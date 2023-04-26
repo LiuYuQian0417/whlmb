@@ -1,0 +1,317 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css"/>
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<link rel="stylesheet" href="__RES__/css/evaluate/evaluate.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+{/block}
+{block name="content"}
+<div class="index-box">
+    <div class="evaluate-title">
+        <h3>发表评价</h3>
+        <p>
+            <span>订单号：<i>{$result.order_attach_number}</i></span>
+            <span class="time">
+                {$result.create_time}
+            </span>
+        </p>
+    </div>
+    <form action="/v2.0/evaluate/report" id="form">
+        <input type="hidden" name="store_star_num" id="store_star_num" value="5">
+        <input type="hidden" name="express_star_num" id="express_star_num" value="5">
+        {volist name="result.order_goods" id="order_goods"}
+        <input type="hidden" name="goods_set[{$key}][order_goods_id]" value="{$order_goods.order_goods_id}">
+        <input type="hidden" name="goods_set[{$key}][attr]" value="{$order_goods.attr}">
+        <input type="hidden" name="goods_set[{$key}][star_num]" id="star_num{$key}" value="5">
+        <input type="hidden" name="goods_set[{$key}][multiple_file]" id="multiple_file_{$key}" value="">
+        <input type="hidden" name="goods_set[{$key}][video]" id="video{$key}" value="">
+        <input type="hidden" name="goods_set[{$key}][is_anonymous]" class="is_anonymous" value="1">
+        <div class="evaluate-con">
+            <div class="goods">
+                <img src="{$order_goods.file}" alt="">
+                <span class="goods-name">{$order_goods.goods_name}</span>
+                <p class="pic">￥{$order_goods.single_price}</p>
+                <span class="goods-specification">{$order_goods.attr}</span>
+            </div>
+            <div class="evaluate">
+                <ul>
+                    <li>
+                        <div class="tit">
+                            商品评分
+                        </div>
+                        <div class="con">
+                            <div class="start-box" data-key="star_num{$key}">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tit">
+                            评价晒单
+                        </div>
+                        <div class="con">
+                            <div class="evaluate-content">
+                                <!--评价-->
+                                <div class="text">
+                                    <textarea datatype="*" nullmsg="请填写商品评价" name="goods_set[{$key}][content]"></textarea>
+                                    <!--字数-->
+                                    <p class="text-num">
+                                        <span>0</span>/500
+                                    </p>
+                                </div>
+                                <!--上传图片和视频-->
+                                <div class="upload">
+                                    <!--图片和视频放置的位置-->
+                                    <div class="video-list" id="video-list-{$key}" data-index="{$key}">
+                                    </div>
+                                    <div class="img-list" id="img-list-{$key}" data-index="{$key}"></div>
+                                    <label for="file_{$key}" class="label">
+                                        <img src="__RES__/imgs/xj.png" alt="">
+                                        <p>添加图片</p>
+                                    </label>
+                                    <label for="video_{$key}" class="label">
+                                        <img src="__RES__/imgs/xj.png" alt="">
+                                        <p>添加视频</p>
+                                    </label>
+                                    <div class="img-file-list" data-index="{$key}" id="img-file-list-{$key}">
+                                        <input type="file" accept="image/jpeg,image/png,image/gif" class="files" hidden
+                                               id="file_{$key}" name="file[]">
+                                    </div>
+                                    <div class="video-file-list" data-index="{$key}" id="video-file-list-{$key}">
+                                        <input type="file" class="files video" accept="video/*" hidden id="video_{$key}" onchange="test()"
+                                               name="video[]">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        {/volist}
+        <div class="evaluate-con">
+            <div class="goods bor">
+            </div>
+            <div class="evaluate">
+                <ul>
+                    <li>
+                        <div class="tit">
+                            店铺评分
+                        </div>
+                        <div class="con">
+                            <div class="start-box" data-key="store_star_num">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tit">
+                            物流评分
+                        </div>
+                        <div class="con">
+                            <div class="start-box"  data-key="express_star_num">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                                <img src="__RES__/imgs/start_on.png" alt="">
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="tit">
+                            物流评价
+                        </div>
+                        <div class="con">
+                            <div class="evaluate-content">
+                                <!--评价-->
+                                <div class="text">
+                                    <textarea datatype="*" nullmsg="请输入物流评价" name="express_content"></textarea>
+                                    <!--字数-->
+                                    <p class="text-num">
+                                        <span>0</span>/500
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="evaluate-bottom">
+            <input class="submit primary-background-color" type="submit" value="提交">
+            <label class="checked" for="checked">
+                <span class="bor"></span>
+                <img src="__RES__/imgs/checked.png" alt="">
+                匿名评价<span>（你的评价能帮助其他小伙伴哦）</span>
+            </label>
+            <input id="checked" type="checkbox" checked hidden>
+        </div>
+    </form>
+    <div class="cover">
+        <video src="" controls id="video-play"></video>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+    main.valid({
+        'select': '#form', 'call_back': function () {
+            $('.img-file-list').each(function (k, v) {
+                $('#multiple_file_' + $(v).data('index')).val(main.upload({
+                    'data': {'type': 'pc'},
+                    'select': $(v).children('input'),
+                    'file_name': 'image',
+                }));
+            });
+            $('.video-file-list').each(function (k, v) {
+                $('#video' + $(v).data('index')).val(main.upload({
+                    'data': {'type': 'pc'},
+                    'one':1,
+                    'url':'/v2.0/image/upload_video',
+                    'select': $(v).children('input'),
+                    'file_name': 'video'
+                }));
+            });
+            sessionStorage.return_url = ObjectOrJson({'use_url':'evaluate/report','return_url':'/pc2.0/order/orderEvaluateList'});
+            // return true;
+        }
+    });
+    //是否匿名
+    $('.evaluate-bottom label').click(function (e) {
+        if ($(this).hasClass('checked')) {
+            $('input.is_anonymous').val(2);
+            $(this).removeClass('checked');
+            $(this).find('img').hide();
+            $(this).find('.bor').css('display', 'inline-block')
+        } else {
+            $('input.is_anonymous').val(1);
+            $(this).addClass('checked');
+            $(this).find('img').show();
+            $(this).find('.bor').css('display', 'none')
+        }
+    });
+    // 星级的选择
+    $('.start-box img').click(function () {
+        var num = $(this).index();
+        $('#' + $(this).parent('div').data('key')).val(parseInt(num) + 1);
+        $(this).parent().find('img').each(function () {
+            var befor = $(this).index();
+            if (befor <= num) {
+                $(this).attr('src', '__RES__/imgs/start_on.png')
+            } else {
+                $(this).attr('src', '__RES__/imgs/start_off.png')
+            }
+        })
+    });
+    // 判断输入了多少个字
+    $('.evaluate-content .text textarea').keyup(function () {
+        var txt = $(this).val()
+        $(this).siblings('.text-num').find('span').html(txt.length);
+    });
+    // 上传图片
+    var num = {};//图片计数
+    $('.img-file-list').on('change', '.files', function () {
+        var index = $(this).parent('div').data('index');
+        var files = this.files;
+        var len = files.length;
+        var num_index = 'num-' + index;
+        if (num_index in num) {
+            num[num_index] += len;
+        } else {
+            num[num_index] = 1;
+        }
+        if (num[num_index] > 3) {
+            main.msg('每个评论最多只能上传3张图片');
+            num[num_index] -= 1;
+            return;
+        }
+        if(num[num_index]<3){
+            var inp = '<input type="file" class="files"  accept="image/jpeg,image/png,image/gif"  hidden name="files[]" id="file_' + index + '"  value=""/>';
+            $('#img-file-list-' + index).append(inp);
+        }else{
+            $('label[for=file_'+index+']').hide();
+        }
+        $(this).removeAttr('id');
+        var imgRUL = null;
+        var windowURL = window.URL || window.webkitURL;
+        for (var a = 0; a < len; a++) {
+            imgRUL = windowURL.createObjectURL(files[a]);
+            var img = '<div class="img-box">' +
+                '<img class="del" src="__RES__/imgs/up-del.png"/>' +
+                '<img  src="' + imgRUL + '"/>' +
+                '</div>';
+            $('#img-list-' + index).append(img);
+        }
+    });
+    // 删除图片
+    $('.img-list').on('click', '.del', function () {
+        var index = $(this).closest('.img-list').data('index');
+        var num_index = 'num-' + index;
+        if (num_index in num) {
+            num[num_index] -= 1;
+        }
+        if($('#file_' + index).length<=0){
+            var inp = '<input type="file" class="files"  accept="image/jpeg,image/png,image/gif"  hidden name="files[]" id="file_' + index + '"  value=""/>';
+            $('#img-file-list-' + index).append(inp);
+            $('label[for=file_'+index+']').show();
+        }
+        var xuhao = $(this).parent().index('.img-box');
+        $(this).parent().remove();
+        $('#img-file-list-' + index + ' .files').not('#file').eq(xuhao).remove();
+    });
+    // 上传视频
+    var video_arr = [];
+    $('.video-file-list').on('change', '.video', function (e) {
+        var index = $(this).parent('div').data('index');
+        $('label[for=video_'+index+']').hide();
+        var img = event.target.files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(img);
+        reader.onload = function (e) {
+            var dataBase64 = e.target.result;
+            video_arr.push(dataBase64);
+            var video = '<div class="img-box">\n' +
+                '<img class="del" src="__RES__/imgs/up-del.png"/>\n' +
+                '<video   loop="loop" src="' + dataBase64 + '" ></video>\n' +
+                '<img class="play" src="__RES__/imgs/play.png" alt="">\n' +
+                '</div>'
+            $('#video-list-'+index).append(video);
+        }
+
+    });
+    // 播放视频
+    $('.video-list').on('click', '.play', function () {
+        var num = $(this).parents('.img-box').index();
+        $('.cover #video-play').attr('src', video_arr[num]);
+        $('.cover #video-play')[0].play();
+        $('.cover').show()
+    });
+    // 关闭视频
+    $('.cover').click(function () {
+        $('.cover').hide()
+        $('.cover #video-play')[0].paused;
+
+    });
+    // 删除视频
+    $('.video-list').on('click', '.del', function () {
+        var index = $(this).closest('.video-list').data('index');
+        $('#video_'+index).val('');
+        $('label[for=video_'+index+']').show();
+        var num = $(this).parents('.img-box').index();
+        $(this).parent().remove();
+        video_arr.splice(num, 1);
+        $('.video-file-list-' + index + ' .files').not('#file').eq(num).remove();
+    });
+</script>
+{/block}

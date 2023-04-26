@@ -1,0 +1,624 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/formSelects-v4.css" rel="stylesheet" type="text/css"/>
+<style>
+    .activityCon {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    .activityConLeft {
+        width: 55%
+    }
+
+    .activityConLeft .layui-input-block {
+        margin-right: 100px
+    }
+
+    .activityConRight {
+        width: 40%;
+        margin-left: 5%
+    }
+
+    .activityConRight img {
+        width: 30%;
+        padding-bottom: 10px
+    }
+</style>
+
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<!--<div class="content">-->
+<!--<div class="explanation" id="explanation">-->
+<!--<div class="ex_tit">-->
+<!--<i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>-->
+<!--</div>-->
+<!--<ul>-->
+<!--<li><span>请注意选择商品分类。</span></li>-->
+<!--<li><span>此处只能创建平台优惠券及自营店铺优惠券，店铺优惠券请商铺后台创建。</span></li>-->
+<!--<li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>-->
+<!--</ul>-->
+<!--</div>-->
+<!--</div>-->
+<form class="layui-form" action="" method="post">
+
+    <div class="activityCon">
+        <!--左边内容-->
+        <div class="activityConLeft">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 活动标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" maxlength="7" autocomplete="off" placeholder="请输入活动标题"
+                           value="{$item.title|default=''}"
+                           class="layui-input" {eq name="$item.is_open|default=1" value="2" }disabled{/eq}>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 活动规则</label>
+                <div class="layui-input-block">
+                <textarea type="text" name="action_rule" maxlength="100" autocomplete="off"
+                          placeholder="请输入活动规则,换行用英文 ' , ' 分割"
+                          class="layui-textarea" {eq name="$item.is_open|default=1" value="2" }disabled{/eq}>{$item.original_action_rule|default=''}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 消耗积分</label>
+                <div class="layui-input-block">
+                    <input type="text" name="integral" value="{$item.integral|default=''}" maxlength="10"
+                           max_number="4294967295" message="最大可增加积分" oninput="verify_max(this)"  onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                           autocomplete="off"
+                           placeholder="请输入消耗积分"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 是否补偿积分</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="is_compensation" value="1" title="是" lay-filter="integral"
+                           {eq name="item.is_compensation|default=1" value="1" }checked{/eq}
+                    >
+                    <input type="radio" name="is_compensation" value="0" title="否" lay-filter="integral"
+                           {eq name="item.is_compensation|default='1'" value="0" }checked{/eq}
+                    >
+                </div>
+            </div>
+            <div class="layui-form-item" id="integral" {eq name="item.is_compensation|default='1'" value="0" }hidden{/eq}  >
+            <label class="layui-form-label"><font color="red">*</font> 补偿积分</label>
+            <div class="layui-input-block">
+                <input type="text" name="compensation_integral" value="{$item.compensation_integral|default=''}"
+                       maxlength="10"
+                       autocomplete="off"
+                       placeholder="请输入补偿积分数量"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 文案编辑</label>
+            <div class="layui-input-block">
+                <input type="text" name="copy_writer" value="{$item.copy_writer|default=''}"
+                       maxlength="100" autocomplete="off"
+                       placeholder="请输入未中奖时提示信息,补偿积分时请输入对应补偿的提示信息"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 是否开启</label>
+            <div class="layui-input-block">
+                <input type="radio" name="open" value="2" title="是" lay-filter="integral"
+                       {eq name="item.is_open|default=1" value="2" }checked{/eq}
+                >
+                <input type="radio" name="open" value="1" title="否" lay-filter="integral"
+                       {eq name="item.is_open|default='1'" value="1" }checked{/eq}
+                >
+            </div>
+        </div>
+    </div>
+    <!--右边内容-->
+    <div class="activityConRight">
+        <div>
+            <div></div>
+            <div style="width: 250px">
+                <img id="img_1" src="{$img_file.0|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+                <img id="img_2" src="{$img_file.1|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+                <img id="img_3" src="{$img_file.2|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+                <img id="img_8" src="{$img_file.7|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+                <img src="/template/master/resource/image/common/imageLottery.png"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'" alt="">
+                <img id="img_4" src="{$img_file.3|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+                <img id="img_7" src="{$img_file.6|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+                <img id="img_6" src="{$img_file.5|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+                <img id="img_5" src="{$img_file.4|default='/template/master/resource/image/common/imageThanks.png'}"
+                     onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                     alt="">
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="activityCon">
+        <table class="layui-table">
+            <tr>
+                <td></td>
+                <td>奖品</td>
+                <td>缩略图</td>
+                <td>中奖率（<span id="sum_probability">{notempty name="$activity"}{$activity->toarray()|array_column=###,'probability'|array_sum}{else/}0{/notempty}</span>%）
+                </td>
+                <td>剩余数量</td>
+                <td>是否开启</td>
+                <td>操作</td>
+            </tr>
+            <input type="hidden" name="activity_id" value="{$item.activity_id|default=''}">
+            {volist name="$activity|default=range(0,7)" id="v"}
+            <tr>
+                {notempty name="$v.prize_id"}<input type="hidden" name="activity_prize_id[]" value="{$v.prize_id}">{/notempty}
+                <input type="hidden" name="goods_type[]" id="goods_type_{$key+1}" value="{$v.goods_type|default=''}">
+                <input type="hidden" name="prize_whole_title[]" id="prize_whole_title_{$key+1}"
+                       value="{$v.prize_whole_title|default=''}">
+                <input type="hidden" name="early_warning_number[]" id="early_warning_number_{$key+1}"
+                       value="{$v.early_warning_number|default=''}">
+                <input type="hidden" name="prize_info_integral[]" id="prize_info_integral_{$key+1}"
+                       value="{$v.prize_info|default=''}">
+                <input type="hidden" name="prize_info_coupon[]" id="prize_info_coupon_{$key+1}"
+                       value="{$v.prize_info|default=''}">
+                <td>{$key+1}</td>
+                <td id="prize_title_{$key+1}">
+                    <div>{$v.prize_title|default=''}</div>
+                    <input type="hidden" name="prize_title[]" value="{$v.prize_title|default=''}"></td>
+                <td id="file_{$key+1}"><input type="hidden" name="file[]" value="{$v.file_extra|default=''}"><img
+                        src="{$v.file}" onerror="this.src='/template/master/resource/image/common/imageError.png'"
+                        alt=""></td>
+                <td id="probability_{$key+1}">
+                    <div>{$v.probability|default=''}</div>
+                    <input type="hidden" name="probability[]" value="{$v.probability|default=''}"></td>
+                <td id="prize_number_{$key+1}">
+                    <div>{$v.prize_number|default=''}</div>
+                    <input type="hidden" name="prize_number[]" value="{$v.prize_number|default=''}"></td>
+                <td id="is_open_{$key+1}">
+                    <div>{eq name="$v.is_open|default=2" value="2"}否{else/}是{/eq}</div>
+                    <input type="hidden" name="is_open[]" value="{$v.is_open|default=''}"></td>
+                <td key="{$key+1}">{eq name="$item.is_open|default=1" value="2" }处于活动中不可修改{else/}
+                    <div><a class="btn_edit" href="javascript:void(0);" onclick="edit_prize({$key+1})"><i
+                            class="fa fa-edit"></i>编辑</a></div>
+                    {/eq}
+                </td>
+            </tr>
+            {/volist}
+        </table>
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {eq name="$item.is_open|default=1" value="1" }
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                {/eq}
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/common/formSelects-v4.js"></script>
+<script src="__RES__/layui/layui.all.js"></script>
+<script>
+    //存储优惠券数据
+    var discount_coupon_data = {};
+    main.ajax({
+        type: 'post', url: '/lottery/coupon_list', callback: function (res) {
+            discount_coupon_data = res.data;
+        }
+    });
+    var type_data = ['实物', '积分'];
+
+    if(parseInt("{$Think.INI_CONFIG['IS_COUPON']}") === 1){
+        type_data.push('优惠券')
+    }
+
+
+    function edit_prize(key) {
+        var key1=key;
+        var early_warning_number = $('#early_warning_number_' + key).val(),discount_coupon_list;
+        var prize_info_integral = $('#prize_info_integral_' + key).val();
+        var prize_info_coupon = $('#prize_info_coupon_' + key).val();
+        var prize_title = $('#prize_title_' + key).children('input').eq(0).val();
+        var prize_whole_title = $('#prize_whole_title_' + key).val();
+        var probability = $('#probability_' + key).children('input').eq(0).val();
+        var prize_number = $('#prize_number_' + key).children('input').eq(0).val();
+        var file = $('#file_' + key).children('img').eq(0).attr('src');//图片展示路径
+        var file_extra = $('#file_' + key).children('input').eq(0).val();//图片原路径
+        var goods_type = parseInt($('#goods_type_' + key).val());
+        var is_open = parseInt($('#is_open_' + key).children('input').eq(0).val());
+        var type_list = '';
+        //获取优惠券列表
+        $.each(discount_coupon_data, function (k, v) {
+            if (v.coupon_id == prize_info_coupon) {
+                discount_coupon_list += '<option value="' + v.coupon_id + '" selected="selected" id="select_coupon_' + v.coupon_id + '">' + v.title + '</option>';
+            } else {
+                discount_coupon_list += '<option value="' + v.coupon_id + '" id="select_coupon_' + v.coupon_id + '">' + v.title + '</option>';
+            }
+        });
+        $.each(type_data, function (k, v) {
+            ++k;
+            if (goods_type == k) {
+                type_list += '<option value="' + k + '" selected="selected">' + v + '</option>';
+            } else {
+                type_list += '<option value="' + k + '">' + v + '</option>';
+            }
+        });
+        layer.open({
+            closeBtn: 1,
+            type: 1,
+            content: '<form action="" class="layui-form">\n' +
+                '    <div class="contentShell">\n' +
+                '        <div class="layui-form-item">\n' +
+                '            <label class="layui-form-label">奖品类型</label>\n' +
+                '            <div class="layui-input-block">\n' +
+                '                <select id="goods_type" name="" lay-filter="goods_type">\n' +
+                '                    <option value="">请选择奖品类型</option>\n' + type_list +
+                '                </select>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '        <div hidden id="prize_info_integral_a">\n' +
+                '            <label class="layui-form-label"><font color="red">*</font> 积分数量</label>\n' +
+                '            <div class="layui-input-block">\n' +
+                '                <input type="text" oninput="clearNoNum(this)" id="prize_info_integral" maxlength="10" autocomplete="off" placeholder="请输入积分数量"\n' +
+                '                       value="' + prize_info_integral + '"\n' +
+                '                       class="layui-input">\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '        <div class="layui-form-item" hidden id="prize_info_coupon_a">\n' +
+                '            <label class="layui-form-label"><font color="red">*</font> 赠送优惠券</label>\n' +
+                '            <div class="layui-input-block">\n' +
+                '                <select id="prize_info_coupon">\n' +
+                '                    <option value="">请选择优惠券</option>\n' + discount_coupon_list +
+                '                </select>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '        <label class="layui-form-label"><font color="red">*</font> 奖品名称</label>\n' +
+                '        <div class="layui-input-block">\n' +
+                '            <input type="text" id="prize_title" maxlength="6" autocomplete="off" placeholder="请输入奖品名称"\n' +
+                '                   value="' + prize_title + '"\n' +
+                '                   class="layui-input">\n' +
+                '        </div>\n' +
+                '        <label class="layui-form-label"><font color="red">*</font> 奖品详细名称</label>\n' +
+                '        <div class="layui-input-block">\n' +
+                '            <input type="text" id="prize_whole_title" maxlength="80" autocomplete="off" placeholder="请输入奖品详细名称"\n' +
+                '                   value="' + prize_whole_title + '"\n' +
+                '                   class="layui-input">\n' +
+                '        </div>\n' +
+                '        <label class="layui-form-label"><font color="red">*</font> 中奖概率</label>\n' +
+                '        <div class="layui-input-block">\n' +
+                '            <input type="text" oninput="clearNoNum(this)"  key1="'+key1+'" id="probability" maxlength="10" autocomplete="off" placeholder="请输入中奖概率"\n' +
+                '                   value="' + probability + '"\n' +
+                '                   class="layui-input">\n' +
+                '        </div>\n' +
+                '        <label class="layui-form-label"><font color="red">*</font> 奖品数量</label>\n' +
+                '        <div class="layui-input-block">\n' +
+                '            <input type="text" oninput="clearNoNum(this)" id="prize_number" maxlength="20" autocomplete="off" placeholder="请输入奖品数量"\n' +
+                '                   value="' + prize_number + '"\n' +
+                '                   class="layui-input">\n' +
+                '        </div>\n' +
+                '        <label class="layui-form-label"><font color="red">*</font> 奖品数量预警</label>\n' +
+                '        <div class="layui-input-block">\n' +
+                '            <input type="text" oninput="clearNoNum(this)" id="early_warning_number" maxlength="10" autocomplete="off" placeholder="请输入奖品数量预警"\n' +
+                '                   value="' + early_warning_number + '"\n' +
+                '                   class="layui-input">\n' +
+                '        </div>\n' +
+                '        <div class="layui-form-item">\n' +
+                '            <label class="layui-form-label">是否开启</label>\n' +
+                '            <div class="layui-input-block" id="is_open">\n' +
+                '                <input type="radio" name="is_open" value="1" title="是""\n' +
+                '                >\n' +
+                '                <input type="radio" name="is_open" value="2" title="否""\n' +
+                '                >\n' +
+                '            </div>\n' +
+                '        </div>' +
+                '<div class="layui-form-item">\n' +
+                '                    <label class="layui-form-label"><em class="require">* </em>商品展示图</label>\n' +
+                '                    <div class="layui-input-inline">\n' +
+                '                        <div\n' +
+                '                                class="imageUpload"\n' +
+                '                                default="'+ file+'"\n' +
+                '                                width="200"\n' +
+                '                                height="200"\n' +
+                '                                file-mime="image/gif,image/jpeg,image/png"\n' +
+                '                                name="goods_file1"\n' +
+                '                                dir="goods_image_file"\n' +
+                '                                value="' + file + '"\n' +
+                '                                valid-type="*"\n' +
+                '                                valid-msg="请选择奖品图片"\n' +
+                '                        >\n' +
+                '                        </div>\n' +
+                '                    <div class="layui-upload-drag" style="padding:1px;display: none" id="goods_file" >\n' +
+                '                        <img src="' + file + '" disabled="none" \n' +
+                '                             class="uploadImg" alt="">\n' +
+                '                        <input class="layui-upload-file" type="file" file_extra="' + file_extra + '" accept="image/*" name="goods_file1" value="' + file_extra + '">\n' +
+                '                    </div>\n' +
+                '                        <div class="layui-form-mid layui-word-aux">\n' +
+                '                            奖品图片，建议尺寸200*200\n' +
+                '                        </div>\n' +
+                '                    </div>\n' +
+                '                </div>'+
+                '        <div class="contentShellBtn">\n' +
+                '            <div class="layui-form-item">\n' +
+                '                <div class="layui-input-block">\n' +
+                '                    <button class="layui-btn" type="button" onclick="save_edit_prize(' + key + ')">立即提交</button>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '        </div>\n' +
+                '    </div>\n' +
+                '</form>', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+            area: ['50%', '85%'],
+            success: function (layero, index) {
+                _is_open = is_open ? is_open : 2;
+                $('#is_open').children('input').eq(_is_open - 1).attr('checked', true);
+                var form = layui.form, layer = layui.layer;
+                check_goods_type(goods_type);
+                form.on('select(goods_type)', function (data) {
+                    check_goods_type(data.value);
+                });
+                imageUploadInit({'lottery':function(a){console.log($('#file_'+key1));
+                var a = '<img src="' + a.view_url + '" class="uploadImg"><input file_extra="' + a.url + '"  type="text" name="file" value="' + a.url + '" title style="display:none;"/>';
+                    $('#goods_file').html(a);
+                    }});
+                // main.upload([{
+                //     elem: '#goods_file',
+                //     size: 2 * 1024,
+                //     auto: false,
+                //     data: {name: 'goods_file', dir: 'goods_file'},
+                //     field: 'goods_file',
+                //     choose: function (obj) {  //上传前选择回调方法
+                //         var flag = true;
+                //         obj.preview(function (index, file, result) {
+                //             var img = new Image();
+                //             img.src = result;
+                //             img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
+                //                 if (img.width == 200 && img.height == 200) {
+                //                     obj.upload(index, file); //满足条件调用上传方法
+                //                 } else {
+                //                     flag = false;
+                //                     layer.msg("您上传的小图大小必须是200*200尺寸！");
+                //                     return false;
+                //                 }
+                //             };
+                //             return flag;
+                //         });
+                //     }, done: function (res) {
+                //         if (res.code !== 0) {
+                //             layer.msg(res.message);
+                //             return false;
+                //         }
+                //         var html = '<img src="' + res.data.domain + res.data.url + '" class="uploadImg">' +
+                //             '<input file_extra="' + res.data.url + '"  type="text" name="file" value="' + res.data.url + '" title style="display:none;"/>';
+                //         $(this.elem).css('padding', '1px').html(html);
+                //         layer.closeAll('loading');
+                //     }
+                // }]);
+                main.form();
+            }
+        });
+    }
+
+    function check_goods_type(val) {
+        val = parseInt(val);
+        var prize_info_integral = $('#prize_info_integral_a');
+        var prize_info_coupon = $('#prize_info_coupon_a');
+        prize_info_integral.attr('hidden', 'hidden');
+        prize_info_coupon.attr('hidden', 'hidden');
+        switch (val) {
+            case 1:
+                break;
+            case 2:
+                prize_info_integral.removeAttr('hidden');
+                break;
+            case 3:
+                prize_info_coupon.removeAttr('hidden');
+                break;
+        }
+    }
+
+    //编辑商品信息信息对象
+    var edit_goods_info = [
+        {type: 'select', id: 'goods_type', msg: '请选择奖品类型', data_id: 'goods_type', is_son: false},
+        {type: 'input', id: 'prize_info_integral', msg: '请输入积分数量', data_id: 'prize_info_integral', is_son: false},
+        {type: 'select', id: 'prize_info_coupon', msg: '请选择优惠券', data_id: 'prize_info_coupon', is_son: false},
+        {type: 'input', id: 'prize_title', msg: '请输入奖品名称', data_id: 'prize_title', is_son: true},
+        {type: 'input', id: 'prize_whole_title', msg: '请输入奖品详细名称', data_id: 'prize_whole_title', is_son: false},
+        {type: 'input', id: 'probability', msg: '请输入中奖概率', data_id: 'probability', is_son: true},
+        {type: 'input', id: 'prize_number', msg: '请输入奖品数量', data_id: 'prize_number', is_son: true},
+        {type: 'input', id: 'early_warning_number', msg: '请输入奖品数量预警', data_id: 'early_warning_number', is_son: false},
+        {type: 'radio', id: 'is_open', msg: '是否开启', data_id: 'is_open', is_son: true, data: {1: '是', 2: '否'}},
+        {type: 'file', id: 'goods_file', msg: '请上传奖品图片', data_id: 'file', is_son: true},
+    ];
+
+    //保存商品信息
+    function save_edit_prize(key) {
+        var goods_type = 0;
+        var is_return = true, val, sun_probability = 0;
+        $.each(edit_goods_info, function (k, v) {
+            switch (v.type) {
+                case 'input':
+                    val = $('#' + v.id).val();
+                    break;
+                case 'select':
+                    val = $('#' + v.id + ' option:selected').val();
+                    break;
+                case 'file':
+                    val = $('#' + v.id).children('input').eq(0).attr('file_extra');
+                    break;
+                case 'radio':
+                    val = $('#' + v.id + ' :checked').val();
+                    break;
+            }
+            if (v.id == 'probability') {
+                sun_probability += parseFloat(parseFloat(val).toFixed(2));
+                if (sun_probability > 100) {
+                    layer.msg('中奖率总和不能大于100');
+                    is_return = false;
+                    return false;
+                }
+            }
+            if (v.id == 'goods_type') {
+                goods_type = parseInt(val);
+            }
+            var rul = ['', undefined, '-1', '/template/master/resource/image/common/imageError.png'];
+            outer:
+                if (!rul.indexOf(val) || val == '') {
+                    switch (goods_type) {
+                        case 1:
+                            if (v.id == 'prize_info_integral' || v.id == 'prize_info_coupon') break outer;
+                        case 2:
+                            if (v.id == 'prize_info_coupon') break outer;
+                        case 3:
+                            if (v.id == 'prize_info_integral') break outer;
+                    }
+                    is_return = false;
+                    layer.msg(v.msg);
+                    return false;
+                }
+        });
+        if (is_return) {
+            $.each(edit_goods_info, function (k, v) {
+                switch (v.type) {
+                    case 'input':
+                        var _value = $('#' + v.id).val();
+                        var _relay = $('#' + v.data_id + '_' + key);
+                        if (v.is_son) {
+                            _relay.children('input').eq(0).val(_value);
+                            _relay.children('div').eq(0).text(_value);
+                        } else {
+                            _relay.val(_value);
+                        }
+                        break;
+                    case 'select':
+                        var _value = $('#' + v.id + ' option:selected').val();
+                        var _relay = $('#' + v.data_id + '_' + key);
+                        if (v.is_son) {
+                            _relay.children('input').eq(0).val(_value);
+                            _relay.children('div').eq(0).text(_value);
+                        } else {
+                            _relay.val(_value);
+                        }
+                        break;
+                    case 'file':
+                        var _file = $('#' + v.id).children('img').eq(0).attr('src');
+                        var _file_extra = $('#' + v.id).children('input').eq(0).attr('file_extra');
+                        var _relay = $('#' + v.data_id + '_' + key);
+                        if (v.is_son) {
+                            _relay.children('input').eq(0).val(_file_extra);
+                            _relay.children('img').eq(0).attr('src', _file);
+                        } else {
+                            _relay.val(_file_extra);
+                        }
+                        $('#img_' + key).attr('src', _file);
+                        break;
+                    case 'radio':
+                        var _value = $('#' + v.id + ' :checked').val();
+                        var _relay = $('#' + v.data_id + '_' + key);
+                        if (v.id == 'is_open' && _value == '2') {
+                            $('#img_' + key).attr('src', '/template/master/resource/image/common/imageThanks.png');
+                        }
+                        if (v.is_son) {
+                            _relay.children('input').eq(0).val(_value);
+                            _relay.children('div').eq(0).text(v.data[_value]);
+                        } else {
+                            _relay.val(_value);
+                        }
+                        break;
+                }
+            });
+            $.each($('td[id^=probability_]'), function (k, v) {
+                var probability = parseFloat($(v).children('div').eq(0).text());
+                if ($(v).attr('id') != 'probability_' + key && !isNaN(probability)) sun_probability += probability;
+            });
+            $('#sum_probability').text(sun_probability);
+            layer.closeAll();
+        }
+    }
+
+    //验证输入数据大小
+    function verify_max(e){
+        var max_price=parseInt($(e).attr('max_number'));
+        var input_price=parseInt($(e).val().replace(/[^\d]/g,""));
+        input_price=isNaN(input_price)?'':input_price;
+        var message=$(e).attr('message');
+        if(input_price>max_price){
+            $(e).val(max_price);
+            $(e).focus();
+            layer.msg(message+max_price);
+        }else{
+            $(e).val(input_price=='NaN'?'':input_price);
+        }
+    }
+
+    //验证中奖概率
+    function checkProbability(obj){
+        var key=$(obj).attr('key1');
+        var sun_probability=0;
+        $.each($('td[id^=probability_]'), function (k, v) {
+            if ($(v).attr('id') != 'probability_' + key) sun_probability += parseFloat($(v).children('div').eq(0).text());
+        });
+        var this_val=parseFloat($(obj).val());
+        this_val=isNaN(this_val)?0:this_val;
+        if(this_val+sun_probability>100){
+            layer.msg('最大可设置中奖概率'+(100-sun_probability)+'%');
+            $(obj).val(100-sun_probability);
+        }
+    }
+
+
+    function clearNoNum(obj)
+    {
+        //先把非数字的都替换掉，除了数字和.
+        obj.value = obj.value.replace(/[^\d.]/g,"");
+        //保证只有出现一个.而没有多个.
+        obj.value = obj.value.replace(/\.{2,}/g,".");
+        //必须保证第一个为数字而不是.
+        obj.value = obj.value.replace(/^\./g,"");
+        //保证.只出现一次，而不能出现两次以上
+        obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        //只能输入两个小数
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
+        if($(obj).attr('id')=='probability'){
+            checkProbability(obj);
+        }
+    }
+
+    main.form([{
+        selector: 'radio(integral)', callback: function (data) {
+            var integral = $('#integral');
+            if (data.value == 0) {
+                integral.prop('hidden', true);
+            }
+            if (data.value == 1) {
+                integral.prop('hidden', false);
+            }
+        }
+    }]);
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

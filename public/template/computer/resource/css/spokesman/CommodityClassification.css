@@ -1,0 +1,26 @@
+.my-ishop{
+    display: flex;
+	width:120px;
+	background:#f9f9f9;
+	border:1px solid #ddd;
+	height:36px;
+	line-height:36px;
+	text-align: center;
+	cursor: pointer;
+	margin-right:10px;
+	justify-content: center;
+	align-items: center;
+	}
+.my-ishop img{
+	display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 8px 0px;
+	float:left;
+	}
+.my-ishop span{
+	margin-left:10px;
+	}
+.my-cart{
+	margin-right:0px;
+	}

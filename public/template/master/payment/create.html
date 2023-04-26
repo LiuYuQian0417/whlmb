@@ -1,0 +1,85 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请谨慎安装支付方式，填写相关信息。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 支付方式名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" maxlength="120" autocomplete="off" placeholder="请输入支付方式名称"
+                       datatype="*"
+                       value="{$item.name|default=''}"
+                       nullmsg="请输入支付方式名称" errormsg="请输入支付方式名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">支付方式描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入支付方式描述" name="describe" maxlength="100" class="layui-textarea">{$item.describe|default=''}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="number" name="sort" maxlength="120" autocomplete="off" placeholder="请输入排序"
+                       datatype="*"
+                       value="{$item.sort|default='0'}"
+                       nullmsg="请输入支付方式名称" errormsg="请输入支付方式名称"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.payment_config_id"}
+                <input type="hidden" name="payment_config_id" value="{$item.payment_config_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    // main.file();
+    //内容页切换
+    $('.tabs_info li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    })
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,257 @@
+{extend name='public/my_header'/}
+
+
+{block name='content_css'}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css"/>
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<link rel="stylesheet" href="__RES__/css/Indent/myIndent.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<style>
+    .index-box .index-right .indent-content{
+        padding: 0px;
+    }
+    .index-box .index-right .indent-content .indent-tit{
+        padding: 0px 20px;
+
+    }
+
+
+    .goods-left{
+
+        padding-right: 134px;
+    }
+    .goods-right{
+        width: 346px;
+        float: right;
+        display: flex;
+        justify-content: space-between;
+    }
+    .money-box{
+        flex: 1;
+    }
+    .indent-state{
+        flex: 1;
+    }
+    .index-box .index-right .indent-box .indent-list .goods-box .indent-state{
+        border-right:none;
+    }
+    .tit-right{
+        width: 346px;
+        float: right;
+        display: flex;
+        justify-content: space-between;
+    }
+    .figure-title{
+        flex: 1;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+
+    <!--右侧内容开始-->
+    <div class="index-right">
+        <div class="title">
+            我的订单
+        </div>
+        <div class="indent-content">
+            <!--title开始-->
+            <div class="indent-tit">
+                <!--时间选择-->
+                <div class="time-filtrate ">
+                    <a class="now-time" href="{:url('pc2.0/order/orderunderlinelist')}?share_time={:input('share_time')}">
+                        <span>
+                            {switch name=":input('share_time')"}
+                            {case 1}近三个月订单{/case}
+                            {case 2}今年内订单{/case}
+                            {case 3}{:date('Y',strtotime('-1 year'))}年订单{/case}
+                            {case 4}{:date('Y',strtotime('-2 year'))}年订单{/case}
+                            {case 5}{:date('Y',strtotime('-3 year'))}年订单{/case}
+                            {default /}全部时间
+                            {/switch}
+                        </span>
+                        <img src="__RES__/imgs/xs.png" alt="">
+                    </a>
+
+                    <div class="time-list">
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/orderunderlinelist')}?share_time=0">
+                            全部时间
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/orderunderlinelist')}?share_time=1">
+                            近三个月订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/orderunderlinelist')}?share_time=2">
+                            今年内订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/orderunderlinelist')}?share_time=3">
+                            {:date('Y',strtotime('-1 year'))}年订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/orderunderlinelist')}?share_time=4">
+                            {:date('Y',strtotime('-2 year'))}年订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/orderunderlinelist')}?share_time=5">
+                            {:date('Y',strtotime('-3 year'))}年订单
+                        </a>
+                    </div>
+                </div>
+                <div class="indent">
+                    订单详情
+                </div>
+                <div class="tit-right">
+                    <div class="figure-title">
+                        金额
+                    </div>
+                    <div class="figure-title">
+                        订单状态
+                    </div>
+                </div>
+
+            </div>
+            <!--title结束-->
+            <!--订单为空-->
+            {empty name='$result'}
+            <div class="indent-box indent-box-emty">
+                <img src="__RES__/imgs/orderemty.png" alt="">
+                <p>暂无订单</p>
+                <span>“暂无订单，忙里偷闲下一单吧”</span>
+            </div>
+            {/empty}
+            <!--订单内容开始-->
+            <div class="indent-box">
+                {volist name="$result" id="item"}
+                <!--每个订单-->
+                <div class="indent-list">
+                    <!--头部信息-->
+                    <div class="list-title">
+                        <span>
+                            下单时间：{$item.create_time}
+                        </span>
+                        <span>
+                            订单号：{$item.order_attach_number}
+                        </span>
+                        <span class="shop-name">
+                            {$item.store_list.store_name}
+                            <!--<a href="javascript:;">-->
+                                <!--<img src="__RES__/imgs/my/info.png" alt="">-->
+                            <!--</a>-->
+                        </span>
+                        {in name="item.status" value="4,6"}
+                        <a class='del-indent' href='javascript:destroy_order("{$item.order_attach_id}");'
+                           style='float: right;line-height: 28px;margin-right: 15px;position: relative;top: 2px;'>
+                            <img src='__RES__/imgs/my/del_brow.png' alt=''>
+                        </a>
+                        {/in}
+                    </div>
+                    <!--头部信息结束-->
+                    <!--商品开始-->
+                    <div class="goods-box">
+                        <div class="goods-left">
+                            {volist name="$item.order_goods_list" id="val"}
+                            <div class="goods-list">
+                                <a href="JavaScript:;">
+                                    <img src="{$item.store_list.logo}" alt="">
+                                    <p class="goods-name">
+                                        线下订单
+                                    </p>
+                                </a>
+                            </div>
+                            {/volist}
+                        </div>
+                        <div class="goods-right">
+                            <div class="money-box">
+                                <span>￥100.00</span>
+
+                            </div>
+
+                            <div class="indent-state">
+                                {in name="$item.status" value="3,4"}
+                                <a class="finish" href="javascript:;">交易成功</a>
+                                {else/}
+                                <span class="state primary-color">{$item.OrderOperation.OrderStatusText}</span>
+                                {/in}
+                                <a href="{:url('pc2.0/order/orderUnderLineDetails')}?order_attach_id={$item.order_attach_id}">订单详情</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!--每个订单结束-->
+                {/volist}
+            </div>
+
+            <div class="pageContainer" style="width: auto;">{$result|raw}</div>
+        </div>
+        <!--订单内容结束-->
+        <!--猜你喜欢-->
+        <div class="guess">
+            <!-- 猜你喜欢 -->
+            <div class="guess-like">
+                <div class="title">
+                    <span>猜你喜欢</span>
+                    <div onclick="main.new_like({'select':'.guess-like-list'});">换一换 <img src="__RES__/imgs/hyh.png" alt=""></div>
+                </div>
+
+                <div class="guess-like-list">
+                    {volist name="$recommend_list" id="val"}
+                    <div class="list" style="width: 25%">
+                        <a href="javascript:;" onclick="jump_goods('{$val.goods_id}')">
+                            <img src="{$val.file}" alt="">
+                            <p class="name">{$val.goods_name}</p>
+                            <div class="money">
+                                <div class="pic primary-color">￥{$val.shop_price}</div>
+                                <div class="volume">
+                                    销量 <span class="primary-color">{$val.sales_volume}</span>
+                                </div>
+                            </div>
+                            <div class="discounts">
+                                {if condition="config('user.one_more') eq 1"}
+                                {switch name="$val.shop"}
+                                {case value='0'}<span style="margin-right: 2px;"
+                                                      class="mark primary-color border-color">
+								                    自营
+								                  </span>{/case}
+                                {case value='1'}<span style="margin-right: 2px;"
+                                                      class="mark primary-color border-color">
+								                    个人
+								                  </span>{/case}
+                                {case value='2'}<span style="margin-right: 2px;"
+                                                      class="mark primary-color border-color">
+								                    公司
+								                  </span>{/case}
+                                {/switch}
+                                {/if}
+                                {eq name="$val.is_bargain" value="1"}<span style="margin-right: 2px;"
+                                                                           class="mark primary-color border-color">砍价</span>{/eq}
+                                {eq name="$val.is_group" value="1"}<span style="margin-right: 2px;"
+                                                                         class="mark primary-color border-color">拼团</span>
+                                <span class="group-buying primary-background-color">{$val.group_num}人拼</span>{/eq}
+                                {eq name="$val.is_limit" value="1"}<span style="margin-right: 2px;"
+                                                                         class="mark primary-color border-color">抢购</span>{/eq}
+                            </div>
+                        </a>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+    // function search() {
+    //     var keyword = $('input[name="keyword"]').val();
+    //     main.jump({'url': '/pc2.0/order/order_list?keyword=' + keyword})
+    // }
+</script>
+{/block}

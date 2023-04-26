@@ -1,0 +1,336 @@
+{extend name="public/common"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/integration/integration.css">
+<!--公共搜索css-->
+<link rel="stylesheet" href="__RES__/css/public/indexHeader.css">
+{/block}
+
+{block name="content"}
+<style>
+    body{
+        background: #fff;
+    }
+</style>
+<div class="logo-img">
+    <a href="{:url('/pc2.0/index/index')}">
+        <img src="__RES__/imgs/logo-color.png" alt="">
+
+    </a>
+</div>
+
+<div class="goods-detail-box">
+    <!--大图 -->
+    <!--正常商品-->
+    <div class="goods-box">
+
+        <!--商品内容开始-->
+        <div class="goods-con">
+            <!--左侧图片选择部分-->
+            <div class="goods-left">
+                <div class="show-img">
+                    <div class="small"></div>
+                    <div class="cover-img">
+                    </div>
+                    <img class="show" src="{$result.file}" alt="">
+                </div>
+                <div class="big-img">
+                    <img src="{$result.file}" alt="">
+                </div>
+                <div class="silder">
+                    <a href="javascript:;" class="arrow-prev ">
+                        <img src="__RES__/imgs/goodsdetail/xy.png" alt="">
+                    </a>
+                    <a href="javascript:;" class="arrow-next">
+                        <img src="__RES__/imgs/goodsdetail/xiangyou.png" alt="">
+                    </a>
+                    <div class="silder-center">
+                        <ul>
+                            {volist name='result.multiple_file' id='multiple_file'}
+                            <li class="border-color">
+                                <img src="{$multiple_file}" alt="">
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!--<div class="function">-->
+                    <!--&lt;!&ndash;<a href="">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<img src="__RES__/imgs/ysc.png" alt="">&ndash;&gt;-->
+                        <!--&lt;!&ndash;关注商品&ndash;&gt;-->
+                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<a href="">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<img src="__RES__/imgs/fx.png" alt="">&ndash;&gt;-->
+                        <!--&lt;!&ndash;分享&ndash;&gt;-->
+                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+
+                <!--</div>-->
+            </div>
+            <!--左侧图片选择结束-->
+            <!--中部商品选择-->
+            <div class="goods-center">
+                <p class="goods-name">
+                    {$result.integral_name}
+                </p>
+
+                <div class="trade-in">
+
+                </div>
+                <!--价格区域-->
+                <div class="pic-box">
+                    <div class="assessment">
+                        <p>已兑换</p>
+                        <span class="accumulative">{$result.add_number}+</span>
+                    </div>
+
+
+                    <div class="pic-list">
+                        <div class="tit pic-tit">
+                            积分
+                        </div>
+                        <div class="pic-con">
+                            <span class="primary-color now-pic">{$result.integral}</span>
+                        </div>
+
+                    </div>
+                    {eq name='$result.type' value='1'}
+                    <div class="pic-list">
+                        <div class="tit">
+                            换购
+                        </div>
+                        <div class="pic-con">
+                            <span class="primary-color now-pic">￥{$result.price}</span>
+                            使用积分换购可享受优惠价
+                            </a>
+                        </div>
+                    </div>
+                    {/eq}
+
+                </div>
+
+                <!--提交部分-->
+
+                <div class="group-btn">
+
+                    <a href="javascript:jump()" class="submit border-color primary-background-color">
+                        立即兑换
+                    </a>
+                </div>
+
+                <!--<div class="logistics">-->
+                    <!--<div class="logistics-list">-->
+                        <!--<div class="tit">-->
+                            <!--配送-->
+                        <!--</div>-->
+                        <!--<div class="logistics-con">-->
+                            <!--<span>-->
+    <!--<img src="__RES__/imgs/goodsdetail/tcsd.png" alt="">-->
+    <!--同城配送-->
+    <!--</span>-->
+                            <!--<span>-->
+    <!--<img src="__RES__/imgs/goodsdetail/mdzt.png" alt="">-->
+    <!--门店自提-->
+    <!--</span>-->
+                            <!--<span>-->
+    <!--<img src="__RES__/imgs/goodsdetail/qgyj.png" alt="">-->
+    <!--全国邮寄-->
+    <!--</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+
+
+            </div>
+            <!--商品内容结束-->
+
+
+        </div>
+    </div>
+
+</div>
+
+<div class="goods-detail-bottom">
+    <div class="goods-right">
+        <div class="detail-title">
+            <div class="table">
+                <a href="javascript:;" class="primary-color active">
+                    <span class="primary-background-color"></span>
+                    商品介绍
+                </a>
+
+            </div>
+        </div>
+
+        <div class="goods-content">
+            <!--商品介绍-->
+            <div class="con referral">
+                {$result.content|raw}
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+{/block}
+
+{block name="js"}
+
+<script src="__RES__/js/swiper.min.js"></script>
+
+<script type="text/javascript">
+
+    function jump(){
+        if ('{$result.integral_number}' == 0){
+            layer.msg('库存不足');
+            return;
+        }
+        if (parseInt('{$pay_points}') < parseInt('{$result.integral}')) {
+            layer.msg('积分不足');
+            return;
+        }
+
+        main.jump({'url':'/pc2.0/integral/conversion?integral_id={$result.integral_id}'})
+    }
+
+    // 放大镜效果
+    $('.show-img .cover-img').mousemove(function (e) {
+        var left = e.offsetX || e.layerX;
+        var top = e.offsetY || e.layerY;
+        left -= 116;
+        top -= 116;
+        if (top <= 0) {
+            top = 0;
+        } else if (top >= 116) {
+            top = 116
+        }
+        if (left <= 0) {
+            left = 0;
+        } else if (left >= 116) {
+            left = 116
+        }
+        $('.show-img .small').css({'top': top + 'px', 'left': left + 'px'})
+        $('.big-img img').css({'top': -2 * top + 'px', 'left': -2 * left + 'px'})
+        // console.log(left+'|'+top)
+
+    });
+    $('.show-img').hover(function () {
+        $('.big-img').show()
+        $('.small').show()
+    }, function () {
+        $('.big-img').hide()
+        $('.small').hide()
+    });
+
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 6,
+        spaceBetween: 30,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+
+
+    // 看了又看轮播
+    var look_num = 0;
+    var look_img = $('.look .goods ul li').length;
+    $('.look-bottom .look-prev').click(function () {
+
+        if (look_img > 3) {
+
+            if (look_num <= 0) {
+
+                look_num == 0
+            } else {
+                look_num--;
+                $('.look .goods ul').animate({'top': -look_num * 200 + 'px'}, 300)
+            }
+        }
+    })
+    $('.look-bottom .look-next').click(function () {
+
+        if (look_img > 3) {
+            if (look_num >= look_img - 3) {
+                look_num == look_img - 3
+            } else {
+                look_num++;
+                $('.look .goods ul').animate({'top': -look_num * 200 + 'px'}, 300)
+            }
+        }
+    })
+
+    // 数量-
+    $('.number-box .subtraction').click(function () {
+        var val = $(this).siblings('input').val();
+        val--;
+        if (val <= 1) {
+            val = 1;
+            $(this).addClass('disabled')
+        }
+        $(this).siblings('input').val(val)
+
+    })
+    // 数量+
+    $('.number-box .add').click(function () {
+        var val = $(this).siblings('input').val()
+        console.log(val)
+        val++;
+        $(this).siblings('input').val(val)
+        $(this).siblings('.subtraction').removeClass('disabled')
+
+    })
+
+    // // 规格选择
+    // $('.specifications-box a').click(function () {
+    //     $(this).addClass('border-color active').siblings('a').removeClass('border-color active');
+    //     var txt = $(this).find('span').html();
+    //     $(this).siblings('input').val(txt)
+    // })
+
+    // 获取图片数量
+    var img_num = $('.silder-center ul li').length;
+    // if(){
+    //     $('.silder .arrow-prev').addClass('disabled')
+    //     $('.silder .arrow-next').addClass('disabled')
+    // }
+
+    var num = 0;
+    $('.silder .arrow-prev').click(function () {
+        if (img_num > 5) {
+            if (num <= 0) {
+                num == 0
+            } else {
+                num--;
+                $('.silder-center ul').animate({'left': -num * 59 + 'px'}, 300)
+            }
+        }
+    })
+    $('.silder .arrow-next').click(function () {
+        if (img_num > 5) {
+            if (num >= img_num - 5) {
+                num == img_num - 5
+            } else {
+                num++;
+                $('.silder-center ul').animate({'left': -num * 59 + 'px'}, 300)
+            }
+        }
+    })
+
+    // 切换图片
+    $('.silder-center ul li').mouseenter(function () {
+        var src = $(this).find('img').attr('src');
+        $('.show-img .show').attr('src', src);
+        $('.big-img img').attr('src', src);
+        $(this).addClass('border-color').siblings('li').removeClass('border-color');
+    })
+
+</script>
+
+{/block}

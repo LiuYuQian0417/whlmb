@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>编辑/删除快递配送</title>
+    <!-- 引入样式 -->
+
+    <link rel="stylesheet" href="__PUBLIC_RES__/element-ui/lib/theme-chalk/index.css">
+
+    <link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="/template/client/resource/css/delivery.css"/>
+    <link href="__RES__/font/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="__RES__/css/common/delivery.css" rel="stylesheet" type="text/css"/>
+    <style>
+
+        .discount{
+            line-height: 38px;
+        }
+        .discount > *{
+            float: left;
+        }
+        .discount > .el-checkbox{
+            margin-right: 0;
+        }
+        .discount > .el-checkbox .el-checkbox__label{
+            padding: 0;
+            width: 0;
+        }
+        .discount > .input{
+            width: 140px;
+        }
+        .discount > .input input{
+            width: 100% !important;
+        }
+        .discount > span{
+            margin: 0 5px;
+        }
+        .discount .unit{
+            width:60px;
+        }
+    </style>
+</head>
+<body class="childrenBody" style="margin: 0">
+{neq name="$Request.get.create_from_goods|default=0" value="1"}
+<!--面包屑导航-->
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+    <legend>
+        <span class="layui-breadcrumb" style="visibility: visible">
+<!--            <a href="/freight_express/index"><i class="fa fa-reply fa-lg"></i></a><span lay-separator="">/</span>-->
+            <a><cite>商城</cite></a><span lay-separator="">/</span>
+            <a><cite>配送</cite></a><span lay-separator="">/</span>
+            <a><cite>快递配送</cite></a><span lay-separator="">/</span>
+            <a><cite>创建运费模板</cite></a>
+        </span>
+    </legend>
+</fieldset>
+{/neq}
+<div id="placeholder">加载中请稍后</div>
+<div id="app" v-cloak>
+    <el-form ref="form" :model="expressData" label-position="left" :size="size" label-suffix=":" v-if="expressData">
+        {eq name="single_store" value="1"}
+        <el-form-item label="所属店铺" v-if="{$Request.get.create_from_goods|default=0} != 1">
+            <el-select v-model="store_id" placeholder="请选择所属店铺" :size="size" {notempty name="store_id"} :disabled="true" {/notempty}>
+            <el-option
+                    v-for="item in store_list"
+                    :key="item.store_id"
+                    :label="item.store_name"
+                    :value="item.store_id">
+            </el-option>
+            </el-select>
+        </el-form-item>
+        {/eq}
+        <input type="hidden" v-model="store_id" v-else>
+        <el-form-item label="模板名称">
+            <el-input v-model="expressData.name" placeholder="请输入模板名称"></el-input>
+        </el-form-item>
+        <el-form-item label="模板类型">
+            <el-radio-group v-model="expressData.express">
+                <el-radio :label="1" :size="size">买家承担运费</el-radio>
+                <el-radio :label="2" :size="size">卖家包邮</el-radio>
+            </el-radio-group>
+        </el-form-item>
+        <el-form-item label="计价方式">
+            <el-radio-group v-model="expressData.type" @change="handleChangeType">
+                <el-radio :label="1" :size="size">按件数</el-radio>
+                <el-radio :label="2" :size="size">按重量</el-radio>
+            </el-radio-group>
+        </el-form-item>
+        <el-form-item label="运费模板">
+            <el-table :data="expressData.children" highlight-current-row :size="size">
+                <el-table-column label="可配送区域" width="500">
+                    <template slot-scope="scope">
+                        <!-- 全国统一 -->
+                        <div v-if="scope.row.distribution_area_id === -1">
+                            <span><el-checkbox v-model="expressData.all_address_express"></el-checkbox>&nbsp;&nbsp;所有地区默认配送</span>
+                        </div>
+                        <div v-else>
+                            <span>{{scope.row.distribution_area_name}}</span>
+                            <div>
+                                <el-button type="text" @click="handleEditRow(scope.row)" :size="size">编辑</el-button>
+                                <el-button type="text" @click="handleDeleteRow(scope.row)" :size="size">删除</el-button>
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="upper_num" :label="tableLabel[type].upper_num">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.distribution_area_id === -1">
+                            <el-input v-model="scope.row.upper_num" :disabled="scope.row.disabled_upper_num"></el-input>
+                        </div>
+                        <div v-else>
+                            <el-input v-model="scope.row.upper_num" :size="size"></el-input>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="base_amount" :label="tableLabel[type].base_amount">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.distribution_area_id === -1">
+                            <el-input v-model="scope.row.base_amount"
+                                      :disabled="scope.row.disabled_base_amount"></el-input>
+                        </div>
+                        <div v-else>
+                            <el-input v-model="scope.row.base_amount" :size="size"></el-input>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="extend_num_unit" :label="tableLabel[type].extend_num_unit">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.distribution_area_id === -1">
+                            <el-input v-model="scope.row.extend_num_unit"
+                                      :disabled="scope.row.disabled_extend_num_unit"></el-input>
+                        </div>
+                        <div v-else>
+                            <el-input v-model="scope.row.extend_num_unit" :size="size"></el-input>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="extend_amount" :label="tableLabel[type].extend_amount">
+                    <template slot-scope="scope">
+                        <div v-if="scope.row.distribution_area_id === -1">
+                            <el-input v-model="scope.row.extend_amount"
+                                      :disabled="scope.row.disabled_extend_amount"></el-input>
+                        </div>
+                        <div v-else>
+                            <el-input v-model="scope.row.extend_amount"></el-input>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div style="margin-top: 20px">
+                <el-button icon="el-icon-plus" @click="handleCreateRow()">点击添加可配送区域和运费</el-button>
+            </div>
+        </el-form-item>
+        <el-form-item label="邮递优惠规则">
+            <el-row>
+                <el-col :span="24" class="discount">
+                    <el-checkbox v-model="expressData.discount_postage_rules_top" value="1">&nbsp;</el-checkbox>
+                    <span>满</span>
+                    <div class="input">
+                        <el-input v-model.lazy="expressData.discount_top" type="number"></el-input>
+                    </div>
+                    <span class="unit">元</span>
+                    <template v-if="expressData.express == 1">
+                        <span>邮费</span>
+                        <div class="input">
+                            <el-input v-model="expressData.postage_top" type="number"></el-input>
+                        </div>
+                        <span>元</span>
+                    </template>
+                    <span v-else>包邮</span>
+                </el-col>
+                <el-col :span="24" class="discount">
+                    <el-checkbox v-model="expressData.discount_postage_rules_down" value="2">&nbsp;</el-checkbox>
+                    <span>满</span>
+                    <div class="input">
+                        <el-input v-model="expressData.discount_down" type="number"></el-input>
+                    </div>
+                    <span class="unit">件/公斤</span>
+                    <template v-if="expressData.express == 1">
+                    <span>邮费</span>
+                    <div class="input">
+                        <el-input v-model="expressData.postage_down" type="number"></el-input>
+                    </div>
+                    <span>元</span>
+                    </template>
+                    <span v-else>包邮</span>
+                </el-col>
+                <el-col>
+                    邮递规则只能选择一个，会员购买商品时，如果满足优惠条件已优惠为主，如果不满足优惠条件按照默认邮递规则计算，填写0元视为包邮
+                </el-col>
+            </el-row>
+        </el-form-item>
+    </el-form>
+
+    <el-dialog :title="dialog.title" width="1000px" :visible.sync="dialog.visible" :close-on-click-modal="false"
+               :close-on-press-escape="false" :show-close="false" @closed="handleClosed" :size="size">
+        <el-row class="area_list">
+            <el-col :span="4">
+                <div v-for="(item ,index) in province">
+                    <el-checkbox :true-label="`check-province-${index}`" :false-label="`uncheck-province-${index}`"
+                                 :value="item.checked"
+                                 :disabled="item.disabled"
+                                 @change="handleCheckboxCheckChange(item.checked,'province',index)"></el-checkbox>
+                    <span>{{item.area_name}}</span>
+                    <el-button type="text" icon="el-icon-caret-right" @click="handleGetArea(item.area_id,'city')"
+                               size="medium"></el-button>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <template v-if="city.length > 0">
+                    <div v-for="(item ,index) in city">
+                        <el-checkbox :true-label="`check-city-${index}`" :false-label="`uncheck-city-${index}`"
+                                     :value="item.checked"
+                                     :disabled="item.disabled"
+                                     @change="handleCheckboxCheckChange(item.checked,'city',index)"></el-checkbox>
+                        <span>{{item.area_name}}</span>
+                        <el-button type="text" icon="el-icon-caret-right"
+                                   @click="handleGetArea(item.area_id,'area')"></el-button>
+                    </div>
+                </template>
+                <p v-else class="empty-area">请选择省</p>
+            </el-col>
+            <el-col :span="4">
+                <template v-if="area.length > 0">
+                    <div v-for="(item ,index) in area">
+                        <el-checkbox :true-label="`check-area-${index}`" :false-label="`uncheck-area-${index}`"
+                                     :value="item.checked"
+                                     :disabled="item.disabled"
+                                     @change="handleCheckboxCheckChange(item.checked,'area',index)"></el-checkbox>
+                        <span>{{item.area_name}}</span>
+                        <el-button type="text" icon="el-icon-caret-right"
+                                   @click="handleGetArea(item.area_id,'county')"></el-button>
+                    </div>
+                </template>
+                <p v-else class="empty-area">请选择市</p>
+            </el-col>
+            <el-col :span="4">
+                <template v-if="county.length > 0">
+                    <div v-for="(item ,index) in county">
+                        <el-checkbox :true-label="`check-county-${index}`" :false-label="`uncheck-county-${index}`"
+                                     :value="item.checked"
+                                     :disabled="item.disabled"
+                                     @change="handleCheckboxCheckChange(item.checked,'county',index)"></el-checkbox>
+                        <span>{{item.area_name}}</span>
+                    </div>
+                </template>
+                <p v-else class="empty-area">请选择区</p>
+            </el-col>
+            <el-col :span="8">
+                <el-tree :data="selectedNode" node-key="area_id" empty-text="请选择地区" :props="treeProps"
+                         :default-expanded-keys="treeExpandKeys" @node-expand="handleTreeNodeExpand"
+                         @node-collapse="handleTreeNodeCollapse"></el-tree>
+            </el-col>
+        </el-row>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialog.visible = false" :size="size" :disabled="inserting">取 消</el-button>
+            <el-button type="primary" @click="handleInsertRow" :size="size" :loading="inserting">确 定</el-button>
+      </span>
+    </el-dialog>
+    <div class="bottom-control">
+        <el-button type="primary" :size="size" @click="submit" :loading="submiting">保存</el-button>
+        <el-button :size="size" @click="cancel">取消</el-button>
+    </div>
+</div>
+<!-- 引入 vue -->
+<!--<script src="__RES__/js/vue.min.js"></script>-->
+<script src="/template/client/resource/js/vue.min.js"></script>
+<!--<script src="https://vuejs.org/js/vue.js"></script>-->
+<script src="/template/client/resource/js/axios.min.js"></script>
+<!-- 引入组件库 -->
+<script src="/template/client/resource/js/element-ui.lib.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                // 当前模板分类ID
+                id: '{$freight_express_classify_id}',
+                store_list: [],
+                store_id: '{$store_id}',
+                // 数据
+                expressData: false,
+                type: 1,
+                // 类型的文字
+                tableLabel: {
+                    1: {
+                        // 首（件、重量）
+                        upper_num: '首件(个)',
+                        // 首运费
+                        base_amount: '运费(元)',
+                        // 续（件、重量）
+                        extend_num_unit: '续件(个)',
+                        // 续运费
+                        extend_amount: '续费(元)',
+                    },
+                    2: {
+                        // 首（件、重量）
+                        upper_num: '首重(kg)',
+                        // 首运费
+                        base_amount: '运费(元)',
+                        // 续（件、重量）
+                        extend_num_unit: '续重(kg)',
+                        // 续运费
+                        extend_amount: '续费(元)',
+                    }
+                },
+                dialog: {
+                    visible: false,
+                    title: '',
+                    // dialog 类型 创建(create)或编辑(update)
+                    type: '',
+                    indexInAction: -1
+                },
+                size: 'mini',
+                // 页面是否加载完成
+                loaded: false,
+                // 源数据
+                area_src: {
+                    // 省
+                    province: [],
+                    // 市
+                    city: [],
+                    // 区
+                    area: [],
+                    // 县
+                    county: [],
+                },
+                // 当前选择的数据的对象
+                currentRow: {},
+                // 当前展示的区域的ID
+                currentArea: {
+                    province: -1,
+                    city: -1,
+                    area: -1,
+                },
+                // 树的属性
+                treeProps: {
+                    label: 'area_name',
+                    children: 'children',
+                },
+                // 树展开的目标记录
+                treeExpandKeys: [],
+                // 要删除的条目的ID列表
+                deletedRowsList: [],
+                // 插入/编辑中
+                inserting: false,
+                // 禁止选择的地域列表
+                disabledAreaList: [],
+                // 前台保存状态
+                submiting: false
+            }
+        },
+        mounted: function () {
+            var parentElement = document.getElementsByTagName('body')
+            var deleteElement = document.getElementById('placeholder')
+
+            parentElement[0].removeChild(deleteElement)
+
+            this.getStoreList();
+
+            // 获取现有的模板信息
+            axios({
+                url: '/freight_express/get_row',
+                method: 'GET',
+                params: {
+                    freight_express_classify_id: this.id
+                }
+            }).then(function (resp) {
+                var data = resp.data.data
+                
+                if (data.discount_postage_rules === 1){
+                    data.discount_postage_rules_top = true
+                    data.discount_top = data.discount
+                    data.postage_top = data.postage
+                }
+
+                if(data.discount_postage_rules === 2){
+                    data.discount_postage_rules_down = true
+                    data.discount_down =data.discount
+                    data.postage_down =data.postage
+                }
+
+                app.expressData = data
+                app.type = data.type
+                app.$nextTick(function () {
+                    app.loaded = true
+                })
+            })
+            // 获取默认城市列表
+            this.handleGetArea(0, 'province')
+        },
+        methods: {
+            getStoreList: function () {
+                axios({
+                    url: '/freight_express/get_store_list',
+                    method: 'GET',
+                }).then(function (resp) {
+                    if (resp.data.code !== 200) {
+                        throw resp.data.message
+                    }
+                    app.store_list = resp.data.data
+                }).catch(function (err) {
+                    this.$alert(err, '提示', {
+                        type: 'warning',
+                        confirmButtonText: '返回列表',
+                        showClose: false,
+                        callback: function () {
+                            window.location.href = '/freight_express/index'
+                        }
+                    })
+                })
+            },
+            // 获取地区列表
+            handleGetArea: function (id, target) {
+                axios({
+                    url: '/freight_express/get_area',
+                    method: 'GET',
+                    params: {
+                        parent_id: id
+                    }
+                }).then(function (resp) {
+                    switch (target) {
+                        case 'province':
+                            break
+                        case 'city':
+                            // 如果区里有元素则清空
+                            if (app.area_src.area.length > 0) {
+                                app.currentArea.area = 0
+                                app.area_src.area = []
+                            }
+                            // 如果县里有元素则清空
+                            if (app.area_src.county.length > 0) {
+                                app.currentArea.county = 0
+                                app.area_src.county = []
+                            }
+                            app.$set(app.currentArea, 'province', id)
+                            break
+                        case 'area':
+                            // 如果县里有元素则清空
+                            if (app.area_src.county.length > 0) {
+                                app.currentArea.county = 0
+                                app.area_src.county = []
+                            }
+                            app.$set(app.currentArea, 'city', id)
+                            break
+                        case 'county':
+                            app.$set(app.currentArea, 'area', id)
+                            break
+                    }
+                    app.$set(app.area_src, target, resp.data.data)
+                })
+            },
+            // 复选框状态变化
+            handleCheckboxCheckChange: function (checked, region, index) {
+                if (checked) {
+                    this._handleCheckboxUncheck(region, index.toString())
+                } else {
+                    this._handleCheckboxCheck(region, index.toString())
+                }
+            },
+            // 选中复选框时间接受者
+            _handleCheckboxCheck: function (region, index) {
+                // 省
+                var province = null,
+                    // 市
+                    city = null,
+                    // 区
+                    area = null,
+                    // 县
+                    county = null,
+                    // 省全部子元素被选择
+                    provinceAllChildrenChecked = false,
+                    // 市全部子元素被选择
+                    cityAllChildrenChecked = false,
+                    // 区全部子元素被选择
+                    areaAllChildrenChecked = false,
+                    item
+
+                switch (region) {
+                    // 省
+                    case 'province':
+                        province = this.province[index]
+                        // 省的变化
+                        this.$set(this.currentRow, province.area_id, {
+                            area_id: province.area_id,
+                            area_name: province.area_name,
+                            all_children_checked: true,
+                            children: {},
+                        })
+                        break
+                    // 市
+                    case 'city':
+                        // 省
+                        province = this.province.find(function (ele) {
+                            return ele.area_id === app.currentArea.province
+                        })
+                        // 市
+                        city = this.city[index]
+
+                        if (this.currentRow[province.area_id] === undefined) {
+                            this.$set(this.currentRow, province.area_id, {
+                                area_id: province.area_id,
+                                area_name: province.area_name,
+                                all_children_checked: false,
+                                children: {}
+                            })
+                        }
+
+                        this.$set(this.currentRow[province.area_id].children, city.area_id, {
+                            area_id: city.area_id,
+                            area_name: city.area_name,
+                            all_children_checked: true,
+                            children: {}
+                        })
+
+                        // 默认给个true
+                        provinceAllChildrenChecked = true
+                        for (item of this.city) {
+                            if (this.currentRow[province.area_id].children[item.area_id] === undefined ||
+                                this.currentRow[province.area_id].children[item.area_id].all_children_checked === false) {
+                                provinceAllChildrenChecked = false
+                            }
+                        }
+
+                        if (provinceAllChildrenChecked) {
+                            this.$set(this.currentRow[province.area_id], 'all_children_checked', true)
+                            this.$set(this.currentRow[province.area_id], 'children', {})
+                        }
+                        break
+                    // 区
+                    case 'area':
+                        // 省
+                        province = this.province.find(function (ele) {
+                            return ele.area_id === app.currentArea.province
+                        })
+
+                        // 市
+                        city = this.city.find(function (ele) {
+                            return ele.area_id === app.currentArea.city
+                        })
+                        // 区
+                        area = this.area[index]
+
+                        if (this.currentRow[province.area_id] === undefined) {
+                            this.$set(this.currentRow, province.area_id, {
+                                area_id: province.area_id,
+                                area_name: province.area_name,
+                                all_children_checked: false,
+                                children: {}
+                            })
+                        }
+
+                        if (this.currentRow[province.area_id].children[city.area_id] === undefined) {
+                            this.$set(this.currentRow[province.area_id].children, city.area_id, {
+                                area_id: city.area_id,
+                                area_name: city.area_name,
+                                all_children_checked: false,
+                                children: {}
+                            })
+                        }
+
+                        this.$set(this.currentRow[province.area_id].children[city.area_id].children, area.area_id, {
+                            area_id: area.area_id,
+                            area_name: area.area_name,
+                            all_children_checked: true,
+                            children: {}
+                        })
+
+
+                        // city 是否全部选中
+                        cityAllChildrenChecked = true
+                        // 默认给个true
+
+                        for (item of this.area) {
+                            if (this.currentRow[province.area_id].children[city.area_id].children[item.area_id] === undefined ||
+                                this.currentRow[province.area_id].children[city.area_id].children[item.area_id].all_children_checked === false) {
+                                cityAllChildrenChecked = false
+                            }
+                        }
+
+                        if (cityAllChildrenChecked) {
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'all_children_checked', true)
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'children', {})
+                        }
+
+                        // 默认给个true
+                        provinceAllChildrenChecked = true
+
+                        for (item of this.city) {
+                            if (this.currentRow[province.area_id].children[item.area_id] === undefined ||
+                                this.currentRow[province.area_id].children[item.area_id].all_children_checked === false) {
+                                provinceAllChildrenChecked = false
+                            }
+                        }
+
+                        if (provinceAllChildrenChecked) {
+                            this.$set(this.currentRow[province.area_id], 'all_children_checked', true)
+                            this.$set(this.currentRow[province.area_id], 'children', {})
+                        }
+                        break
+                    // 县
+                    case 'county':
+                        province = this.province.find(function (ele) {
+                            return ele.area_id === app.currentArea.province
+                        })
+
+                        city = this.city.find(function (ele) {
+                            return ele.area_id === app.currentArea.city
+                        })
+
+                        area = this.area.find(function (ele) {
+                            return ele.area_id === app.currentArea.area
+                        })
+
+                        county = this.county[index]
+
+                        if (this.currentRow[province.area_id] === undefined) {
+                            this.$set(this.currentRow, province.area_id, {
+                                area_id: province.area_id,
+                                area_name: province.area_name,
+                                all_children_checked: false,
+                                children: {}
+                            })
+                        }
+
+                        if (this.currentRow[province.area_id].children[city.area_id] === undefined) {
+                            this.$set(this.currentRow[province.area_id].children, city.area_id, {
+                                area_id: city.area_id,
+                                area_name: city.area_name,
+                                all_children_checked: false,
+                                children: {}
+                            })
+                        }
+
+                        if (this.currentRow[province.area_id].children[city.area_id].children[area.area_id] === undefined) {
+                            this.$set(this.currentRow[province.area_id].children[city.area_id].children, area.area_id, {
+                                area_id: area.area_id,
+                                area_name: area.area_name,
+                                all_children_checked: false,
+                                children: {}
+                            })
+                        }
+
+                        this.$set(this.currentRow[province.area_id].children[city.area_id].children[area.area_id].children, county.area_id, {
+                            area_id: county.area_id,
+                            area_name: county.area_name,
+                            all_children_checked: true,
+                        })
+
+                        // 区子地域是否全部选中
+                        // 默认给个true
+                        areaAllChildrenChecked = true
+
+                        for (item of this.county) {
+                            if (this.currentRow[province.area_id].children[city.area_id].children[area.area_id].children[item.area_id] === undefined ||
+                                this.currentRow[province.area_id].children[city.area_id].children[area.area_id].children[item.area_id].all_children_checked === false) {
+                                areaAllChildrenChecked = false
+                            }
+                        }
+
+                        if (areaAllChildrenChecked) {
+                            this.$set(this.currentRow[province.area_id].children[city.area_id].children[area.area_id], 'all_children_checked', true)
+                            this.$set(this.currentRow[province.area_id].children[city.area_id].children[area.area_id], 'children', {})
+                        }
+
+                        // city 是否全部选中
+                        cityAllChildrenChecked = true
+                        // 默认给个true
+
+                        for (item of this.area) {
+                            if (this.currentRow[province.area_id].children[city.area_id].children[item.area_id] === undefined ||
+                                this.currentRow[province.area_id].children[city.area_id].children[item.area_id].all_children_checked === false) {
+                                cityAllChildrenChecked = false
+                            }
+                        }
+
+                        if (cityAllChildrenChecked) {
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'all_children_checked', true)
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'children', {})
+                        }
+
+                        // 默认给个true
+                        provinceAllChildrenChecked = true
+
+                        for (item of this.city) {
+                            if (this.currentRow[province.area_id].children[item.area_id] === undefined ||
+                                this.currentRow[province.area_id].children[item.area_id].all_children_checked === false) {
+                                provinceAllChildrenChecked = false
+                            }
+                        }
+
+                        if (provinceAllChildrenChecked) {
+                            this.$set(this.currentRow[province.area_id], 'all_children_checked', true)
+                            this.$set(this.currentRow[province.area_id], 'children', {})
+                        }
+                        break
+                }
+            },
+            // 取消选中复选框时间接受者
+            _handleCheckboxUncheck: function (region, index) {
+                var province,
+                    city,
+                    area,
+                    county,
+                    provinceChildData = {},
+                    cityChildData = {},
+                    areaChildData = {},
+                    item
+
+                switch (region) {
+                    // 取消选中省
+                    case 'province':
+                        province = this.province[index]
+
+                        // 删除tree中的元素省
+                        this.handleTreeNodeCollapse({area_id: province.area_id})
+
+                        this.$delete(this.currentRow, province.area_id)
+                        break
+                    // 取消选中市
+                    case 'city':
+                        province = this.province.find(function (ele) {
+                            return ele.area_id === app.currentArea.province
+                        })
+                        city = this.city[index]
+
+                        // 如果省子元素都被选中了 那么要把其他的都选中
+                        if (this.currentRow[province.area_id].all_children_checked) {
+                            // 省标记为非子元素都被选中
+                            this.$set(this.currentRow[province.area_id], 'all_children_checked', false)
+
+                            for (item of this.city) {
+                                if (city.area_id !== item.area_id) {
+                                    this.$set(this.currentRow[province.area_id].children, item.area_id, {
+                                        area_id: item.area_id,
+                                        area_name: item.area_name,
+                                        all_children_checked: true,
+                                        children: {},
+                                    })
+                                }
+                            }
+                        }
+
+                        // 删除tree中的元素市
+                        this.handleTreeNodeCollapse({area_id: city.area_id})
+                        // 当前市干掉
+                        this.$delete(this.currentRow[province.area_id].children, city.area_id)
+
+                        // 如果市删干净了，那就把省删掉
+                        if (Object.keys(this.currentRow[province.area_id].children).length === 0) {
+                            // 删除tree中的元素省
+                            this.handleTreeNodeCollapse({area_id: province.area_id})
+                            this.$delete(this.currentRow, province.area_id)
+                        }
+                        break
+                    // 取消选择区
+                    case 'area':
+                        province = this.province.find(function (ele) {
+                            return ele.area_id === app.currentArea.province
+                        })
+
+                        city = this.city.find(function (ele) {
+                            return ele.area_id === app.currentArea.city
+                        })
+
+                        area = this.area[index]
+
+                        // 如果省子元素都被选中了 那么要把所有的市都选中
+                        if (this.currentRow[province.area_id].all_children_checked) {
+                            // 省标记为非子元素都被选中
+                            this.$set(this.currentRow[province.area_id], 'all_children_checked', false)
+
+                            for (item of this.city) {
+                                provinceChildData[item.area_id] = {
+                                    area_id: item.area_id,
+                                    area_name: item.area_name,
+                                    all_children_checked: true,
+                                    children: {},
+                                }
+                            }
+
+                            this.$set(this.currentRow[province.area_id], 'children', provinceChildData)
+                        }
+
+                        // 如果市子元素都被选中了 那么要把其他的区都选中
+                        if (this.currentRow[province.area_id].children[city.area_id].all_children_checked) {
+                            // 市标记为非子元素都被选中
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'all_children_checked', false)
+
+                            for (item of this.area) {
+
+                                if (area.area_id !== item.area_id) {
+
+                                    cityChildData[item.area_id] = {
+                                        area_id: item.area_id,
+                                        area_name: item.area_name,
+                                        all_children_checked: true,
+                                        children: {},
+                                    }
+                                }
+                            }
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'children', cityChildData)
+                        }
+
+                        // 删除当前元素区
+                        this.handleTreeNodeCollapse({area_id: area.area_id})
+                        // 当前区干掉
+                        this.$delete(this.currentRow[province.area_id].children[city.area_id].children, area.area_id)
+
+                        // 如果区删干净了，那就把市干掉
+                        if (Object.keys(this.currentRow[province.area_id].children[city.area_id].children).length === 0) {
+                            // 删除当前元素市
+                            this.handleTreeNodeCollapse({area_id: city.area_id})
+                            this.$delete(this.currentRow[province.area_id].children, city.area_id)
+                        }
+
+                        // 如果市删干净了，那就把省删掉
+                        if (Object.keys(this.currentRow[province.area_id].children).length === 0) {
+                            // 删除当前元素省
+                            this.handleTreeNodeCollapse({area_id: province.area_id})
+                            this.$delete(this.currentRow, province.area_id)
+
+                        }
+                        break
+                    case 'county':
+                        province = this.province.find(function (ele) {
+                            return ele.area_id === app.currentArea.province
+                        })
+                        city = this.city.find(function (ele) {
+                            return ele.area_id === app.currentArea.city
+                        })
+                        area = this.area.find(function (ele) {
+                            return ele.area_id === app.currentArea.area
+                        })
+                        county = this.county[index]
+
+                        // 如果省子元素都被选中了 那么要把所有的市都选中
+                        if (this.currentRow[province.area_id].all_children_checked) {
+                            // 省标记为非子元素都被选中
+                            this.$set(this.currentRow[province.area_id], 'all_children_checked', false)
+
+                            for (item of this.city) {
+                                provinceChildData[item.area_id] = {
+                                    area_id: item.area_id,
+                                    area_name: item.area_name,
+                                    all_children_checked: true,
+                                    children: {},
+                                }
+                            }
+
+                            this.$set(this.currentRow[province.area_id], 'children', provinceChildData)
+                        }
+
+                        // 如果市子元素都被选中了 那么要把其他的区都选中
+                        if (this.currentRow[province.area_id].children[city.area_id].all_children_checked) {
+                            // 市标记为非子元素都被选中
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'all_children_checked', false)
+
+                            for (item of this.area) {
+                                cityChildData[item.area_id] = {
+                                    area_id: item.area_id,
+                                    area_name: item.area_name,
+                                    all_children_checked: true,
+                                    children: {},
+                                }
+                            }
+
+                            this.$set(this.currentRow[province.area_id].children[city.area_id], 'children', cityChildData)
+                        }
+
+                        // 如果区子元素都被选中了 那么要把其他的县都选中
+                        if (this.currentRow[province.area_id].children[city.area_id].children[area.area_id].all_children_checked) {
+                            // 区标记为非子元素都被选中
+                            this.$set(this.currentRow[province.area_id].children[city.area_id].children[area.area_id], 'all_children_checked', false)
+                            for (item of this.county) {
+
+                                if (county.area_id !== item.area_id) {
+                                    areaChildData[item.area_id] = {
+                                        area_id: item.area_id,
+                                        area_name: item.area_name,
+                                        all_children_checked: true,
+                                        children: {},
+                                    }
+                                }
+                            }
+
+                            this.$set(this.currentRow[province.area_id].children[city.area_id].children[area.area_id], 'children', areaChildData)
+                        }
+
+                        // 删除当前元素县
+                        this.handleTreeNodeCollapse({area_id: county.area_id})
+                        // 当前县干掉
+                        this.$delete(this.currentRow[province.area_id].children[city.area_id].children[area.area_id].children, county.area_id)
+
+                        // 如果县删干净了，那就把区干掉
+                        if (Object.keys(this.currentRow[province.area_id].children[city.area_id].children[area.area_id].children).length === 0) {
+                            // 删除当前元素区
+                            this.handleTreeNodeCollapse({area_id: area.area_id})
+                            this.$delete(this.currentRow[province.area_id].children[city.area_id].children, area.area_id)
+                        }
+
+                        // 如果区删干净了，那就把市干掉
+                        if (Object.keys(this.currentRow[province.area_id].children[city.area_id].children).length === 0) {
+                            // 删除当前元素市
+                            this.handleTreeNodeCollapse({area_id: city.area_id})
+                            this.$delete(this.currentRow[province.area_id].children, city.area_id)
+                        }
+
+                        // 如果市删干净了，那就把省删掉
+                        if (Object.keys(this.currentRow[province.area_id].children).length === 0) {
+                            // 删除当前元素省
+                            this.handleTreeNodeCollapse({area_id: province.area_id})
+                            this.$delete(this.currentRow, province.area_id)
+
+                        }
+
+                        break
+                }
+            },
+            // 创建数据
+            handleCreateRow: function () {
+                this._buildSelectedAreaIdArr()
+                this.dialog.type = 'create'
+                this.dialog.title = '添加可配送区域'
+                this.dialog.visible = true
+            },
+            // dialog取消按钮点击
+            handleClosed: function () {
+                this.currentRow = {}
+                this.treeExpandKeys = []
+                this.disabledAreaList = []
+                this.area_src.city = []
+                this.area_src.area = []
+                this.area_src.county = []
+                this.currentArea.city = -1
+                this.currentArea.area = -1
+                this.currentArea.province = -1
+                this.dialog.type = ''
+                this.dialog.title = ''
+                this.dialog.indexInAction = -1
+            },
+            // 编辑数据
+            handleEditRow: function (row) {
+                this.currentRow = JSON.parse(row.distribution_area_data)
+                this.dialog.type = 'update'
+                this.dialog.title = '编辑可配送区域'
+                this.dialog.indexInAction = this.expressData.children.indexOf(row)
+                this._buildSelectedAreaIdArr()
+                this.dialog.visible = true
+            },
+            // 删除一条数据
+            handleDeleteRow: function (row) {
+                if (row.freight_express_id !== null) {
+                    this.deletedRowsList.push(row.freight_express_id)
+                }
+                var index = this.expressData.children.indexOf(row)
+                if (index !== -1) {
+                    this.expressData.children.splice(index, 1)
+                }
+            },
+            // 插入一条数据
+            handleInsertRow: function () {
+                // 判断是否选择了地域
+                if (Object.keys(this.currentRow).length === 0) {
+                    this.$alert('请至少选择一个地域', '提示', {
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        showClose: false,
+                    })
+                    return
+                }
+
+                var freight_express_id = null;
+
+                if (this.dialog.type === 'update') {
+                    freight_express_id = this.expressData.children[this.dialog.indexInAction].freight_express_id
+                }
+
+                var data = {
+                    freight_express_id: freight_express_id,
+                    upper_num: 0,
+                    base_amount: 0,
+                    extend_num_unit: 0,
+                    extend_amount: 0,
+                    distribution_area_id: '',
+                    distribution_area_name: '',
+                    distribution_area_data: '',
+                }
+                this.inserting = true
+
+                data.distribution_area_data = JSON.stringify(this.currentRow)
+                data.distribution_area_id = this._buildIdString(this.currentRow)
+                data.distribution_area_name = this._buildNameString(this.selectedNode)
+
+                switch (this.dialog.type) {
+                    case 'create':
+                        this.expressData.children.push(data)
+                        break
+                    case 'update':
+                        this.$set(this.expressData.children, this.dialog.indexInAction, data)
+                        break
+                }
+
+                this.$nextTick(function () {
+                    this.dialog.visible = false
+                    this.inserting = false
+                })
+
+            },
+            // 计价方式改变
+            handleChangeType: function (val) {
+                this.$confirm('您设置的可配送区域及运费设置将全部清空！', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function () {
+                    var i
+                    // 将所有的列入到删除列表中
+                    for (i = 1; i !== app.expressData.children.length; i++) {
+                        if (app.expressData.children[i].freight_express_id !== null) {
+                            app.deletedRowsList.push(app.expressData.children[i].freight_express_id)
+                        }
+                    }
+                    app.expressData.children.splice(1, app.expressData.children.length - 1)
+                    app.type = val
+                }).catch(function () {
+                    app.expressData.type = val == 1 ? 2 : 1
+                    app.type = app.expressData.type
+                })
+            },
+            // tree节点展开时间接受者
+            handleTreeNodeExpand: function (obj) {
+                this.treeExpandKeys.push(obj.area_id)
+            },
+            // tree节点关闭时间接受者
+            handleTreeNodeCollapse: function (obj) {
+                var index = this.treeExpandKeys.indexOf(obj.area_id)
+                if (index !== -1) {
+                    this.treeExpandKeys.splice(index, 1)
+                }
+            },
+            // 对象转数组 tree展示用
+            _obj2arr: function (obj, deep) {
+                var data = [],
+                    item,
+                    tmp
+
+                if (obj === undefined || Object.keys(obj).length === 0) {
+                    return []
+                }
+
+                for (item in obj) {
+                    tmp = {
+                        area_id: obj[item].area_id,
+                        area_name: obj[item].area_name,
+                    }
+                    if (deep !== 4) {
+                        tmp.children = this._obj2arr(obj[item].children, deep + 1)
+                    }
+                    data.push(tmp)
+                }
+
+                return data
+            },
+            // 生成地域名字
+            _buildNameString: function (data) {
+                if (data.length === 0) {
+                    return '全境'
+                }
+
+                var arr = [],
+                    item
+
+                for (item of data) {
+                    if (item.children !== undefined) {
+                        arr.push(`${item.area_name}[${this._buildNameString(item.children)}]`)
+                    } else {
+                        arr.push(item.area_name)
+                    }
+                }
+
+                return arr.join(',')
+            },
+            // 生成地域ID
+            _buildIdString: function (data) {
+                var arr = [],
+                    item
+
+                // 遍历现在所有选中的省市区县
+                for (item of Object.keys(data)) {
+                    // 如果他下的所有子地区都被选中了
+                    if (data[item].all_children_checked) {
+                        // 加入此ID
+                        arr.push(item)
+                    } else {
+                        arr.push(this._buildIdString(data[item].children))
+                    }
+                }
+
+                return arr.join(',')
+            },
+            // 生成禁用的地域列表
+            _buildSelectedAreaIdArr: function () {
+                var i,
+                    data = [],
+                    index = this.dialog.indexInAction
+
+                for (i = 1; i !== this.expressData.children.length; i++) {
+                    if (index === -1 || index !== i) {
+                        data.push(this.expressData.children[i].distribution_area_id)
+                    }
+                }
+
+                this.disabledAreaList = data.join(',').split(',')
+            },
+            // 提交按钮
+            submit: function () {
+                app.submiting = true
+
+                // 判断是否选择店铺
+                if (this.store_id === '') {
+                    this.$alert('请选择所属店铺', '提示', {
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        showClose: false,
+                        callback: function () {
+                            app.submiting = false
+                        }
+                    })
+                    return;
+                }
+
+                // 判断是否填写模板名称
+                if (this.expressData.name === '') {
+                    this.$alert('请填写模板名称', '提示', {
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        showClose: false,
+                        callback: function () {
+                            app.submiting = false
+                        }
+                    })
+                    return;
+                }
+
+                // 判断是否有选择区域
+                if (this.expressData.children.length <= 0 && this.expressData.all_address_express === false) {
+                    this.$alert('请填写至少添加一项可配送区域和运费或勾选所有地区默认配送', '提示', {
+                        type: 'warning',
+                        confirmButtonText: '确定',
+                        showClose: false,
+                        callback: function () {
+                            app.submiting = false
+                        }
+                    })
+                    return;
+                }
+
+                var expressData = JSON.parse(JSON.stringify(this.expressData)),
+                    data = {
+                        delete_list: this.deletedRowsList,
+                        express_classify: {
+                            store_id: this.store_id,
+                            freight_express_classify_id: expressData.freight_express_classify_id,
+                            name: expressData.name,
+                            type: expressData.type,
+                            express: expressData.express,
+                            all_address_express: expressData.all_address_express ? 1 : 2,
+                            upper_num: expressData.children[0].upper_num,
+                            base_amount: expressData.children[0].base_amount,
+                            extend_num_unit: expressData.children[0].extend_num_unit,
+                            extend_amount: expressData.children[0].extend_amount,
+                        },
+                        express_list: []
+                    }
+                expressData.children.splice(0, 1)
+
+                // 判断是否选择 邮递优惠规则满足金额包邮
+                if (this.expressData.discount_postage_rules_top){
+
+                    if (!this.expressData.discount_top){
+                        this.$alert('请填写邮递优惠规则中满足的金额', '提示', {
+                            type: 'warning',
+                            confirmButtonText: '确定',
+                            showClose: false,
+                            callback: function () {
+                                app.submiting = false
+                            }
+                        });
+                        return
+                    }
+
+                    if (this.expressData.express == 1){
+                        if (!this.expressData.postage_top){
+                            this.$alert('请填写邮递优惠规则中满足金额的邮费', '提示', {
+                                type: 'warning',
+                                confirmButtonText: '确定',
+                                showClose: false,
+                                callback: function () {
+                                    app.submiting = false
+                                }
+                            });
+                            return
+                        }
+                        data.express_classify.postage =this.expressData.postage_top
+                    }
+                    data.express_classify.discount_postage_rules = '1'
+                    data.express_classify.discount =this.expressData.discount_top
+                }
+
+                // 判断是否选择 邮递优惠规则满足件/公斤 包邮
+                if (this.expressData.discount_postage_rules_down){
+
+                    if (!this.expressData.discount_down){
+                        this.$alert('请填写邮递优惠规则中满足的件/公斤', '提示', {
+                            type: 'warning',
+                            confirmButtonText: '确定',
+                            showClose: false,
+                            callback: function () {
+                                app.submiting = false
+                            }
+                        });
+                        return
+                    }
+
+                    if (this.expressData.express == 1){
+                        if (!this.expressData.postage_down){
+                            this.$alert('请填写邮递优惠规则中满足件/公斤的邮费', '提示', {
+                                type: 'warning',
+                                confirmButtonText: '确定',
+                                showClose: false,
+                                callback: function () {
+                                    app.submiting = false
+                                }
+                            });
+                            return
+                        }
+                        data.express_classify.postage =this.expressData.postage_down
+                    }
+                    data.express_classify.discount_postage_rules = '2'
+                    data.express_classify.discount =this.expressData.discount_down
+
+
+                }
+
+                data.express_list = expressData.children
+
+                axios({
+                    url: '/freight_express/save',
+                    method: 'POST',
+                    data: data
+                }).then(function (resp) {
+                    if (resp.data.code == 200) {
+                        app.$alert('保存成功', '提示', {
+                            type: 'success',
+                            confirmButtonText: '确定',
+                            showClose: false,
+                            callback: function () {
+                                {neq name="$Request.get.create_from_goods|default=0" value="1"}
+                                    window.location.href = '/freight_express/index'
+                                {else/}
+                                    parent.updateFreightExpress()
+                                {/neq}
+                                }
+                            })
+                        } else {
+                        app.$alert(resp.data.message, '提示', {
+                            type: 'error',
+                            confirmButtonText: '确定',
+                            showClose: false,
+                        })
+                    }
+                }).catch(function (resp) {
+                    app.$alert(resp.data.message, '提示', {
+                        type: 'error',
+                        confirmButtonText: '确定',
+                        showClose: false,
+                    })
+                }).finally(function () {
+                    app.submiting = false
+                })
+            },
+            // 取消按钮
+            cancel: function () {
+                window.history.go(-1)
+            }
+        },
+        computed: {
+            // 选中的地域 数据for Tree
+            selectedNode: function () {
+                return this._obj2arr(this.currentRow, 1)
+            },
+            province: function () {
+                var data = [],
+                    item
+
+                // 省下没有数据
+                if (this.area_src.province === undefined || this.area_src.province.length <= 0) {
+                    return data
+                }
+
+                for (item of this.area_src.province) {
+                    data.push({
+                        area_id: item.area_id,
+                        area_name: item.area_name,
+                        parent_id: item.parent_id,
+                        disabled: this.disabledAreaList.indexOf(item.area_id.toString()) !== -1,
+                        checked: this.currentRow[item.area_id] !== undefined
+                    })
+                }
+                return data
+            },
+            city: function () {
+                var data = [],
+                    item
+
+                // 市下没有数据
+                if (this.area_src.city === undefined || this.area_src.city.length <= 0) {
+                    return data
+                }
+                // 省的选中状态 如果为true 则省下所有的都应该为true
+                var provinceCheckStatus = false
+
+                if (this.currentRow[this.currentArea.province] !== undefined &&
+                    this.currentRow[this.currentArea.province].all_children_checked === true) {
+                    provinceCheckStatus = true
+                }
+
+                for (item of this.area_src.city) {
+                    data.push({
+                        area_id: item.area_id,
+                        area_name: item.area_name,
+                        parent_id: item.parent_id,
+                        disabled: this.disabledAreaList.indexOf(item.area_id.toString()) !== -1,
+                        checked: provinceCheckStatus ||
+                            (this.currentRow[this.currentArea.province] !== undefined) &&
+                            (this.currentRow[this.currentArea.province].children[item.area_id] !== undefined)
+                    })
+                }
+                return data
+            },
+            area: function () {
+                var data = [],
+                    item
+
+                // 市下没有数据
+                if (this.area_src.city === undefined || this.area_src.city.length <= 0) {
+                    return data
+                }
+                // 省的选中状态 如果为true 则省下所有的都应该为true
+                var provinceCheckStatus = false
+
+                if (this.currentRow[this.currentArea.province] !== undefined &&
+                    this.currentRow[this.currentArea.province].all_children_checked === true) {
+                    provinceCheckStatus = true
+                }
+                // 市的选中状态 如果为true 则市下所有的都应该为true
+                var cityCheckStatus = false
+
+                if (!provinceCheckStatus) {
+                    if (this.currentRow[this.currentArea.province] !== undefined &&
+                        this.currentRow[this.currentArea.province].children[this.currentArea.city] !== undefined &&
+                        this.currentRow[this.currentArea.province].children[this.currentArea.city].all_children_checked === true
+                    ) {
+                        cityCheckStatus = true
+                    }
+                }
+
+                for (item of this.area_src.area) {
+                    data.push({
+                        area_id: item.area_id,
+                        area_name: item.area_name,
+                        parent_id: item.parent_id,
+                        disabled: this.disabledAreaList.indexOf(item.area_id.toString()) !== -1,
+                        checked: provinceCheckStatus ||
+                            cityCheckStatus ||
+                            (this.currentRow[this.currentArea.province] !== undefined) &&
+                            (this.currentRow[this.currentArea.province].children[this.currentArea.city] !== undefined) &&
+                            (this.currentRow[this.currentArea.province].children[this.currentArea.city].children[item.area_id] !== undefined)
+                    })
+                }
+                return data
+            },
+            county: function () {
+                var data = [],
+                    item
+
+                // 市下没有数据
+                if (this.area_src.county === undefined || this.area_src.county.length <= 0) {
+                    return data
+                }
+
+                // 省的选中状态 如果为true 则省下所有的都应该为true
+                var provinceCheckStatus = false
+
+                if (this.currentRow[this.currentArea.province] !== undefined &&
+                    this.currentRow[this.currentArea.province].all_children_checked === true) {
+                    provinceCheckStatus = true
+                }
+
+                // 市的选中状态 如果为true 则市下所有的都应该为true
+                var cityCheckStatus = false
+
+                if (!provinceCheckStatus) {
+                    if (this.currentRow[this.currentArea.province] !== undefined &&
+                        this.currentRow[this.currentArea.province].children[this.currentArea.city] !== undefined &&
+                        this.currentRow[this.currentArea.province].children[this.currentArea.city].all_children_checked === true
+                    ) {
+                        cityCheckStatus = true
+                    }
+                }
+
+                // 区的选中状态 如果为true 则区下所有的都应该为true
+                var areaCheckStatus = false
+
+                if (!provinceCheckStatus && !cityCheckStatus) {
+                    if (this.currentRow[this.currentArea.province] !== undefined &&
+                        this.currentRow[this.currentArea.province].children[this.currentArea.city] !== undefined &&
+                        this.currentRow[this.currentArea.province].children[this.currentArea.city].children[this.currentArea.area] !== undefined &&
+                        this.currentRow[this.currentArea.province].children[this.currentArea.city].children[this.currentArea.area].all_children_checked === true
+                    ) {
+                        areaCheckStatus = true
+                    }
+                }
+                for (item of this.area_src.county) {
+                    data.push({
+                        area_id: item.area_id,
+                        area_name: item.area_name,
+                        parent_id: item.parent_id,
+                        disabled: this.disabledAreaList.indexOf(item.area_id.toString()) !== -1,
+                        checked: provinceCheckStatus ||
+                            cityCheckStatus ||
+                            areaCheckStatus ||
+                            (this.currentRow[this.currentArea.province] !== undefined) &&
+                            (this.currentRow[this.currentArea.province].children[this.currentArea.city] !== undefined) &&
+                            (this.currentRow[this.currentArea.province].children[this.currentArea.city].children[this.currentArea.area] !== undefined) &&
+                            (this.currentRow[this.currentArea.province].children[this.currentArea.city].children[this.currentArea.area].children[item.area_id] !== undefined)
+                    })
+                }
+                return data
+            },
+        },
+        watch: {
+            // 配送模板列表变化的监听
+            // 'expressData.children': {
+            //     handler: function () {
+            //         if (this.expressData.children.length <= 1) {
+            //             this.expressData.all_address_express = true
+            //         }
+            //     }
+            // },
+            // 所有地区默认配送变化的监听
+            'expressData.all_address_express': function (newValue) {
+                if (newValue) {
+                    this.expressData.children[0].disabled_upper_num = false
+                    this.expressData.children[0].disabled_base_amount = false
+                    this.expressData.children[0].disabled_extend_num_unit = false
+                    this.expressData.children[0].disabled_extend_amount = false
+                } else {
+                    this.expressData.children[0].disabled_upper_num = true
+                    this.expressData.children[0].disabled_base_amount = true
+                    this.expressData.children[0].disabled_extend_num_unit = true
+                    this.expressData.children[0].disabled_extend_amount = true
+
+                    this.expressData.children[0].upper_num = '0'
+                    this.expressData.children[0].base_amount = '0'
+                    this.expressData.children[0].extend_num_unit = '0'
+                    this.expressData.children[0].extend_amount = '0'
+                }
+            },
+            'expressData.discount_postage_rules_top':function (value) {
+                if (!value) {
+                    return false
+                }
+
+                if (this.expressData.discount_postage_rules_down){
+                    this.expressData.discount_postage_rules_down = !this.expressData.discount_postage_rules_down
+                }
+            },
+            'expressData.discount_postage_rules_down':function (value) {
+                if (!value) {
+                    return false
+                }
+
+                if (this.expressData.discount_postage_rules_top){
+                    this.expressData.discount_postage_rules_top = !this.expressData.discount_postage_rules_top
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,261 @@
+.index-box{
+  .evaluate-title{
+    height: 100px;
+    width: 1200px;
+    background: #fff;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 25px;
+    color: #010101;
+    margin-bottom: 25px;
+    p{
+      font-size: 12px;
+      color: #A1A1A9;
+      margin-top: 10px;
+      i{
+        color: #010101;
+        font-style: inherit;
+      }
+    }
+  }
+  .evaluate-con{
+    //height: 480px;
+    background: #fff;
+    margin-bottom: 10px;
+    overflow: hidden;
+    min-height: 300px;
+    .goods{
+      float: left;
+      width: 320px;
+      //height: 480px;
+      border-right: 1px solid #F0F3EF;
+      padding-top: 55px;
+      box-sizing: border-box;
+      text-align: center;
+      font-size: 12px;
+      color: #666666;
+      padding-bottom: 1000px;
+      margin-bottom: -1000px;
+      img{
+        width: 100px;
+        height: 100px;
+        margin-bottom: 15px;
+      }
+      .pic{
+        margin: 10px 0px;
+      }
+      .goods-name{
+        display: inline-block;
+        width: 220px;
+        line-height: 22px;
+      }
+      .goods-specification{
+          color: #999999;
+      }
+
+    }
+    .bor{
+      border-right: none;
+    }
+
+    .evaluate{
+      float: left;
+      padding-top: 25px;
+
+      background: #fff;
+      ul{
+        li{
+          overflow: hidden;
+          font-size: 12px;
+          margin-bottom: 25px;
+          .tit{
+            float: left;
+            width: 130px;
+            text-align: center;
+            color: #666666;
+          }
+          .con{
+            float: left;
+            padding-left: 30px;
+            //星级
+            .start-box{
+              img{
+                cursor: pointer;
+              }
+            }
+
+            //评论内容
+
+            .evaluate-content{
+              .text{
+                width: 647px;
+                height: 104px;
+                border: 1px solid #E0E0E0;
+                position: relative;
+                .text-num{
+                  position: absolute;
+                  right: 13px;
+                  bottom:7px;
+                  color: #999999;
+                }
+                textarea{
+                  border: none;
+                  width: 100%;
+                  height: 100%;
+                  resize: none;
+                  outline: none;
+                  padding: 15px;
+                  box-sizing: border-box;
+                  background: none;
+                }
+              }
+            }
+          //上传样式
+            .upload{
+              display: flex;
+              justify-content: flex-start;
+              .img-list{
+                overflow: hidden;
+                padding-top: 15px;
+              }
+              .video-list {
+                overflow: hidden;
+                padding-top: 15px;
+                video{
+                  width:100% ;
+                  height: 100%;
+                }
+              }
+              .img-box{
+                float: left;
+                width: 55px;
+                height: 55px;
+                position: relative;
+                background: #eee;
+                margin-right: 10px;
+                .play{
+                  width: 24px;
+                  height: 24px;
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%,-50%);
+                  cursor: pointer;
+                }
+                .del{
+                  position: absolute;
+                  top: -8px;
+                  right: -8px;
+                  cursor: pointer;
+                  width: 20px;
+                  height: 20px;
+                  z-index: 9;
+                }
+                img{
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+              .label{
+                display: block;
+                width: 55px;
+                height: 55px;
+                border:1px #E3E3E3 dashed ;
+                padding-top: 12px;
+                box-sizing: border-box;
+                text-align: center;
+                line-height: 19px;
+                color: #A2A2A2;
+                float: left;
+                cursor: pointer;
+                margin-top: 15px;
+                margin-right: 15px;
+                img{
+                  width: 17px;
+                }
+                p{
+                  transform: scale(0.8);
+                }
+              }
+            }
+
+
+
+          }
+        }
+      }
+    }
+
+  }
+
+  .cover{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0px;
+    top: 0px;
+    background: rgba(0,0,0,0.5);
+    z-index: 99999;
+      video{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform:translate(-50%,-50%);
+    }
+  }
+  .evaluate-bottom{
+    width: 1200px;
+    height: 120px;
+    background: #fff;
+    margin: 0px auto;
+    margin-top: 20px;
+    padding-top: 36px;
+    box-sizing: border-box;
+    .submit{
+      width: 220px;
+      height: 50px;
+      border-radius: 3px;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 18px;
+      margin-left: 442px;
+      cursor: pointer;
+    }
+    label{
+      color: #656565;
+      margin-left: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      // 禁止文字被鼠标选中
+      moz-user-select: -moz-none;
+      -moz-user-select: none;
+      -o-user-select:none;
+      -khtml-user-select:none;
+      -webkit-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
+
+      img{
+        position: relative;
+        top: 2px;
+      }
+      .bor{
+        display: inline-block;
+        width:14px ;
+        height: 14px;
+        border: 1px solid #E0E0E0;
+        box-sizing: border-box;
+        position: relative;
+        top: 2px;
+        display: none;
+      }
+      span{
+        color: #999999;
+      }
+    }
+  }
+}

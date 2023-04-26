@@ -1,0 +1,757 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<link rel="stylesheet" href="__RES__/css/Indent/RefundDetails.css">
+<style>
+
+    .demo-class .layui-layer-content {
+        width: 290px !important;
+    }
+
+</style>
+{/block}
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+    <div class="index-right">
+        <div class="title">
+            退款详情
+        </div>
+        <div class="refund">
+            <div class="refund-tit">
+                {$result.refund_operation.text}
+                {empty name="$result.finish_time"}
+                <span class="line">|</span>
+                <span class="time">剩余时间：<span class="remaining_time"
+                                              data-time_str="{:date('Y-m-d H:i:s',time()+$result.remaining_time)}" ;>00天00时00分</span></span>
+                {/empty}
+            </div>
+            {in name='$result.order_goods_status' value='5.5,5.6,5.7'}
+            <!--失败-->
+            <div class="refund-con">
+                <div class="progress">
+                    <!--第一步-->
+                    <div class="step active ">
+                        <div class="progress-box">
+                              <span class="first">
+                                  <img class="active-checked" src="__RES__/imgs/indent/lg.png" alt="">
+                                  <img class="checked" src="__RES__/imgs/indent/flie.png" alt="">
+                                  <img class="unchecked" src="__RES__/imgs/indent/hg.png" alt="">
+                              </span>
+                            <div class="txt">
+                                <p class="">
+                                    提交订单
+                                </p>
+                                <p class="time">
+                                    {$result.create_time}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="bor">
+                            <span></span>
+                        </div>
+                    </div>
+                    <!--第si步-->
+                    <div class="step  active">
+                        <div class="progress-box">
+                              <span class="first">
+                                  <img class="active-checked" src="__RES__/imgs/indent/lg.png" alt="">
+                                  <img class="checked" src="__RES__/imgs/indent/flie.png" alt="">
+                                  <img class="unchecked" src="__RES__/imgs/indent/hg.png" alt="">
+                              </span>
+                            <div class="txt">
+                                <p class="">
+                                    完成
+                                </p>
+                                <p class="time">
+                                    {$result.finish_time}
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!--第一阶段 提交申请-->
+                <div class="phase">
+                    <ul>
+                        <li>商家拒绝，您可以修改申请后再次发起，商家会重新处理</li>
+                        <li>拒绝原因：{$result.refuse_reason}</li>
+                    </ul>
+                    <div class="btn-group">
+                        {neq name='$result.status' value='2'}
+                        <a href="javascript:revoke_apply('{$result.order_goods_id}');"
+                           class="primary-color border-color  repeal">
+                            撤销申请
+                        </a>
+                        {/neq}
+                        <!--跳回添加页-->
+                        <a href="JavaScript:main.jump({'url':'/pc2.0/order/apply_for_after_sale?order_goods_id={$result.order_goods_id}'});"
+                           class="primary-background-color">
+                            修改申请
+                        </a>
+                    </div>
+                </div>
+                <!--第四阶段 完成-->
+                <div class="phase" style="{$result.finish_time ?'': 'display: none'}">
+                    <div class="info">
+                        <p>退款总金额：<span class="primary-color">￥{$result.refund_amount}</span></p>
+                        <p>退款路径：
+                            {switch name='$result.pay_channel'}
+                            {case 1}微信{/case}
+                            {case 2}支付宝{/case}
+                            {case 3}余额{/case}
+                            {case 4}银行卡{/case}
+                            {case 5}线下{/case}
+                            {case 6}货到付款{/case}
+                            {/switch}
+                        </p>
+                    </div>
+                </div>
+                <!--退款关闭-->
+                <div class="phase" style="display: none">
+                    <div class="info" style="border-bottom: none">
+                        <p>您已撤销本次退款申请，如问题仍未解决，您可以重新发起申请。</p>
+                    </div>
+
+                </div>
+            </div>
+            {else/}
+            <!--成功-->
+            <div class="refund-con">
+                <div class="progress">
+                    <!--第一步-->
+                    <div class="step {$result.dispose_time ? 'active' : 'half'}">
+                        <div class="progress-box">
+                              <span class="first">
+                                  <img class="active-checked" src="__RES__/imgs/indent/lg.png" alt="">
+                                  <img class="checked" src="__RES__/imgs/indent/flie.png" alt="">
+                                  <img class="unchecked" src="__RES__/imgs/indent/hg.png" alt="">
+                              </span>
+                            <div class="txt">
+                                <p class="">
+                                    提交订单
+                                </p>
+                                <p class="time">
+                                    {$result.create_time}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="bor">
+                            <span></span>
+                        </div>
+                    </div>
+                    <!--第二步-->
+                    <div class="step {if $result.update_time===$result.dispose_time and $result.dispose_time and $result.dispose_time!==$result.deliver_time}half{/if}{if ($result.update_time!==$result.dispose_time or $result.dispose_time===$result.deliver_time) and $result.dispose_time}active{/if}">
+                        <div class="progress-box">
+                              <span class="first">
+                                  <img class="active-checked" src="__RES__/imgs/indent/lg.png" alt="">
+                                  <img class="checked" src="__RES__/imgs/indent/flie.png" alt="">
+                                  <img class="unchecked" src="__RES__/imgs/indent/hg.png" alt="">
+                              </span>
+                            <div class="txt">
+                                <p class="">
+                                    卖家处理申请
+                                </p>
+                                <p class="time">
+                                    {$result.dispose_time}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="bor">
+                            <span></span>
+                        </div>
+                    </div>
+                    {neq name="$result.type" value="1"}
+                    <!--第三步-->
+                    <div class="step {if $result.update_time===$result.deliver_time and $result.deliver_time}half{/if}{if $result.finish_time}active{/if}">
+                        <div class="progress-box">
+                              <span class="first">
+                                 <img class="active-checked" src="__RES__/imgs/indent/lg.png" alt="">
+                                  <img class="checked" src="__RES__/imgs/indent/flie.png" alt="">
+                                  <img class="unchecked" src="__RES__/imgs/indent/hg.png" alt="">
+                              </span>
+                            <div class="txt">
+                                <p class="">
+                                    买家发货
+                                </p>
+                                <p class="time">
+                                    {$result.deliver_time}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="bor">
+                            <span class=""></span>
+                        </div>
+                    </div>
+                    {/neq}
+                    <!--第si步-->
+                    <div class="step {$result.finish_time?'half':'finish'}">
+                        <div class="progress-box">
+                              <span class="first">
+                                  <img class="active-checked" src="__RES__/imgs/indent/lg.png" alt="">
+                                  <img class="checked" src="__RES__/imgs/indent/flie.png" alt="">
+                                  <img class="unchecked" src="__RES__/imgs/indent/hg.png" alt="">
+                              </span>
+                            <div class="txt">
+                                <p class="">
+                                    完成
+                                </p>
+                                <p class="time">
+                                    {$result.finish_time}
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!--第一阶段 提交申请-->
+                <div class="phase" style="{$result.dispose_time ? 'display: none' : ''}">
+                    <p class="info">
+                        您已成功发起退款申请，请耐心等到商家处理。
+                    </p>
+                    <ul>
+                        <li>商家同意 系统将退款给你</li>
+                        <li>如果商家拒绝，您可以修改申请后再次发起，商家会重新处理</li>
+                    </ul>
+                    <div class="btn-group">
+                        <a href="javascript:revoke_apply('{$result.order_goods_id}');"
+                           class="primary-color border-color  repeal">
+                            撤销申请
+                        </a>
+                        <!--跳回添加页-->
+                        <a href="JavaScript:main.jump({'url':'/pc2.0/order/apply_for_after_sale?order_goods_id={$result.order_goods_id}'});"
+                           class="primary-background-color">
+                            修改申请
+                        </a>
+                    </div>
+                </div>
+                <!--第二阶段 卖家处理阶段-->
+                <div class="phase"
+                     style="{if ($result.update_time!==$result.dispose_time or $result.dispose_time===$result.deliver_time) and $result.update_time}display: none{/if}">
+                    <div class="info">
+                        <img src="__RES__/imgs/indent/dw.png" alt="">
+                        <div class="address-box">
+                            <p class="contact-way">
+                                <span class="name">{$result.store_name}</span>
+                                <span class="iphone">{$result.phone}</span>
+                            </p>
+                            <p>{$result.address}</p>
+                        </div>
+                    </div>
+                    <ul>
+                        <li>请填写真实物流信息，逾期未填写，退货申请将撤销</li>
+                    </ul>
+
+                    <div class="btn-group">
+                        <a href="javascript:revoke_apply('{$result.order_goods_id}');"
+                           class="primary-color border-color  repeal">
+                            撤销申请
+                        </a>
+                        <a href="JavaScript:;" id="return_order_logistics" class="primary-background-color information">
+                            填写退货信息
+                        </a>
+                    </div>
+                </div>
+                <!--第三阶段 买家发货-->
+                {neq name="$result.type" value="1"}
+                <div class="phase" style="{if $result.update_time !== $result.deliver_time}display: none{/if}">
+                    <div class="info">
+                        <p>退款总金额：<span class="primary-color">￥{$result.refund_amount}</span></p>
+                        <p>退款路径：
+                            {switch name='$result.pay_channel'}
+                            {case 1}微信{/case}
+                            {case 2}支付宝{/case}
+                            {case 3}余额{/case}
+                            {case 4}银行卡{/case}
+                            {case 5}线下{/case}
+                            {case 6}货到付款{/case}
+                            {/switch}
+                        </p>
+                    </div>
+                    <ul>
+                        <li>如果商家收到货并验货无误，将操作退款给您</li>
+                        <li>如果商家拒绝退款，需要您修改退货申请</li>
+                        <li>如果商家超时未处理，将自动退款给您</li>
+                    </ul>
+                    {switch name="$result.return_type"}
+                    {case 1}
+                    {notempty name="$result.express_details"}
+                    <div class="obligation-right">
+                        <div class=" logistics-progress">
+                            <!--待付款-->
+                            <div class="progress-box">
+                                <!--时间-->
+                                <div class="time">
+                                    <p>{:date('m-d',strtotime($result.express_details.ftime))}</p>
+                                    <span>{:date('H:i',strtotime($result.express_details.ftime))}</span>
+                                </div>
+                                <!--分割线-->
+                                <div class="line-box">
+                                    <img src="__RES__/imgs/del/active-gx.png" alt="">
+                                    <div class="line">
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <!--信息-->
+                                <div class="logistics-info">
+                                    <p>退货物流：{$result.express_name}({$result.express_number})</p>
+                                    <p>{$result.express_details.context}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/notempty}
+                    {case 2}
+                    {/case}
+                    {/case}
+                    {/switch}
+                </div>
+                {/neq}
+                <!--第四阶段 完成-->
+                <div class="phase" style="{$result.finish_time ?'': 'display: none'}">
+                    <div class="info">
+                        <p>退款总金额：<span class="primary-color">￥{$result.refund_amount}</span></p>
+                        <p>退款路径：
+                            {switch name='$result.pay_channel'}
+                            {case 1}微信{/case}
+                            {case 2}支付宝{/case}
+                            {case 3}余额{/case}
+                            {case 4}银行卡{/case}
+                            {case 5}线下{/case}
+                            {case 6}货到付款{/case}
+                            {/switch}
+                        </p>
+                    </div>
+                </div>
+                <!--退款关闭-->
+                <div class="phase" style="display: none">
+                    <div class="info" style="border-bottom: none">
+                        <p>您已撤销本次退款申请，如问题仍未解决，您可以重新发起申请。</p>
+                    </div>
+
+                </div>
+            </div>
+            {/in}
+        </div>
+        <!--退款信息-->
+        <div class="refund-detail">
+            <div class="tit">
+                <span class="left">
+                    退款信息
+                </span>
+                <div class="right">
+                    <!--<a href="javascript:;" class="primary-background-color">-->
+                        <!--<img src="__RES__/imgs/indent/zixu.png" alt="">-->
+                        <!--咨询平台-->
+                    <!--</a>-->
+                    <!--<a href="javascript:;" class="primary-background-color">-->
+                        <!--<img src="__RES__/imgs/indent/info-refund.png" alt="">-->
+                        <!--联系客服-->
+                    <!--</a>-->
+
+                </div>
+            </div>
+            <div class="refund-detail-con">
+                <div class="con-list">
+                    <div class="goods-box">
+                        <img src="{$result.file}" alt="">
+                        <p class="goods-name">
+                            {$result.goods_name}
+                        </p>
+                    </div>
+                    <div class="con">
+                        {$result.attr}
+                    </div>
+                    <div class="con">
+                        {$result.quantity}
+                    </div>
+                </div>
+                <div class="con-list">
+                    <div class="list-tit">
+                        退款原因
+                    </div>
+                    <div class="list-con">
+                        {$result.reason}
+                    </div>
+                </div>
+                <div class="con-list">
+                    <div class="list-tit">
+                        退款金额
+                    </div>
+                    <div class="list-con">
+                        ￥{$result.refund_amount}
+                    </div>
+                </div>
+                <div class="con-list">
+                    <div class="list-tit">
+                        申请件数
+                    </div>
+                    <div class="list-con">
+                        {$result.quantity}
+                    </div>
+                </div>
+                <div class="con-list">
+                    <div class="list-tit">
+                        申请时间
+                    </div>
+                    <div class="list-con">
+                        {$result.create_time_format}
+                    </div>
+                </div>
+                <div class="con-list">
+                    <div class="list-tit">
+                        退款编号
+                    </div>
+                    <div class="list-con">
+                        {$result.order_goods_refund_number}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--遮罩层-->
+        <div class="cover">
+            <div class=" logistics-box">
+                <div class="tit">
+                    填写退货物流
+                    <img class="del" src="__RES__/imgs/indent/x.png" alt="">
+                </div>
+                <div class="logistics-con">
+                    <form action="{:url('/v2.0/order/returnConfirmed')}" id="from">
+                        <input type="hidden" name="express_value" id="express_value" nullmsg="请选择物流公司" value="">
+                        <input type="hidden" name="express_name" id="express_name" nullmsg="请选择物流公司" value="">
+                        <input type="hidden" name="take_id" id="take_id" nullmsg="请选择自提点" value="">
+                        <input type="hidden" name="return_multiple_file" id="return_multiple_file" value="">
+                        <input type="hidden" name="order_goods_refund_id" value="{$result.order_goods_refund_id}">
+                        <div class="logistics-list">
+                            <div class="list-tit">
+                                <span class="primary-color">*</span>
+                                退回方式
+                            </div>
+                            <div class="list-con">
+                                <label class="merchant  border-color btn active" href="javascript:;">
+                                    快递至商家
+                                    <div class="border-color">
+                                        <img src="__RES__/imgs/dh.png" alt="">
+                                    </div>
+                                    <input type="radio" name="return_type" hidden checked name="type"  value="1">
+                                </label>
+                                {eq name='$result.distribution_type' value='2'}
+                                <label class="store btn" href="javascript:;">
+                                    送货至门店
+                                    <div class="border-color">
+                                        <img src="__RES__/imgs/dh.png" alt="">
+                                    </div>
+                                    <input type="radio" name="return_type" hidden name="type" value="2">
+                                </label>
+                                {/eq}
+                            </div>
+                        </div>
+                        <div class="logistics-merchant">
+                            <div class="logistics-list">
+                                <div class="list-tit">
+                                    <span class="primary-color">*</span>
+                                    物流公司
+                                </div>
+                                <div class="list-con">
+                                    <div class="address-detailed-box">
+                                        <span>请选择物流公司</span>
+                                        <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                    </div>
+                                    <div class="detailed-box" style="display: none;">
+                                        <div class="detailed-box-top">
+                                            <img class="close" src="__RES__/imgs/my/address-close.png"
+                                                 style="cursor: pointer;" alt="">
+                                        </div>
+
+                                        <div class="address-detailed">
+                                            {notempty name="$result.express_list"}
+                                            {volist name="$result.express_list" id="express_list"}
+                                            <a href="javascript:;" data-code="{$express_list.code}"
+                                               data-express_name="{$express_list.name}"
+                                               class="{eq name='$key' value='0'}primary-background-color checked{/eq} provincial">
+                                                {$express_list.name}
+                                            </a>
+                                            {/volist}
+                                            {/notempty}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="logistics-list">
+                                <div class="list-tit">
+                                    <span class="primary-color">*</span>
+                                    物流单号
+                                </div>
+                                <div class="list-con">
+                                    <input type="text" class="text" name="express_number" placeholder="请填写物流单号">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="logistics-store" style="display: none">
+                            <div class="logistics-list">
+                                <div class="list-tit">
+                                    <span class="primary-color">*</span>
+                                    退货门店
+                                </div>
+                                <div class="list-con">
+                                    <div class="store-box">
+                                        <span>请选择门店</span>
+                                        <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                    </div>
+                                    <div class="address-con">
+                                        <div class="address-list">
+                                            <ul>
+                                                {notempty name="$result.take_list"}
+                                                {volist name="$result.take_list" id="take_list"}
+                                                <li>
+                                                    <label data-take_id="{$take_list.take_id}">
+                                                        <div class="circle {eq name='$key' value='0'}border-color active{/eq}">
+                                                            <span class="primary-background-color"></span>
+                                                        </div>
+                                                        <input hidden type="radio">
+                                                        <p><span class="shop-name">{$take_list.take_name}</span>
+                                                            <span class="time">
+                                                            <img src="__RES__/imgs/my/time.png" alt="">
+                                                            {$take_list.start_hours}:00-{$take_list.end_hours}:00
+                                                        </span>
+                                                            <span class=" distance">
+                                                            <img src="__RES__/imgs/wz.png" alt="">
+                                                            {$take_list.distance}
+                                                        </span></p>
+                                                        <p class="address">{$take_list.address}</p>
+                                                    </label>
+                                                </li>
+                                                {/volist}
+                                                {/notempty}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="logistics-list">
+                            <div class="list-tit">
+                                <span class="primary-color">*</span>
+                                联系电话
+                            </div>
+                            <div class="list-con">
+                                <input type="text" class="text" placeholder="请填写手机号码" autocomplete="new-password"
+                                       name="phone" datatype="m" maxlength="11" nullmsg="请填写手机号码" errormsg="请填写正确格式手机号">
+                            </div>
+                        </div>
+
+                        <div class="logistics-list">
+                            <div class="list-tit">
+                                <span>&nbsp;</span>
+                                退货说明
+                            </div>
+                            <div class="list-con">
+                                <input type="text" class="big-text" placeholder="选填">
+                            </div>
+                        </div>
+
+                        <div class="logistics-list">
+                            <div class="list-tit">
+                                上传凭证
+                            </div>
+                            <div class="list-con img-list">
+                                <!--<div class="img-box" >-->
+                                <!--<img class="del" src="__RES__/imgs/up-del.png" alt="">-->
+                                <!--<img src="__RES__/imgs/del/r1.jpg" alt="">-->
+                                <!--</div>-->
+
+                                <label for="file" class="label">
+                                    <img src="__RES__/imgs/xj.png" alt="">
+                                    <p>添加图片</p>
+                                </label>
+                                <div class="file-list">
+                                    <input type="file" class="files" hidden id="file">
+                                </div>
+                            </div>
+                        </div>
+                        <input class="submit primary-background-color" type="submit" id="submit" value="提交">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+
+    main.valid({
+        'select': '#from', 'call_back': function () {
+            try {
+                var type = $('input[name=type]:checked').val();
+                switch (type) {
+                    //快递至商家
+                    case '1':
+                        if (!$('#express_value').val()) {
+                            main.msg($('#express_value').attr('nullmsg'));
+                            return false;
+                        }
+                        ;
+                        //清空其他信息
+                        $('#take_id').val('');
+                        break;
+                    //送至自提点
+                    case '2':
+                        if (!$('#take_id').val()) {
+                            main.msg($('#take_id').attr('nullmsg'));
+                            return false;
+                        }
+                        ;
+                        //清空其他信息
+                        $('#express_value').val('');
+                        $('#express_name').val('');
+                        break;
+                }
+                ;
+                $('#return_multiple_file').val(main.upload({
+                    'data': {'type': 2},
+                    'select': $('.files'),
+                    'file_name': 'image'
+                }));
+            } catch (e) {
+            }
+            $('.cover').hide();
+            $('.cover .box').hide();
+        }
+    });
+
+    if ($('.remaining_time').length > 0) {
+        remaining_time();
+    }
+
+    //退款剩余时间
+    function remaining_time() {
+        main.count_down({
+            'time_select': $('.remaining_time'),
+            'function_name': remaining_time,
+            'dispose_callback': function (time) {
+                return time.y + '天' + time.h + '时' + time.m + '分';
+            },
+            'callback': function () {
+                window.location.href = '/pc2.0/order/orderaftersalelist';
+            }
+        });
+    }
+
+    //{//撤销申请}
+    function revoke_apply(order_goods_id) {
+        main.ajax({
+            'url': '/pc2.0/order/revokeApply',
+            'data': {'order_goods_id': order_goods_id},
+            'confirm_text': '<h5 class="">提示</h5><p>您将撤销本次申请,如果有问题未解决您可以在此发起申请,确定继续么?</p>',
+            'title': '撤销申请',
+            'return_url':ObjectOrJson({'use_url':'order/refundDetails','return_url':'/pc2.0/order/orderaftersalelist'}),
+        });
+    }
+
+    // 关闭遮罩和撤销申请框
+    $('.logistics-box .tit .del').click(function () {
+        $('.cover').hide();
+        $('.cover .box').hide();
+    });
+    // 关闭遮罩和撤销申请框
+    $('.cover .box  .cancel').click(function () {
+        $('.cover').hide()
+    });
+    // 显示遮罩 和撤销申请框
+    $('#return_order_logistics').click(function () {
+        $('.cover').show();
+        $('.cover .box').show()
+    });
+
+    // 选择退款方式
+    $('.list-con .btn').click(function () {
+        $(this).addClass('active border-color').siblings('.btn').removeClass('active border-color');
+        // 判断是否点击的是快递至商家
+        if ($(this).hasClass('merchant')) {
+            $('.logistics-merchant').show();
+            $('.logistics-store').hide()
+        } else {
+            $('.logistics-store').show();
+            $('.logistics-merchant').hide()
+        }
+    });
+    // 关闭物流选择
+    $('.logistics-merchant .detailed-box .close').click(function () {
+        $('.logistics-merchant .detailed-box').hide();
+        $('.logistics-merchant .address-detailed-box').removeClass('border-bottom')
+    });
+    // 显示物流选择
+    $('.logistics-merchant .address-detailed-box').click(function () {
+        $('.logistics-merchant .detailed-box').toggle()
+        $(this).toggleClass('border-bottom')
+    });
+
+    //  关闭/显示门店选择
+    $('.logistics-store .store-box').click(function () {
+        $('.logistics-store .address-con').toggle()
+        $(this).toggleClass('border-bottom')
+    });
+    // 点击选中物流选中效果
+    $('.logistics-merchant .address-detailed').on('click', 'a', function () {
+        $(this).addClass('primary-background-color checked').siblings('a').removeClass('primary-background-color checked');
+        $('#express_value').val($(this).data('code'));
+        $('#express_name').val($(this).data('express_name'));
+        $('.logistics-merchant .address-detailed-box span').html($(this).text());
+    });
+    // 上传图片
+    var num = 0;
+    $('.img-list').on('change', '#file', function () {
+        var that=$(this);
+        var files = this.files;
+        var len = files.length;
+        num += len;
+//       	上传图片
+        if (num > 3) {
+            $(this).val('');
+            num -= 1;
+            layer.open({
+                content: '最多只能传三张图片',
+                end:function(){
+                    that.val('');
+                }
+            });
+        } else {
+            var inp = '<input type="file" class="files"  hidden name="files[]" id="file"  value=""/>'
+            $('.img-list .file-list').append(inp);
+            $(this).removeAttr('id');
+            var imgRUL = null;
+            var windowURL = window.URL || window.webkitURL;
+            for (var a = 0; a < len; a++) {
+                imgRUL = windowURL.createObjectURL(files[a]);
+                var img = '<div class="img-box">' +
+                    '<img class="del" src="__RES__/imgs/up-del.png"/>' +
+                    '<img  src="' + imgRUL + '"/>' +
+                    '</div>';
+                $('.label').before(img);
+            }
+        }
+    });
+    // 删除图片
+    $('.img-list').on('click', '.del', function () {
+        num -= 1;
+        var xuhao = $(this).parent().index('.img-box');
+        $(this).parent().remove();
+        $('.file-list .files').not('#file').eq(xuhao).remove();
+    });
+    $('.address-list li label').click(function () {
+        $(this).find('.circle').addClass('border-color active').find('span').addClass('primary-background-color');
+        $(this).parent().siblings('li').find('.circle').removeClass('border-color active').find('span').removeClass('primary-background-color');
+        var txt = $(this).find('.shop-name').text();
+        $(this).parents('.address-con').siblings('.store-box').find('span').html(txt);
+        $('#take_id').val($(this).data('take_id'));
+        $('.address-con').hide();
+        $('.store-box ').removeClass('border-bottom')
+    })
+</script>
+{/block}
+

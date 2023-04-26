@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!--网站图标-->
+    <link rel="shortcut icon" href="__RES__/image/common/favicon.ico"/>
+    <link rel="bookmark" href="__RES__/image/common/favicon.ico" type="image/x-icon"/>
+    <title>登录 - 商家管理后台</title>
+    <!--字体符号图标    -->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css">
+    <!--通用CSS    -->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/general.css">
+    <!--引用CSS-->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/drag.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/slide-unlock.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/login.css">
+    <!--公共JQ-->
+    <script type="text/javascript" src="__RES__/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="__RES__/js/drag.js"></script>
+    <script src="__RES__/js/jquery.cookie.js"></script>
+    <script src="__RES__/js/jsencrypt.min.js"></script>
+    <script src="__RES__/layui/layui.js"></script>
+    <script src="__RES__/layui/lay/modules/layer.js"></script>
+    <script src="__RES__/js/main.js"></script>
+    <script src="__RES__/js/Validform_v5.3.2_ncr_min.js"></script>
+    <script src="__RES__/js/jquery.from.js"></script>
+    <script src="__RES__/js/jquery.slideunlock.js"></script>
+</head>
+<body>
+<div class="sller_login" style="background-size: 100% 100%;">
+    <div class="sller_login_warp">
+
+        <div class="ecsc-login-container">
+
+            <div class="container">
+                <div class="tipPic">
+                    <img src="__RES__/images/login_tips.png" alt="">
+                </div>
+                <div class="warp">
+                    <div class="warp_content">
+                        <div class="title">
+                            <img src="__RES__/images/loginLogo.png">
+                        </div>
+                        <form method="post" action="" name="login">
+                            <div class="formInfo">
+                                <div class="formText">
+                                    <i class="login-icon login-icon-user"></i>
+                                    <input type="text" name="phone" autocomplete="off" class="input-text" value=""
+                                           placeholder="用户名" maxlength="11">
+                                </div>
+                                <div class="formText">
+                                    <i class="login-icon login-icon-pwd"></i>
+                                    <input type="password" style="display:none">
+                                    <input type="password" name="password" autocomplete="off" class="input-text"
+                                           value="" placeholder="登录密码">
+                                </div>
+                                <div class="formText login_check" style="background: none!important">
+                                    <input type="checkbox" class="check" id='login' checked="">
+                                    <label for="login">自动登录</label>
+                                </div>
+                                <div class="formText" id="drag">
+                                    <script>
+                                        $(function () {
+                                            $("#drag").drag();
+                                        })
+                                    </script>
+                                </div>
+                                <div id="slider">
+                                    <div id="slider_bg"></div>
+                                    <span id="label"></span> <span id="labelTip">请按住滑块，拖动到最右边</span> </div>
+                                <script>
+                                    $(function () {
+                                        var slider = new SliderUnlock("#slider",{
+                                            successLabelTip : "验证成功"
+                                        },function(){
+                                            $('#label').addClass("success");
+                                            $('#slider_bg').html('<input type="hidden" id="verification" name="verification" value="1">');
+                                        });
+                                        slider.init();
+                                    })
+                                </script>
+
+
+                                <div class="formText submitDiv" >
+                                    <!--<span class="submit_span">-->
+                                            <button class="lang-btn log-btn submit_span" id="submit">登录</button>
+                                    <!--</span>-->
+                                </div>
+                            </div>
+                            <div id="error" class="error"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    main.valid('[name="login"]');
+</script>
+
+</body>
+</html>

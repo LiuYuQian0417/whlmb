@@ -1,0 +1,111 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+
+    <div class="tabs_info">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);">商家资金列表</a></li>
+            <li class=""><a href="javascript:void(0);">提现记录</a></li>
+            <li class=""><a href="javascript:void(0);">充值记录</a></li>
+            <li class=""><a href="javascript:void(0);">结算记录</a></li>
+            <li class=""><a href="javascript:void(0);">冻结记录</a></li>
+            <li class=""><a href="javascript:void(0);">申请记录</a></li>
+            <li class=""><a href="javascript:void(0);">资金明细</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>商家提交结算申请相关信息管理</span></li>
+            </ul>
+        </div>
+    </div>
+    <!----------------------------------------------------基本设置------------------------------------------------------>
+    <!--导航-->
+    <form class="layui-form" method="get" action="">
+        <div class="common-head">
+            <div class="fl">
+                <div class="refresh" onclick="location.reload();">
+                    <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                    <div class="refresh_span">共 0 条记录&nbsp;&nbsp;每页<font> 10 </font>条</div>
+                </div>
+                <div class="inquire_search" >
+                    <div class="inquire">
+                        <input type="text" name="keyword" class="inquire_text nofocus" placeholder="店铺名称"
+                               value="{:input('get.keyword')}"
+                               autocomplete="off">
+                        <input type="submit" class="btn" name="secrch_btn" value="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <!--列表-->
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>商家名称</th>
+                <th>可用余额</th>
+                <th>冻结资金</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+
+
+            <!--<tr>-->
+                <!--<td>123</td>-->
+                <!--<td>111111</td>-->
+                <!--<td>88888</td>-->
+                <!--<td>-->
+                    <!--<a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('')"><i-->
+                            <!--class="fa fa-edit"></i>管理</a>-->
+                <!--</td>-->
+            <!--</tr>-->
+
+            </tbody>
+        </table>
+        <div class="right">
+
+        </div>
+    </form>
+
+    <!--<div class="contentShellBtn">-->
+        <!--<div class="layui-form-item">-->
+            <!--<div class="layui-input-block">-->
+                <!--<button class="layui-btn" type="submit" id="submit">保存设置</button>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    //内容页切换
+    $('.tabs_info li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    });
+</script>
+{/block}
+{block name='highSearch'}{/block}

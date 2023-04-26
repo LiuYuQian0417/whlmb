@@ -1,0 +1,94 @@
+
+<!--公共头部结束-->
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的设置左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MySetting.css" />
+<!--账户安全css-->
+<link rel="stylesheet" href="__RES__/css/my/AccountSecurity.css" />
+{/block}
+{block name="content"}
+	<!--我的设置主体-->
+	  <div class="setting">
+	  <!--据中部分-->
+	    <div class="setting-center">
+	    	<!--左侧列表-->
+			{include file="public/setting_left" /}
+	      <!--右侧内容-->
+	      <div class="setting-right">
+
+	      	<!--账号安全右侧开始-->
+	        <div class="account-security" >
+	        	<!--unqualified 设置密码的样式-->
+	        	<!--qualified 修改密码的样式-->
+				{eq name="$result.password_state" value='1'}
+			    <div class="account-box qualified ">
+			      <img src="__RES__/imgs/my/login-password.png" alt="">
+			      <div class="text">
+			        <p class="tit">登录密码 </p>
+			        <span>定期更换密码有利于账户安全</span>
+			      </div>
+			      <a href="{:url('pc2.0/setting/update_password')}"  class="btn" >修改登录密码</a>
+			    </div>
+				{else/}
+				<div class="account-box unqualified ">
+					<img src="__RES__/imgs/my/login-password.png" alt="">
+					<div class="text">
+						<p class="tit">登录密码 </p>
+						<span>定期更换密码有利于账户安全</span>
+					</div>
+					<a  class="btn" href="{:url('pc2.0/setting/set_password')}">设置登录密码</a>
+				</div>
+				{/eq}
+
+				{eq name="$result.phone_state" value='1'}
+
+			    <div class="account-box qualified">
+			      <img src="__RES__/imgs/my/iphonenumber.png" alt="">
+			      <div class="text">
+			        <p class="tit">手机号 </p>
+			        <span>{$result.phone}</span>
+			      </div>
+			      <a class="btn" href="{:url('pc2.0/setting/update_phone')}">修改手机号</a>
+			    </div>
+				{else/}
+				<div class="account-box unqualified">
+					<img src="__RES__/imgs/my/iphonenumber.png" alt="">
+					<div class="text">
+						<p class="tit">手机号 </p>
+						<span>133****3333</span>
+					</div>
+					<a class="btn" href="{:url('pc2.0/setting/update_phone')}">设置手机号</a>
+				</div>
+
+				{/eq}
+
+
+				{eq name="$result.pay_state" value='1'}
+			    <div class="account-box qualified">
+			      <img src="__RES__/imgs/my/password.png" alt="">
+			      <div class="text">
+			        <p class="tit">支付密码 </p>
+			        <span>支付所购买商品时使用</span>
+			      </div>
+			      <a  class="btn" href="{:url('pc2.0/setting/edit_password')}">修改支付密码</a>
+			    </div>
+				{else/}
+				<div class="account-box unqualified">
+					<img src="__RES__/imgs/my/password.png" alt="">
+					<div class="text">
+						<p class="tit">支付密码 </p>
+						<span>支付所购买商品时使用</span>
+					</div>
+					<a  class="btn" href="javascript:main.jump({'url':'/pc2.0/setting/set_pay_password','return_url':ObjectOrJson({'use_url':'setting/set_pay_password','return_url':window.location.href})})">设置支付密码</a>
+				</div>
+				{/eq}
+			  </div>
+			  <!--账号安全右侧结束-->
+	      </div>
+	    </div>
+	  </div>
+{/block}
+
+

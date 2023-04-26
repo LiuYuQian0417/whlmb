@@ -1,0 +1,258 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+<style>
+    .calculate span {
+        margin-right: 20px;
+    }
+    .sel {
+        background-color: rgba(102, 204, 153, 1);
+    }
+</style>
+{__block__}
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+        <li class="curr"><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、根据分销商查看提现汇总与提现明细；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tab" style="margin-top: 15px;">
+    <ul>
+        <li {eq name="single_store" value="0"} hidden {/eq}><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/store')">结算对账</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/distribution')">分销商对账</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/order')">订单对账</a></li>
+    </ul>
+</div>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="goods-list" style="width: 100%">
+        <table class="ecsc-default-table ecsc-table-seller mt20" style="width: 100%;color: #333;margin: 10px 0;">
+            <tbody>
+            <tr>
+                <td class="{:input('get.type','3') == 3 ? 'sel' : 'nav'}" onclick="reloadSelf({type:3})" style="cursor: pointer;border:1px solid #e6e6e6;padding: 9px 15px;">
+                    <p style="line-height: 30px">全部</p>
+                    <p><span class="font-style">{$find.order_num?:0}</span></p>
+                </td>
+                <td class="{:input('get.type','3') == 1 ? 'sel' : 'nav'}" onclick="reloadSelf({type:1})" style="cursor: pointer;border:1px solid #e6e6e6;padding: 9px 15px;">
+                    <p style="line-height: 30px">已结算</p>
+                    <p>&yen;<span class="font-style">{$find.close_pro?:0.00}</span></p>
+                </td>
+                <td class="{:input('get.type','3') == 2 ? 'sel' : 'nav'}" onclick="reloadSelf({type:2})" style="cursor: pointer;border:1px solid #e6e6e6;padding: 9px 15px;">
+                    <p style="line-height: 30px">待结算</p>
+                    <p>&yen;<span class="font-style">{$find.wait_pro?:0.00}</span></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--关键词结束-->
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">目前共有 {:$data->total()} 名记录&nbsp;&nbsp;每页<font> {:$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select" style="width: 180px;">
+                    <input title="下单日期" name="date" type="text" class="layui-input"
+                           value="{:input('get.date','')}"
+                           id="date" readonly placeholder="按下单日期范围查询">
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus"
+                           placeholder="请输入订单编号" value="{:input('get.keyword','')}" autocomplete="off">
+                </div>
+                <input type="hidden" name="type" value="{:input('get.type','3')}" />
+                <input type="submit" class="btn search_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th>订单</th>
+                <th>买家信息</th>
+                <th>佣金规则</th>
+                <th>佣金分配</th>
+                <th>佣金金额</th>
+                <th>状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {foreach $data as $item}
+            <tr>
+                <td style="width: 400px;">
+                    <div style="display: flex;align-items: center;justify-content: flex-start">
+                        <div class="img-div">
+                            <img src="{$item.file}" alt="{$item.goods_name}" title="{$item.goods_name}" class="thumb-img"
+                                 onerror="this.src='/template/master/resource/image/common/imageError.png'"/>
+                        </div>
+                        <div class="describe" style="flex: 1">
+                            <div class="name-div" title="{$item.goods_name}">订单编号：{$item.order_attach_number}</div>
+                            <div class="brand-div">下单时间：<font>{$item.create_time}</font></div>
+                            <div class="brand-div">商品价格：<span>{$item.single_price}</span></div>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <img src="{$item.avatar}" class="avatar" alt="买家图片" onerror="this.src='__RES__/image/common/imageError.png'" />
+                    {$item.nickname}
+                </td>
+                <td>
+                    <!--<div style="display: flex;align-items: center;justify-content: flex-start">-->
+                    {if condition="is_null($item.rule_snapshot_content_a)"}
+                    <p>无</p>
+                    {else/}
+                    <p><font style="color: green;">{$item.rule_type_a_alias}</font></p>
+                    <p>{$item.rule_snapshot_content_a}</p>
+                    {/if}
+                    <hr/>
+                    {if condition="is_null($item.rule_snapshot_content_b)"}
+                    <p>无</p>
+                    {else/}
+                    <p><font style="color: green;">{$item.rule_type_b_alias}</font></p>
+                    <p>{$item.rule_snapshot_content_b}</p>
+                    {/if}
+                    <hr/>
+                    {if condition="is_null($item.rule_snapshot_content_c)"}
+                    <p>无</p>
+                    {else/}
+                    <p><font style="color: green;">{$item.rule_type_c_alias}</font></p>
+                    <p>{$item.rule_snapshot_content_c}</p>
+                    {/if}
+                    <hr/>
+                    <!--</div>-->
+                </td>
+                <td style="width: 350px;">
+                    <div style="display: flex;align-items: center;justify-content: flex-start">
+                        <div>一级分销商</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                        {if condition="is_null($item.distributor_a)"}
+                        <div>无</div>
+                        {else/}
+                        <div class="img-div">
+                            <img src="{$item.member_a_distribution.member_base_info.avatar?:'?'}" alt="分销商A" class="avatar"
+                                 onerror="this.src='/template/master/resource/image/common/imageError.png'"/>
+                        </div>
+                        <div class="describe" style="flex: 1">
+                            <div class="brand-div"><font>{$item.member_a_distribution.member_base_info.nickname?:'未设置昵称'}</font></div>
+                            <div class="brand-div">佣金: <font>{$item.distributor_a_brokerage}</font></div>
+                        </div>
+                        {/if}
+                    </div>
+
+                    <hr/>
+                    <div style="display: flex;align-items: center;justify-content: flex-start">
+                        <div>二级分销商</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                        {if condition="is_null($item.distributor_b)"}
+                        <div>无</div>
+                        {else/}
+                        <div class="img-div">
+                            <img src="{$item.member_b_distribution.member_base_info.avatar?:'?'}" alt="分销商B" class="avatar"
+                                 onerror="this.src='/template/master/resource/image/common/imageError.png'"/>
+                        </div>
+                        <div class="describe" style="flex: 1">
+                            <div class="brand-div"><font>{$item.member_b_distribution.member_base_info.nickname?:'未设置昵称'}</font></div>
+                            <div class="brand-div">佣金: <font>{$item.distributor_b_brokerage}</font></div>
+                        </div>
+                        {/if}
+                    </div>
+                    <hr/>
+                    <div style="display: flex;align-items: center;justify-content: flex-start">
+                        <div>三级分销商</div>&nbsp;&nbsp;&nbsp;&nbsp;
+                        {if condition="is_null($item.distributor_c)"}
+                        <div>无</div>
+                        {else/}
+                        <div class="img-div">
+                            <img src="{$item.member_c_distribution.member_base_info.avatar?:'?'}" alt="分销商C" class="avatar"
+                                 onerror="this.src='/template/master/resource/image/common/imageError.png'"/>
+                        </div>
+                        <div class="describe" style="flex: 1">
+                            <div class="brand-div"><font>{$item.member_c_distribution.member_base_info.nickname?:'未设置昵称'}</font></div>
+                            <div class="brand-div">佣金: <font>{$item.distributor_c_brokerage}</font></div>
+                        </div>
+                        {/if}
+                    </div>
+                </td>
+                <td>{:number_format($item.distributor_a_brokerage + $item.distributor_b_brokerage + $item.distributor_c_brokerage,'2','.','')}</td>
+                <td>
+                    {if condition="$item.status eq 1"}
+                    <font>已结算</font>
+                    {elseif condition="$item.status eq 0"}
+                    <font style="color: red;">待结算</font>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+            {notempty name='data'}
+            {if condition="$data->lastPage() > 1"}
+            <tfoot>
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            </tfoot>
+            {/if}
+            {/notempty}
+        </table>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    $('.nav').on('mousemove',function () {
+        $(this).addClass('sel');
+    }).on('mouseleave',function () {
+        $(this).removeClass('sel');
+    });
+    main.form('.layui-form');
+    main.laydate([{
+        elem: '#date',
+        type: 'date',
+        range: true,
+        max:0
+    }]);
+    //重定向本身
+    function reloadSelf(args) {
+        var param = 'store_id=' + $('[name="store_id"]').val(),key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+        }
+        location.href='?' + param;
+    }
+</script>
+{/block}

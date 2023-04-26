@@ -1,0 +1,164 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .area_name>span{
+        width: 100%;
+        display: block;
+    }
+</style>
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+        <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、设置分销商等级后，分销商就可晋级，得到高比例的分佣，如果不设置分销商等级，也没设置单品分佣规则，则按照默认分佣规则进行佣金结算，单品分佣规则优先级仍是最高。</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--导航-->
+<form class="layui-form" action="">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onclick="main.jumpFour('distribution_level/distribution_put')">
+                <div class="fbutton">
+                    <div class="add" title="添加分销商等级"><span><i class="fa fa-plus"></i>添加分销商等级</span></div>
+                </div>
+            </a>
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">目前有 {:$data->total()} 条记录&nbsp;&nbsp;每页<font> {:$data->listRows()} </font>条</div>
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>等级名称</th>
+            <th>等级标志</th>
+            <th>分销商人数</th>
+            <th>一级分销比例</th>
+            <th>二级分销比例</th>
+            <th>三级分销比例</th>
+            <th>升降级条件</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach $data as $key => $item}
+        <tr>
+            <td>
+                {if condition="$key !== 0"}
+                <input type="checkbox" value="{$item.distribution_level_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" />
+                {/if}
+            </td>
+            <td>{$item.level_title?:'未填写'}</td>
+            <td>
+                <img src="{$item.mark_alias?:'?'}" class="avatar" alt="等级标志" onerror="this.src='__RES__/image/common/imageError.png'" />
+            </td>
+            <td>{$item.distribution_level_list_count}</td>
+            <td>{$item.one_ratio}</td>
+            <td>{$item.two_ratio}</td>
+            <td>{$item.three_ratio}</td>
+            <td>{$item.condition|raw}</td>
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('distribution_level/distribution_put?id={$item.distribution_level_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                {if condition="$key !== 0 "}
+                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/distribution_level/distribution_del','{$item.distribution_level_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/distribution_level/distribution_del')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form();
+    main.laydate([{
+        elem: "#date",
+        type: "date",
+        range: true,
+        max:0
+    }]);
+    function convert(did) {
+        var data = [];
+        if (did == undefined) {
+            var checked = $('.chk:checked');
+            if (checked.length > 0) {
+                $.each(checked,function (i,o) {
+                    data.push($(o).val());
+                })
+            } else {
+                layer.msg('请选择操作项',{time:2000});
+                return false;
+            }
+        } else {
+            data.push(did);
+        }
+        layer.msg("确定将选择的会员转为分销商吗?",{time:2000,btn:['确定','取消'],yes:function () {
+            $.ajax({
+                url: '/distribution_manage/covert_to_distribution',
+                type: 'post',
+                dataType: 'json',
+                data: {id:data.join(',')},
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.msg(res.message,{time:1000});
+                        setTimeout(function () {
+                            location.reload();
+                        },1000);
+                    }
+                }
+            })
+        },btn2: function () {
+            layer.msg('已取消');
+        }});
+
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

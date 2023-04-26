@@ -1,0 +1,233 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .goods-desc .name{height: auto!important;}
+    .tabmenu .tab{ height: auto !important;}
+    .tabmenu .tab p{ margin-left: 30px;}
+    .collect_display td{border: hidden!important;}
+    .childTable td{padding-top:0!important;padding-bottom: 0!important;}
+    .childTable tr:nth-child(2) td{color: #0BB20C!important;}
+    .tabmenu>span{color: red}
+    .step_con ul li.active::before{top: 47px;width: 200px;right: 122px;}
+    .step_con ul li::after{top: 45px;width: 200px;right: 122px;}
+    .tabmenu_frame > div{display: inline-block;width: 211px;border:1px solid #DCDCDC;padding: 8px;height: 90px;overflow: hidden}
+    .step_con ul li{width: 222px;}
+    .tabmenu_frame span{color: #f98a10;}
+    .tabmenu_frame p{line-height: 29px;}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+        <div class="tabmenu">
+            账单日期： <span>{:input('time')}~{$time}</span> &nbsp&nbsp &nbsp  店铺名称：  <span>{$client_storeName}</span>
+            <!--<div class="step_con">-->
+                <!--<ul>-->
+                    <!--<li class="active">-->
+                        <!--<div class="state" style="color: #f98a10">账单出账</div>-->
+                        <!--<div class="circle">-->
+                            <!--<div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>-->
+                        <!--</div>-->
+                    <!--</li>-->
+                    <!--<li  value="2" {eq name=":input('check_status')" value="2"}class="active"{/eq}>-->
+                        <!--<div class="state" {eq name=":input('check_status')" value="2"}style="color: #f98a10"{/eq}>{eq name=":input('check_status')" value='2'}已出账，已转入余额{else/}暂未出账{/eq}</div>-->
+                        <!--<div class="circle">-->
+                            <!--<div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>-->
+                        <!--</div>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</div>-->
+            <!--<div class="tabmenu_frame" style="text-align: center;margin-bottom: 20px">-->
+                <!--<div style="text-align: left;">此周期还有未出账的账单，请等待账单出账！</div>-->
+                <!--<div style="margin-left: 15px;font-size: 17px;text-align: left;">-->
+                    <!--<p>应结金额：<span>{$should_be_price}</span></p>-->
+                    <!--<p>订单总数：<span>{$order_number}</span> 单</p>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div style="margin-top: 35px">
+                <form action="">
+                    订单编号：<input type="text" name="order_attach_number" value="{:input('order_attach_number','')}">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                    付款方式：
+                    <select name="pay_type" id="" style="display: inline;width: 130px">
+                        <option value="0">全部</option>
+                        <option value="1" {eq name=":input('pay_type',0)" value="1"} selected {/eq}>线上付款</option>
+                        <option value="2" {eq name=":input('pay_type',0)" value="2"} selected {/eq}>货到付款</option>
+                    </select>
+                    <input type="hidden" name="check_order_id" value="{:input('check_order_id')}">
+                    <input type="hidden" name="check_status" value="{:input('check_status')}">
+                    <input type="hidden" name="time" value="{:input('time')}">&nbsp&nbsp&nbsp&nbsp
+                    <input style="background: transparent;border: 1px solid #e9e9e9;border-radius: 3px;padding: 2px 10px;" class="btn_see" type="submit" value="查询">
+                    <input style="background: transparent;border: 1px solid #e9e9e9;border-radius: 3px;padding: 2px 10px;" class="btn_see" type="button" value="导出" onclick="dc();">
+                </form>
+            </div>
+            <br>
+            <ul class="tab">
+            </ul>
+
+        </div>
+        <div class="btn-info">
+            <!--<a class="sc-btn sc-blue-btn" href="#download"><i class="icon-download-alt"></i>下载订单</a>-->
+        </div>
+        <div class="order_stats">
+            <div class="order_stats_search clearfix">
+                <form action="javascript:searchGeneral()" name="searchForm">
+                    <!--<div class="screeItme mt10">-->
+                    <!--<div class="bf100 fl mt5">-->
+                    <!--<strong class="fl lh mr10">金额区间：</strong>-->
+                    <!--<input name="min" value="" type="number" placeholder="" class="text text_2 mr10"  autocomplete="off" />-->
+                    <!--<span class="bolang">&nbsp;&nbsp;至&nbsp;&nbsp;</span>-->
+                    <!--<input name="max" value="" type="number" placeholder="" class="text text_2 mr10"  autocomplete="off" />-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="screeItme mt10">-->
+                    <!--<div class="bf100 fl mt5">-->
+                    <!--<strong class="fl lh mr10">关 键 词 ：</strong>-->
+                    <!--<input name="cat_name" value="" type="text" placeholder="流水号/订单号" class="text text_2 mr10"  autocomplete="off" />-->
+                    <!--<input type="submit" name="query_by_date" value="查询" class="sc-btn sc-blueBg-btn btn30" />-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </form>
+            </div>
+            <!--列表-->
+            <form method="POST" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                    <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                        <tr>
+                            <th width="10%" rowspan="2">订单号</th>
+                            <th width="10%" rowspan="2">下单时间</th>
+                            <th width="10%" rowspan="2">确认收货时间</th>
+                            <th width="10%" rowspan="2">出账时间</th>
+                            <th width="30%" colspan="5">店铺应收金额</th>
+                            <th width="10%" rowspan="2">小计</th>
+                            <th width="10%" rowspan="2">结算状态</th>
+                            <th width="10%" rowspan="2">操作</th>
+                        </tr>
+                        <tr>
+                            <th>付款金额</th>
+                            <th>平台承担活动款</th>
+                            <th>运费</th>
+                            <th>退款金额</th>
+                            <th>佣金</th>
+                        </tr>
+                        {empty name='data'}
+                        <tr>
+                            <td class="no-records" colspan="10">没有找到任何记录</td>
+                        </tr>
+                        {/empty}
+                        {volist name="data" id="item"}
+                        <tr>
+                            <td>{$item.order_attach_number}</td>
+                            <td>{$item.create_time}</td>
+                            <td>{$item.deal_time}</td>
+                            <td>{$item.check_time}</td>
+                            <td>{$item.pay_price}</td>
+                            <td>{$item.activity_price}</td>
+                            <td>{$item.subtotal_freight_price}</td>
+                            <td>{$item.refund_price}</td>
+                            <td>{$item.sum_brokerage_price}</td>
+                            <td>{$item.should_be_price}</td>
+                            <td>{empty name='$item.is_checking'}未出账{else/}已出账{/empty}</td>
+                            <td>
+                                <p><a href="javascript:void(0);" onclick="main.jumpFour('client/order/examine?id={$item.order_attach_id}',5,0)" class="btn_see" style="margin-bottom: 3px;padding: 0px 7px"> 查看 </a></p>
+                                <a href="javascript:void(0);" class="btn_see" style="padding: 0px 7px" onclick="collect_display({$item.order_id})"> 支付汇总 </a>
+                            </td>
+                        </tr>
+                        <tr style="display: none;" class="collect_display" id="collect_display_{$item.order_id}">
+                            <td colspan="6">
+                                <table width="100%"  style="border: hidden" class="childTable">
+                                    <tr>
+                                        <td>支付宝支付</td>
+                                        <td>微信支付</td>
+                                        <td>银联支付</td>
+                                        <td>余额支付</td>
+                                        <td>货到付款</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{$item.alipay_price|default=0}</td>
+                                        <td>{$item.wechat_price|default=0}</td>
+                                        <td>{$item.unionpay_price|default=0}</td>
+                                        <td>{$item.balance_price|default=0}</td>
+                                        <td>{$item.offline_price|default=0}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {/volist}
+                        <tfoot>
+                        <tr>
+                            <td >
+                                {:$data->render()}
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+
+    //显示隐藏支付汇总
+    function collect_display(id){
+        $('#collect_display_'+id).toggle('5');
+    }
+    // 筛选选中效果
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+    function dc(){
+        window.location.href="{:url('')}?check_order_id={:input('check_order_id')}&dc";
+    }
+</script>
+<script type="text/javascript">
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId':'start_time',//时间写入对象的id
+        'triggerId':['start_time'],//触发事件的对象id
+        'alignId':'text_time1',//日历对齐对象
+        'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    },opts2 = {
+        'targetId':'end_time',
+        'triggerId':['end_time'],
+        'alignId':'text_time2',
+        'format':'-'
+    }
+
+    xvDate(opts1);
+    xvDate(opts2);
+    //日期选择插件调用end sunle
+</script>
+{/block}

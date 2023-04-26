@@ -1,0 +1,169 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css"  rel="stylesheet" type="text/css" />
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>可从管理平台手动添加一名新管理员，并填写相关信息。<li>
+            <li>新增管理员后可从管理员列表中找到该条数据，并再次进行编辑操作。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="contentShell">
+    <form class="layui-form"  enctype="multipart/form-data" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>昵称(登录账号)</label>
+            <div class="layui-input-inline">
+                <input type="text" name="nickname" maxlength="20" value="{$data.nickname?:''}" datatype="alphaNum" nullmsg="请输入昵称" errormsg="昵称格式不正确" placeholder="请输入昵称,不超过20字母数字" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$data.avatar|default=''}"
+                        width="100"
+                        height="100"
+                        file-mime="image/gif,image/jpeg,image/png" 文件类型
+                        name="avatar"
+                        dir="manage"
+                        value="{$data.avatar_data|default=''}"
+
+                ></div>
+                <!--<div>-->
+                    <!--<div id="imgPrev">-->
+                        <!--<img id="imgShow" src="{$data.avatar?:'?'}" class="uploadImg" onerror="this.src='__RES__/image/common/imageError.png'"  alt="管理员头像"/>-->
+                    <!--</div>-->
+                    <!--<div class="uploader white">-->
+                        <!--<input type="text" class="filename" id="localPath" title value="{$data.avatar?:''}" readonly/>-->
+                        <!--<input type="button" name="file" class="button" value="上传..."/>-->
+                        <!--<input type="file" id="up_img" name="image" />-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>手机号(忘记密码用)</label>
+            <div class="layui-input-inline">
+                <input type="number" name="phone" datatype="m" value="{$data.phone?:''}" nullmsg="请输入手机号" errormsg="请输入正确的手机号" maxlength="11" placeholder="请输入手机号码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>密 码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="password" minlength="6" maxlength="18"
+                       {if condition="$Request.action eq 'create'"} plugin="passwordStrength"  datatype="*6-18" nullmsg="请输入密码！" errormsg="密码6-18位数字+字母！" placeholder="管理员登录时的密码，密码6-18个字符！"{else/} placeholder="如果不修改密码，请留空，密码6-18个字符！"{/if}
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>确认密码</label>
+            <div class="layui-input-inline">
+                <input type="password" name="confirm_password" value=""
+                       {if condition="$Request.action eq 'create'"} recheck="password"  datatype="*6-18" nullmsg="请输入确认密码！" errormsg="两次输入的密码不一致！" placeholder="管理员登录时的密码"{else/} placeholder="如果不修改密码,请留空"{/if}
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限组</label>
+            <div class="layui-input-inline">
+                <select name="auth_group_id" title>
+                    {volist name='$authGroupData' id='v'}
+                    <option value="{$v.auth_group_id}" {present name="$data"}{$data.auth_group_id==$v.auth_group_id?'selected':''}{/present}>{$v.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <input type="hidden" name="manage_id" value="{:input('id',0)}" />
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a href="javascript:void(0);" class="layui-btn" id="submit">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+
+    main.form();
+
+    $(function () {
+        var options = {
+            type: "post",
+            dataType: "json",
+            resetForm: false,
+            ind: 0,
+            beforeSend: function (request, from) {
+                // 禁用按钮防止重复提交
+                $(".layui-btn").attr("disabled", "disabled");
+            },
+            success: function (data) {
+                if (data.code == 0) {
+                    layer.msg(data.message, {offset: '300px', time: 2000});
+                    setTimeout('window.location.href = "/manage/index"',1000)
+                    // window.location.href = "/manage/index";
+                } else {
+                    layer.msg(data.message, {offset: '300px', time: 2000});
+                }
+            },
+            complete: function () {
+                // layer.close(this.ind);
+                $(".layui-btn").removeAttr("disabled");
+            }
+        };
+        $.Tipmsg.r = null;
+        $.Tipmsg.c = null;
+        $.Tipmsg.p = null;
+
+        $(".layui-form").Validform({
+            btnSubmit: '#submit',
+            tipSweep: true,
+            tiptype: function (msg) {
+                layer.msg(msg, {offset: '300px', time: 2000});
+            },
+            ignoreHidden: true,
+            datatype: {
+                alphaNum: /^[a-zA-Z0-9]{1,20}$/,
+                password: /^[a-zA-Z0-9]{6,18}$/
+            },
+            ajaxPost: true,
+            beforeSubmit:function(){
+                var password = $("input[name=password]").val();
+                var confirm_password = $("input[name=confirm_password]").val();
+                if (password != '' && '{$Request.action}' == 'edit' && /^[a-zA-Z0-9]{6,18}$/.test(password) == false) {
+                    layer.msg('密码6-18位数字+字母！');
+                    return false;
+                }
+
+                if (password != confirm_password && '{$Request.action}' == 'edit') {
+                    layer.msg('两次密码不一致');
+                    return false;
+                }
+                $('.layui-form').ajaxSubmit(options);
+                return false;
+            },
+            usePlugin: {}
+        });
+    })
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,205 @@
+{extend name='layout/frame' /}
+{block name='body'}
+<link href="__RES__/css/city.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/tree/css/bootstrapStyle/bootstrapStyle.css" rel="stylesheet" type="text/css" media="all"/>
+{block name='breadcrumb'}{/block}
+<div class="city-container">
+    <form class="layui-form" action="">
+        <div class="city_con">
+            <div class="city-list">
+                <ul class="city-ul">
+                    {foreach $city as $key => $item}
+                    <li>
+                        <input type="checkbox" value="{$item['area_id']}" id="{$item['area_id']}" class="1" data-pid="0"
+                               lay-skin="primary" title="{$item['area_name']}" lay-filter="1"
+                               {in name="item['area_id']" value="$areaStr" }disabled{/in}
+                        >
+                        <em title="点击展示市"
+                            onclick="getNextCity('{$item[\'area_id\']}','{$item[\'deep\']}','.city-list');"> &gt; </em>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div class="city-list">
+                <ul class="city-ul">
+                    <li class="empty">请选择省</li>
+                </ul>
+            </div>
+            <div class="city-list">
+                <ul class="city-ul">
+                    <li class="empty">请选择市</li>
+                </ul>
+            </div>
+            <div class="city-list">
+                <ul class="city-ul">
+                    <li class="empty">请选择区县</li>
+                </ul>
+            </div>
+            <div class="city-show">
+                <ul class="city-ul">
+                    <li class="city-tip">已选省、市、区、街道</li>
+                    <li>
+                        <ul id="zTree" class="ztree"></ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="area_foot"><a href="javascript:chooseIt();" class="submit_button sc-btn sc-blueBg-btn btn35">确定</a>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='sidebar'}{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/tree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="__RES__/tree/js/jquery.ztree.excheck.js"></script>
+<script>
+    var selectedIndex = [];
+
+    $(function () {
+
+        var sI = sessionStorage.getItem('selectedIndex')
+
+        if (sI !== null && sI !== '') {
+            selectedIndex = sI.split(',')
+            sessionStorage.setItem('allChk', sI)
+        }
+
+        $('.city_con>.city-list>.city-ul').eq(0).children('li').each(function () {
+            if (-1 !== $.inArray($(this).children('input').val(), selectedIndex)) {
+                $(this).children('input').attr('checked', true)
+            }
+        })
+
+        var obj = [];
+        for (var i = 0; i < 5; i++) {
+            obj.push({
+                selector: 'checkbox(' + i + ')', callback: function (data) {
+                    relOther(data.elem);
+                    this.render();
+                }
+            });
+        }
+        integration()
+        main.form(obj);
+    })
+
+
+    // 获取子级城市
+    function getNextCity(cityId, deep, selector) {
+
+        var loadIndex = 0,
+            target = event.target,
+            checked = $(target).parent('li').children('[type="checkbox"]').prop('checked'),
+            classStr = $(target).parent('li').children('[type="checkbox"]').attr('class'),
+            checkStr = selectedIndex.join(',');
+
+        main.ajax({
+            data: {
+                cityId: cityId,
+                deep: deep,
+                classStr: classStr,
+                checked: checked ? 'checked' : '',
+                type: "{:input('type')}",
+                fid: "{:input('freightId')}",
+                checkStr: checkStr
+            }, url: '/client/business_express/city', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                var tip1 = '<ul class="city-ul"><li class="empty">请选择市</li></ul>',
+                    tip2 = '<ul class="city-ul"><li class="empty">请选择区县</li></ul>';
+                if (deep == 1) $(selector).eq(2).html(tip1);
+                if (deep == 1 || deep == 2) $(selector).eq(3).html(tip2);
+                $(target).parent('li').addClass('active').siblings('li').removeClass('active');
+                $(selector).eq(deep).html(res.data);
+                main.form();
+                integration();
+            }
+        });
+    }
+
+    // 关联城市状态
+    function relOther(dom) {
+        var domId = $(dom).attr('id'),
+            checked = dom.checked,
+            allChecked = $('[type="checkbox"]:not(\'#0\')').length == $('[type="checkbox"]:not(\'#0\'):checked').length;
+
+        var classArr = $(dom).attr('class').split(' '),
+            firstFlag = classArr.shift(),
+            length = $('.' + firstFlag + ':checked').length,
+            compare = length == $('.' + firstFlag).length,
+            value = dom.value,  //自己的id
+            next = $('.' + value),   //下级城市
+            prevId = $(dom).attr('data-pid'),   //直系上级城市ID
+            prev = $('#' + prevId),    //直系上级城市dom
+            prevAll = $('#' + classArr.join(',#'));    //上级所有城市
+        if (prev.length > 0) prevAll.prop('checked', compare);
+        if (next.length > 0) next.prop('checked', checked);
+        $('#' + '0').prop('checked', allChecked);
+        integration();
+    }
+
+    var _setting = {
+        data: {simpleData: {enable: true, idKey: 'id', pIdKey: 'pid'}},
+        view: {showIcon: false}
+    };
+
+    /**
+     * 收集数据渲染tree
+     * 每次数据有变化都要触发这个
+     */
+    function integration() {
+        var allChk = $('[type="checkbox"]:not(\'#0\'):checked'),
+            selectedIndex = [];
+
+        var data = [];
+        if (allChk.length > 0) {
+            allChk.each(function (i, o) {
+                selectedIndex.push($(o).val())
+                data.push({id: $(o).val(), pid: $(o).attr('data-pid'), name: $(o).attr('title'), open: true});
+            });
+        }
+        sessionStorage.setItem('allChk', selectedIndex.join(','));
+        $.fn.zTree.init($("#zTree"), _setting, data);
+    }
+
+    // 选择确认后的提示和操作
+    function chooseIt() {
+        var chkIds = $('[type="checkbox"]:not(\'#0\'):checked');
+        var idStr = sessionStorage.getItem('allChk') ? sessionStorage.getItem('allChk') : ''
+        var nameStr = '';
+        main.ajax({
+            data: {ids: idStr}, url: '/client/business_express/switchName', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                nameStr = res.name;
+            }
+        });
+        layer.msg('确定选择这些地区吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                // 商品名称
+                // sessionStorage.removeItem('allChk');
+
+                // 赋值信息到父级页面元素上
+                var ele = $('#template-body>tr', parent.document).eq(sessionStorage.getItem('editRowIndex')),
+                    eleTd = ele.children('td').eq(0)
+                eleTd.children('[name=distribution_area_id]').val(idStr)
+                eleTd.children('[name=distribution_area_name]').val(nameStr)
+                eleTd.children('.tips').text(nameStr)
+                eleTd.children('.controller').children('span').eq(0).remove();
+
+                layer.close(index);
+                parent.layer.closeAll();
+                sessionStorage.removeItem('editRowIndex')
+            }
+        });
+    }
+</script>
+{/block}
+

@@ -1,0 +1,155 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    a:last-child {
+        margin-right: 10px;
+    }
+
+    a.btn_see, a.btn_edit, a.btn_trash {
+        margin-bottom: 5px;
+    }
+
+    .ecsc-default-table td .goods-desc {
+        width: calc(100% - 80px)
+    }
+
+    .ecsc-default-table td .goods-img img {
+        border: 1px solid #dcdcdc;
+    }
+
+    .ecsc-default-table td .goods-img {
+        border: none !important;
+    }
+
+    .ecsc-default-table td .goods-info {
+        float: none !important;
+    }
+</style>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css"/>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>展示已开票和未开票商品。
+                <li>
+                <li>对发票信息进行编辑
+                <li>
+            </ul>
+        </div>
+    </div>
+    <!--操作提示end-->
+    <!--店铺名称-->
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh" onclick="location.reload();">
+                <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">刷新</div>
+            </div>
+            <div class="inquire_search">
+                <label class="layui-form-label" style="width: 100px;">店铺名称：</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="keyword" value="{:input('keyword','')}" autocomplete="off" placeholder=""
+                           class="layui-input">
+                </div>
+                <button class="layui-btn" lay-submit="">查询</button>
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th>店铺ID</th>
+                <th>店铺名称</th>
+                <th>发票税号</th>
+                <th>寄送发票运费</th>
+                <th>二次寄送发票</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>{$item.store_id}</td>
+                <td>{$item.store_name}</td>
+                <td>{$item.invoice_code|default='无'}</td>
+                <td>
+                    {switch name="$item.invoiced_freight"}
+                    {case value="0"}否{/case}
+                    {case value="1"}是{/case}
+                    {/default}出错了
+                    {/switch}
+                </td>
+                <td>
+                    {switch name="$item.invoiced_second_order"}
+                    {case value="0"}否{/case}
+                    {case value="1"}是{/case}
+                    {/default}出错了
+                    {/switch}
+                </td>
+                <td>
+                    <a href="javascript:void(0);" onclick="main.jumpFour('invoice_store/edit?id={$item.store_id}')"
+                       class="btn_see"><i class="fa fa-eye"></i>开票</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '', key = Object.keys(args);
+        if (key.length > 0) {
+            $.each(args, function (i, o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href = '?' + param;
+    }
+
+    main.laydate([{
+        elem: '#start_date',
+        type: 'datetime'
+    }, {
+        elem: '#end_date',
+        type: 'datetime'
+    }]);
+</script>
+{/block}

@@ -1,0 +1,120 @@
+.GaugeMeter{
+		Position:				Relative;
+		Text-Align:			Center;
+		Overflow:				Hidden;
+		Cursor:				Default;
+	}
+
+	.GaugeMeter SPAN,
+	.GaugeMeter B{
+		Margin:				0 23%;
+		Width:					54%;
+		Position:				Absolute;
+		Text-Align:			Center;
+		Display:				Inline-Block;
+		Color:					RGBa(0,0,0,.8);
+		Font-Weight:			100;
+		Overflow:				Hidden;
+		White-Space:			NoWrap;
+		Text-Overflow:		Ellipsis;
+		line-height: 54px!important;
+	}
+	.GaugeMeter[data-style="Semi"] B{
+		Margin:				0 10%;
+		Width:					80%;
+	}
+
+	.GaugeMeter S,
+	.GaugeMeter U{
+		Text-Decoration:	None;
+		Font-Size:			.60em;
+		Font-Weight:			200;
+		Opacity:				.6;
+	}
+
+	.GaugeMeter B{
+		Color:					Black;
+		Font-Weight:			200;
+		Opacity:				.8;
+		font-size: 10px!important;
+		line-height: 88px!important;
+	}
+	BODY{
+		Margin:				0;
+		Padding:				0;
+		Width:				100%;
+		overflow-x: hidden;
+	}
+
+	#Header{
+		min-Height:360px;
+	}
+
+	HEADER,
+	FOOTER{
+		Width:					100%;
+		z-Index:				1;
+		Top:					0;
+		Margin:				0;
+		/*Padding:				10px 0 0 0;*/
+		Text-Align:			Center;
+		/*Background:			#21B4F9;*/
+		/*Background:			#2C94E0;*/
+		/*Background: 			Linear-Gradient(45deg, #2C94E0, #21B4F9), URL(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAnCAQAAAAmqpm+AAAAUUlEQVR4AWMgDvyXJEoV7/AwjnckGzdq3Khxo8apDQvj/kuCIS9OqIYCefFD4tzG+F+NGFW0Mo7ysBvNFaPGjRo3apzkIDfuP89/XipASQgEAF4fpQGYXVnnAAAAAElFTkSuQmCC);*/
+		/*Background-Blend-Mode: Lighten;*/
+		/*Box-Shadow:			0 0 20px 0 rgba(0,0,0,.4);*/
+		/*-Moz-Animation:		BluePrint 60s Infinite;*/
+		/*-Webkit-Animation:	BluePrint 60s Infinite;*/
+		/*Animation:				BluePrint 60s Infinite;*/
+	}
+
+	@-moz-keyframes BluePrint{
+			0%					{Background-Position: 0 0;}
+		100%					{Background-Position: 1100% 100%;}
+	}
+	
+	@-webkit-keyframes BluePrint{
+			0%					{Background-Position: 0 0;}
+		100%					{Background-Position: 1100% 100%;}
+	}
+	
+	@keyframes BluePrint{
+			0%					{Background-Position: 0 0;}
+		100%					{Background-Position: -100% 100%;}
+	}
+
+	HEADER H1{
+		Color:					White;
+		Font:					Normal 400 28px/28px "Helvetica", Arial;
+		Margin:				30px Auto 20px Auto;
+		Text-Shadow:			0 2px 10px rgba(0,0,0,.3);
+	}
+
+	HEADER P{
+		Color:					White;
+		Font:					Normal 200 18px/22px "Helvetica", Arial;
+		Margin:				0 Auto;
+		Text-Shadow:			0 1px 5px rgba(0,0,0,.3);
+	}
+	HEADER P.SubTitle{
+		Color:					White;
+		Font:					Normal 200 15px/22px "Helvetica", Arial;
+		Margin:				0 Auto;
+		Text-Shadow:			0 1px 5px rgba(0,0,0,.3);
+	}
+
+	HEADER .Preview{
+		Overflow:				Auto;
+		Margin-Top:			30px;
+		Display:				Inline-Block;
+	}
+
+	HEADER .Preview .GaugeMeter{
+		Margin:				0 10px;
+	}
+
+
+
+
+
+

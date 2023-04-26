@@ -1,0 +1,1 @@
+2018-11-29 13:28:53: strlen() expects parameter 1 to be string, array given

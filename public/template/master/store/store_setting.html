@@ -1,0 +1,216 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/map.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<style>
+    .picShow > .pic {
+        display: none
+    }
+
+    .picShow > .pic:first-child {
+        display: block
+    }
+
+    .picShow > .pic a {
+        position: relative;
+        width: 150px;
+    }
+
+    .picShow > .pic img {
+        width: 150px;
+        display: block;
+    }
+
+    #tooltip {
+        position: absolute;
+        width: 300px;
+        border: 1px solid #f4f4f4;
+        background: #fff;
+        color: #fff;
+        display: none
+    }
+
+    #tooltip img {
+        width: 100%
+    }
+
+    .auth_type > div {
+        float: left;
+        width: 50%;
+    }
+
+    .step > li:not(.active) > .stepLabel:hover:before {
+        background: #fff;
+        color: rgb(51, 51, 51);
+    }
+
+    .step > li:not(.active) > .stepLabel:hover:after {
+        background: rgb(235, 235, 235);
+        color: rgb(51, 51, 51);
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请先选择商城已注册会员进行添加店铺操作。</span></li>
+            <li><span>请根据提示信息准确无误填写店铺信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            <li><span>入驻店铺需认证，自营无需认证。</span></li>
+        </ul>
+    </div>
+</div>
+
+<br>
+
+<form class="layui-form" action="" method="post">
+    <!--认证信息-->
+    <div class="contentShell">
+        <!--同城配送-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 是否开启同城配送</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_city" value="1" title="是"
+                       {eq name="item.is_city|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_city" value="0" title="否"
+                       {eq name="item.is_city|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+
+        <!--货到付款-->
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label"><font color="red">*</font> 是否开启货到付款</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="radio" name="is_pay_delivery" value="1" title="是"-->
+                       <!--{eq name="item.is_pay_delivery|default=1" value="1" }checked{/eq}-->
+                <!--&gt;-->
+                <!--<input type="radio" name="is_pay_delivery" value="0" title="否"-->
+                       <!--{eq name="item.is_pay_delivery|default=1" value="0" }checked{/eq}-->
+                <!--&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--门店自提-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 是否开启门店自提</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_shop" value="1" title="是"
+                       {eq name="item.is_shop|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_shop" value="0" title="否"
+                       {eq name="item.is_shop|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--是否开启全国包邮-->
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label"><font color="red">*</font> 是否开启全国包邮</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="radio" name="is_express" value="1" title="是"-->
+                       <!--{eq name="item.is_express|default='1'" value="1" }checked{/eq}-->
+                <!--&gt;-->
+                <!--<input type="radio" name="is_express" value="0" title="否"-->
+                       <!--{eq name="item.is_express|default=''" value="0" }checked{/eq}-->
+                <!--&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--店铺品牌甄选展示图-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 店铺品牌甄选展示图<br>[684*304]</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$item.brand_image|default=''}"
+                        width="684"
+                        height="304"
+                        file-mime="image/gif,image/jpeg,image/png"
+                        name="brand_image"
+                        dir="store_image_brand_image"
+                        value="{$item.brand_image_data|default=''}"
+                        {eq name="Request.get.audit|default=0" value="1"}disabled="disabled"{/eq}
+                >
+                </div>
+            </div>
+        </div>
+
+        <!--是否参加发现好店-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 发现好店</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_good" value="1" title="是"
+                       {eq name="item.is_good|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_good" value="0" title="否"
+                       {eq name="item.is_good|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--发现好店展示图-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 店铺发现好店展示图<br>[400*400]</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$item.good_image|default=''}"
+                        width="400"
+                        height="400"
+                        file-mime="image/gif,image/jpeg,image/png"
+                        name="good_image"
+                        dir="store_image_good_image"
+                        value="{$item.good_image_data|default=''}"
+                        {eq name="Request.get.audit|default=0" value="1"}disabled="disabled"{/eq}
+                >
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {notempty name="Request.get.member_id|default=''"}
+                <button type="button" class="layui-btn layui-btn-primary" onclick="main.jumpFour('store/storeAuth?member_id={$Request.get.member_id}')">返回上一步</button>
+                <button class="layui-btn" type="submit" id="submit">保存并下一步</button>
+                {/notempty}
+                {notempty name="Request.get.store_id|default=''"}
+                    {eq name="Request.get.audit|default=0" value="1"}
+                        <button type="button" class="layui-btn layui-btn-primary" onclick="main.jumpFour('store/storeAuth?store_id={$Request.get.store_id}&audit=1')">返回上一步</button>
+                        <button type="button" class="layui-btn" onclick="main.jumpFour('store/fitment?store_id={$Request.get.store_id}&audit=1')">查看下一步</button>
+                    {else/}
+                        <button class="layui-btn" type="submit" id="submit">保存</button>
+                    {/eq}
+                {/notempty}
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('element');
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

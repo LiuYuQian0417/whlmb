@@ -1,0 +1,58 @@
+{extend name='public/common' /}
+{block name="header_css"}
+<!--首页css-->
+
+<link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+{/block}
+{block name="page_head"}
+<style>
+    .head-container{
+        height: 110px;
+    }
+</style>
+<!--头部搜索-->
+<div class="head-container clearfix" style="background: #fff">
+    <div class="head-container-center clearfix">
+        <div class="logo">
+            <img  src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <!--<span>{$header_title|default=''}</span>-->
+        </div>
+        <div class="search-content">
+            <div class="search clearfix">
+                <input type="text" class="search-border border-color" maxlength="60" value="{:input('keyword')}">
+                <div class="search-goods primary-background-color" onclick="hot_search(1,$(this).parent('.search').children('input').val())">搜商品</div>
+                {if $function_status.one_or_more===true}<div class="search-shop" onclick="hot_search(2,$(this).parent('.search').children('input').val())">搜店铺</div>{/if}
+            </div>
+            <div class="search-keywords" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width: 100%;">
+                {volist name="search" id="search_data"}
+                <span class="primary-color-hover" style="width: 2px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis" onclick="hot_search('{$search_data.type}','{$search_data.keyword}')">{$search_data.keyword}</span>
+                {/volist}
+            </div>
+        </div>
+        <!--have-goods 有商品时-->
+        <div class="my-cart clearfix {if ($member_info['cart_count']??0)>0}have-goods{/if}" onclick="jump_cart()">
+            <div class="num" style="display: none;">{$member_info['cart_count']??0}</div>
+            <img src="__RES__/imgs/del/buyCar.png" alt="">
+            <span >我的购物车</span>
+        </div>
+    </div>
+</div>
+<!--头部搜索结束-->
+{/block}
+{block name='header_js'}
+<script type="text/javascript">
+    //热门搜索跳转-->
+    function hot_search(type,text){
+        switch (type.toString()) {
+            //商品
+            case '1':
+                main.jump({'url':'/pc2.0/goods/index?keyword='+text});
+                break;
+            //店铺
+            case '2':
+                main.jump({'url':'/pc2.0/store/search_list?keyword='+text+'&lat='+localStorage.lat+'&lng='+localStorage.lng});
+                break;
+        }
+    }
+</script>
+{/block}

@@ -1,0 +1,176 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<style>
+    .contentShell {
+        width: 90%;
+        height: 485px;
+    }
+.preview{
+    background: #bbb !important;
+    display: none;
+}
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="/config/saveConfig" method="post">
+
+    <div class="tabs_info">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);">商城设置</a></li>
+            <li class=""><a href="javascript:void(0);">店铺设置</a></li>
+            <li class=""><a href="javascript:void(0);">商品设置</a></li>
+            <li class=""><a href="javascript:void(0);">订单设置</a></li>
+            <li class=""><a href="javascript:void(0);">配送设置</a></li>
+            <li class=""><a href="javascript:void(0);">会员设置</a></li>
+            <li class=""><a href="javascript:void(0);">营销设置</a></li>
+        </ul>
+    </div>
+
+    <!--操作提示begin-->
+    <!--<div class="content">-->
+        <!--<div class="explanation" id="explanation">-->
+            <!--<div class="ex_tit">-->
+                <!--<i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>-->
+            <!--</div>-->
+            <!--<ul>-->
+                <!--<li><span>1、商城相关信息设置，请谨慎填写信息；</span></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!----------------------------------------------------商城设置------------------------------------------------------>
+    <div class="contentShell">
+        <img src="__RES__/image/home/step1.png" alt="">
+    </div>
+
+    <!----------------------------------------------------店铺设置------------------------------------------------------>
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/step2.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/step3.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/step4.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/step5.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/step6.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/step7.png" alt="">
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a class="layui-btn preview">上一步</a>
+                <a class="layui-btn next">了解下一步</a>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([
+        {
+            selector: 'switch(changeSwitch)',
+            callback: function (data) {
+                main.ajax({
+                    data: {
+                        switchType: data.value,
+                        checked: data.elem.checked ? 1 : 0
+                    },
+                    url: '/config/function_status'
+                })
+            }
+        }
+    ]);
+    main.valid('.layui-form');
+
+    //内容页切换
+    var len =  $('.tabs_info li').length;
+    var index = 0;
+    $('.tabs_info li').click(function () {
+        index = $(this).index();
+        if(index==len-1){
+            $('.next').html('好的，看懂了');
+        }else{
+            $('.next').html('了解下一步');
+        }
+        if(index>0){
+            $('.preview').css('display','inline-block')
+        }else{
+            $('.preview').css('display','none')
+        }
+        if(index==len-1){
+            $('.next').html('好的，看懂了');
+        }
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    });
+
+    $('.next').click(function () {
+        if(index==len-1){
+            $('.next').attr('href','/home/index');
+        }
+        index++;
+        if(index>=len-1){
+            index=len-1;
+        }
+        console.log(index)
+        if(index==len-1){
+            $(this).html('好的，看懂了');
+        }else{
+            $('.next').html('了解下一步');
+        }
+        if(index>0){
+            $('.preview').css('display','inline-block')
+        }else{
+            $('.preview').css('display','none')
+        }
+
+        $('.tabs_info li').eq(index).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+
+    })
+    $('.preview').click(function () {
+        index--;
+        if(index<=0){
+            index=0;
+        }
+        if(index==len-1){
+            $('.next').html('好的，看懂了');
+        }else{
+            $('.next').html('了解下一步');
+        }
+        if(index>0){
+            $('.preview').css('display','inline-block')
+        }else{
+            $('.preview').css('display','none')
+        }
+        $('.tabs_info li').eq(index).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    })
+</script>
+{/block}
+{block name='highSearch'}{/block}

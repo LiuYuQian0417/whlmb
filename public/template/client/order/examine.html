@@ -1,0 +1,1095 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .ecsc-form-goods dt{text-align: left!important;}
+    .ecsc-default-table{border-bottom: none}
+    .layui-layer-shade{background: rgba(0,0,0,0.5)!important;}
+    .ecsc-form-goods dl{border-bottom:none;padding: 10px 0!important;background-color: #fff !important;}
+    .ecsc-form-goods dl:hover{background: none;}
+    .ecsc-form-goods dl span{color:#000;font-weight: bold}
+    .ecsc-default-table tr:first-child td{background: #fafafa}
+    .layui-checkbox-disbaled:hover i{
+        color: #5FB878!important;
+    }
+</style>
+<div class="main-content" id="mainContent">
+    <div class="ecsc-form-goods">
+        <form action="" method="post" class="layui-form">
+            <!--<div class="wrapper-list border1">-->
+            <div class="step_con">
+                <ul>
+                    <li {if condition="$item.status egt 0"}class="active"{/if}>
+                    <div class="circle">
+                        <div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>
+                    </div>
+                    <div class="state">提交订单</div>
+                    <div class="time">{$item.create_time}</div>
+                    </li>
+
+                    {eq name="$item.pay_type" value="2"}
+                        <li {eq name="$item.distribution_type" value="2"}style="display:none"{/eq} {if condition="$item.status egt 2 and $item.deliver_time neq NULL and $item.distribution_type neq 2 or $item.distribution_type eq 2 and $item.status egt 2"}class="active"{/if}>
+                        <div class="circle">
+                            <div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>
+                        </div>
+                        <div class="state">商品发货</div>
+                        {if condition="$item.deliver_time neq NULL and $item.distribution_type neq 2 or $item.distribution_type eq 2 and $item.status eq 2 or $item.distribution_type eq 2 and $item.status eq 3"}
+                        <div class="time">{$item.deliver_time}</div>
+                        {/if}
+                        </li>
+
+                        <li {if condition="$item.status egt 1 and $item.pay_time neq NULL"}class="active"{/if}>
+                        <div class="circle">
+                            <div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>
+                        </div>
+                        <div class="state">
+                            {switch name="$item.distribution_type"}
+                            {case value="2"}待自提{/case}
+                            {default/}支付成功
+                            {/switch}
+                        </div>
+                        {if condition="$item.pay_time neq NULL"}
+                        <div class="time">{$item.pay_time}</div>
+                        {/if}
+                        </li>
+                    {else/}
+                        <li {if condition="$item.status egt 1 and $item.pay_time neq NULL"}class="active"{/if}>
+                        <div class="circle">
+                            <div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>
+                        </div>
+                        <div class="state">
+                            {switch name="$item.distribution_type"}
+                            {case value="2"}待自提{/case}
+                            {default/}支付成功
+                            {/switch}
+                        </div>
+                        {if condition="$item.pay_time neq NULL"}
+                        <div class="time">{$item.pay_time}</div>
+                        {/if}
+                        </li>
+
+                        <li {eq name="$item.distribution_type" value="2"}style="display:none"{/eq} {if condition="$item.status egt 2 and $item.deliver_time neq NULL and $item.distribution_type neq 2 or $item.distribution_type eq 2 and $item.status egt 2"}class="active"{/if}>
+                        <div class="circle">
+                            <div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>
+                        </div>
+                        <div class="state">商品发货</div>
+                        {if condition="$item.deliver_time neq NULL and $item.distribution_type neq 2 or $item.distribution_type eq 2 and $item.status eq 2 or $item.distribution_type eq 2 and $item.status eq 3"}
+                        <div class="time">{$item.deliver_time}</div>
+                        {/if}
+                        </li>
+                    {/eq}
+
+
+                    <li {if condition="$item.status egt 3 and $item.deal_time neq NULL"}class="active"{/if}>
+                    <div class="circle">
+                        <div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>
+                    </div>
+                    <div class="state">
+                        {switch name="$item.distribution_type"}
+                        {case value="2"}已提货{/case}
+                        {default/}确认收货
+                        {/switch}
+                    </div>
+                    {if condition="$item.deal_time neq NULL"}
+                    <div class="time">{$item.deal_time}</div>
+                    {/if}
+                    </li>
+
+                    <li {eq name="$comment" value="1"}class="active"{/eq}>
+                    <div class="circle">
+                        <div class="cur"><svg t="1514173150140" class="icon" style="" viewBox="0 0 1027 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1557" xmlns:xlink="http://www.w3.org/1999/xlink" width="14" height="14"><defs><style type="text/css"></style></defs><path d="M286.372864 473.019392l138.845184 264.991744c0 0 225.627136-538.53184 581.4272-718.04416C997.963776 148.18816 963.254272 259.315712 1024 396.08832 867.795968 430.27968 546.709504 814.948352 442.576896 1003.008 295.05024 823.491584 121.490432 686.724096 0 643.984384L286.372864 473.019392z" p-id="1558" fill="#BDBBBB"></path></svg></div>
+                    </div>
+                    <div class="state">评价</div>
+                    {if condition="$time neq ''"}
+                    <div class="time">{$time}</div>
+                    {/if}
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="tabmenu" style="margin-top: 20px;">
+                <ul class="tab">
+                    <li class="active"><a href="javascript:;">订单信息</a></li>
+                    <li class=""><a href="javascript:;">物流和收货信息</a></li>
+                    {eq name="$item.order_type" value="2"}
+                    <li class=""><a href="javascript:;">拼团信息</a></li>
+                    {/eq}
+                    {if condition="$item.take_id neq NULL"}
+                    <li class=""><a href="javascript:;">自提信息</a></li>
+                    {/if}
+                </ul>
+            </div>
+
+            <!--订单信息-->
+            <div class="wrapper-list">
+                <dl>
+                    <span>买家留言：</span>{$item.message|default='无'}
+                </dl>
+                <div class="dash_line"></div>
+                <dl>
+                    <span>买家信息：</span>
+                </dl>
+                <dl style="display: flex;align-items: center;padding-top: 0!important;">
+                    <div style="width: 26%">买家账号：{$item.nickname|default=''}/{$item.username|default=''}</div>
+                    <div style="width: 26%">所在地区：{$item.address_province|default=''} {$item.address_city|default=''} {$item.address_area|default=''}</div>
+                    <div style="width: 26%">联系电话：{$item.consignee_phone|default=''}</div>
+                    <div style="width: 22%">支付方式：{switch name="$item.pay_channel|default=''"}
+                        {case value="0"}待付款{/case}
+                        {case value="1"}微信{/case}
+                        {case value="2"}支付宝{/case}
+                        {case value="3"}余额{/case}
+                        {case value="4"}银行卡{/case}
+                        {case value="5"}线下{/case}
+                        {case value="6"}货到付款{/case}
+                        {default /}出错啦
+                        {/switch}</div>
+                </dl>
+                <div class="dash_line"></div>
+                <dl>
+                    <span>订单信息：</span>
+                </dl>
+                <dl style="display: flex;align-items: center;padding: 0!important;">
+                    <div style="width: 26%">订单编号：{$item.order_attach_number|default=''}</div>
+                    <div style="width: 26%">订单类型：
+                        {switch name="$item.order_type|default=''"}
+                        {case value="1"}普通线上{/case}
+                        {case value="2"}拼团{/case}
+                        {case value="3"}砍价{/case}
+                        {case value="4"}限时抢购{/case}
+                        {case value="5"}普通线下{/case}
+                        {default /}出错啦
+                        {/switch}</div>
+                    <div style="width: 26%">订单来源：{switch name="$item.case_pay_type|default=''"}
+                        {case value="1"}APP{/case}
+                        {case value="2"}小程序{/case}
+                        {case value="3"}PC{/case}
+                        {case value="4"}手机站{/case}
+                        {default /}出错啦
+                        {/switch}</div>
+                    <div style="width: 22%">创建时间：{$item.create_time|default=''}</div>
+                </dl>
+                <dl style="display: flex;align-items: center">
+                    <div style="width: 26%">付款时间：{$item.pay_time|default='未付款'}</div>
+                    <div style="width: 26%">配送方式：
+                        {switch name="$item.distribution_type|default=''"}
+                        {case value="1"}同城速递{/case}
+                        {case value="2"}预约自提{/case}
+                        {case value="3"}快递邮寄{/case}
+                        {default /}出错啦
+                        {/switch}
+                    </div>
+
+                    {if condition="$item.distribution_type neq 2"}
+                    {if condition="$item.distribution_type eq 1"}
+                    <div style="width: 26%">配送时间：{$item.deliver_time|default=''}</div>
+                    {else/}
+                    <div style="width: 26%">发货时间：{$item.deliver_time|default=''}</div>
+                    {/if}
+                    {else/}
+                    {if condition="$item.deal_time neq NULL"}
+                    <div style="width: 26%">提货时间：{$item.deal_time|default=''}</div>
+                    {else/}
+                    <div style="width: 26%">发货时间：待自提</div>
+                    {/if}
+                    {/if}
+
+                    <div style="width: 22%">订单状态：
+                        {switch name="$item.status|default=''"}
+                        {case value="0"}待付款{/case}
+                        {case value="1"}
+                        {switch name="$item.distribution_type"}
+                        {case value="1"}待配送{/case}
+                        {default/}待发货
+                        {/switch}
+                        {/case}
+                        {case value="2"}
+                        {switch name="$item.distribution_type"}
+                        {case value="2"}待自提{/case}
+                        {default/}配送中
+                        {/switch}
+                        {/case}
+                        {case value="3"}已完成{/case}
+                        {case value="4"}已关闭{/case}
+                        {case value="5"}退款中{/case}
+                        {case value="6"}已取消{/case}
+                        {default /}出错啦
+                        {/switch}</div>
+                </dl>
+                <dl>
+                    <span>发票信息：</span>
+                </dl>
+                <dl style="display: flex;align-items: center;padding: 0!important;">
+                    <div style="width: 26%">是否开票：
+                        {empty name="$invoice_status"}
+                        否
+                        {else/}
+                        <a href="javascript:void(0);"
+                           {eq name="$invoice_status['status']" value="1"}
+                           onclick="main.jumpFour('client/invoice/examine?id={$invoice_status.invoice_id}')"
+                           {else/}
+                           onclick="main.jumpFour('client/invoice/check?id={$invoice_status.invoice_id}')"
+                            {/eq}
+                        >是</a>
+                        {/empty}
+                    </div>
+                </dl>
+                <div class="dash_line" style="margin-bottom: 15px;"></div>
+                <!--<dl>-->
+                <!--商品信息-->
+                <!--</dl>-->
+                <div class="list-div" >
+                    <table class="ecsc-default-table" >
+                        <tr>
+                            <td width="15%">商品名称</td>
+                            <td width="15%">缩略图</td>
+                            <td width="10%">商品规格详细</td>
+                            <td width="10%">原价</td>
+                            <td width="10%">单品交易价</td>
+                            <td width="10%">购买数量</td>
+                            <td width="10%">总交易价</td>
+                            <td width="10%">状态</td>
+                            <td width="10%">操作</td>
+                        </tr>
+                        {volist name="goods" id="vo"}
+                        <tr>
+                            <td>
+                                {$vo.goods_name}
+                                <input type="hidden" name="order_goods_id[]" value="{$vo.order_goods_id}">
+                            </td>
+                            <td>
+                                <img src="{$vo.file}" class="thumb-img" style="width: 50px;height: 50px;"
+                                     onerror="this.src='/template/master/resource/image/common/imageError.png'" />
+                            </td>
+                            <td>{$vo.attr|default='无属性'}</td>
+                            <td>{$vo.original_price}</td>
+                            <td>{$vo.single_price}</td>
+                            <td>{$vo.quantity}</td>
+                            <td>
+                                {$vo.goodsTotal}
+                                <div style="color: red">
+                                    改价:
+                                    <span id="symbol_{$vo.order_goods_id}">
+                                        {$vo.sum_alter_goods_price>0?'+':''}
+                                    </span>
+                                    <span id="alter_price_{$vo.order_goods_id}">
+                                        {$vo.sum_alter_goods_price}
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                {switch vo.status}
+                                {case 0.1}待付款{/case}
+                                {case 1.1|1.2}
+                                {switch name="$item.distribution_type"}
+                                {case value="1"}待配送{/case}
+                                {default/}待发货
+                                {/switch}
+                                {/case}
+                                {case 2.1}
+                                {switch name="$item.distribution_type|default=''"}
+                                {case value="2"}待自提{/case}
+                                {default/}待收货
+                                {/switch}
+                                {/case}
+                                {case 2.2}拼团自提进行中{/case}
+                                {case 3.1}已收货{/case}
+                                {case 4.1}已评价{/case}
+                                {case 4.2}退款成功(仅退款){/case}
+                                {case 4.3}退货成功{/case}
+                                {case 6.1}已取消{/case}
+                                {case 5.1|5.2}申请退款中（{if condition="$vo.orderGoodsRefund.is_get_goods eq 1"}未收到货{else/}已收到货{/if}）{/case}
+                                {case 5.3}同意退货（等待填写物流）{/case}
+                                {case 5.4}申请退货中{/case}
+                                {case 5.5|5.7}退款失败（原因：{$vo.orderGoodsRefund.refuse_reason|default=''}） {/case}
+                                {case 5.6}退货失败（原因：{$vo.orderGoodsRefund.refuse_reason|default=''}） {/case}
+                                {default /}错误
+                                {/switch}
+                            </td>
+                            <td>
+                                {switch name="$vo.status"}
+                                {case value="0.1"}
+<!--                                <a href="javascript:;" onclick="editPrice({title:'修改价格',btn:[]},{$vo.order_goods_id})" class="btn_edit"><i class="fa fa-edit"></i>修改价格 </a>-->
+                                {/case}
+                                {case value="5.1"}
+                                <a href="javascript:;" onclick="openRefund({title:'退款',btn:[]},{$vo.order_goods_id})" class="btn_edit"><i class="icon icon-share"></i>退款 </a>
+                                {/case}
+                                {case value="5.2"}
+                                <a href="javascript:;" onclick="openRefund({title:'退货退款',btn:[]},{$vo.order_goods_id})" class="btn_edit"><i class="icon icon-share"></i>退货退款（退款）</a>
+                                {/case}
+                                {case value="4.2"}
+                                <a href="javascript:;" onclick="openRefund({title:'退款',btn:[]},{$vo.order_goods_id})" class="btn_edit"><i class="icon icon-share"></i>退款成功</a>
+                                {/case}
+                                {case value="4.3"}
+                                <a href="javascript:;" onclick="openRefund({title:'退货退款',btn:[]},{$vo.order_goods_id})" class="btn_edit"><i class="icon icon-share"></i>退货成功</a>
+                                {/case}
+                                {case value="5.4"}
+                                <a href="javascript:;" onclick="openRefund({title:'退货退款',btn:[]},{$vo.order_goods_id})" class="btn_edit"><i class="icon icon-share"></i>是否收到货</a>
+                                {/case}
+                                {default/}无
+                                {/switch}
+                            </td>
+                        </tr>
+                        {/volist}
+                    </table>
+                </div>
+                <dl style="line-height: 30px">
+                    费用信息{eq name="$item.status" value="0"}
+                    <!--<a class="sc-btn" style="color: #f98a10;border-color:#f98a10;float: right" onclick="editPrice({title:'修改价格',btn:[]},{$item.order_attach_id})"><i class="fa fa-edit" style="margin-right: 5px;"></i>修改价格</a>-->
+                    {/eq}
+                </dl>
+                <div class="list-div">
+                    <table class="ecsc-default-table">
+                        <tr>
+                            <td width="10%">订单支付金额</td>
+                            <td width="10%">修改订单金额</td>
+                            <td width="10%">平台优惠券金额</td>
+                            <td width="10%">平台红包金额</td>
+                            <td width="10%">店铺优惠券抵扣金额</td>
+                            <td width="10%">会员折扣</td>
+                            <!--<td width="10%">店铺促销金额</td>-->
+                            <!--<td width="10%">店铺满减金额</td>-->
+                            <td width="10%">店铺运费</td>
+                        </tr>
+                        <tr>
+                            <td id="subtotal_price">{$item.subtotal_price}</td>
+                            <td id="sum_alter_goods_price">{$item.sum_alter_goods_price}</td>
+                            <td>{$item.subtotal_share_platform_coupon_price}</td>
+                            <td>{$item.subtotal_share_platform_packet_price}</td>
+                            <td>{$item.subtotal_coupon_price}</td>
+                            <td>{$member_discount_price|number_format=###,2,'.',''}</td>
+                            <!--<td>{$item.subtotal_promotion_price}</td>-->
+                            <!--<td>{$item.subtotal_fullSub_price}</td>-->
+                            <td id="subtotal_freight_price">{$item.subtotal_freight_price}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                {if condition="$item.status eq 1 or $item.status eq 2"}
+                <!--<dl>-->
+                <!--我的退货信息（店铺地址）：{$store.province} {$store.city} {$store.area} {$store.address}-->
+                <!--</dl>-->
+                {/if}
+
+                <!--自提待核销-->
+                {switch name="$item.distribution_type"}
+                {case value="2"}
+                <!--待核销提货码-->
+                {eq name="$item.status" value="2"}
+                <div class="list-div">
+                    <div class="contentShell80">
+                        <div class="layui-form-item">
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>
+                                    {notempty name="$invoiceArr"}
+                                        {eq name="$invoiceArr.billing_type" value="0"}
+                                        要求开具票
+                                        {else/}
+                                        用户已开发票
+                                        {/eq}
+                                    {else/}
+                                    要求开具票
+                                    {/notempty}
+                                </label>
+                                {notempty name="$invoiceArr"}
+                                <input type="checkbox" disabled  {notempty name="$invoiceArr"} checked{/notempty}>
+                                {else/}
+                                <span style="margin-top: 9px;display: block">无</span>
+                                {/notempty}
+                            </div>
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font> 验证提货码</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="take_code" maxlength="50" autocomplete="off" placeholder="请输入提货码"
+                                           value=""
+                                           datatype="*" nullmsg="请输入提货码" errormsg="请输入提货码" class="layui-input">
+                                </div>
+                                <a class="layui-btn" href="javascript:void(0);" onclick="checkTakeCode('{$item.order_attach_id}')">核销</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/eq}
+                {/case}
+                {/switch}
+
+                <!--货到付款确认收货操作-->
+                {if condition="($item.pay_type eq 2) and ($item.status eq 2)"}
+                <div class="list-div">
+                    <div class="contentShell80">
+                        <div class="layui-form-item">
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"> 货到付款订单操作</label>
+
+                                <a class="layui-btn" href="javascript:void(0);" onclick="confirmCollect('{$item.order_attach_id}')">确认收货</a>
+                            </div>
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>
+                                    {notempty name="$invoiceArr"}
+                                        {eq name="$invoiceArr.billing_type" value="0"}
+                                        要求开具票
+                                        {else/}
+                                        用户已开发票
+                                        {/eq}
+                                    {else/}
+                                    要求开具票
+                                    {/notempty}
+                                </label>
+                                {notempty name="$invoiceArr"}
+                                <input type="checkbox" disabled  {notempty name="$invoiceArr"} checked{/notempty}>
+                                {else/}
+                                <span style="margin-top: 9px;display: block">无</span>
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+                <!--所有待发货情况-->
+                {eq name="$item.status|default=''" value="1"}
+                {switch name="$item.distribution_type"}
+                {case value="3"}
+                {if condition="($item.order_type eq 2 and $item.group_activity_status eq 2) or ($item.order_type neq 2)"}
+                <dl>
+                    物流信息
+                </dl>
+                <div class="list-div">
+                    <div class="contentShell80">
+                        <div class="layui-form-item">
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font> 快递公司名称</label>
+                                <div class="layui-input-inline">
+                                    <select name="express_value" lay-search="" datatype="*"
+                                            nullmsg="请选择快递公司" errormsg="请选择快递公司">
+                                        <option value="" {eq name="item.express_value|default=''" value="" }selected{/eq}>请选择快递公司</option>
+                                        {volist name="express" id="vo"}
+                                        <option value="{$vo.code}" {eq name="item.express_value|default=''" value="$vo.code" }selected{/eq}>{$vo.name}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font> 快递单号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="express_number" maxlength="30" autocomplete="off" placeholder="请输入快递单号"
+                                           value="{$item.express_number|default=''}"
+                                           datatype="*" nullmsg="请输入快递单号" errormsg="请输入快递单号" class="layui-input">
+                                </div>
+                                <a href=""></a>
+                            </div>
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>
+                                    {notempty name="$invoiceArr"}
+                                        {eq name="$invoiceArr.billing_type" value="0"}
+                                        要求开具发票
+                                        {else/}
+                                        用户已开发票
+                                        {/eq}
+                                    {else/}
+                                    要求开具发票
+                                    {/notempty}
+                                </label>
+                                {notempty name="$invoiceArr"}
+                                <input type="checkbox" disabled  {notempty name="$invoiceArr"} checked{/notempty}>
+                                {else/}
+                                <span style="margin-top: 9px;display: block">无</span>
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {/case}
+
+                <!--拼团满足条件人数或非拼团情况-->
+                {case value="1"}
+                {if condition="($item.order_type eq 2 and $item.surplus_num eq 0) or ($item.order_type neq 2)"}
+                {if condition="$item.dada eq 0"}
+                <dl>
+                    <dt>配送方式：</dt>
+                    <dd>
+                        <div class="checkbox_items" onclick="showunit()">
+                            <!--<input type="radio"  name="delivery_method" value="1" title="快递" checked>-->
+                            <input type="radio"  name="delivery_method" value="2" title="自主配送" style="margin-left: 10px;" id="refuse" checked>
+                            {if condition="$store.source_id neq NULL and $item.pay_type neq 2"}
+                            <input type="radio"  name="delivery_method" value="3" title="第三方配送" style="margin-left: 10px;">
+                            {/if}
+                        </div>
+                    </dd>
+                </dl>
+                <dl>
+                    物流信息
+                </dl>
+                <!--快递配送-->
+                <!--<div class="list-div" id="express">-->
+                    <!--<div class="contentShell80">-->
+                        <!--<div class="layui-form-item">-->
+                            <!--<div style="height:38px;padding-top: 20px">-->
+                                <!--<label class="layui-form-label"><font color="red">*</font> 快递公司名称</label>-->
+                                <!--<div class="layui-input-inline">-->
+                                    <!--<select name="express_value" lay-search="" datatype="*"-->
+                                            <!--nullmsg="请选择快递公司" errormsg="请选择快递公司">-->
+                                        <!--<option value="" {eq name="item.express_value|default=''" value="" }selected{/eq}>请选择快递公司</option>-->
+                                        <!--{volist name="express" id="vo"}-->
+                                        <!--<option value="{$vo.code}" {eq name="item.express_value|default=''" value="$vo.code" }selected{/eq}>{$vo.name}</option>-->
+                                        <!--{/volist}-->
+                                    <!--</select>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <!--<div style="height:38px;padding-top: 20px">-->
+                                <!--<label class="layui-form-label"><font color="red">*</font> 快递单号</label>-->
+                                <!--<div class="layui-input-inline">-->
+                                    <!--<input type="text" name="express_number" maxlength="50" autocomplete="off" placeholder="请输入快递单号"-->
+                                           <!--value="{$item.express_number|default=''}"-->
+                                           <!--datatype="*" nullmsg="请输入快递单号" errormsg="请输入快递单号" class="layui-input">-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--自主配送-->
+                <div class="list-div" id="distribution_tel">
+                    <div class="contentShell80">
+                        <div class="layui-form-item">
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font> 配送人员联系方式</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="distribution_tel" maxlength="11" autocomplete="off" placeholder="请输入联系方式"
+                                           value="{$item.distribution_tel|default=''}"
+                                           datatype="m" nullmsg="请输入联系方式" errormsg="请输入正确的联系方式" class="layui-input">
+                                </div>
+                            </div>
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>
+                                    {notempty name="$invoiceArr"}
+                                        {eq name="$invoiceArr.billing_type" value="0"}
+                                        要求开具票
+                                        {else/}
+                                        用户已开发票
+                                        {/eq}
+                                    {else/}
+                                    要求开具票
+                                    {/notempty}
+                                </label>
+                                {notempty name="$invoiceArr"}
+                                <input type="checkbox" disabled  {notempty name="$invoiceArr"} checked{/notempty}>
+                                {else/}
+                                <span style="margin-top: 9px;display: block">无</span>
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {if condition="$store.source_id neq NULL"}
+                <!--第三方配送-->
+                <div class="list-div" style="display:none;" id="dada">
+                    <div class="contentShell80">
+                        <!--门店-->
+                        <div class="layui-form-item">
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>选择门店</label>
+                                <div class="layui-input-inline">
+                                    <select name="shop_no" lay-search="" datatype="*"
+                                            nullmsg="请选择门店" errormsg="请选择门店">
+                                        <option value="">请选择门店</option>
+                                        {volist name="shop" id="shop"}
+                                        <option value="{$shop.origin_shop_id}">{$shop.station_name}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <!--所在城市-->
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>所在城市</label>
+                                <div class="layui-input-inline">
+                                    <select name="city_code" lay-search="" datatype="*"
+                                            nullmsg="请选择所在城市" errormsg="请选择所在城市">
+                                        <option value="">请选择所在城市</option>
+                                        {volist name="city_code" id="city_code"}
+                                        <option value="{$city_code.cityCode}">{$city_code.cityName}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <!--是否需要垫付-->
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>是否需要垫付(垫付订单金额，非运费)</label>
+                                <div class="checkbox_items">
+                                    <input type="radio"  name="is_prepay" value="1" title="是">
+                                    <input type="radio"  name="is_prepay" value="0" title="否" style="margin-left: 10px;" checked>
+                                </div>
+                            </div>
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>
+                                    {notempty name="$invoiceArr"}
+                                        {eq name="$invoiceArr.billing_type" value="0"}
+                                        要求开具票
+                                        {else/}
+                                        用户已开发票
+                                        {/eq}
+                                    {else/}
+                                    要求开具票
+                                    {/notempty}
+                                </label>
+                                {notempty name="$invoiceArr"}
+                                <input type="checkbox" disabled  {notempty name="$invoiceArr"} checked{/notempty}>
+                                {else/}
+                                <span style="margin-top: 9px;display: block">无</span>
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+                {elseif condition="$item.dada eq 2"}
+                <dl>
+                    <dt>配送方式：</dt>
+                    <dd>
+                        <div class="checkbox_items" onclick="showunit()">
+                            <input type="radio"  name="delivery_method" value="3" checked title="第三方配送" style="margin-left: 10px;">
+                        </div>
+                    </dd>
+                </dl>
+                <dl>
+                    物流信息
+                </dl>
+                <div class="list-div" style="">
+                    <div class="contentShell80">
+                        <!--门店-->
+                        <div class="layui-form-item">
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>选择门店</label>
+                                <div class="layui-input-inline">
+                                    <select name="shop_no" lay-search="" datatype="*"
+                                            nullmsg="请选择门店" errormsg="请选择门店">
+                                        <option value="">请选择门店</option>
+                                        {volist name="shop" id="shop"}
+                                        <option value="{$shop.origin_shop_id}">{$shop.station_name}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <!--所在城市-->
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>所在城市</label>
+                                <div class="layui-input-inline">
+                                    <select name="city_code" lay-search="" datatype="*"
+                                            nullmsg="请选择所在城市" errormsg="请选择所在城市">
+                                        <option value="">请选择所在城市</option>
+                                        {volist name="city_code" id="city_code"}
+                                        <option value="{$city_code.cityCode}">{$city_code.cityName}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <!--是否需要垫付-->
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>是否需要垫付(垫付订单金额，非运费)</label>
+                                <div class="checkbox_items">
+                                    <input type="radio"  name="is_prepay" value="1" title="是">
+                                    <input type="radio"  name="is_prepay" value="0" title="否" style="margin-left: 10px;" checked>
+                                </div>
+                            </div>
+                            <div style="height:38px;padding-top: 20px">
+                                <label class="layui-form-label"><font color="red">*</font>
+                                    {notempty name="$invoiceArr"}
+                                        {eq name="$invoiceArr.billing_type" value="0"}
+                                        要求开具票
+                                        {else/}
+                                        用户已开发票
+                                        {/eq}
+                                    {else/}
+                                    要求开具票
+                                    {/notempty}
+                                </label>
+                                {notempty name="$invoiceArr"}
+                                <input type="checkbox" disabled  {notempty name="$invoiceArr"} checked{/notempty}>
+                                {else/}
+                                <span style="margin-top: 9px;display: block">无</span>
+                                {/notempty}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/if}
+                {/if}
+                {/case}
+                {/switch}
+                {/eq}
+                <dl class="button_info">
+                    <dd>
+                        <input type="hidden" name="order_attach_id" value="{$item.order_attach_id}">
+                        <input type="hidden" name="order_id" value="{$item.order_id}">
+                        <input type="hidden" name="status" value="{$item.status}">
+                        <input type="hidden" name="distribution_type" value="{$item.distribution_type}">
+                        {eq name="item.status" value="1"}
+                        {if condition="($item.order_type eq 2 and $item.group_activity_status eq 2) or ($item.order_type neq 2) and ($item.distribution_type neq 2)"}
+                        {if condition="$item.dada eq 0"}
+                        <input type="submit" value="发货" class="sc-btn sc-blueBg-btn btn35"/>
+                        {elseif condition="$item.dada eq 2"}
+                        <input type="submit" value="重新发单" class="sc-btn sc-blueBg-btn btn35"/>
+                        {/if}
+                        {/if}
+                        {/eq}
+                        <a type="reset" href="javascript:main.jumpFour('{:url_logs_replace(url_logs_up('client_logs'))}')" class="sc-btn btn35 sc-blue-btn">返回</a>
+                    </dd>
+                </dl>
+            </div>
+
+            <!--收货和物流信息-->
+            <div class="wrapper-list hide">
+                <div class="logistics_info">
+                    <div class="det">
+                        <div class="title">收货人信息</div>
+                        <ul>
+                            <li>
+                                <div class="tips">收货人：</div>
+                                <div class="info">{$item.consignee_name|default=''}</div>
+                            </li>
+                            <li>
+                                <div class="tips">地区：</div>
+                                <div class="info">{$item.address_province|default=''} {$item.address_city|default=''} {$item.address_area|default=''} {$item.address_street|default=''}</div>
+                            </li>
+                            <li>
+                                <div class="tips">地址：</div>
+                                <div class="info">{$item.address_details|default=''}</div>
+                            </li>
+                            <li>
+                                <div class="tips">手机号码：</div>
+                                <div class="info">{$item.consignee_phone|default=''}</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="det">
+                        <div class="title">配送信息</div>
+                        <ul>
+                            <li>
+                                <div class="tips">配送方式：</div>
+                                <div class="info">{switch name="$item.distribution_type|default=''"}
+                                    {case value="1"}同城速递{/case}
+                                    {case value="2"}预约自提{/case}
+                                    {case value="3"}快递邮寄{/case}
+                                    {default /}出错啦
+                                    {/switch}</div>
+                            </li>
+                            <li>
+                                <div class="tips">物流公司：</div>
+                                <div class="info">
+                                    {if condition="$item.dada eq 0"}
+                                    {$express_name|default='无'}
+                                    {else/}
+                                    达达配送
+                                    {/if}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="tips">运单号：</div>
+                                <div class="info">
+                                    {if condition="$item.dada eq 0"}
+                                    {$item.express_number|default='无'}
+                                    {else/}
+                                    {$dadaExpress.data.client_id||default='无'}
+                                    {/if}
+                                </div>
+                            </li>
+                            <!--达达配送骑手信息-->
+                            {if condition="$item.dada eq 1"}
+                            <li>
+                                <div class="tips">骑手姓名：</div>
+                                <div class="info">
+                                    {$dadaExpress.data.transporterName|default='无'}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="tips">骑手电话：</div>
+                                <div class="info">
+                                    {$dadaExpress.data.transporterPhone|default='无'}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="tips">配送费：</div>
+                                <div class="info">
+                                    {$dadaExpress.data.deliveryFee|default='无'}
+                                </div>
+                            </li>
+                            {/if}
+
+                            <li>
+                                <div class="tips">买家留言：</div>
+                                <div class="info">{$item.message|default='无'}</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!--有物流单号-->
+                    <div class="log_det">
+                        {if condition="$item.distribution_tel neq ''"}
+                        <div class="title">配送人员信息</div>
+                        {else/}
+                        <div class="title">物流信息</div>
+                        {/if}
+
+                        {if condition="$item.distribution_tel eq ''"}
+
+                        {if condition="$item.express_number neq NULL"}
+                        <ul>
+                            {empty name="$logistics.data"}
+                            <li>暂无物流</li>
+                            {else /}
+                            {volist name="$logistics.data" id="logistics"}
+                            <li>
+                                <div class="time">{$logistics.time}</div>
+                                <div class="l_text">{$logistics.context}</div>
+                            </li>
+                            {/volist}
+                            {/empty}
+                        </ul>
+                        {elseif condition="$item.dada eq 1"}
+                        <ul>
+                            {if condition="$dadaExpress.data.statusCode elt 1"}
+                            <li>
+                                <div class="time">{$dadaExpress.data.createTime|default=''}</div>
+                                <div class="l_text">已发单</div>
+                            </li>
+                            {elseif condition="$dadaExpress.data.statusCode elt 2"}
+                            <li>
+                                <div class="time">{$dadaExpress.data.acceptTime|default=''}</div>
+                                <div class="l_text">配送员已接单</div>
+                            </li>
+                            <li>
+                                <div class="time">{$dadaExpress.data.createTime|default=''}</div>
+                                <div class="l_text">已发单</div>
+                            </li>
+                            {elseif condition="$dadaExpress.data.statusCode elt 3"}
+                            <li>
+                                <div class="time">{$dadaExpress.data.fetchTime|default=''}</div>
+                                <div class="l_text">配送员已取货</div>
+                            </li>
+                            <li>
+                                <div class="time">{$dadaExpress.data.acceptTime|default=''}</div>
+                                <div class="l_text">配送员已接单</div>
+                            </li>
+                            <li>
+                                <div class="time">{$dadaExpress.data.createTime|default=''}</div>
+                                <div class="l_text">已发单</div>
+                            </li>
+                            {elseif condition="$dadaExpress.data.statusCode elt 4"}
+                            <li>
+                                <div class="time">{$dadaExpress.data.finishTime|default=''}</div>
+                                <div class="l_text">配送员已送达</div>
+                            </li>
+                            <li>
+                                <div class="time">{$dadaExpress.data.fetchTime|default=''}</div>
+                                <div class="l_text">配送员已取货</div>
+                            </li>
+                            <li>
+                                <div class="time">{$dadaExpress.data.acceptTime|default=''}</div>
+                                <div class="l_text">配送员已接单</div>
+                            </li>
+                            <li>
+                                <div class="time">{$dadaExpress.data.createTime|default=''}</div>
+                                <div class="l_text">已发单</div>
+                            </li>
+                            {elseif condition="$dadaExpress.data.statusCode eq 7"}
+                            <li>
+                                <div class="time">{$dadaExpress.data.cancelTime|default=''}</div>
+                                <div class="l_text">订单已过期</div>
+                            </li>
+                            {/if}
+                        </ul>
+                        {else/}
+                        <ul>
+                            <li>无</li>
+                        </ul>
+                        {/if}
+                        {else/}
+                        <ul>
+                            <li>
+                                <div class="tips">配送人员联系方式：{$item.distribution_tel|default=''}</div>
+                            </li>
+                        </ul>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+
+            <!--拼团信息-->
+            {if condition="$item.order_type eq 2"}
+            <div class="wrapper-list hide">
+                <dl>
+                    拼团信息
+                </dl>
+                <div class="list-div">
+                    <table class="ecsc-default-table">
+                        <tr>
+                            <td width="10%">团长昵称</td>
+                            <td width="10%">团长手机号</td>
+                            <td width="10%">拼团总人数</td>
+                            <td width="10%">剩余人数</td>
+                            <td width="10%">拼团状态</td>
+                        </tr>
+                        <tr>
+                            <td>{$item.owner_nickname}</td>
+                            <td>{$item.owner_phone}</td>
+                            <td>{$item.group_num}</td>
+                            <td>{$item.surplus_num}</td>
+                            <td>
+                                {switch name="$item.group_activity_status"}
+                                {case value="1"}进行中{/case}
+                                {case value="2"}成功{/case}
+                                {case value="3"}失败{/case}
+                                {/switch}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {/if}
+
+            <!--自提信息-->
+            {if condition="$item.take_id neq NULL"}
+            <div class="wrapper-list hide">
+                <dl>
+                    自提信息
+                </dl>
+                <div class="list-div">
+                    <table class="ecsc-default-table">
+                        <tr>
+                            <!--<td width="10%">自提凭证</td>-->
+                            <td width="10%">自提点名称</td>
+                            <td width="10%">自提地址</td>
+                        </tr>
+                        <tr>
+                            <!--<td>{$item.take_code}</td>-->
+                            <td>{$item.take_name}</td>
+                            <td>{$item.take_province} {$item.take_city} {$item.take_area} {$item.take_address}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            {/if}
+
+
+            <!--</div>-->
+
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+{__block__}
+<script>
+    //模块切换
+    $('.tab li').click(function () {
+        var index = $(this).index();
+        console.log(index);
+        $(this).addClass("active").siblings().removeClass("active");
+        $(".wrapper-list").eq(index).show().siblings(".wrapper-list").hide();
+    });
+
+    main.form('.layui-form');
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+    function openRefund(obj,id) {
+        main.ajax({
+            type:'post',
+            data: {id:id,}, url: '/client/order/checkRefunds', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                } else {
+                    var param = 'id='+id;
+                    layer.open({
+                        type: 2,
+                        title: obj.title,
+                        move: false,
+                        shade: 1,
+                        shadeClose: false,
+                        area: ['80%', '700px'],
+                        btn: obj.btn,
+                        content: '/client/order/refunds_details?' + param
+                    });
+                }
+            }
+        });
+    }
+
+    function checkTakeCode(order_attach_id) {
+        var take_code = $('input[name="take_code"]').val();
+        layer.msg('确定核销该订单吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {order_attach_id:order_attach_id,take_code: take_code}, url: '/client/order/checkTakeCode', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // 切换单选
+    function showunit() {
+        var get_value = $("input[name='delivery_method']:checked").val();
+        if (get_value == 1) {
+            $('#express').show()
+            $('#distribution_tel').hide()
+            $('#dada').hide()
+        } else if (get_value == 2) {
+            $('#distribution_tel').show()
+            $('#express').hide()
+            $('#dada').hide()
+        } else {
+            $('#dada').show()
+            $('#express').hide()
+            $('#distribution_tel').hide()
+        }
+    }
+
+    function confirmCollect(order_attach_id) {
+        layer.msg('确定确认收货吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {order_attach_id:order_attach_id}, url: '/order/confirmCollect', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function editPrice(obj,order_goods_id) {
+        var param = 'order_goods_id='+order_goods_id;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0,
+            shadeClose: true,
+            area: ['50%', '500px'],
+            btn: obj.btn,
+            content: '/client/order/editPrice?' + param
+        });
+    }
+</script>
+{/block}

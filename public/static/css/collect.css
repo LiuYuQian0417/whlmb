@@ -1,0 +1,395 @@
+/*内容关注*/
+.my_concern_con{
+    background: #fff;
+}
+.my_concern_con .list{
+    margin: 5px 0;
+    position: relative;
+    transition: all 0.2s ease;
+}
+.my_concern_con .list .checkBox{
+    display: none;
+}
+.my_concern_con .list .concern_det{
+    position: relative;
+    padding-left: 110px;
+    padding-right: 10px;
+    height: 100px;
+}
+.my_concern_con .list .concern_pic{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    display: block;
+    top:0;
+    left:0;
+}
+.my_concern_con .list .concern_title{
+    font-size: 14px;
+    line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    padding-top: 5px;
+    color: #202224;
+}
+.my_concern_con .list .concern_det .det{
+    position: relative;
+    height: 100px;
+}
+.my_concern_con .list .concern_det .date{
+    position: absolute;
+    bottom: 4px;
+    width: 100%;
+    font-size: 13px;
+    line-height: 20px;
+    color: #202224;
+}
+.my_concern_con .list .concern_det .date span{
+    color: #9ea3a9;
+}
+.my_concern_con .concern_write .list{
+    padding-left: calc(3% + 30px);
+    transition: all 0.2s ease;
+}
+.my_concern_con .concern_write .checkBox{
+    position: absolute;
+    /*left:3%;*/
+    top:0;
+    overflow: hidden;
+    z-index: 4;
+    display: block;
+    height: 100%;
+}
+/*.my_concern_con .concern_write .check_con .check + label {*/
+    /*height: 100%;*/
+/*}*/
+.cate_shop_list{
+    margin-top: 8px;
+}
+.cate_shop_list li{
+    padding: 10px 20px;
+    background: #fff;
+    border-bottom: 1px solid #f6f6f6;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.cate_shop_list li.all{
+    margin-bottom: 7px;
+}
+.cate_shop_list li .number{
+    display: flex;
+    align-items: center;
+}
+/*.cate_shop_list li .iconPar{*/
+    /*width: 14px;*/
+    /*height: 10px;*/
+    /*overflow: hidden;*/
+    /*visibility: hidden;*/
+/*}*/
+/*.cate_shop_list li .iconPar .iconColor{*/
+    /*display: block;*/
+    /*position: relative;*/
+    /*border-right: 14px solid transparent;*/
+/*}*/
+.cate_shop_list li .cate{
+    font-size: 14px;
+    line-height: 24px;
+    color: #202224;
+}
+.cate_shop_list li .num{
+    font-size: 13px;
+    color: #9ea3a9;
+    margin-right: 10px;
+}
+.cate_shop_list li.active .iconPar{
+    visibility: visible;
+}
+
+
+/*店铺关注*/
+.my_concern_shop{
+    background: #fff;
+    margin-top: 8px;
+}
+.concern_shop_list{
+    padding-left: 3%;
+}
+.concern_shop_list .list{
+    position: relative;
+    height: 80px;
+    transition: all 0.2s ease;
+}
+.concern_shop_list .list .det{
+    border-bottom: 1px solid #f6f6f6;
+    height: 74px;
+    padding: 10px calc(3% + 12px) 10px 0;
+}
+.concern_shop_list .checkBox,.concern_list .checkBox{
+    position: absolute;
+    left:0;
+    top:0;
+    overflow: hidden;
+    z-index: 4;
+    height: 100%;
+  width: 20px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.concern_list .checkBox{
+  left:3%!important;
+}
+/*.concern_shop_list .check_con .iconColor,.concern_list .check_con .iconColor{*/
+  /*width: 100%;*/
+  /*height:100%;*/
+  /*background: url("../img/check1.png") no-repeat center left;*/
+  /*background-size: 20px 20px;*/
+/*}*/
+
+/*.concern_shop_list .check_con.checked .iconColor,.concern_list .check_con.checked .iconColor{*/
+  /*background: url("../img/checked1.png") no-repeat center left;*/
+  /*background-size: 20px 20px;*/
+  /*position: relative;*/
+  /*border-right: 20px solid transparent;*/
+/*}*/
+
+.concern_shop_list.coupon_write_shop .list{
+    padding-left: 30px;
+    transition: all 0.2s ease;
+}
+.concern_list.concern_write .list{
+  padding-left: calc(30px + 3%);
+  transition: all 0.2s ease;
+}
+.concern_shop_list.coupon_write_shop .checkBox,.concern_list.concern_write .checkBox{
+    display: flex;
+}
+.concern_shop_det{
+    padding: 0 0 0 70px;
+    position: relative;
+}
+.concern_shop_det .pic{
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    display: block;
+    top:9px;
+    left:0;
+}
+.concern_shop_det .more{
+    position: absolute;
+    width: 6px;
+    top:50%;
+    margin-top: -6px;
+    right:10px;
+}
+.my_concern_shop .check_con .check + label {
+    height: 100%;
+}
+.concern_shop_list .list .det .shop_title{
+    font-size: 14px;
+    line-height: 24px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: 5px;
+    color: #202224;
+}
+.concern_shop_list .list .det .concern_num{
+    font-size: 13px;
+    line-height: 20px;
+    margin-top: 5px;
+    color: #9ea3a9;
+}
+
+/*商品收藏*/
+.concern_goods_list{
+    padding-left: 0;
+    border-bottom: 1px solid transparent;
+}
+.concern_goods_list .list{
+    height: 140px;
+    margin-bottom: 5px!important;
+    padding-bottom: 0!important;
+}
+.concern_goods_list .list .pic{
+    width: 140px;
+    height: 140px;
+    top:0;
+}
+.concern_goods_list .concern_shop_det{
+    padding-left: 150px;
+}
+.concern_goods_list .concern_goods{
+    padding-right: 3%;
+    padding-top: 10px;
+    height: 140px;
+    position: relative;
+}
+.concern_goods_list .concern_goods::after{
+    width: 100%;
+    height: 1px;
+    background: #F6F6F6;
+    content: '';
+    position: absolute;
+    left:0;
+    bottom:-5px;
+}
+.concern_goods_list .concern_goods .title{
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    font-size: 13px;
+    line-height: 20px;
+}
+.concern_goods_list .concern_goods .title a{
+    color: #202224;
+}
+.concern_goods_list .concern_goods .price{
+    font-size: 12px;
+    line-height: 1;
+}
+.concern_goods_list .concern_goods .original{
+  /*margin-left: 10px;*/
+  color: #ccc;
+  text-decoration: line-through;
+}
+.concern_goods_list .concern_goods span {
+    font-size: 16px;
+}
+.concern_goods_list .buy_more{
+    padding-left: 65px;
+    position: relative;
+    padding-right: 10px;
+    margin-top: 5px;
+}
+.concern_goods_list .buy_more .tips{
+    font-size: 10px;
+    line-height: 14px;
+    padding: 0 5px;
+    position: absolute;
+    border-radius: 20px;
+    left:0;
+    top:50%;
+    margin-top: -8px;
+}
+.concern_goods_list .buy_more .more_det{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 20px;
+    color: #6e7479;
+}
+.concern_goods_list .concern_shop_det .more{
+    right:0!important;
+}
+
+.concern_goods_list .concern_goods .ope{
+    overflow: hidden;
+}
+.concern_goods_list .concern_goods .ope .notice{
+    font-size: 13px;
+    line-height: 20px;
+    border:1px solid #E7E7E7;
+    border-radius: 10px;
+    padding: 0 8px;
+    margin-top: 10px;
+}
+.concern_goods_list .concern_goods .ope .notice a{
+    display: block;
+    color: #202224;
+}
+.concern_goods_list .concern_goods .ope .cart{
+    width: 34px;
+    height: 34px;
+    overflow: hidden;
+    border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top:0;
+    left:0;
+    margin-top: 0;
+}
+.concern_goods_list .concern_goods .ope .cart .iconPar{
+    width: 26px;
+    height: 26px;
+    overflow: hidden;
+}
+.concern_goods_list .concern_goods .ope .cart .iconPar .iconColor{
+    border-right: 26px solid transparent;
+    position: relative;
+}
+.concern_goods .end{
+    position: absolute;
+    bottom:20px;
+    left:0;
+    width: 95%;
+}
+.concern_goods_list.coupon_write_shop .list{
+    padding-left: calc(3% + 30px);
+}
+.concern_goods_list .checkBox{
+    left:3%;
+}
+.date_time{
+    font-size: 15px;
+    line-height: 40px;
+    color: #828282;
+    padding: 0 10px;
+    border-bottom: 1px solid #eee;
+}
+header #clear{
+    right:calc(3% + 40px)
+}
+
+
+/*降价通知*/
+.cut_notice{
+
+}
+.cut_notice .tip{
+    font-size: 14px;
+    line-height: 24px;
+    color: #666;
+    padding: 10px 3%;
+}
+.cut_notice .cur_price{
+    background: #F5F9FC;
+    border:1px solid #eee;
+    border-left: none;
+    border-right:none;
+    padding: 12px 3%;
+    font-size: 15px;
+    line-height: 20px;
+}
+.cut_notice .hope{
+    padding: 12px 3%;
+    font-size: 15px;
+    line-height: 20px;
+    background: #fff;
+    margin-top: 8px;
+}
+.cut_notice .confirm_sub{
+    width: 94%;
+    margin: 10% auto 0;
+    display: block;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 12px 0 !important;
+    color: #fff;
+    border-radius: 4px!important;
+}
+.cut_notice .confirm_sub a{
+    display: block;
+    color: #fff;
+    text-align: center;
+}

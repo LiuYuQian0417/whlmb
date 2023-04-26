@@ -1,0 +1,164 @@
+.order-process{
+    width: 375px;
+    height:55px;
+    padding-top: 15px;
+    position: relative;
+}
+.order-process ul{
+    position: absolute;
+    width: 380px;
+    height:55px;
+    top: 24px;
+    left: 0;
+}
+.order-process ul li span{
+    display: block;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    text-align: center;
+    line-height: 24px;
+    color: #fff;
+    background: #ffb401;
+    margin: 0 auto;
+}
+.order-process ul li{
+    width: 60px;
+    height: 55px;
+    float: left;
+    text-align: center;
+    color: #ffb401;
+    margin-right: 100px;
+}
+.order-process ul li p{
+    font-size: 12px;
+    line-height: 25px;
+}
+.order-process ul li:nth-child(3){
+    margin-right: 0;
+}
+.order-process ul  .order-process-gray span{
+    background: #ccc;
+
+}
+.order-process ul  .order-process-gray p {
+    color: #ccc;
+}
+.barline{
+    width:335px;
+    background:#ccc;
+    height:5px;
+    overflow:hidden;
+    border-radius: 5px;
+    margin: 20px auto;
+}
+.charts {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #ffb401;
+}
+.paysuccess-content{
+    width: 1200px;
+    margin: 30px auto;
+    box-shadow:0 0 10px 0 rgba(200,200,200,0.3);
+    padding:0 0 35px ;
+}
+.wechat-pay-bottom p{
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    color: #666;
+    font-size: 14px;
+}
+.wechat-pay-bottom{
+    width: 1200px;
+    padding: 40px 0;
+    margin: 50px auto 0 auto;
+    border-top: 1px solid #e9e5e5;
+}
+
+.pay-success{
+    width:260px;
+    margin: 0 auto;
+}
+.pay-success-img{
+    padding: 50px 0 20px 0;
+}
+.pay-success p{
+    text-align: center;
+}
+.pay-success{
+    font-size: 14px;
+    color: #333;
+    line-height: 30px;
+}
+.real-pay{
+    color: #9696;
+    line-height: 25px;
+}
+.view-order{
+    display: block;
+    float: left;
+    margin: 0 0 0 20px;
+    border-radius: 15px;
+    border:1px solid;
+    width: 98px;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+}
+.clear{
+    clear: both;
+    height:0;
+    overflow: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.guess-like{
+    padding: 0 26px;
+}
+.guess-like .guess-like-list{
+    width: 165px;
+    height: 225px;
+    margin-right: 80px;
+    float: left;
+}
+.guess-like .guess-like-list:nth-child(5n){
+    margin-right: 0;
+}
+.paysuccess-content .guess-like .guess-like-list .clear{
+    clear: both;
+    height:0;
+    overflow: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+
+}
+.guess-like-name{
+    display: block;
+    width: 165px;
+    font-size: 12px;
+    line-height: 15px;
+    height:30px;
+    margin:  15px 0 10px 0;
+    text-overflow: -o-ellipsis-lastline;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -moz-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+}
+.price{
+    float: left;
+    font-size: 12px;
+}
+.sales{
+    color: #969696;
+    float: right;
+}

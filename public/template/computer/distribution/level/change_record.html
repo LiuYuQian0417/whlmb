@@ -1,0 +1,192 @@
+{extend name="public/common"}
+{block name="content_css"}
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicHeader.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/color.css" />
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<!--公共搜索css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/indexHeader.css" />
+<!--商品分类css-->
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/spokesman/endorsementcentre.css" />
+
+<!--公共JQ库-->
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__RES__/layui/layui.js"></script>
+{/block}
+
+{block  name="content"}
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="spokesperson-center" >
+            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <p>代言中心</p>
+        </div>
+        <div class="my-grade">
+            <a href="{:url('/pc2.0/distribution_level/my_level')}" >我的等级</a>
+            <a href="{:url('/pc2.0/distribution_level/change_record')}" class="primary-color border-color-bottom">升降级记录</a>
+        </div>
+    </div>
+</div>
+<!--代言等级记录开始-->
+<div class="cndorsementcentre-content">
+    <div class="lifting-rules lifting-rules1">
+        <div class="lifting-rules-content lifting-rules-content1">
+            <!--当记录为空时-->
+            {empty name="$data"}
+            <div class="empty">
+                <img src="__RES__/imgs/dyk.png" alt="">
+                <p>暂时没有升降记录~</p>
+                <a href="{:url('/pc2.0/distribution_goods/goods_list')}" class="empty-btn">再逛逛</a>
+            </div>
+            {/empty}
+            <div class="lifting-rules-content1-con">
+                {volist name="$data" id="item"}
+                <div class="lifting-rules-content-item">
+                    <div class="life-left">
+                        {eq name="$item.change_type" value="1"}
+                        <img src="__RES__/imgs/spokesman/shengji.png" alt="">
+                        {else/}
+                        <img src="__RES__/imgs/spokesman/jiangji.png" alt="">
+                        {/eq}
+                        <div class="life-left-view">
+                            {eq name="$item.change_type" value="1"}
+                            <p class="life-title">您已成功升级</p>
+                            {else/}
+                            <p class="life-title">可惜哦</p>
+                            {/eq}
+
+                            <p class="life-desc">{$item.record_content}</p>
+                        </div>
+                    </div>
+                    <span class="life-right">{$item.change_time}</span>
+                </div>
+                {/volist}
+            </div>
+        </div>
+    </div>
+    <!--代言等级记录结束-->
+</div>
+<!--公共尾部结束-->
+{/block}
+
+{block name="js"}
+
+<script type="text/javascript">
+    //			显示降价通知
+    $('.goods-collection .goods .goods-list .bottom .depreciate').click(function(){
+        var pic = $(this).parents('.goods-list').find('.pic .money').text();
+        $('.depreciate-cover .price').html(pic)
+        $('.depreciate-box').show();
+        $('.depreciate-cover').show();
+    })
+
+    //			关闭降价通知
+    $('.depreciate-cover .right img').click(function(){
+        $('.depreciate-box').hide();
+        $('.depreciate-cover').hide()
+    })
+    //			关闭降价通知
+    $('.depreciate-cover .depreciate-box .sure').click(function(){
+        $('.depreciate-box').hide();
+        $('.depreciate-cover').hide()
+    })
+
+
+
+    //			显示全选
+    $('.bulk-operation .operation-btn').click(function(){
+        $(this).hide().siblings('.all-check').show()
+        $('.cover').show()
+    })
+    //			关闭全选
+    $('.success').click(function(){
+        $('.bulk-operation .operation-btn').show()
+        $('.all-check').hide()
+        $('.cover').hide()
+        $('.allcheck').removeClass('check').addClass('uncheck')
+        $('.goods-list').each(function(){
+            $(this).removeClass('active').find('input').removeAttr('checked')
+        })
+    })
+
+
+    //			提交
+    $('.disqualification').click(function(){
+        $('.depreciate-cover').show();
+        $('.collect-box').show();
+//
+    })
+    //			确定取消收藏
+    $('.depreciate-cover .collect-box .sure').click(function(){
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide();
+        $('#form').submit()
+    })
+    //			取消
+    $('.depreciate-cover .collect-box .countermand').click(function(){
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide();
+
+    })
+    $('.cover label div').click(function(e){
+        if($(this).parents('.goods-list').hasClass('active')){
+            $(this).parents('.goods-list').removeClass('active')
+        }else{
+            $(this).parents('.goods-list').addClass('active')
+        }
+        e.stopPropagation();
+    })
+
+    //			全选
+    $('.allcheck').click(function(){
+        if($(this).hasClass('uncheck')){
+            $(this).removeClass('uncheck').addClass('check')
+            $('.goods-list').each(function(){
+                $(this).addClass('active').find('input').attr('checked','checked')
+            })
+        }else{
+            $(this).removeClass('check').addClass('uncheck')
+            $('.goods-list').each(function(){
+                $(this).removeClass('active').find('input').removeAttr('checked')
+            })
+        }
+
+    })
+
+
+
+    layui.use('element', function(){
+        var $ = layui.jquery
+            ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+
+        //触发事件
+        var active = {
+
+            loading: function(othis){
+                var DISABLED = 'layui-btn-disabled';
+                if(othis.hasClass(DISABLED)) return;
+
+                //模拟loading
+                var n = 0, timer = setInterval(function(){
+                    n = n + Math.random()*10|0;
+                    if(n>100){
+                        n = 100;
+                        clearInterval(timer);
+                        othis.removeClass(DISABLED);
+                    }
+                    element.progress('demo', n+'%');
+                }, 300+Math.random()*1000);
+
+                othis.addClass(DISABLED);
+            }
+        };
+
+
+    });
+
+</script>
+
+{/block}

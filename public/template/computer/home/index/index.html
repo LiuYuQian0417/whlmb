@@ -1,0 +1,742 @@
+{extend name='public/index_header' /}
+{block name="content_css"}
+<!--首页css-->
+<link rel="stylesheet" href="__RES__/css/index/index.css">
+<!--<link rel="stylesheet" href="__RES__/css/index/swiper.css">-->
+<link rel="stylesheet" href="__RES__/css/swiper2.7.6.css">
+<!--iconfont-->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1111076_kt6tcyfyhdd.css">
+<style>
+    .goods-view-center ul li p{
+        padding: 0px 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .recommended-for-you ul{
+        width: 1190px;
+    }
+    .recommended-for-you ul li{
+        margin-right: 10px;
+    }
+    .goods-msg .goods-msg-title{
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .goods-view-list{
+        margin-bottom: 40px;
+    }
+    #layui-layer1{
+        background-color: transparent !important;
+        box-shadow:none !important;
+    }
+    .goods-view-center ul li img{
+        height: 145px;
+    }
+    .goods-pic{
+        width: 120px;
+    }
+</style>
+{/block}
+{block name="content"}
+<!--分类导航-->
+<div class="category-nav">
+    <div class="nav">
+        <div class="nav-container clearfix">
+            <img class="all-category" src="__RES__/imgs/index/all_category.png">
+            <ul class="clearfix">
+                <!--active primary-color-hover-->
+                <li class="primary-color-hover active" onclick="main.jump({'url':'/pc2.0/index/index'})">首页</li>
+                {eq name='$function_status.is_group' value='1'}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/group/index'})">拼团</li>{/eq}
+                {eq name='$function_status.is_cut' value='1'}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/bargain/index'})">砍价</li>{/eq}
+                {eq name='$function_status.is_limit' value='1'}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/time_limit/index'})">限时抢购</li>{/eq}
+                {eq name='$function_status.is_brand' value='1'} {if $function_status.one_or_more===true}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/home/brand_list'})">品牌甄选</li>{/if}{/eq}
+                {if $function_status.one_or_more===true}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/store/find_store'})">发现好店</li>{/if}
+                {eq name='$function_status.is_coupon' value='1'}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/coupon/get'})">领券中心</li>{/eq}
+                {eq name='$function_status.is_sign_in' value='1'}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/rank/index','return_url':ObjectOrJson({'use_url':'index/index','return_url':window.location.href})})">签到</li>{/eq}
+                <li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/integral/index','return_url':ObjectOrJson({'use_url':'index/index','return_url':window.location.href})})">积分商城</li>
+                {if $function_status.one_or_more===true}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/store/nearby_list'})">附近商家</li>{/if}
+                {eq name='$function_status.distribution_status' value='1'}<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/distribution_goods/goods_list'})">代言专区</li>{/eq}
+            </ul>
+        </div>
+    </div>
+    <div class="category-container clearfix" style="position: relative">
+        <div class="category-column">
+            <!--贾博雨填写-->
+            {volist name="result.goods_classify" id="goods_classify1"}
+            <ul>
+                <li class="primary-background-color-hover" style="cursor: pointer;">
+                    <a{eq name="$navigation_status" value="0"} href="{:url('/pc2.0/goods/index')}?goods_classify_id={$goods_classify1.goods_classify_id}"  {else/} href="javascript:;"  {/eq} > {$goods_classify1.title}</a>
+                    <div class="menu-view">
+                        <div class="menu-list">
+                            {egt name="$navigation_status" value="1"}
+                            {volist name="goods_classify1.tree_relevance" id='goods_classify2'}
+                            <div class="menu-item">
+                                <span class="menu-tit" onclick="main.jump({'url':'/pc2.0/goods/index?goods_classify_id={$goods_classify2.goods_classify_id}'})">{$goods_classify2.title}
+                                   {eq name="$navigation_status" value="2"} <i class="iconfont icon-arrow-right"></i>{/eq}
+                                </span>
+                                <div class="cate">
+                                    {eq name="$navigation_status" value="2"}
+                                    {volist name="$goods_classify2.tree_relevance" id="goods_classify3"}
+                                    <span class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/goods/index?goods_classify_id={$goods_classify3.goods_classify_id}'})">{$goods_classify3.title}</span>
+                                    {/volist}
+                                    {/eq}
+                                </div>
+                            </div>
+                            {/volist}
+                            {/egt}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            {/volist}
+            <!--贾博雨填写结束-->
+        </div>
+        <div class="banner">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {volist name='$result.banner' id='banner_data'}
+                    <div class="swiper-slide">
+                        <img width="672" height="450" style="cursor:pointer;" src="{$banner_data.file}" alt="" onclick="main.adv_jump('{$banner_data.type}','{$banner_data.content}')">
+                    </div>
+                    {/volist}
+                </div>
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+        <div class="info-msg">
+            <div class="msg-welcome">
+                <div class="msg-welcome-content">
+                    <img src="{$member_info.avatar|default='__RES__/imgs/user_default.png'}" style="cursor: pointer;" onclick="main.jump({'url':'/pc2.0/setting/index'})" alt="">
+                    <p>Hi，欢迎来到商城!</p>
+                    <div class="btn-view">
+                        {empty name=":session('member_info')"}
+                        <div class="vip" onclick="main.jump({'url':'/pc2.0/login/index'})">登录</div>
+                        <div class="regiest border-color primary-color" onclick="main.jump({'url':'/pc2.0/register/one'})">注册有礼</div>
+                        {else/}
+                        <div class="vip" onclick="main.jump({'url':'/pc2.0/my/index'})">会员</div>
+                        {/empty}
+                    </div>
+                </div>
+            </div>
+            <div class="shop-headline">
+                <div class="shop-headline-view">
+                    <div class="headline-title">
+                        <span>商城头条</span>
+                        <div style="cursor: pointer" onclick="main.jump({'url':'/pc2.0/home/hot_list'})">更多<i class="iconfont icon-down"></i></div>
+                    </div>
+                    <div class="headline-list">
+                        {volist name="result.hot_list" id="hot_list_data"}
+                        <div class="headline-item">
+                            <a href="{:url('/pc2.0/home/hot_view')}?article_id={$hot_list_data.article_id}">
+                                <div class="hotdool">热门</div>
+                                <span class="primary-color-hover" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor: pointer;">{$hot_list_data.title}</span>
+                            </a>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            <div class="other-option">
+                <ul>
+                    {eq name='$function_status.is_recharge' value='1'}
+                    <li>
+                        <a href="{:url('/pc2.0/recharge/index')}">
+                            <img src="__RES__/imgs/index/icon_1.png" alt="">
+                            <span>充值</span>
+                        </a>
+                    </li>
+                    {/eq}
+                    {eq name='$function_status.is_sign_in' value='1'}
+                    <li>
+                        <a href="{:url('/pc2.0/rank/index')}">
+                            <img src="__RES__/imgs/index/icon_2.png" alt="">
+                            <span>签到</span>
+                        </a>
+                    </li>
+                    {/eq}
+                    <li>
+                        <a href="{:url('/pc2.0/record_goods/index')}">
+                            <img src="__RES__/imgs/index/icon_3.png" alt="">
+                            <span>足迹</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{:url('/pc2.0/goods/collect_goods_list')}">
+                            <img src="__RES__/imgs/index/icon_4.png" alt="">
+                            <span>收藏</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!--分类导航结束-->
+{notempty name="result.limit.list"}
+<!--限时抢购-->
+<div class="panic-buying">
+    <img src="__RES__/imgs/index/Panic_buying.png" onclick="main.jump({'url':'/pc2.0/time_limit/index'})" alt="">
+    <ul>
+        <li class="panic">
+            <a href="{:url('/pc2.0/time_limit/index')}">
+                <span id="index_limit_time" class="time_select" data-time_str="{$result.limit.time.count_down}">00:00:00</span>
+            </a>
+        </li>
+        {volist name="result.limit.list" id="limit_data"}
+        <li>
+            <a href="{:url('/pc2.0/goods/view')}?goods_id={$limit_data.goods_id}">
+                <img data-original="{$limit_data.file}" alt="">
+                <div class="info">
+                    <p class="panic-title">{$limit_data.goods_name}</p>
+                    <div class="panic-price">
+                        <div class="new-price primary-color">￥{$limit_data.time_limit_price}</div>
+                    </div>
+                    <div class="panic-price">
+                        <div class="old-price">￥{$limit_data.shop_price}</div>
+                    </div>
+                </div>
+            </a>
+
+        </li>
+        {/volist}
+    </ul>
+</div>
+<!--限时抢购结束-->
+{/notempty}
+<!--新人大礼包-->
+{if empty($member_info.is_gift) and env('POPUP_ADV_STATUS')==1}
+<!--<img style="width: 100%;margin-top: 30px;" src="__RES__/imgs/index/newpersion.png" alt="">-->
+{/if}
+<!--新人大礼包结束-->
+<!--排行榜-->
+{notempty name="$result.ranking_list"}
+<div class="ranking-list public-list">
+    <div class="ranking-title public-title">
+        <h3 class="">排行榜</h3>
+        <div class="title-right">
+            <div class="menu-list">
+                {volist name="$result.ranking_list.classify" id="ranking_list_classify"}
+                <a class="{eq name='$key' value='0'}che{/eq}" href="javascript:;"
+                   onclick="ranking_list(this,'{$ranking_list_classify.goods_classify_id}');">{$ranking_list_classify.title}</a>
+                {/volist}
+            </div>
+            <img onclick="main.jump({'url':'/pc2.0/home/ranking'})" src="__RES__/imgs/index/25.png" alt="">
+        </div>
+    </div>
+    <div class="ranking-con">
+        <div class="con-right">
+            <a href="javascript:main.jump({'url':'/pc2.0/home/ranking'})">
+                <img data-original="__RES__/imgs/del/phb_bj.png" alt="">
+            </a>
+        </div>
+        <div class="con-left" id="ranking_list">
+            {volist name="$result.ranking_list.goods" id="ranking_list_goods"}
+            <a href="javascript:jump_goods('{$ranking_list_goods.goods_id}')" class="goods-list">
+                <h3>{$key+1}</h3>
+                <div class="goods-detail">
+                    <img class="lazy" data-original="{$ranking_list_goods.file}" alt="">
+                    <div>
+                        <p class="goods-name">{$ranking_list_goods.goods_name}</p>
+                        <p class="pic">
+                            <span>￥</span>{$ranking_list_goods.goods_price}
+                        </p>
+                    </div>
+                </div>
+            </a>
+            {/volist}
+            {empty name="$result.ranking_list.goods"}
+            <img src="__RES__/imgs/defined_index.png" style=" display: block; margin: 0 auto; width: 300px; padding-top: 40px; "  alt="">
+            <p style="text-align: center;padding-top: 5px;color: #8C8C8C;">暂无商品</p>
+            {/empty}
+        </div>
+    </div>
+
+</div>
+{/notempty}
+<!--拼团-->
+{notempty name="$result.group_goods"}
+<div class="group-list public-list">
+    <div class="group-title public-title">
+        <h3 class="">拼团</h3>
+        <div class="title-right">
+            <div class="menu-list">
+                {volist name="$result.group_goods.classify" id="group_goods_classify"}
+                <a class="{eq name='$key' value='0'}che{/eq}" href="javascript:"
+                   onclick="group_goods(this,'{$group_goods_classify.group_classify_id}');">
+                    {$group_goods_classify.title}
+                </a>
+                {/volist}
+            </div>
+            <img src="__RES__/imgs/index/25.png" alt="" onclick="main.jump({'url':'/pc2.0/group/index'})">
+        </div>
+    </div>
+    <div class="group-con">
+        <div class="con-left">
+            <a href="javascript:main.jump({'url':'/pc2.0/group/index'})">
+                <img src="__RES__/imgs/del/pt_bj.png" alt="">
+            </a>
+        </div>
+        <div class="con-right" id="group_goods">
+            {volist name="$result.group_goods.goods" id="group_goods"}
+            <a href="javascript:jump_goods('{$group_goods.goods_id}');" class="goods-list">
+                <img class="lazy" data-original="{$group_goods.file}" alt="">
+                <p class="goods-name">{$group_goods.goods_name}</p>
+                <div class="pic">
+                    <span class="now-pic">
+                        <i>￥</i>{$group_goods.group_price}
+                    </span>
+                    <del class="del-pic">
+                        ￥{$group_goods.shop_price}
+                    </del>
+                </div>
+                <!-- 拼团人数-->
+                <span class="group-number">{$group_goods.group_num}人团</span>
+            </a>
+            {/volist}
+            {empty name="$result.group_goods.goods"}
+                    <img src="__RES__/imgs/defined_index.png" style="padding-left: 300px; display: block; margin: 0 auto; width: 300px; padding-top: 40px; " alt="">
+            {/empty}
+        </div>
+    </div>
+</div>
+{/notempty}
+<!--优惠券-->
+{notempty name="$result.coupon"}
+<div class="coupon-list public-list">
+    <div class="coupon-title public-title">
+        <h3 class="">领券</h3>
+        <div class="title-right">
+            <!--<div class="menu-list">-->
+                <!--{volist name="$result.coupon.classify" id="coupon_classify"}-->
+                <!--<a class="{eq name='$key' value='0'}che{/eq}" href="javascript:"-->
+                   <!--onclick="coupon(this,'{$coupon_classify.goods_classify_id}');">-->
+                    <!--{$coupon_classify.title}-->
+                <!--</a>-->
+                <!--{/volist}-->
+            <!--</div>-->
+            <img onclick="main.jump({'url':'/pc2.0/coupon/get'})" src="__RES__/imgs/index/25.png" alt="">
+        </div>
+    </div>
+    <div class="ranking-con">
+        <div class="con-right">
+            <a href="javascript:main.jump({'url':'/pc2.0/coupon/get'})">
+                <img src="__RES__/imgs/del/yhq_bj.png" alt="">
+            </a>
+        </div>
+        <div class="con-left" id="coupon">
+            {volist name="$result.coupon.coupon" id="coupon"}
+            <a href="javascript:get_coupon({'coupon_id':'{$coupon.coupon_id}','classify_str':'{$coupon.classify_str}','type':'{$coupon.type}'});" class="goods-list">
+                <div class="goods-detail">
+                    <img class="lazy" data-original="{$coupon.file}" alt="">
+                    <div>
+                        <p>
+                            <span class="symbol">￥</span>
+                            <span class="pic">{$coupon.actual_price}</span>
+                            <span class="condition">满{$coupon.full_subtraction_price}可用</span>
+                        </p>
+                        <div class="mark">
+                            {$coupon.title}
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {/volist}
+
+            {empty name="$result.coupon.coupon"}
+            <img src="__RES__/imgs/defined_index.png" style=" padding-left: 300px; display: block; margin: 0 auto; width: 300px; padding-top: 40px; " alt="">
+            {/empty}
+        </div>
+    </div>
+</div>
+{/notempty}
+<!--好物推荐 -->
+{notempty name="result.popularity.goods.0"}
+<img class="good-shop-recommend" onclick="main.jump({'url':'/pc2.0/goods/choiceness_list'})" src="__RES__/imgs/index/67.png" alt="">
+<div class="recommend">
+    <div class="recommend-top">
+        <div class="recommend-top-left" style="width: 330px;margin-left: 90px;">
+            <img class="lazy" data-original="{$result.popularity.goods.0.file}" style="width: 340px;" alt="">
+        </div>
+        <div class="recommend-top-right">
+            <img src="__RES__/imgs/index/39.png" alt="">
+            <div class="recommend-mask">
+                <h1>{$result.popularity.goods.0.goods_name}</h1>
+                <div class="down-line"></div>
+                <div class="mask-price">
+                    <div class="primary-color"><span class="primary-color">￥</span>{$result.popularity.goods.0.shop_price}
+                    </div>
+                </div>
+                <div class="mask-price">
+                    <del>￥{$result.popularity.goods.0.market_price}</del>
+                </div>
+                <div class="mask-btn primary-background-color" style="cursor: pointer;" onclick="jump_goods('{$result.popularity.goods.0.goods_id}')">立即抢购</div>
+            </div>
+        </div>
+    </div>
+    <div class="recommend-btm">
+        <div class="swiper-container2">
+            <div class="swiper-wrapper">
+                {notempty name="result.popularity.goods.1"}
+                {volist name="result.popularity.goods" id="popularity" offset="1" length='6'}
+                <div class="swiper-slide">
+                    <div class="swiper-msg" style="background: #f9eff2;">
+                        <img class="lazy" data-original="{$popularity.file}">
+                        <div class="goods-msg">
+                            <p class="primary-color"><span>￥</span>{$popularity.shop_price}</p>
+                            <div class="goods-msg-title">{$popularity.goods_name}</div>
+                            <div class="goods-down-line">&nbsp;_</div>
+                            <!--<div class="goods-tag">-->
+                            <!--<span>生鲜水果</span>-->
+                            <!--<span>精选优品</span>-->
+                            <!--<span>现货空运</span>-->
+                            <!--</div>-->
+                            <div class="goods-buys primary-color" style="cursor: pointer;" onclick="jump_goods('{$popularity.goods_id}')">立即选购</div>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+                {/notempty}
+            </div>
+            <!-- Add Arrows -->
+            <div class="swiper-button-next">
+                <span></span>
+            </div>
+            <div class="swiper-button-prev">
+                <span></span>
+            </div>
+        </div>
+    </div>
+</div>
+{/notempty}
+<!--好物推荐结束-->
+<!--主题广告位-->
+{notempty name="result.theme"}
+<img onclick="main.adv_jump('{$result.theme.type}','{$result.theme.content}')" class="adv" src="{$result.theme.file}"
+     alt="" style="width: auto;">
+{/notempty}
+<!--主题广告位结束-->
+<!--商品分类推荐-->
+{volist name="result.class_list" id="class_list_data"}
+{notempty name="class_list_data.goods_list"}
+<div class="goods-view-list clearfix">
+    <img class="lazy img" data-original="{$class_list_data.PcAdv.file|default=''}" alt=""
+         onclick="main.adv_jump('{$class_list_data.PcAdv.type}','{$class_list_data.PcAdv.content}')">
+    <div class="goods-view-center">
+        <ul class="clearfix">
+            {volist name='class_list_data.goods_list' id="goods_list_data1" offset="0" length='4'}
+            <li>
+                <a href="{:url('/pc2.0/goods/view')}?goods_id={$goods_list_data1.goods_id}">
+                    <img class="lazy" data-original="{$goods_list_data1.file}" alt="">
+                    <p>{$goods_list_data1.goods_name}</p>
+                </a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    <div class="goods-view-right">
+        <ul>
+            {volist name='class_list_data.goods_list' id="goods_list_data2" offset="4" length='7'}
+            <li class="first-li">
+                <a href="{:url('/pc2.0/goods/view')}?goods_id={$goods_list_data2.goods_id}">
+                    <div class="goods-intro">
+                        <div>{$goods_list_data2.goods_name}</div>
+                    </div>
+                    <img class="goods-pic lazy" data-original="{$goods_list_data2.file}" alt="">
+                </a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+{/notempty}
+{/volist}
+<img class="recommended" src="__RES__/imgs/index/50.png" alt="">
+<!--为您推荐-->
+<div class="recommended-for-you clearfix">
+    <ul class="clearfix">
+        {volist name="result.recommend_list" id="recommend_list"}
+        <li>
+            <a href="{:url('/pc2.0/goods/view')}?goods_id={$recommend_list.goods_id}">
+                <img class="recommend-img lazy" alt="" data-original="{$recommend_list.file}">
+                <div class="recommend-view">
+                    <p>{$recommend_list.goods_name}</p>
+                    <div class="primary-color">
+                        <span>￥</span>
+                        {switch $recommend_list.is_group.$recommend_list.is_bargain.$recommend_list.is_limit}
+                        {case 100}
+                        {$recommend_list.group_price}
+                        {/case}
+                        {case 010}
+                        {$recommend_list.cut_price}
+                        {/case}
+                        {case 001}
+                        {$recommend_list.time_limit_price}
+                        {/case}
+                        {default /}
+                        {$recommend_list.shop_price}
+                        {/switch}
+                    </div>
+                </div>
+            </a>
+        </li>
+        {/volist}
+    </ul>
+</div>
+<!--为您推荐结束-->
+<!--置顶-->
+<div class="back-top">
+    <i class="iconfont icon-arrow_top"></i>
+    <span>返回顶部</span>
+</div>
+<!--<div class="back-menu-top">-->
+<!--<ul>-->
+<!--<li class="actClass">家具家电</li>-->
+<!--<li>天赐粮机</li>-->
+<!--<li>电脑办公</li>-->
+<!--<li>美妆护肤</li>-->
+<!--<li>鲜花干花</li>-->
+<!--<li>户外运动</li>-->
+<!--</ul>-->
+<!--<div class="to-top">-->
+<!--<i class="iconfont icon-arrow_top"></i>-->
+<!--<span>返回顶部</span>-->
+<!--</div>-->
+<!--</div>-->
+{/block}
+{block name='js'}
+<script src="__RES__/js/swiper2.7.6.min.js"></script>
+<script type="text/javascript">
+    {if condition="$is_gift_bag  eq 2"}
+
+    function open_new_gift() {
+        layer.open({
+            offset: 'auto',
+            area: '450px',
+            title: false,
+            type: 1,
+            closeBtn: 1,
+            shadeClose: true,
+            content: '<div style="width: 420px;height: 377px;"><img onclick="main.jump({\'url\':\'/pc2.0/register/coupon_list\'})" style="width: 100%;height: 100%" src="__RES__/imgs/new_gift_bag.png"></div>',
+            cancel:function(){
+                {notempty name=":session('member_info')['member_id']"}
+                //请求关闭接口
+                main.ajax({
+                    'url':'/v2.0/index/setGiftClose',
+                    not_load:true,
+                    callback:function(){}
+                });
+                {/notempty}
+            }
+        });
+    }
+    open_new_gift();
+    {/if}
+
+    {egt name="$navigation_status" value="1"}
+    /*分类导航*/
+    $('.category-column ul li').hover(function () {
+        var cateLen = $(this).find('.menu-item').length;
+        if(cateLen>0){
+            $(this).find('.menu-view').css('display', 'block');
+        }
+    }, function () {
+        $(this).find('.menu-view').css('display', 'none');
+    })
+    {/egt}
+
+    /*置顶*/
+    $('.to-top').click(function () {
+        $("html,body").animate({scrollTop: 0}, 300);
+    })
+    /*新人礼包选项卡*/
+    fn($('.banner-tab1 ul li'), $('.banner-lists1'));
+    fn($('.banner-tab2 ul li'), $('.banner-lists2'));
+    fn($('.banner-tab3 ul li'), $('.banner-lists3'), 2);
+    fn($('.banner-tab4 ul li'), $('.banner-lists4'), 2);
+
+    function fn(obj, listObj, num) {
+        var listLen = obj.length,num = num||'';
+        for (var a = 0; a < listLen; a++) {
+            obj.eq(a).click(function () {
+                obj.attr('class', '');
+                obj.eq(a).attr('class', 'hover'+num+'Class');
+                listObj.css('display', 'none');
+                listObj.eq(a).css('display', 'block');
+            })
+        }
+    }
+
+
+    /* swiper */
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        paginationClickable :true,
+        loop: true,
+        autoplay: 5000,
+    });
+
+    var swiper2 = new Swiper('.swiper-container2', {
+        slidesPerView: 3,
+        spaceBetween: 10,
+        slidesPerGroup: 3,
+        loop: true,
+        loopFillGroupWithBlank: true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+
+    //    限时抢购倒计时
+    var count_time_text = '{$result.limit.time.count_down}';
+    index_limit();
+    function index_limit() {
+        main.count_down_new({
+            'time_select': $('.time_select'),
+            'function_name': index_limit,
+            'count_down':count_time_text,
+            'callback': function () {
+                //时间到之后从新请求
+                main.ajax({
+                    'url': '/pc2.0/index/curLimitList', 'async': false, callback: function (res) {
+                        if (res.result.list.length > 0) {
+                            //初始化结束时间
+                            count_time_text = res.result.time.count_down;
+                            var limt_html = '';
+                            $.each(res.result.list, function (k, v) {
+                                limt_html += '<li>' +
+                                    '<a href="/pc2.0/goods/view?goods_id='+v.goods_id+'">' +
+                                    '<img src="' + v.file + '" alt="">\n' +
+                                    '                <div class="info">\n' +
+                                    '                    <p class="panic-title">' + v.goods_name + '</p>\n' +
+                                    '                    <div class="panic-price">\n' +
+                                    '                        <div class="new-price primary-color">￥' + v.time_limit_price + '</div>\n' +
+                                    '                    </div>' +
+                                    '                    <div class="panic-price">\n' +
+                                    '                        <div class="old-price">￥' + v.shop_price + '</div>\n' +
+                                    '                    </div>' +
+                                    '</div></a></li>';
+                            });
+                            $('#index_limit_time').data('time_str',res.result.time.count_down);
+                            $('.panic-buying li.panic').nextAll().remove();
+                            $('.panic-buying ul').append(limt_html);
+                            index_limit();
+                        } else {
+                            $('.panic-buying').remove();
+                        }
+                    }
+                })
+            }
+        });
+    }
+
+    // {notempty name="$result.ranking_list"}
+    //排行榜
+    function ranking_list(ogj, classify) {
+        $(ogj).addClass('che').siblings('a.che').removeClass('che');
+        main.ajax({
+            'url': '/pc2.0/index/AjaxRankingList',
+            'data': {'goods_classify_id': classify},
+            'callback': function (res) {
+                if (res.code === 0) {
+                    var html_str = '';
+                    $.each(res.data, function (k, v) {
+                        html_str += '<a href="javascript:jump_goods(' + v.goods_id + ');" class="goods-list">\n' +
+                            '                <h3>' + (k + 1) + '</h3>\n' +
+                            '                <div class="goods-detail">\n' +
+                            '                    <img src="' + v.file + '" alt="">\n' +
+                            '                    <div >\n' +
+                            '                        <p class="goods-name">' + v.goods_name + '</p>\n' +
+                            '                        <p class="pic">\n' +
+                            '                            <span>￥</span>\n' +  v.goods_price +
+                            '                        </p>\n' +
+                            '                    </div>\n' +
+                            '                </div>\n' +
+                            '            </a>';
+                    })
+                    html_str =  html_str=='' ? '<img src="__RES__/imgs/defined_index.png" style=" display: block; margin: 0 auto; width: 300px; padding-top: 40px; " alt=""><p style="text-align: center;padding-top: 5px;color: #8C8C8C;">暂无商品</p>' : html_str;
+
+                    $('#ranking_list').html(html_str);
+                }
+            }
+        });
+    }
+
+    // {/notempty}{notempty name="$result.group_goods"}
+    //拼团
+    function group_goods(ogj, classify) {
+        $(ogj).addClass('che').siblings('a.che').removeClass('che');
+        main.ajax({
+            'url': '/pc2.0/index/AjaxGetGroupGoods',
+            'data': {'group_classify_id': classify},
+            'callback': function (res) {
+                if (res.code === 0) {
+                    var html_str = '';
+                    $.each(res.data, function (k, v) {
+                        html_str += '<a href="javascript:jump_goods(' + v.goods_id + ')" class="goods-list">\n' +
+                            '                <img class="lazy" data-original="' + v.file + '" style="width: 140;">\n' +
+                            '                <p class="goods-name">' + v.goods_name + '</p>\n' +
+                            '                <div class="pic">\n' +
+                            '                    <span class="now-pic">\n' +
+                            '                        <i>￥</i>'+v.group_price +
+                            '                    </span>\n' +
+                            '                    <del class="del-pic">￥'+ v.shop_price +'</del>\n'+
+                            '                </div>\n' +
+                            '                <!-- 拼团人数-->\n' +
+                            '                <span class="group-number">\n'
+                            + v.group_num +'人团</span>\n' +
+                            '            </a>';
+                    })
+                   html_str =  html_str=='' ? '<img src="__RES__/imgs/defined_index.png" style=" padding-left: 300px; display: block; margin: 0 auto; width: 300px; padding-top: 40px; " alt="">' : html_str;
+                    $('#group_goods').html(html_str);
+                }
+            }
+        });
+    }
+
+    // {/notempty}{notempty name="$result.coupon"}
+    //优惠券
+    function coupon(ogj, classify) {
+        $(ogj).addClass('che').siblings('a.che').removeClass('che');
+        main.ajax({
+            'url': '/pc2.0/index/AjaxGetCoupon',
+            'data': {'goods_classify_id': classify},
+            'callback': function (res) {
+                if (res.code === 0) {
+                    var html_str = '';
+                    $.each(res.data, function (k, v) {
+                        html_str += '<a href="javascript:get_coupon({coupon_id:' + v.coupon_id + ',classify_str:' + v.classify_str + ',type:' + v.type + '});" class="goods-list">\n' +
+                            '                <div class="goods-detail">\n' +
+                            '                    <img src="' + v.file + '" alt="">\n' +
+                            '                    <div >\n' +
+                            '                        <p >\n' +
+                            '                            <span class="symbol">￥' + v.actual_price + '</span>\n' +
+                            '                            <span class="pic"></span>\n' +
+                            '                            <span class="condition">满' + v.full_subtraction_price + '可用</span>\n' +
+                            '                        </p>\n' +
+                            '                        <div class="mark">\n' + v.title +
+                            '                            \n' +
+                            '                        </div>\n' +
+                            '                    </div>\n' +
+                            '                </div>\n' +
+                            '            </a>';
+                    })
+                    html_str =  html_str=='' ? '<img src="__RES__/imgs/defined_index.png" style=" padding-left: 300px; display: block; margin: 0 auto; width: 300px; padding-top: 40px; " alt="">' : html_str;
+
+                    $('#coupon').html(html_str);
+                }
+            }
+        });
+    }
+
+    // {/notempty}
+</script>
+{/block}

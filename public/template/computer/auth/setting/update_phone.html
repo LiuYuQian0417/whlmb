@@ -1,0 +1,201 @@
+<!--公共头部结束-->
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的设置左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MySetting.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/Changephone.css" />
+{/block}
+{block name="content"}
+
+
+		
+	<!--我的设置主体-->
+  <div class="setting">
+  <!--据中部分-->
+	<div class="setting-center">
+		<!--左侧列表-->
+		{include file="public/setting_left" /}
+	  <!--右侧内容-->
+	  <div class="setting-right">
+		<!--修改手机号开始-->
+		<div class="change-iphone">
+			<div class="title">
+			  修改手机
+			</div>
+
+			<div class="change-iphone-box">
+			  <div class="tit">
+				<div class="tit-list current">
+				  <p class="progress">
+					<span>1</span>
+				  </p>
+				  <p class="caption">
+					验证手机
+				  </p>
+				</div>
+				<div class="tit-list">
+				  <p class="progress">
+					<span>2</span>
+				  </p>
+				  <p class="caption">
+					修改手机
+				  </p>
+				</div>
+			  </div>
+			  <!--旧手机获取验证码-->
+
+			  <div class="iphone-box" >
+				<form action="" id="form" method="post">
+					<div class="input-box">
+					  <span>手机号：</span>
+					  {$phone}
+					</div>
+					<div class="input-box">
+					  <span>验证码：</span>
+					  <input class="code" type="tel" maxlength="6" name="code">
+						<a href="javascript:check_num1();" class="getCode" id="yzm1">
+							获取验证码
+					  </a>
+					</div>
+					<input type="button" id="submit" class="primary-background-color btn" value="下一步">
+				</form>
+			  </div>
+
+			<!--旧手机获取验证码结束-->
+			<!--新手机获取验证码-->
+
+			  <div  class="iphone-box" style="display: none;">
+				<form action=""  id="form1" method="post" >
+					<div class="input-box">
+					  <span>手机号：</span>
+					  <input type="tel" name="phone" datatype="*" nullmsg="请填写手机号" errormsg="请填写手机号" maxlength="11">
+					</div>
+					<div class="input-box">
+					  <span>验证码：</span>
+					  <input class="code" name="code" datatype="*" nullmsg="请填写验证码" errormsg="请填写验证码" type="tel" maxlength="6">
+					  <a href="JavaScript:check_num2();"  class="getCode"  id="yzm2">
+							获取验证码
+					  </a>
+					</div>
+					<input type="submit" class="primary-background-color btn" value="完成" >
+				  </form>
+			  </div>
+
+			</div>
+		  </div>
+
+		  <!--修改手机号结束-->
+	  </div>
+	</div>
+  </div>
+  <!--我的设置主体部分结束-->
+{/block}
+		
+{block name='js'}
+<script type="text/javascript">
+
+	$('#submit').on('click',function(){
+		var tel = '{$phone}';
+		var code = $("[name='code']").val();
+		if (code == '') {
+			layer.msg('请输入验证码！');
+			return false;
+		}
+		$.ajax({
+			url: "{:url('pc2.0/sms/checkCodeInvalid')}",
+			dataType: 'json',
+			type: 'post',
+			data: {'phone': tel, 'type': 2,'code':code},
+			success: function (t) {
+				if (t.code != 0) {
+					layer.msg(t.message);
+					return false;
+				} else {
+					// layer.msg(t.message);
+					$('#submit').parents('.iphone-box').hide().siblings('.iphone-box').show();
+					$('.tit-list').eq(1).addClass('current').siblings().removeClass('current')
+					return false;
+				}
+			}
+		})
+
+
+
+	})
+
+	function check_num1(){
+		var tel = '{$phone}';
+		console.log(tel);
+		$.ajax({
+			url: "{:url('pc2.0/sms/send')}",
+			dataType: 'json',
+			type: 'post',
+			data: {'phone': tel, 'type': 2},
+			success: function (t) {
+				if (t.code != 0) {
+					layer.msg(t.message);
+				} else {
+					count_down1();
+				}
+			}
+		})
+	}
+	function check_num2(){
+		var tel = $('input[name="phone"]').val();
+		$.ajax({
+			url: "{:url('pc2.0/sms/send')}",
+			dataType: 'json',
+			type: 'post',
+			data: {'phone': tel, 'type': 1},
+			success: function (t) {
+				if (t.code != 0) {
+					layer.msg(t.message);
+				} else {
+					count_down2();
+				}
+			}
+		})
+	}
+
+
+
+	function count_down1() {
+		var num = 60;
+		var verif = $('#yzm1');
+		var timer = setInterval(function () {
+			verif.text(num + '秒');
+			if (num <= 60 && num >= 1) {
+				verif.addClass('.disable');
+				verif.removeAttr('href');
+			} else {
+				verif.text('获取验证码');
+				window.clearInterval(timer);
+				verif.attr("href", 'javascript:check_num1();');
+			}
+			num--;
+		}, 1000);
+	}
+	function count_down2() {
+		var num = 60;
+		var verif = $('#yzm2');
+		var timer = setInterval(function () {
+			verif.text(num + '秒');
+			if (num <= 60 && num >= 1) {
+				verif.addClass('.disable');
+				verif.removeAttr('href');
+			} else {
+				verif.text('获取验证码');
+				window.clearInterval(timer);
+				verif.attr("href", 'javascript:check_num2();');
+			}
+			num--;
+		}, 1000);
+	}
+
+
+	main.valid('#form1');
+</script>
+{/block}
+	

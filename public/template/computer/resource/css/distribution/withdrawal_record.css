@@ -1,0 +1,82 @@
+.tip-img{
+    padding:70px 0 527px;
+    background-color: #fff;
+    margin-top: 10px;
+}
+.withdrawal-record{
+    width: 122px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    color: #fff;
+    margin-top: 43px;
+    cursor: pointer;
+}
+.tip-img{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+.tip-img p{
+    color: #666;
+    font-size: 14px;
+    margin-top: 15px;
+}
+.recorded{
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 15px 30px 30px 30px;
+}
+.recorded-title{
+    background-color: #f8f6f6;
+    height: 32px;
+    line-height: 32px;
+    font-size: 14px;
+    text-align: center;
+    color: #434343;
+    overflow: hidden;
+}
+.recorded-title div{
+    float: left;
+}
+.recorded-title div:nth-child(1){
+    width: 30%;
+}
+.recorded-title div:nth-child(2){
+    width: 20%;
+}
+.recorded-title div:nth-child(3){
+    width: 20%;
+}
+.recorded-title div:nth-child(4){
+    width: 30%;
+}
+.recorded-info{
+    height: 50px;
+    line-height: 50px;
+    color: #666;
+    font-size: 15px;
+    border-bottom:1px solid #f5f5f5;
+    text-align: center;
+    overflow: hidden;
+}
+.recorded-info div{
+    float: left;
+}
+.recorded-info div:nth-child(1){
+    width: 30%;
+}
+.recorded-info div:nth-child(2){
+    width: 20%;
+}
+.recorded-info div:nth-child(3){
+    width: 20%;
+}
+.recorded-info div:nth-child(4){
+    width: 30%;
+}
+.pageContainer{
+    margin-top: 20px;
+}

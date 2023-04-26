@@ -1,0 +1,192 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请按提示文案填写信息，以免出错。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>商品分类</label>
+            <div class="layui-input-inline">
+                <select name="goods_classify_id" lay-search="" datatype="*"
+                        nullmsg="请选择商品分类" errormsg="请选择商品分类">
+                    <option value="">--请选择商品分类--</option>
+                    {volist name="goods_classfly" id="goods_class"}
+                    <option value="{$goods_class.goods_classify_id}" {eq name="$goods_class.goods_classify_id" value="$item.goods_classify_id|default=''" }selected{/eq}>{$goods_class.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>品牌分类</label>
+            <div class="layui-input-inline">
+                <select name="brand_classify_id" lay-search="" datatype="*"
+                        nullmsg="请选择品牌分类" errormsg="请选择品牌分类">
+                    <option value="">品牌分类</option>
+                    {volist name="classifies" id="class"}
+                    <option value="{$class.brand_classify_id}" {eq name="$class.brand_classify_id"
+                            value="$item.brand_classify_id|default=''" }selected{/eq}>{$class.brand_classify_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <!--品牌中文名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 品牌中文名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand_name" maxlength="20" autocomplete="off" placeholder="请输入品牌名称"
+                       datatype="*"
+                       value="{$item.brand_name|default=''}"
+                       nullmsg="请输入品牌名称" errormsg="请输入品牌名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--品牌英文名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 品牌英文名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand_letter" maxlength="20" autocomplete="off" placeholder="请输入品牌英文名称"
+                       datatype="*"
+                       onkeyup="value=value.replace(/[^\w\.\/]/ig,'')"
+                       value="{$item.brand_letter|default=''}"
+                       nullmsg="请输入品牌英文名称" errormsg="请输入品牌英文名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--品牌英文名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 品牌首字母：</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand_first_char" maxlength="1" autocomplete="off" placeholder="请输入品牌首字母"
+                       datatype="*"
+                       onkeyup="value = value.replace(/[^A-Z]/g, '')"
+                       value="{$item.brand_first_char|default=''}"
+                       nullmsg="请输入品牌首字母" errormsg="请输入品牌首字母"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--品牌LOGO-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>品牌LOGO<br>684 X 305</label>
+            <div class="layui-input-inline">
+                <div
+                        class="imageUpload"
+                        default="{$item.brand_logo|default=''}"
+                        width="684"
+                        height="305"
+                        file-mime="image/gif,image/jpeg,image/png"
+                        name="brand_logo"
+                        dir="brand_image_logo"
+                        value="{$item.brand_logo_data|default=''}"
+                >
+                </div>
+            </div>
+        </div>
+
+        <!--描述-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">品牌描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容"  name="brand_describe" maxlength="100" class="layui-textarea" >{$item.brand_describe|default=''}</textarea>
+            </div>
+        </div>
+
+        <!--是否推荐-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 是否推荐</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_recommend" value="1" title="是"
+                       {eq name="item.is_recommend|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_recommend" value="0" title="否"
+                       {eq name="item.is_recommend|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.friendship_link_id"}
+                <input type="hidden" name="friendship_link_id" value="{$item.friendship_link_id}">
+                {/present}
+                {present name="$item.brand_id"}
+                <input type="hidden" name="brand_id" value="{$item.brand_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.upload([
+        {
+            elem: '#goods_file',
+            size: 2 * 1024,
+            auto : false,
+            data: {name: 'friendship_file', dir: 'friendship_file', auth: '', style: 1, crypt: 1},
+            field: 'friendship_file',
+            choose: function(obj){  //上传前选择回调方法
+                console.log(obj);
+                var flag = true;
+                obj.preview(function(index, file, result){
+                    console.log(file);            //file表示文件信息，result表示文件src地址
+                    var img = new Image();
+                    img.src = result;
+                    img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
+                        if(img.width ==684 && img.height ==305){
+                            obj.upload(index, file); //满足条件调用上传方法
+                        }else{
+                            flag = false;
+                            layer.msg("您上传的小图大小必须是684*305尺寸！");
+                            return false;
+                        }
+                    }
+                    return flag;
+                });
+            },
+            done: function (res) {
+                if (res.code !== 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                        '<input type="text" name="brand_logo" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+                $(this.elem).css('padding','1px').html(html);
+                layer.closeAll('loading');
+            }
+        }
+    ])
+</script>
+{/block}
+{block name='highSearch'}{/block}

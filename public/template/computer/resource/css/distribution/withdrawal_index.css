@@ -1,0 +1,84 @@
+.withdrawal{
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 40px 0 377px 30px;
+}
+.cash-balance{
+    color: #666;
+    margin-bottom:7px;
+}
+.cash-balance input{
+    margin: 0 15px;
+    height: 30px;
+    width: 169px;
+}
+.tip{
+    margin-left: 100px;
+    font-size: 14px;
+    color: #fdb762;
+}
+.withdrawal-way{
+    color: #666;
+    display: flex;
+    align-items: center;
+    height: 42px;
+    margin-top: 15px;
+}
+.way{
+    position: relative;
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    border:1px solid #cccccc;
+    cursor: pointer;
+}
+.triangle{
+    position: absolute;
+    right: 0;
+    bottom:0;
+    height:0;
+    width: 0;
+    background: none;
+    border-left: 7px solid transparent !important;
+    border-top: 7px solid transparent !important;
+    border-bottom: 7px solid;
+    border-right: 7px solid;
+}
+.triangle img{
+    position: absolute;
+    right: -7px;
+    bottom:-6px;
+}
+.withdrawaling{
+    width: 122px;
+    height: 32px;
+    color: #fff;
+    text-align: center;
+    line-height: 32px;
+    margin:35px 0 0 100px;
+    cursor: pointer;
+    border: 0;
+}
+.withdrawal-record{
+    color: #789efd;
+    font-size: 14px;
+    margin: 6px 0 0 130px;
+}
+.warning{
+    width: 950px;
+    height: auto;
+    margin-top: 35px;
+    border:1px solid #fdad57;
+    background-color: #fef3e8;
+    padding: 20px 25px;
+    box-sizing: border-box;
+    font-size: 13px;
+    color: #8c8986;
+}
+.warning p{
+    margin-bottom: 2px;
+}
+.warning-title{
+    margin-bottom: 12px;
+}

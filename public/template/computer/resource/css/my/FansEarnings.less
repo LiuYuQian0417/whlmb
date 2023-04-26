@@ -1,0 +1,185 @@
+.fans-earnings{
+
+  .fans-earnings-box{
+    padding: 0px 30px;
+    background: #fff;
+    margin-top: 20px;
+
+    .title{
+      height: 57px;
+      line-height: 57px;
+      .tit-left{
+        float: left;
+        a{
+          color: #333333;
+        }
+        span{
+          color: #D1D4E2;
+          font-size: 12px;
+          margin: 0px 20px;
+          position: relative;
+          top: -2px;
+        }
+      }
+      .tit-right{
+        float: right;
+        .order-num{
+          margin-right: 15px;
+        }
+      }
+    }
+
+    .fans-earnings-content{
+      margin-top: 5px;
+      margin-bottom: 35px;
+      .fans-top{
+        height: 34px;
+        background: #F8F6F6;
+        display: flex;
+        line-height: 34px;
+
+        div{
+          flex: 1;
+          text-align: center;
+          font-size: 14px;
+          a{
+            color: #666666;
+          }
+          span{
+            float: left;
+          }
+          .top{
+            display: inline-block;
+            width: 0px;
+            height: 0px;
+            border: 4px solid transparent;
+            border-bottom: 4px solid #666666;
+            position: relative;
+            top: -6px;
+          }
+          .bottom{
+            display: inline-block;
+            width: 0px;
+            height: 0px;
+            border: 4px solid transparent;
+            border-top: 4px solid #666666;
+            margin-top: 2px;
+            position: relative;
+            top: 4px;
+            left: -12px;
+          }
+        }
+
+        .date-picker{
+          width: 140px;
+          flex: none;
+          position: relative;
+          img{
+            position: relative;
+            top: -3px;
+            transform: rotate(180deg);
+          }
+          &>a{
+            position: relative;
+            z-index: 102;
+
+          }
+          a{
+            display: block;
+            width: 100%;
+            height: 34px;
+          }
+          .date-picker-list{
+            position: absolute;
+            top: 34px;
+            left: 0px;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0px 10px 10px #ddd;
+            box-shadow-top:none ;
+            display: none;
+            a{
+              position: relative;
+              z-index: 101;
+              &:hover{
+                background: #F5F5F5;
+              }
+            }
+          }
+        }
+
+        .date-picker-show{
+          box-shadow: 0px 0px 10px #ddd;
+          background: #FFFFFF;
+          &>a{
+            background: #fff;
+          }
+          img{
+            transform: rotate(0deg) !important;
+          }
+          .date-picker-list{
+            display: block;
+          }
+        }
+      }
+
+      .fans-earnings-list{
+        .list{
+          height: 85px;
+          background: #fff;
+          border-bottom: 1px solid #F5F5F5;
+          display: flex;
+          padding-top: 10px;
+          box-sizing: border-box;
+          padding-left:20px;
+          line-height: 65px;
+          text-align: center;
+          font-size: 14px;
+          color: #666666;
+          div{
+            flex: 1;
+          }
+          .goods{
+            width: 320px;
+            flex: none;
+            img{
+              width: 65px;
+              height: 65px;
+              float: left;
+            }
+            .goods-name{
+              float: left;
+              width: 235px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space:nowrap ;
+              margin-left: 15px;
+            }
+          }
+          .user{
+            .name{
+              display: inline-block;
+              max-width: 160px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space:nowrap ;
+            }
+            img{
+              margin-left: 10px;
+              display: inline-block;
+              position: relative;
+              top: -27px;
+            }
+          }
+
+        }
+      }
+    }
+  }
+}
+.date_picker_show{
+-webkit-box-shadow: 0px 0px 10px #ddd;
+box-shadow: 0px 0px 10px #ddd;
+background: #FFFFFF;
+  z-index: 102 !important;
+}

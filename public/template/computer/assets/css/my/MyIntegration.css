@@ -1,0 +1,402 @@
+.my-integration .title {
+  height: 55px;
+  background: #fff;
+  line-height: 55px;
+  font-size: 14px;
+  padding-left: 20px;
+  border-bottom: 1px solid #F0F3EF;
+}
+.my-integration .title a {
+  border-bottom: 1px solid transparent;
+  padding-bottom: 5px;
+  margin-right: 50px;
+  color: #000;
+}
+.my-integration .title .title-right {
+  float: right;
+  padding-right: 15px;
+}
+.my-integration .title .title-right a {
+  margin-right: 0px;
+  font-weight: 400;
+  color: #4184E8;
+}
+.my-integration .title .title-right img {
+  position: relative;
+  top: 1px;
+  margin-left: 5px;
+}
+.my-integration .integration-box {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.my-integration .integration-box .tit {
+  height: 55px;
+  background: #fff;
+  line-height: 55px;
+  font-size: 16px;
+  padding-left: 20px;
+  border-bottom: 1px solid #F0F3EF;
+  color: #000;
+}
+.my-integration .integration-box .integration {
+  width: 410px;
+  height: 175px;
+  background: #fff;
+}
+.my-integration .integration-box .integration .usable-integration {
+  margin-top: 20px;
+  padding-left: 20px;
+}
+.my-integration .integration-box .integration .usable-integration p {
+  font-size: 14px;
+}
+.my-integration .integration-box .integration .usable-integration p span {
+  font-size: 30px;
+}
+.my-integration .integration-box .integration .usable-integration p img {
+  width: 24px;
+  height: 24px;
+  position: relative;
+  top: 2px;
+}
+.my-integration .integration-box .integration .usable-integration .link-group {
+  margin-top: 15px;
+  overflow: hidden;
+}
+.my-integration .integration-box .integration .usable-integration .link-group a {
+  display: block;
+  float: left;
+  width: 80px;
+  height: 27px ;
+  border: 1px solid blue;
+  font-size: 12px;
+  text-align: center;
+  line-height: 27px;
+  margin-right: 10px;
+}
+.my-integration .integration-box .integration-statistics {
+  width: 590px;
+  height: 175px;
+  background: #fff;
+}
+.my-integration .integration-box .integration-statistics .detail-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 35px 20px 0px;
+}
+.my-integration .integration-box .integration-statistics .detail-group div {
+  font-size: 28px;
+  text-align: center;
+}
+.my-integration .integration-box .integration-statistics .detail-group div .items {
+  font-size: 14px;
+}
+.my-integration .lately-integration-statistics {
+  background: #fff;
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+.my-integration .lately-integration-statistics .tit {
+  height: 55px;
+  background: #fff;
+  line-height: 55px;
+  font-size: 16px;
+  padding-left: 20px;
+  border-bottom: 1px solid #F0F3EF;
+  color: #000;
+}
+.my-integration .lately-integration-statistics .list {
+  padding: 10px 20px 20px;
+}
+.my-integration .lately-integration-statistics .list .list-tit {
+  height: 33px;
+  padding-left: 40px;
+  background: #F8F6F6;
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+  line-height: 33px;
+}
+.my-integration .lately-integration-statistics .list .list-tit span {
+  display: block;
+  flex: 1;
+}
+.my-integration .lately-integration-statistics .list .list-detail {
+  height: 33px;
+  padding-left: 40px;
+  background: #F8F6F6;
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+  line-height: 33px;
+  background: #fff;
+  border-bottom: 1px solid #F8F6F6;
+}
+.my-integration .lately-integration-statistics .list .list-detail span {
+  display: block;
+  flex: 1;
+}
+.my-integration .lately-integration-statistics .all-integration {
+  text-align: center;
+}
+.my-integration .lately-integration-statistics .all-integration a {
+  font-size: 14px;
+  color: #4184E8;
+}
+.my-integration .earn-points .tit {
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  background: url("../../imgs/my/integration/title.png") no-repeat center;
+}
+.my-integration .earn-points .point-content {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: #fff;
+}
+.my-integration .earn-points .point-content .content {
+  width: 318px;
+  height: 177px;
+  color: #333333;
+  padding-top: 40px;
+  padding-left: 40px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+}
+.my-integration .earn-points .point-content .content .con-tit:after {
+  content: '';
+  display: block;
+  height: 2px;
+  width: 20px;
+  background: #000000;
+  position: relative;
+  top: 5px;
+}
+.my-integration .earn-points .point-content .content p {
+  font-size: 12px;
+  width: 150px;
+  margin-top: 15px;
+  height: 28px;
+}
+.my-integration .earn-points .point-content .content p span {
+  color: #E73C0A;
+}
+.my-integration .earn-points .point-content .content a {
+  display: block;
+  width: 90px;
+  height: 28px;
+  border: 1px solid #1E1E1E;
+  color: #333333;
+  font-size: 14px;
+  text-align: center;
+  line-height: 28px;
+  margin-top: 10px;
+}
+.my-integration .earn-points .point-content .c1 {
+  background: url("../../imgs/my/integration/c1.png") no-repeat;
+}
+.my-integration .earn-points .point-content .c2 {
+  background: url("../../imgs/my/integration/c2.png") no-repeat;
+}
+.my-integration .earn-points .point-content .c3 {
+  background: url("../../imgs/my/integration/c3.png") no-repeat;
+}
+.my-integration .earn-points .point-content .c4 {
+  background: url("../../imgs/my/integration/c4.png") no-repeat;
+}
+.my-integration .earn-points .point-content .c5 {
+  background: url("../../imgs/my/integration/c5.png") no-repeat;
+}
+.my-integration .earn-points .point-content .c6 {
+  background: url("../../imgs/my/integration/c6.png") no-repeat;
+}
+.my-integration .expenditure-points .tit {
+  height: 70px;
+  line-height: 70px;
+  text-align: center;
+  background: url("../../imgs/my/integration/title.png") no-repeat center;
+}
+.my-integration .expenditure-points .content {
+  padding: 20px 0px 30px;
+  background: #fff;
+}
+.my-integration .expenditure-points .content .expenditure {
+  padding: 20px 17px;
+  padding-top: 0px;
+  background: #fff;
+  overflow: hidden;
+  box-sizing: border-box;
+  border-bottom: 1px solid #F0F3EF;
+}
+.my-integration .expenditure-points .content .expenditure div {
+  width: 480px;
+  height: 150px;
+  float: left;
+  padding-left: 64px;
+  box-sizing: border-box;
+  padding-top: 30px;
+}
+.my-integration .expenditure-points .content .expenditure div p {
+  color: #333333;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+.my-integration .expenditure-points .content .expenditure div .expenditure-tit {
+  font-size: 20px;
+}
+.my-integration .expenditure-points .content .expenditure div a {
+  font-size: 12px;
+  display: block;
+  width: 90px;
+  height: 30px;
+  border: 1px solid #0F0F0F;
+  text-align: center;
+  line-height: 30px;
+  color: #333333;
+  background: #fff;
+}
+.my-integration .expenditure-points .content .expenditure .play-game {
+  background: url("../../imgs/my/integration/game.png") no-repeat;
+}
+.my-integration .expenditure-points .content .expenditure .getinreturn {
+  float: right;
+  background: url("../../imgs/my/integration/exchangeCoupon.png") no-repeat;
+}
+.my-integration .expenditure-points .content .exchange .title .title-right a {
+  color: #969696;
+}
+.my-integration .expenditure-points .content .exchange .swiper {
+  padding: 0px 20px;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con {
+  position: relative;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con .mark {
+  position: absolute;
+  width: 34px;
+  height: 38px;
+  background: #EA5514;
+  font-size: 12px;
+  color: #fff;
+  text-align: center;
+  line-height: 38px;
+  border-radius: 0px 0px 17px 17px;
+  top: 0px;
+  left: 0px;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con img {
+  width: 180px;
+  height: 180px;
+  border: 1px solid #E1E1E1;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con .name {
+  font-size: 12px;
+  color: #666666;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 16px;
+  height: 32px;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con .value {
+  font-size: 12px;
+  color: #FF9800;
+  text-align: center;
+  margin-top: 8px;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con .edemption {
+  font-size: 12px;
+  margin-top: 8px;
+  padding-right: 9px;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con .edemption .integral {
+  color: #FF9800;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .goods-con .edemption .economize {
+  float: right;
+  padding: 1px 2px;
+  border: 1px solid blue;
+  border-radius: 5px;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .swiper-button-next,
+.my-integration .expenditure-points .content .exchange .browse-box .swiper-container-rtl .swiper-button-prev {
+  background: url("../../imgs/my/swiper-right.png");
+  width: 30px;
+  height: 76px;
+  right: 0px;
+}
+.my-integration .expenditure-points .content .exchange .browse-box .swiper-button-prev,
+.my-integration .expenditure-points .content .exchange .browse-box .swiper-container-rtl .swiper-button-next {
+  background: url("../../imgs/my/swiper-left.png");
+  width: 30px;
+  height: 76px;
+  left: 0px;
+}
+.lately-integration-statistics-box {
+  background: #fff;
+  padding-bottom: 30px;
+}
+.lately-integration-statistics-box .lately-integration-statistics {
+  background: #fff;
+  margin-top: 10px;
+  padding-bottom: 20px;
+}
+.lately-integration-statistics-box .lately-integration-statistics .tit {
+  height: 55px;
+  background: #fff;
+  line-height: 55px;
+  font-size: 16px;
+  padding-left: 20px;
+  border-bottom: 1px solid #F0F3EF;
+  color: #000;
+}
+.lately-integration-statistics-box .lately-integration-statistics .list {
+  padding: 10px 20px 0px;
+}
+.lately-integration-statistics-box .lately-integration-statistics .list .list-tit {
+  height: 33px;
+  padding-left: 40px;
+  background: #F8F6F6;
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+  line-height: 33px;
+}
+.lately-integration-statistics-box .lately-integration-statistics .list .list-tit span {
+  display: block;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lately-integration-statistics-box .lately-integration-statistics .list .list-detail {
+  height: 33px;
+  padding-left: 40px;
+  background: #F8F6F6;
+  display: flex;
+  justify-content: space-around;
+  font-size: 14px;
+  line-height: 33px;
+  background: #fff;
+  border-bottom: 1px solid #F8F6F6;
+}
+.lately-integration-statistics-box .lately-integration-statistics .list .list-detail span {
+  display: block;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.lately-integration-statistics-box .lately-integration-statistics .all-integration {
+  text-align: center;
+}
+.lately-integration-statistics-box .lately-integration-statistics .all-integration a {
+  font-size: 14px;
+  color: #4184E8;
+}

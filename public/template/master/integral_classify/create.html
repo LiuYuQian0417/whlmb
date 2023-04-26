@@ -1,0 +1,85 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请注意选择商品分类。</span></li>
+                <li><span>此处只能创建平台优惠券及自营店铺优惠券，店铺优惠券请商铺后台创建。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+    <form class="layui-form" action="" method="post">
+
+        <div class="contentShell">
+            <!--分类名称-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 分类名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" maxlength="6" autocomplete="off" placeholder="请输入分类名称"
+                           datatype="*"
+                           value="{$item.title|default=''}"
+                           nullmsg="请输入分类名称" errormsg="请输入分类名称"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <!--排序-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 排序</label>
+                <div class="layui-input-block">
+                    <input type="number" name="sort" maxlength="20" autocomplete="off" placeholder="请输入排序顺序"
+                           datatype="*"
+                           value="{$item.sort|default=''}"
+                           nullmsg="请输入排序顺序" errormsg="请输入排序顺序"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <!--启用状态-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 启用状态</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="status" value="1" title="是"
+                           {eq name="item.status|default='1'" value="1" }checked{/eq}>
+                    <input type="radio" name="status" value="0" title="否"
+                           {eq name="item.status|default=''" value="0" }checked{/eq}>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="contentShellBtn">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    {present name="$item.integral_classify_id"}
+                    <input type="hidden" name="integral_classify_id" value="{$item.integral_classify_id}">
+                    {/present}
+                    <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+        <!--操作提示end-->
+    </form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

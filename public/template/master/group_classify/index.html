@@ -1,0 +1,103 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('group_activity/index')">拼团活动</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('group_goods/index')">拼团商品</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('group_classify/index')">商品分类</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、拼团商品分类设置后，将展示在前台拼团活动中；</span></li>
+            <li><span>2、拼团分类最多两级；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<!--列表-->
+<form class="layui-form" action="" method="get">
+    <!--导航-->
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('group_classify/create?classify_id={:input(\'get.classify_id\')}')">
+                <div class="fbutton">
+                    <div class="add" title="添加商品"><span><i class="fa fa-plus"></i> 添加分类</span></div>
+                </div>
+            </a>
+            {notempty name=":input('get.classify_id')"}
+            <a href="/group_classify/index" class="left">
+                <div class="fbutton">
+                    <div class="add" title="返回上级"><span><i class="fa fa-mail-reply (alias)"></i>返回上级</span></div>
+                </div>
+            </a>
+            {/notempty}
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据"  onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入拼团分类名称"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                </div>
+                <input type="hidden" name="classify_id" value="{$classify_id}">
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>分类名称</th>
+            <th>创建时间</th>
+            <th width="350">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td>{$item.title}</td>
+            <td>{$item.create_time}</td>
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('group_classify/edit?group_classify_id={$item.group_classify_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                {if condition="$classify_id eq 0"}
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('group_classify/create?classify_id={$item.group_classify_id}')">新增下级</a>
+                <a class="btn_edit" href="/group_classify/index?classify_id={$item.group_classify_id}">查看下级</a>
+                {/if}
+                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/group_classify/destroy','{$item.group_classify_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+        <tfoot>
+
+        </tfoot>
+    </table>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{selector:'switch(status)',callback:function (data) {
+        main.ajax({type:'post',url:'/integral_classify/auditing',data:{'id': data.value},callback:main.callback});
+    }}]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

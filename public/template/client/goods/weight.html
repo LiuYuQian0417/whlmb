@@ -1,0 +1,63 @@
+{extend name='layout/frame'}
+{block name='body'}
+<link href="__RES__/css/main.css" rel="stylesheet" type="text/css" media="all">
+
+<div class="explanation" id="explanation">
+    <div class="ex_tit">
+        <i class="sc_icon"></i><h4>操作提示123</h4>
+    </div>
+    <ul>
+        <li>该页面展示了商城所有的商品信息，可对商品进行编辑修改操作。<li>
+    </ul>
+</div>
+<div class="content">
+    <div class="goods-div">商品名称：<label class="goods-name" title="{$data['goods_name']}">{$data['goods_name']}</label></div>
+</div>
+<div class="layui-form" >
+    <table class="layui-table">
+        <thead>
+            <tr>
+                <th>购买数量</th>
+                <th>退换货数量</th>
+                <th>购买的会员数量</th>
+                <th>评价数量</th>
+                <th>对商家评分数</th>
+                <th>关注数量</th>
+                <th>人工干预值</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="weight-tr">
+                <td>{$data['sales_volume']}</td>
+                <td>{$data['ordergoods'][0]['refund']}</td>
+                <td>{$data['ordergoods'][0]['member_pay']}</td>
+                <td>{$data['comments_number']}</td>
+                <td>{$data['store']['grade']}</td>
+                <td>{$data['collect_number']}</td>
+                <td class="intervene">
+                    <i class="fa fa-edit" title="可编辑" aria-hidden="true"></i>
+                    <input type="text"  class="sort-txt-out" title name="sort-txt" value="{$data['sort']}" />&nbsp;
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{/block}
+
+{block name='js'}
+{__block__}
+<script>
+
+    var txt = '';
+    $(".sort-txt-out").on('click',function () {
+        $(this).removeClass('sort-txt-out');
+        txt = $(this).val();
+    }).on('blur','.intervene [name="sort-txt"]',function () {
+        alert(3333);
+        var newTxt = Math.abs(parseInt($(this).val().trim()));
+        $(this).addClass('sort-txt-out');
+        if (newTxt != txt) $.post('/client/goods/editVal',{goods_id:'{:input(\'id\')}',sort:newTxt});
+    });
+</script>
+{/block}
+{block name='sidebar'}{/block}

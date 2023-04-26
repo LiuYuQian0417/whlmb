@@ -1,0 +1,320 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+/*.head-container-center .logo img {*/
+/*  position: relative;*/
+/*  top: 5px;*/
+/*}*/
+/*.head-container-center .logo span {*/
+/*  font-size: 20px;*/
+/*  color: #8C8C8C;*/
+/*  margin-left: 5px;*/
+/*  position: relative;*/
+/*  top: -5px;*/
+/*}*/
+body {
+  background: #F6F6F6;
+}
+.menu {
+  border-bottom: 1px solid #fff;
+}
+.menu .menu-center {
+  width: 1200px;
+  margin: 0px auto;
+}
+.menu .menu-center .menu-top {
+  width: 1230px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.menu .menu-center .menu-top > a {
+  display: inline-block;
+  width: 85px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 13px;
+  color: #000000;
+  margin-right: 5px;
+  position: relative;
+}
+.menu .menu-center .menu-top > a .find-menu {
+  display: none;
+  width: 518px;
+  height: 168px;
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  padding-top: 13px;
+  box-sizing: border-box;
+  z-index: 9;
+}
+.menu .menu-center .menu-top > a .find-menu .triangle {
+  border: 12px solid transparent;
+  border-bottom-color: #EDEDED;
+  position: absolute;
+  top: -10px;
+  left: 48px;
+  width: 0px;
+  height: 0px;
+}
+.menu .menu-center .menu-top > a .find-menu .triangle:before {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 0px;
+  border: 10px solid transparent;
+  border-bottom-color: #fff;
+  position: absolute;
+  top: -8px;
+  left: -10px;
+}
+.menu .menu-center .menu-top > a .find-menu .menu-con {
+  height: 155px;
+  background: #fff;
+  border: 1px solid #EDEDED;
+  box-sizing: border-box;
+  padding-left: 50px;
+  padding-right: 30px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.menu .menu-center .menu-top > a .find-menu .menu-con ul {
+  overflow: auto;
+  height: 100%;
+}
+.menu .menu-center .menu-top > a .find-menu .menu-con ul li {
+  width: 90px;
+  height: 27px;
+  border: 1px solid #fff;
+  border-radius: 13px;
+  text-align: center;
+  line-height: 27px;
+  color: #666666;
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 12px;
+}
+.menu .menu-center .menu-top > a:hover .find-menu {
+  display: block;
+}
+.menu .menu-center .menu-top .active {
+  color: #fff !important;
+}
+.menu .menu-center .all-menu img {
+  position: relative;
+  top: -2px;
+  margin-left: 5px;
+}
+.menu .menu-center .all-box {
+  height: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.menu .menu-center .all-box a {
+  display: inline-block;
+  width: 85px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 13px;
+  color: #000000;
+  margin-right: 5px;
+  position: relative;
+}
+.menu .menu-center .all-box a .find-menu {
+  display: none;
+  width: 518px;
+  height: 168px;
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  padding-top: 13px;
+  box-sizing: border-box;
+  z-index: 9;
+}
+.menu .menu-center .all-box a .find-menu .triangle {
+  border: 12px solid transparent;
+  border-bottom-color: #EDEDED;
+  position: absolute;
+  top: -10px;
+  left: 48px;
+  width: 0px;
+  height: 0px;
+}
+.menu .menu-center .all-box a .find-menu .triangle:before {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 0px;
+  border: 10px solid transparent;
+  border-bottom-color: #fff;
+  position: absolute;
+  top: -8px;
+  left: -10px;
+}
+.menu .menu-center .all-box a .find-menu .menu-con {
+  height: 155px;
+  background: #fff;
+  border: 1px solid #EDEDED;
+  box-sizing: border-box;
+  padding-left: 50px;
+  padding-right: 30px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.menu .menu-center .all-box a .find-menu .menu-con ul {
+  overflow: auto;
+  height: 100%;
+}
+.menu .menu-center .all-box a .find-menu .menu-con ul li {
+  width: 90px;
+  height: 27px;
+  border: 1px solid #fff;
+  border-radius: 13px;
+  text-align: center;
+  line-height: 27px;
+  color: #666666;
+  float: left;
+  margin-right: 15px;
+  margin-bottom: 12px;
+}
+.menu .menu-center .all-box a:hover .find-menu {
+  display: block;
+}
+.menu .menu-center .ov {
+  overflow: hidden;
+}
+.silder-menu {
+  width: 1200px;
+  margin: 0px auto;
+  height: 51px;
+  padding-top: 10px;
+  box-sizing: border-box;
+}
+.silder-menu .silder .swiper-slide {
+  width: auto;
+}
+.silder-menu .silder .swiper-slide a {
+  padding: 0px 17px;
+  height: 29px;
+  border: 1px solid #EEEEEE ;
+  background: #fff;
+  display: inline-block;
+  border-radius: 15px;
+  text-align: center;
+  line-height: 29px ;
+  color: #444444;
+  font-size: 12px;
+}
+.banner {
+  background: url("../../imgs/Spellgroup/pt-bg.png") no-repeat top center;
+  background-size: contain;
+  padding-top: 100px;
+}
+.banner .banner-swiper {
+  width: 1200px;
+  margin: 0px auto;
+  padding-bottom: 30px;
+}
+.banner .banner-swiper .swiper-slide {
+  width: 1030px;
+  height: 420px;
+}
+.banner .banner-swiper .swiper-slide img {
+  width: 100%;
+  height: 100%;
+}
+.banner .banner-swiper .swiper-pagination-bullet {
+  width: 47px;
+  height: 3px;
+  border-radius: 0px;
+}
+.banner .banner-swiper .swiper-pagination-bullet-active {
+  background: #EA5413;
+}
+.group-list {
+  width: 1200px;
+  margin: 0px auto;
+  overflow: hidden;
+}
+.group-list ul {
+  width: 1230px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.group-list ul li {
+  width: 292px;
+  height: 410px;
+  background: #fff;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.group-list ul li a {
+  display: block;
+  padding: 15px;
+}
+.group-list ul li a .goods-img img {
+  width: 262px;
+  height: 262px;
+}
+.group-list ul li a .goods-name {
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 14px;
+  color: #333333;
+  height: 38px;
+  line-height: 19px;
+}
+.group-list ul li a .bot {
+  margin-top: 25px;
+}
+.group-list ul li a .bot .left {
+  float: left;
+}
+.group-list ul li a .bot .left .pic {
+  font-size: 14px;
+}
+.group-list ul li a .bot .left .pic span {
+  font-size: 22px;
+}
+.group-list ul li a .bot .left .bot-left .number {
+  display: inline-block;
+  height: 14px;
+  line-height: 14px;
+  border-radius: 7px;
+  border-top-left-radius: 2px;
+  font-size: 12px;
+  color: #fff;
+  padding: 2px 7px;
+}
+.group-list ul li a .bot .left .bot-left span {
+  font-size: 12px;
+  color: #666666;
+}
+.group-list ul li a .bot .btn {
+  float: right;
+  width: 88px;
+  height: 39px;
+  line-height: 39px;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 3px 5px #F7BEA5;
+}

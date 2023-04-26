@@ -1,0 +1,144 @@
+{extend name="public/common"}
+
+{block name="content_css"}
+<!--公共搜索css-->
+<link rel="stylesheet" href="__RES__/css/public/indexHeader.css">
+<!--微信支付css-->
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<link rel="stylesheet" href="__RES__/css/wechatpay/wechatpay.css">
+
+<!--公共JQ库-->
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<link rel="stylesheet" href="__RES__/css/wallet/wallet.css">
+{/block}
+
+{block name="content"}
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="logo" >
+            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <span>账户充值</span>
+        </div>
+        <div class="order-process">
+            <ul>
+                <li><span>1</span>
+                    <p>确认订单</p></li>
+                <li><span>2</span>
+                    <p>付款</p></li>
+                <li class="order-process-gray"><span>3</span>
+                    <p>支付成功</p></li>
+            </ul>
+            <div class="barline">
+                <div w="75" style="width: 25%;" class="charts"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--微信支付开始-->
+<div class="wechatpay-top">
+    订单提交成功，请尽快付款！订单号：{$order_number}<span class="wechatpay-top-amount">应付金额  <span class="primary-color">{$total_price}</span> 元</span>
+    <div class="triangle"></div>
+</div>
+<div class="wechatpay-content wechatpay-content3">
+
+    <div class="wechat-pay">
+        <div class="wechat-pay-top">
+            微信支付<span class="wechat-pay-top-code-time">距离二维码过期还剩<span id="time-remaining" data-time_str="{:date('Y-m-d H:i:s',strtotime('+2 hour'))}">02时00分00秒</span>，过期后请刷新页面重新获取二维码。</span>
+        </div>
+        <div class="wechat-pay-content">
+            <div class="wechat-pay-content-code">
+                <img class="wechat-pay-content-code-img"  src="{:url('/pc2.0/wechat/payment')}?order_data={$order_data}" width="298" height="298">
+                <p class="wechat-pay-code-content"><span class="wechat-pay-code-content-img"><img src="__RES__/imgs/wechatpay/saoma.png" width="38" height="38"></span><span class="wechat-pay-code-content-title">请使用微信扫一扫<br>扫描二维码支付</span></p>
+            </div>
+
+            <div class="wechat-pay-content-phone">
+                <img src="__RES__/imgs/wechatpay/shouji.jpg" width="309" height="415">
+            </div>
+            <div class="clear"></div>
+        </div>
+        <a href="javascript:main.jump({'url':'/pc2.0/recharge/index?recharge_id={:input(\'recharge_id\')}'})" class="other-way"><span><img src="__RES__/imgs/wechatpay/zuojiantou.png"> </span>其他方式支付</a>
+    </div>
+</div>
+<!--微信支付结束-->
+<!--侧边栏-->
+<div class="side-navigation">
+    <div class="side-navigation-view">
+        <div class="shop-vip primary-background-color" onclick="main.jump({'url':'/pc2.0/rank/index'})">
+            <span class="shop-vip-text" >会员</span>
+            <img src="__RES__/imgs/cart/my.png" alt="">
+        </div>
+        <div class="collect" onclick="main.jump({'url':'/pc2.0/cart/index'})">
+            <img src="__RES__/imgs/shophome/gouwuche.png" alt="">
+        </div>
+        <div class="collect" style="top: 453px;" onclick="main.jump({'url':'/pc2.0/goods/collect_goods_list'})">
+            <img src="__RES__/imgs/cart/collect.png" alt="">
+        </div>
+        <!--/template/computer/resource/imgs/shophome/xiaoxi.png-->
+        <div class="collect" style="top: 489px;" onclick="main.jump({'url':'/pc2.0/message/index.html?type=1'})">
+            <img src="__RES__/imgs/shophome/xiaoxi.png" alt="">
+        </div>
+        <!--<div class="qrcode">-->
+        <!--<img src="__RES__/imgs/cart/qrcode.png" alt="">-->
+        <!--</div>-->
+        <div class="top back-top">
+            <img src="__RES__/imgs/cart/top.png" alt="">
+        </div>
+        <div class="question" onclick="main.jump({'url':'/pc2.0/setting/help_center?status=feedback'})">
+            <img src="__RES__/imgs/cart/question.png" alt="">
+        </div>
+    </div>
+
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    function limit(){
+        main.count_down({
+            'time_select': $('#time-remaining'),
+            'function_name': limit,
+            'dispose_callback':function(time){
+                var text = '';
+                return  text +time.h+'时'+time.m+'分'+time.s+'秒';
+            },
+            'callback': function () {
+                window.location.reload();
+            }
+        });
+    }
+    limit();
+
+    check_order_status();
+
+    function check_order_status() {
+        var order_number = '{$order_number}';
+        var pay_type = '{$pay_type}';
+        main.ajax({
+            'url': '/pc2.0/order/check_order_status',
+            'data': {'order_number': order_number, 'pay_type': pay_type},
+            'callback': function (res) {
+                if (res.status == -100) {
+                    setTimeout(check_order_status, 1000);
+                } else {
+                    console.log(1);
+                }
+            }
+        });
+    }
+
+    //进度条
+    function animate() {
+        $(".charts").each(function (i, item) {
+            var a = parseInt($(item).attr("w"));
+            $(item).animate({
+                width: a + "%"
+            }, 1000);
+        });
+    };
+    animate();
+</script>
+{/block}
+

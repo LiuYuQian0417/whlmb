@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>批量审核</title>
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+</head>
+<body>
+
+<div class="layui-form"
+     style="padding: 10px;position: relative;width: 100%;height:230px;-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;">
+    <div>
+        <span>审核结果:</span>
+        <div style="text-align: center;">
+            <input type="radio" name="review_status" value="1" lay-filter="review_status" title="审核通过"
+                   checked="checked">
+            <input type="radio" name="review_status" value="0" lay-filter="review_status" title="审核未通过">
+        </div>
+    </div>
+    <div id="review_content" style="display:none">
+        <span>原因:</span>
+        <textarea name="review_content" maxlength="100" placeholder="请输入审核未通过的原因" class="layui-textarea"></textarea>
+    </div>
+    <div style="text-align: center; position: absolute; bottom: 0;width: calc(100% - 20px);">
+        <button class="layui-btn layui-btn-primary" id="close">取消</button>
+        <button class="layui-btn" id="submit">提交</button>
+    </div>
+</div>
+
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<script>
+    main.form([
+        {
+            selector: 'radio(review_status)',
+            callback: function (data) {
+                if (data.value == 0) {
+                    $('#review_content').show()
+                } else {
+                    $('#review_content').hide()
+                }
+            }
+        }
+    ]);
+
+    $('#close').on('click', function () {
+        parent.layer.closeAll()
+    })
+
+    $('#submit').on('click',function () {
+        main.ajax({
+            url: '/goods/review_all'+location.search,
+            data:{
+                type:$('input[name=review_status]:checked').val(),
+                content:$('textarea[name=review_content]').val()
+            },
+            callback: function (res) {
+                parent.layer.msg(res.message, {
+                    time: 1000
+                }, function () {
+                    if (res.code === 0) {
+                        parent.window.location.reload()
+                    }
+                });
+                layer.close('iframe')
+            }
+        })
+    })
+
+</script>
+</body>
+</html>

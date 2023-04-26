@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{block name='title'}{:env('title')}{/block}</title>
+    <!--网站图标-->
+    <link rel="shortcut icon" href="/template/master/resource/image/common/favicon_48.ico" />
+    <link rel="bookmark" href="/template/master/resource/image/common/favicon_64.ico" type="image/x-icon" />
+    <!--公共头部css-->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicHeader.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/color.css"/>
+    <!--分页css-->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+    <style>
+        .layui-layer-content{
+            padding: 15px;
+        }
+        /*没有数据*/
+        .indent-box-emty {
+            padding-top: 90px;
+            text-align: center;
+            font-size: 12px;
+            padding-bottom: 90px;
+        }
+
+        .indent-box-emty p {
+            font-size: 14px;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        .indent-box-emty span {
+            color: #9EA3A9;
+            font-size: 12px;
+        }
+    </style>
+    <!--页面公共头部基础css-->
+    {block name='header_css'}
+    {/block}
+    <!--页面css-->
+    {block name="content_css"}
+    {/block}
+    <style type="text/css">
+        .demo-class .layui-layer-btn0 {
+            background-color: #EA5413 !important;
+            border-color: #EA5413 !important;
+            color: #FFF;
+        }
+    </style>
+    {notempty name=':session("member_info")'}
+    {//当前用户是否登录标签}
+    <is_valid id="{:session('member_info')['member_id'] ?? ''}"></is_valid>
+    {/notempty}
+    <!--公共js-->
+    <script src="__RES__/js/jquery-1.10.1.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/jquery.lazyload.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/pages.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<!--公共头部-->
+<div class="public-header">
+    <div class="header-center clearfix">
+        <div class="header-left">
+            <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/index/index'})">
+                <img class="img-color" src="__RES__/imgs/del/home.png" alt="">商城首页
+            </a>
+            <span class="partition">|</span>
+            <a class="primary-color-hover" href="javascript:position()">
+                <img class="img-color" src="__RES__/imgs/del/location.png" alt=""><span id="city_info">定位中</span>
+                <!--<img src="__RES__/imgs/del/bottom.png" alt="">-->
+            </a>
+        </div>
+        <div class="header-right">
+            {empty name=":session('member_info')['member_id']"}
+            <!--未登录-->
+            <a class="primary-color-hover" href="javascript:;"
+               onclick="main.jump({'url':'/pc2.0/login/index','return_url':ObjectOrJson({'use_url':'login/index','return_url':window.location.href})})">
+                登录用户,
+            </a>
+            <a class="primary-color-hover" style="color: rgb(234,84,19)" href="javascript:;"
+               onclick="main.jump({'url':'/pc2.0/register/one'})">
+                注册有礼
+            </a>
+            {else/}
+            <!--已登录-->
+            <a href="javascript:main.jump({'url':'/pc2.0/setting/index'})">
+                {$member_info.nickname}
+            </a>
+            <a class="primary-color-hover" href="JavaScript:main.loginOut(1);">【退出】</a>
+            <span class="partition">|</span>
+            <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/order/order_list'})">我的订单</a>
+            <span class="partition">|</span>
+            <div class="service" style="background: none; box-shadow: none; margin: 0">
+                <div class="customer-service">
+
+                    <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/my/index'})">我的<img src="__RES__/imgs/del/bottom.png"
+                                                                                 alt=""></a>
+                </div>
+                <div class="secondary-menu">
+                    <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/message/index?type=1'})">
+                        消息
+                    </a>
+                    <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/goods/collect_goods_list'})">
+                        我的关注
+                    </a>
+                    <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/record_goods/index'})">
+                        浏览记录
+                    </a>
+                </div>
+            </div>
+            <span class="partition">|</span>
+            <a class="primary-color-hover" href="javascript:;"
+               onclick="main.jump({'url':'/pc2.0/rank/index'})">会员</a>
+            {/empty}
+            <span class="partition">|</span>
+            {if $function_status.one_or_more===true}
+            <a class="primary-color-hover" href="javascript:;" onclick="create_store()">商家入驻</a>
+            <span class="partition">|</span>
+            {/if}
+            <div class="service" style="background: none; box-shadow: none; margin: 0">
+                <div class="customer-service">
+
+                    <a class="primary-color-hover" href="">客户服务<img src="__RES__/imgs/del/bottom.png" alt=""></a>
+                </div>
+                <div class="secondary-menu">
+                    <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/setting/help_center'})">
+                        帮助中心
+                    </a>
+                    {if INI_CONFIG['IS_CUSTOMER'] ==1}
+                    <a class="primary-color-hover" href="javascript:;" onclick="jump_service({store_id:'{:config(\'user.\')[\'one_more\']==0?config(\'user.\')[\'one_store_id\']:0}',diversion_id:'5000'})">
+                    在线客服
+                    </a>
+                    {/if}
+                    <!--<a class="primary-color-hover" href="">
+                        电话客服
+                    </a>-->
+                    <a class="primary-color-hover"
+                       href="javascript:main.jump({'url':'/pc2.0/setting/help_center?status=feedback'})">
+                        问题反馈
+                    </a>
+                </div>
+            </div>
+            <!--<span class="partition">|</span>-->
+            <!--<a class="primary-color-hover" href="javascript:;">手机商城</a>-->
+        </div>
+    </div>
+</div>
+<div id="container"></div>
+<!--页面头部-->
+{block name="page_head"}{/block}
+<!--end-->
+<!--页面内容-->
+{block name="content"}{/block}
+<!--end-->
+<!--公共尾部开始-->
+<div class="public-bottom-box">
+    <div class="public-bottom-top-all">
+        <div class="public-bottom-center-top">
+            <div class="public-bottom-top-list">
+                <img src="__RES__/imgs/del/wenti.png" alt=""> 专业服务，贴心解决
+            </div>
+            <div class="public-bottom-top-list">
+                <img src="__RES__/imgs/del/zhifu.png" alt=""> 多种支付，安全快捷
+            </div>
+            <div class="public-bottom-top-list">
+                <img src="__RES__/imgs/del/baozhang.png" alt=""> 正品保障，服务安心
+            </div>
+            <div class="public-bottom-top-list">
+                <img src="__RES__/imgs/del/wenti.png" alt=""> 多种配送，快速便捷
+            </div>
+        </div>
+    </div>
+
+    <div class="public-bottom-floor-all">
+        <div class="public-bottom-floor-center">
+            {volist name="article_classify" id="article_classify_data"}
+            <div class="public-bottom-floor-list">
+                <h4 class="public-bottom-floor-list-title">{$article_classify_data.title}</h4>
+                {volist name='$article_classify_data.article' id="article_data"}
+                <a class="primary-color-hover"
+                   href="javascript:main.jump({'url':'/pc2.0/setting/help_center?article_id={$article_data.article_id}'})">{$article_data.title}</a>
+                {/volist}
+            </div>
+            {/volist}
+        </div>
+    </div>
+
+    <!--<div class="bottom-formation">-->
+        <!--<div class="bottom-formation-center">-->
+            <!--<p>-->
+                <!--技术支持：-->
+                <!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+                <!--<span>|</span> 技术支持：-->
+                <!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+                <!--<span>|</span> 技术支持：-->
+                <!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+                <!--<span>|</span> 技术支持：-->
+                <!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+            <!--</p>-->
+        <!--</div>-->
+    <!--</div>-->
+</div>
+<div class="copyright-con">
+	{if config('user.')['qualification']['icp_bei']['is_include']}
+	<div style="margin:0 5px"><a style="color:#636363;height:20px;line-height:20px;display:inline-block;" href="http://www.beian.miit.gov.cn">{:config('user.')['qualification']['icp_bei']['province']}ICP备{:config('user.')['qualification']['icp_bei']['number']}号{notempty name=":config('user.')['qualification']['icp_bei']['sub_number']"}-{:config('user.')['qualification']['icp_bei']['sub_number']}{/notempty}</a></div>
+	{/if}
+	{if config('user.')['qualification']['gong_wang_an_bei']['is_include']}
+	<div style="margin:0 5px"><a style="color:#636363;height:20px;line-height:20px;display:inline-block;" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode="><img style="width:15px;height:15px" src="/template/computer/resource/imgs/national_emblem.png"></img>{:config('user.')['qualification']['gong_wang_an_bei']['province']}公网安备 {:config('user.')['qualification']['gong_wang_an_bei']['number']} 号</a></div>
+	{/if}
+</div>
+<!--<script src="__RES__/js/Validform_v5.3.2_ncr_min.js" type="text/javascript" charset="utf-8"></script>-->
+<script src="__RES__/js/jquery.from.js" type="text/javascript" charset="utf-8"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+<!--浏览器推送js-->
+<script src="__RES__/js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__RES__/js/public/notification.js" type="text/javascript" charset="utf-8"></script>
+<!--地图-->
+<script type="text/javascript" src='//webapi.amap.com/maps?v=1.4.5&key=fcd30c95e43b5abb1dcd294e1ec7e1ac&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<script>
+    $(function () {
+        //图片懒加载
+        $("img[data-original]").lazyload({
+            placeholder:"__RES__/imgs/zwt.png",    //图片未加载出来时显示的占位图
+            effect: "fadeIn",
+            threshold: 100,
+            failure_limit:2                //加载多少张可见区域外的图片
+        });
+        //图片加载失败设置默认图
+        $("img").one('error',function () {
+            $(this).attr('src', '__RES__/imgs/zwt.png');
+        });
+        //图片属性为空默认图
+        $("img[src='']").attr('src', '__RES__/imgs/zwt.png');
+        // position();
+        if (!localStorage.lat || localStorage.lat==='0' || !localStorage.lng || localStorage.lng==='0' || !localStorage.get_city) {
+            position();
+        } else {
+            $('#city_info').text(localStorage.get_city);
+        }
+
+    });
+    //获得用户未登录时唯一标识
+    get_identification();
+    //如果token有变化则刷新其他页面
+//    storageChange('token',function(){
+//        window.location.reload();
+//    });
+    function position() {
+        $('#city_info').text('定位中');
+        mapObj = new AMap.Map('container');
+        mapObj.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                timeout: 1000,          //超过10秒后停止定位，默认：无穷大
+                maximumAge: 10,           //定位结果缓存0毫秒，默认：0
+                showButton: false,        //显示定位按钮，默认：true
+                buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+            });
+            mapObj.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+            //解析定位结果
+            function onComplete(data) {
+                console.log(data);
+                localStorage.lat = data.position.lat;
+                localStorage.lng = data.position.lng;
+                window.sessionStorage.setItem('lat', data.position.lat);
+                window.sessionStorage.setItem('lng', data.position.lng);
+                var cityinfo = get_city(data.addressComponent);
+                localStorage.get_city = cityinfo;
+                $('#city_info').text(cityinfo);
+            }
+
+            //解析定位错误信息
+            function onError(data) {
+                localStorage.lat = 0;
+                localStorage.lng = 0;
+                sessionStorage.lat = 0;
+                sessionStorage.lng = 0;
+                $('#city_info').text('定位失败');
+            }
+        });
+    }
+
+    //获得城市信息
+    function get_city(data) {
+        if (data.city.length != 0) {
+            return data.city;
+        }
+        if (data.district.indexOf('市') != -1) {
+            return data.district;
+        }
+        return data.province;
+    }
+
+    //商家入驻
+    function create_store() {
+        switch ('{$member_info.store_status|default=-1}'.toString()) {
+            case '-1':
+            case '0':
+                main.jump({'url': '/pc2.0/my/create_store'});
+                break;
+            case '1':
+                layer.msg('入驻申请通过,请登录后台填写认证信息', function () {
+                    main.jump({'url': '/client/login/index','is_open':true});
+                });
+                break;
+            case '2':
+                layer.msg('入驻申请未通过,请重新申请', function () {
+                    main.jump({'url': '/pc2.0/my/create_store'});
+                });
+                break;
+            case '3':
+                layer.msg('入驻认证正在审核中', function () {
+                    main.jump({'url': '/client/login/index','is_open':true});
+                });
+                break;
+            case '4':
+                main.jump({'url': '/client/login/index','is_open':true});
+                break;
+            case '5':
+                layer.msg('入驻认证未通过,请重新新填写认真信息', function () {
+                    main.jump({'url': '/client/login/index','is_open':true});
+                });
+                break;
+        }
+    }
+</script>
+<!--公共头部js-->
+{block name='header_js'}
+{/block}
+<!--公共尾部结束-->
+{block name='js'}
+<!--公共js-->
+<!--end-->
+{/block}
+</body>
+</html>

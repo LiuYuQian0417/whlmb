@@ -1,0 +1,662 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .goods-desc .name{height: auto!important;}
+    /******此类样式只针对打印有效*******/
+    @media print {
+        * {margin: 0;padding: 0;}
+        body{
+            color:#000;
+        }
+        .separate {text-align: center;}
+        .spece {width: 100%;height: 3mm;}
+        .print_b {display: inline !important;width: 52mm;overflow: hidden;}
+        .print_header {width: 100%;}
+        .print_content {width: 95%;overflow: hidden;}
+        .print_content > div {float: left;}
+        .print_content > .print_name {width: 57%;}
+        .print_content > .print_name > p {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 6mm;}
+        .print_content > .print_num {width: 14%;}
+        .print_content > .print_num > p {text-align: right;line-height: 6mm;}
+        .print_content > .print_num > p:before {content: "* ";}
+        .print_content > .print_price {width: 26%;}
+        .print_content > .print_price > p {text-align: right;line-height: 6mm;}
+        .print_footer {width: 95%;overflow: hidden;}
+        .print_footer > div {float: left;}
+        .print_footer > .print_name {width: 65%;}
+        .print_footer > .print_name > p {overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 6mm;}
+        .print_footer > .print_price {width: 35%;}
+        .print_footer > .print_price > p {text-align: right;line-height: 6mm;}
+        .print_store_name {width: 95%;text-align: center;font-size: 5mm;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+        .ele4_div {width: 95%;}
+    }
+    /********此样式只对打印有效********/
+
+    a:last-child{margin-right: 10px;}
+    a.btn_see, a.btn_edit, a.btn_trash{margin-bottom: 5px;}
+    .ecsc-default-table td .goods-desc{width: calc(100% - 80px)}
+    .ecsc-default-table td .goods-img img{
+        border: 1px solid #dcdcdc;
+    }
+    .ecsc-default-table td .goods-img{border: none!important;}
+    .ecsc-default-table td .goods-info{float: none!important;}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+        <div class="tabmenu">
+            <ul class="tab">
+                <li {eq name=":input('type','0')" value='0' } {eq name=":input('pay_type','1')" value='1' } class="active" {/eq} {/eq}><a href="javascript:;" onclick="reloadSelf({type:0})">全部订单</a></li>
+                <li {eq name=":input('type','0')" value='3' }class="active" {/eq}><a href="javascript:;" onclick="reloadSelf({type:3})">快递邮寄订单</a></li>
+                {if $Think.INI_CONFIG['IS_CITY']}<li {eq name=":input('type','0')" value='1' }class="active" {/eq}><a href="javascript:;" onclick="reloadSelf({type:1})">同城速递订单</a></li>{/if}
+                {if $Think.INI_CONFIG['IS_SHOP']}<li {eq name=":input('type','0')" value='2' }class="active" {/eq}><a href="javascript:;" onclick="reloadSelf({type:2})">门店自提订单</a></li>{/if}
+                {if $Think.INI_CONFIG['IS_PAY_DELIVERY']}<li {eq name=":input('pay_type','1')" value='2' }class="active" {/eq}><a href="javascript:;" onclick="reloadSelf({pay_type:2})">货到付款</a></li>{/if}
+            </ul>
+        </div>
+        <div class="btn-info" style="overflow: hidden;float: none">
+            <a class="sc-btn sc-blue-btn" href="javascript:dc()"><i class="icon-download-alt"></i>下载订单</a>
+        </div>
+        <div class="order_stats">
+            <div class="order_stats_search">
+                <!--起止时间开始-->
+                <div class="screeItme">
+                    <strong class="fl lh mr10">起止时间：</strong>
+                    <div  class="imitate_select select_w145">
+                        <div class="cite">不限</div>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="ftx-01">下单时间</a></li>
+                            <li><a href="javascript:;" data-value="2" class="ftx-01">支付时间</a></li>
+                            <li><a href="javascript:;" data-value="3" class="ftx-01">发货时间</a></li>
+                            <li><a href="javascript:;" data-value="1" class="ftx-01">成交时间</a></li>
+                        </ul>
+                        <input name="time_type" type="hidden" value="{:input('time_type','0')}" id="order_referer_val">
+                    </div>
+                    <div class="text_time" id="text_time1">
+                        <input name="start_date" type="text" id="start_date" size="15" placeholder="不限" value="{:input('start_date','')}" readonly  class="text" />
+                    </div>
+                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                    <div class="text_time" id="text_time2">
+                        <input name="end_date" type="text" id="end_date" size="15" placeholder="至今" value="{:input('end_date','')}" readonly  class="text" />
+                    </div>
+                </div>
+                <!--起止时间结束-->
+
+                <div class="screeItme mt10">
+                    <!--订单来源开始-->
+                    <div class="bf100 fl origin_type">
+                        <strong class="fl lh mr10">订单来源：</strong>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" {empty name="$origin_type"} checked{/empty} onclick="clearCheck('.origin_type')" type="checkbox" class="ui-checkbox origin_type_all" id="a_2" value="0" />
+                            <label class="ui-label" for="a_2">不限</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="2" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_0" value="2" />
+                            <label class="ui-label" for="a_0">小程序</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="4" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_3" value="4" />
+                            <label class="ui-label" for="a_3">手机站</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="1" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_1" value="1" />
+                            <label class="ui-label" for="a_1">APP</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="3" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_4" value="3" />
+                            <label class="ui-label" for="a_4">PC</label>
+                        </div>
+                    </div>
+                    <!--订单来源结束-->
+
+                    {if $Think.INI_CONFIG['IS_LIMIT'] || $Think.INI_CONFIG['IS_CUT'] || $Think.INI_CONFIG['IS_GROUP']}
+                    <!--订单类型开始-->
+                    <div class="bf100 fl">
+                        <strong class="fl lh mr10">订单类型：</strong>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="order_type[]" {empty name="$order_type"} checked{/empty} type="checkbox" onclick="clearCheck('.order_type')" class="ui-checkbox order_type_all" id="b_2" value="0" />
+                            <label class="ui-label" for="b_2">不限</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="order_type[]" type="checkbox" {in name="1" value="$order_type"} checked{/in} onclick="clearCheck('.order_type_all')" class="ui-checkbox order_type" id="b_0" value="1" />
+                            <label class="ui-label" for="b_0">普通</label>
+                        </div>
+                        {if $Think.INI_CONFIG['IS_LIMIT']}
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="order_type[]" type="checkbox" {in name="4" value="$order_type"} checked{/in} onclick="clearCheck('.order_type_all')" class="ui-checkbox order_type" id="b_3" value="4" />
+                            <label class="ui-label" for="b_3">限时抢购</label>
+                        </div>
+                        {/if}
+                        {if $Think.INI_CONFIG['IS_GROUP']}
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="order_type[]" type="checkbox" {in name="2" value="$order_type"} checked{/in} onclick="clearCheck('.order_type_all')" class="ui-checkbox order_type" id="b_1" value="2" />
+                            <label class="ui-label" for="b_1">拼团</label>
+                        </div>
+                        {/if}
+                        {if $Think.INI_CONFIG['IS_CUT']}
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="order_type[]" type="checkbox" {in name="3" value="$order_type"} checked{/in} onclick="clearCheck('.order_type_all')" class="ui-checkbox order_type" id="b_4" value="3" />
+                            <label class="ui-label" for="b_4">砍价</label>
+                        </div>
+                        {/if}
+                    </div>
+                    <!--订单类型结束-->
+                    {/if}
+
+                    <!--配送方式开始-->
+                    <div class="bf100 fl">
+                        <strong class="fl lh mr10">配送方式：</strong>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="distribution_type[]" type="radio" class="ui-checkbox" id="shipping_2" value="0"
+                                   {empty name="$distribution_type"} checked{/empty}
+                            />
+                            <label class="ui-label" for="shipping_2">不限</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="distribution_type[]" type="radio" class="ui-checkbox distribution_type" id="shipping_0" value="3"
+                                   {eq name="$distribution_type" value="3"} checked{/eq} {eq name=":input('pay_type','1')" value="2" } disabled {/eq}
+                            {eq name=":input('type','0')" value="3"} checked{/eq}
+                            />
+                            <label class="ui-label" for="shipping_0">快递邮寄订单</label>
+                        </div>
+                        {if $Think.INI_CONFIG['IS_CITY']}
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="distribution_type[]" type="radio" class="ui-checkbox distribution_type" id="shipping_3" value="1"
+                                   {eq name="$distribution_type" value="1"} checked{/eq} {eq name=":input('pay_type','1')" value="2" } checked {/eq}
+                            {eq name=":input('type','0')" value="1"} checked{/eq}
+                            />
+                            <label class="ui-label" for="shipping_3">同城速递订单</label>
+                        </div>
+                        {/if}
+                        {if $Think.INI_CONFIG['IS_SHOP']}
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="distribution_type[]" type="radio" class="ui-checkbox distribution_type" id="shipping_1" value="2"
+                                   {eq name="$distribution_type" value="2"} checked{/eq} {eq name=":input('pay_type','1')" value="2" } disabled {/eq}
+                            {eq name=":input('type','0')" value="2"} checked{/eq}
+                            />
+                            <label class="ui-label" for="shipping_1">门店自提订单</label>
+                        </div>
+                        {/if}
+                    </div>
+                    <!--配送方式结束-->
+
+                    <!--订单状态开始-->
+                    <div class="bf100 fl">
+                        <strong class="fl lh mr10">订单状态：</strong>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="status[]" {if condition="$status eq '-1' || $status eq ''"} checked {else/} {/if} type="checkbox" value="-1" onclick="clearCheck('.status')" id="status_0" class="ui-checkbox status_all" />
+                            <label class="ui-label" for="status_0">不限</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="status[]" type="checkbox"  value="0" id="status_1" class="ui-checkbox status" onclick="clearCheck('.status_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="'0'" value="$status"} checked{/in}
+                            />
+                            <label class="ui-label" for="status_1">等待买家付款</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="status[]" type="checkbox" {in name="1" value="$status"} checked{/in} value="1" id="status_3" class="ui-checkbox status" onclick="clearCheck('.status_all')" />
+                            <label class="ui-label" for="status_3">待发货/待配送</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="status[]" type="checkbox" {in name="2" value="$status"} checked{/in} value="2" id="status_4" class="ui-checkbox status" onclick="clearCheck('.status_all')" />
+                            <label class="ui-label" for="status_4">待收货/待自提/配送中</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="status[]" type="checkbox" {in name="3" value="$status"} checked{/in} value="3" id="status_8" class="ui-checkbox status" onclick="clearCheck('.status_all')" />
+                            <label class="ui-label" for="status_8">已完成</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="status[]" type="checkbox" {in name="4" value="$status"} checked{/in} value="4,6" id="status_9" class="ui-checkbox status" onclick="clearCheck('.status_all')" />
+                            <label class="ui-label" for="status_9">已关闭</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="status[]" type="checkbox" {in name="5" value="$status"} checked{/in} value="5" id="status_10" class="ui-checkbox status" onclick="clearCheck('.status_all')" />
+                            <label class="ui-label" for="status_10">退款中</label>
+                        </div>
+                    </div>
+                    <!--订单状态结束-->
+
+                    <!--支付方式开始-->
+                    <div class="bf100 fl">
+                        <strong class="fl lh mr10">支付方式：</strong>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" {if condition="$pay_channel eq '-1' || $pay_channel eq ''"} checked {else/} {/if} type="checkbox" value="-1" id="pay_0" onclick="clearCheck('.pay_channel')" class="ui-checkbox pay_channel_all" />
+                            <label class="ui-label" for="pay_0">不限</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="0"  id="pay_1" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="'0'" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_1">未支付</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="1" id="pay_2" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="1" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_2">微信</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="2" id="pay_3" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="2" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_3">支付宝</label>
+                        </div>
+                        {if $Think.INI_CONFIG['IS_BALANCE']}
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="3" id="pay_4" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="3" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_4">余额</label>
+                        </div>
+                        {/if}
+                        <!--<div class="checkbox_item fl lh mr10">-->
+                            <!--<input name="pay_channel[]" type="checkbox" value="4" id="pay_5" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"-->
+                                   <!--{eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="4" value="$pay_channel"} checked{/in}-->
+                            <!--/>-->
+                            <!--<label class="ui-label" for="pay_5">银行卡</label>-->
+                        <!--</div>-->
+                        <!--<div class="checkbox_item fl lh mr10">-->
+                            <!--<input name="pay_channel[]" type="checkbox" value="5" id="pay_6" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')" />-->
+                            <!--<label class="ui-label" for="pay_6">线下付款</label>-->
+                        <!--</div>-->
+                    </div>
+                    <!--支付方式结束-->
+
+                    <!--关键词开始-->
+                    <div class="bf100 fl mt5">
+                        <strong class="fl lh mr10">关键词：</strong>
+                        <div  class="imitate_select select_w145">
+                            <div class="cite">全部</div>
+                            <ul>
+                                <li><a href="javascript:;" data-value="0" class="ftx-01">全部</a></li>
+                                <li><a href="javascript:;" data-value="1" class="ftx-01">商品名称</a></li>
+                                <li><a href="javascript:;" data-value="2" class="ftx-01">商品货号</a></li>
+                                <li><a href="javascript:;" data-value="6" class="ftx-01">订单编号</a></li>
+                                <li><a href="javascript:;" data-value="3" class="ftx-01">客户昵称</a></li>
+                                <li><a href="javascript:;" data-value="4" class="ftx-01">收货人姓名</a></li>
+                                <li><a href="javascript:;" data-value="5" class="ftx-01">收货人联系方式</a></li>
+                                <li><a href="javascript:;" data-value="7" class="ftx-01">第三方支付单号</a></li>
+                            </ul>
+                            <input name="keywords_type" type="hidden" value="{:input('keywords_type','0')}"/>
+                        </div>
+                        <input name="keywords" value="{:input('keywords','')}" type="text"  class="text text_2 mr10"/>
+                        <input type="submit"  value="查询" class="sc-btn sc-blueBg-btn btn30" />
+                    </div>
+                    <!--关键词结束-->
+                </div>
+            </div>
+            <!--列表-->
+            <form method="POST" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                    <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                        <tr>
+                            <th width="25%">商品信息</th>
+                            <th width="7%">订单类型</th>
+                            <th width="12%">订单号</th>
+                            <th width="4%">支付方式</th>
+                            <th width="4%">订单来源</th>
+                            <th width="10%">买家</th>
+                            <th width="10%">下单时间</th>
+                            <th width="10%">实收款</th>
+                            <th width="10%">订单状态</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                        {empty name='data'}
+                        <tr>
+                            <td class="no-records" colspan="10">没有找到任何记录</td>
+                        </tr>
+                        {/empty}
+                        {volist name="data" id="item"}
+                        <tr>
+                            <td class="tl">
+                                {volist name="$item.order_goods" id="orderGoods"}
+                                <div class="goods-info">
+                                    <div class="goods-img"><a href="javascript:void(0);" target="_blank"><img src="{$orderGoods.file|default=''}" onerror=this.src="/template/master/resource/image/common/imageError.png" onmouseover="toolTip('<img src={$orderGoods.file}>')" onmouseout="toolTip()"></a></div>
+                                    <div class="goods-desc">
+                                        <div class="name">
+                                            <font title="">商品名称</font>：
+                                            <font class="orange">
+                                                {$orderGoods.goods_name|default=''}
+                                                <br>
+                                                <font class="red" style="font-weight: bold;font-size: 14px;margin-left: 20%;">
+                                                    {switch orderGoods.status}
+                                                    {case 4.2}（退款成功）{/case}
+                                                    {case 4.3}（退货成功）{/case}
+                                                    {case 5.1|5.2}（申请退款中）{/case}
+                                                    {case 5.3}（同意退货（等待填写物流））{/case}
+                                                    {case 5.4}（申请退货中）{/case}
+                                                    {case 5.5|5.7}（退款失败）{/case}
+                                                    {case 5.6}（退货失败）{/case}
+                                                    {default /}
+                                                    {/switch}
+                                                </font>
+                                            </font>
+                                        </div>
+                                        <div class="name">
+                                            <font title="">单价</font>：
+                                            <font class="orange">{$orderGoods.single_price|default=''}</font>
+                                        </div>
+                                        <div class="name">
+                                            <font title="">数量</font>：
+                                            <font class="orange">{$orderGoods.quantity|default=''}</font>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/volist}
+                            </td>
+                            <td>
+                                {switch name="item.order_type"}
+                                {case value="1"}普通{/case}
+                                {case value="2"}拼团
+                                {switch name="$item.group_activity_status"}
+                                {case value="1"}（进行中）{/case}
+                                {case value="2"}（成功）{/case}
+                                {case value="3"}（失败）{/case}
+                                {/switch}
+                                {/case}
+                                {case value="3"}砍价{/case}
+                                {case value="4"}限时抢购{/case}
+                                {case value="5"}线下{/case}
+                                {default /}出错啦
+                                {/switch}
+                            </td>
+                            <td>{$item.order_attach_number|default=''}</td>
+                            <td>
+                                {switch name="item.pay_channel"}
+                                {case value="0"}未支付{/case}
+                                {case value="1"}微信{/case}
+                                {case value="2"}支付宝{/case}
+                                {case value="3"}余额{/case}
+                                {case value="4"}银行卡{/case}
+                                {case value="5"}线下{/case}
+                                {case value="6"}货到付款{/case}
+                                {default /}出错啦
+                                {/switch}
+                            </td>
+                            <td>
+                                {switch name="item.origin_type"}
+                                {case value="1"}APP{/case}
+                                {case value="2"}小程序{/case}
+                                {case value="3"}PC{/case}
+                                {case value="4"}手机站{/case}
+                                {default /}出错啦
+                                {/switch}
+                            </td>
+                            <td>{$item.nickname|default=''}</td>
+                            <td>{$item.create_time|default=''}</td>
+                            <td>{$item.subtotal_price|default=''}</td>
+                            <td>
+                                {switch name="item.status"}
+                                {case value="0"}待付款{/case}
+                                {case value="1"}
+                                {switch name="item.distribution_type"}
+                                {case value="1"}待配送{/case}
+                                {default/}待发货
+                                {/switch}
+                                {/case}
+                                {case value="2"}
+                                {switch name="item.distribution_type"}
+                                {case value="1"}配送中{/case}
+                                {case value="2"}待自提{/case}
+                                {default/}待收货
+                                {/switch}
+                                {/case}
+                                {case value="3"}已完成{/case}
+                                {case value="4"}已关闭{/case}
+                                {case value="5"}退款中{/case}
+                                {case value="6"}已取消{/case}
+                                {default /}出错啦
+                                {/switch}
+                            </td>
+                            <td>
+                                <!--如果是同城配送订单展示下载按钮-->
+                                {if ( $item.status == 1)}
+                                <a href="javascript:void(0);" onclick="print_order('{$item.order_attach_id}')"
+                                   class="btn_see"><i class="icon icon-print"></i>打印</a>
+                                {/if}
+                                <a href="javascript:void(0);" onclick="main.jumpFour('client/order/examine?id={$item.order_attach_id}')"
+                                   class="btn_edit"><i class="icon icon-eye-open"></i>查看</a>
+                                {eq name="$item.status" value="0"}
+                                <a href="javascript:void(0);" onclick="closeOrder('{$item.order_attach_id}','{$item.member_id}')" class="btn_trash">关闭交易</a>
+                                {/eq}
+                            </td>
+                        </tr>
+                        {/volist}
+                        {notempty name="render"}
+                        <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                {:$data->render()}
+                            </td>
+                        </tr>
+                        </tfoot>
+                        {/notempty}
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+<!--------------start打印信息start---------------->
+<div id="ele4" class="print_b" style="font-size: 3mm;position: absolute;z-index: -9999999;display: none">
+    <div style="">
+        <div class="spece" style="height: 12mm;"></div>
+        <div class="print_header">
+            <div class="print_store_name">{:session('client_storeName','')}</div>
+            <div class="spece" style="height: 9mm;"></div>
+            <div class="pay_time" >下单时间：<span id="print_pay_time"></span></div>
+            <div class="spece" style="height: 6mm;"></div>
+            <div class="separate">---------------商 品---------------</div>
+            <div class="spece" style="height: 3mm;"></div>
+        </div>
+        <div class="print_content" id="print_goods">
+            <div class="print_name">
+                <p>大as两句话就暗示该考虑好的购房款垃赶快来</p>
+            </div>
+            <div class="print_num">
+                <p>99</p>
+            </div>
+            <div class="print_price">
+                <p>999.99</p>
+            </div>
+        </div>
+        <div class="spece" style="height: 3mm;"></div>
+        <div class="separate">---------------优 惠---------------</div>
+        <div class="spece" style="height: 3mm;"></div>
+        <div class="print_footer" id="print_discounts">
+            <div class="print_name">
+                <p>大as两句话就暗示该考虑好的购房款垃赶快来</p>
+            </div>
+            <div class="print_price">
+                <p>￥99</p>
+            </div>
+        </div>
+        <div class="spece" style="height: 3mm;"></div>
+        <div class="separate">-----------------------------------</div>
+        <div class="ele4_div">
+            <div  style="float: right">原价：<span  id="print_original_price" ></span>&nbsp</div>
+            <div style="clear: both;"></div>
+            <div  style="float: right;line-height: 10mm">（支付金额）<span id="print_pay_price" style="font-size: 6mm"></span>元</div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="spece" style="height: 3mm;"></div>
+        <div style="font-size: 4mm">顾客号码：<span id="print_phone"></span></div>
+        <div class="spece" style="height: 3mm;"></div>
+        <div><span style="font-size: 6mm" id="print_member_name"></span></div>
+        <div class="spece" style="height: 12mm;"></div>
+        <div style="width: 55mm;overflow: hidden">**************************************</div>
+    </div>
+</div>
+<!----------------ent打印信息end------------------>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/jQuery.print.js"></script>
+<script type="text/javascript">
+
+    function print_order(id){
+       main.ajax({
+           data: {id:id},
+           url:'/client/order/get_examine',
+           callback:function(res){
+           var print_goods='',print_original_price=parseFloat(res['item']['subtotal_price']),print_discounts='',discounts_character={'subtotal_share_platform_coupon_price':'平台优惠券金额','subtotal_share_platform_packet_price':'平台红包金额','subtotal_coupon_price':'店铺优惠券抵扣金额','subtotal_promotion_price':'店铺促销金额','subtotal_fullSub_price':'店铺满减金额'};
+           if(res.code==0) {
+                //商品信息
+                $.each(res.goods,function(k,v){
+                    print_goods+='<div class="print_name"><p>'+v.goods_name+'</p></div><div class="print_num"><p>'+v.quantity+'</p></div><div class="print_price"><p>'+v.single_price+'</p></div>';
+                 });
+               //优惠信息
+               $.each(discounts_character,function(k,v){
+                    print_original_price+=parseFloat(res['item'][k]);
+                    print_discounts +='<div class="print_name"><p>'+v+'</p> </div><div class="print_price"><p>￥-'+res['item'][k]+'</p></div>\n';
+               });
+                $('#print_pay_time').text(res.item.create_time);        //下单时间
+                $('#print_goods').html(print_goods);           //商品信息
+                $('#print_discounts').html(print_discounts);       //优惠信息
+                $('#print_original_price').text(print_original_price);  //原价
+                $('#print_pay_price').text(res.item.subtotal_price);       //支付金额
+                $('#print_phone').text(res.item.orders.consignee_phone);           //电话号
+                $('#print_member_name').text(res.item.orders.consignee_name);     //用户名
+               $("#ele4").print({
+                   //Use Global styles
+                   globalStyles : true,
+
+               });
+               $('#print_pay_time').text('');        //下单时间
+               $('#print_goods').html('');           //商品信息
+               $('#print_discounts').html('');       //优惠信息
+               $('#print_original_price').text('');  //原价
+               $('#print_pay_price').text('');       //支付金额
+               $('#print_phone').text('');           //电话号
+               $('#print_member_name').text('');     //用户名
+           }else{
+               layer.msg(res.message);
+           }
+        }
+       });
+    }
+    main.valid();
+
+    // 关闭订单
+    function closeOrder(order_attach_id,member_id) {
+        layer.msg('确定关闭该订单吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {order_attach_id:order_attach_id,member_id: member_id}, url: '/client/order/closeOrder', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.href = "/client/order/index";
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    // 筛选选中效果
+    $(function () {
+        {volist name="origin_type" id="origin_type"}
+        $("input[name='origin_type[]']").each(function(){
+            if ($(this).val() == {$origin_type}) {
+                $(this).attr('checked','checked');
+            }
+        });
+        {/volist}
+
+            {volist name="order_type" id="order_type"}
+            $("input[name='order_type[]']").each(function(){
+                if ($(this).val() == {$order_type}) {
+                    $(this).attr('checked','checked');
+                }
+            });
+            {/volist}
+
+                {volist name="distribution_type" id="distribution_type"}
+                $("input[name='distribution_type[]']").each(function(){
+                    if ($(this).val() == {$distribution_type}) {
+                        $(this).attr('checked','checked');
+                    }
+                });
+                {/volist}
+
+                    {volist name="status" id="status"}
+                    $("input[name='status[]']").each(function(){
+                        if ($(this).val() == {$status}) {
+                            $(this).attr('checked','checked');
+                        }
+                    });
+                    {/volist}
+
+                        {volist name="pay_channel" id="pay_channel"}
+                        $("input[name='pay_channel[]']").each(function(){
+                            if ($(this).val() == {$pay_channel}) {
+                                $(this).attr('checked','checked');
+                            }
+                        });
+                        {/volist}
+                        });
+
+    // 其他方式
+    function clearCheck(style) {
+        if(style == '.all_state'){
+            $(style).css("display","block");
+        }else{
+            $(style).removeAttr("checked");
+        }
+    }
+    // 配送方式
+    function distributionCheck(id,id2) {
+        $(id).css("display",'none');
+        $(id2).css("display",'none');
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        location.href='?' + param;
+    }
+</script>
+<script type="text/javascript">
+    function dc(){
+        $("#searchForm").append("<input type='text' id='dc' name='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+    main.laydate([{
+        elem: '#start_date'
+        , type: 'datetime'
+    }, {
+        elem: '#end_date'
+        , type: 'datetime'
+    }
+    ])
+</script>
+{/block}

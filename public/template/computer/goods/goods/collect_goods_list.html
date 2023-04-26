@@ -1,0 +1,479 @@
+
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/GoodsCollection.css" />
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+{/block}
+
+{block name="content"}
+<div class="index-box">
+	<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+	<!--我的页面左侧公共部分结束-->
+
+
+	<div class="index-right">
+				<!--右侧内容开始-->
+				<div>
+					<form action="" id="form" method="post">
+
+
+					<div class="my-attention">
+						<div class="tit">
+							<a href="{:url('pc2.0/goods/collect_goods_list')}" class='primary-color border-color'>
+								商品收藏
+							</a>
+
+							{if $function_status.one_or_more===true}
+							<a href="{:url('/pc2.0/store/collect_store_list')}">
+								店铺关注
+							</a>
+							{/if}
+							<a href="{:url('/pc2.0/home/article_list')}">
+								内容收藏
+							</a>
+
+							<div class="tit-right">
+								<div class="bulk-operation">
+									<input class="operation-btn"  type="button" value="批量操作" />
+
+									<div class="all-check" style="display: none;">
+										<a href="javascript:;" class="allcheck uncheck" >
+										<img src="__RES__/imgs/my/sc.png" alt="">全选</a>
+										<a href="javascript:;" class="disqualification">
+											<img src="__RES__/imgs/my/qxsc.png" alt=""> 取消收藏
+										</a>
+										<input class="success" type="button"  value="完成">
+									</div>
+								</div>
+
+
+								<div class="search-box" >
+									<input class="txt" type="text" name="keyword" value="{:input('keyword','')}" placeholder="请输入商品名称">
+									<input class="search-btn" type="button" onclick="search()" value="搜索">
+								</div>
+
+							</div>
+
+						</div>
+
+					</div>
+					<div class="goods-collection-box">
+						{empty name="result"}
+						<!--如果商品为空时-->
+						<div class="goods-emtry" >
+							<img src="__RES__/imgs/my/emtry.png" alt="">
+							<p>您还没有收藏的商品</p>
+						</div>
+						{/empty}
+
+						<div class="goods-collection">
+							<div class="goods">
+								<!--每个商品开始-->
+								<!--active-->
+								{volist name="result" id="item"}
+								<div class="goods-list" >
+									<a href="javascript:jump_goods('{$item.goods_id}')">
+										<img class="goods-imgs" src="{$item.file}" alt="">
+										<p class="name">{$item.goods_name}</p>
+										<div class="pic">
+											{eq name="$item.is_group" value="1"}
+											<span class="primary-background-color tips" >拼团</span>
+											{/eq}
+											{eq name="$item.is_bargain" value="1"}
+											<span class="primary-background-color tips" >砍价</span>
+											{/eq}
+											{eq name="$item.is_limit" value="1"}
+											<span class="primary-background-color tips" >限时</span>
+											{/eq}
+											<span class="primary-color money">￥{$item.shop_price}</span>
+										</div>
+									</a>
+									<div class="bottom">
+										<a class="depreciate" href="javascript:;" >
+											<img src="__RES__/imgs/my/depreciate.png" alt=""> 降价通知
+										</a>
+										<!--<a href="javscript:;">-->
+											<!--<img src="__RES__/imgs/my/gwc.png" alt=""> 加入购物车-->
+										<!--</a>-->
+									</div>
+
+									<!--遮罩-->
+									<!--选中效果-->
+									<div class="cover " style="display: none;" >
+										<label style="display: block;">
+											<input type="checkbox" hidden="hidden" data_goods_price="{$item.shop_price}" data_store_id="{$item.store_id}" name="collect_goods_id" id="collect_goods_id" value="{$item.collect_goods_id}|{$item.goods_id}"/>
+											<div >
+												<img src="__RES__/imgs/my/checked.png" alt="">
+											</div>
+										</label>
+									</div>
+								</div>
+								{/volist}
+								<!--每个商品结束-->
+
+							</div>
+							<!--分页-->
+
+							<!--分页-->
+							<div class="pageContainer" style="width: auto">
+								{$result|raw}
+							</div>
+						</div>
+
+						<!-- 猜你喜欢 -->
+						<div class="guess">
+							<!-- 猜你喜欢 -->
+							<div class="guess-like">
+								<div class="title">
+									<span>猜你喜欢</span>
+									<div href="javascript:;" id="new_like">换一换 <img src="__RES__/imgs/hyh.png" alt=""></div>
+								</div>
+
+								<div class="guess-like-list">
+									{volist name="$recommend_list" id="val"}
+									<div class="list" style="width: 25%">
+										<a href="javascript:jump_goods('{$val.goods_id}')">
+											<img src="{$val.file}" alt="">
+											<p class="name">{$val.goods_name}</p>
+											<div class="money">
+												<div class="pic primary-color">￥{$val.shop_price}</div>
+												<div class="volume">
+													销量 <span class="primary-color">{$val.sales_volume}</span>
+												</div>
+											</div>
+											<div class="discounts">
+												{if condition="config('user.one_more') eq 1"}
+												{switch name="$val.shop"}
+												{case value='0'}<span style="margin-right: 2px;" class="mark primary-color border-color">
+								                    自营
+								                  </span>{/case}
+												{case value='1'}<span style="margin-right: 2px;" class="mark primary-color border-color">
+								                    个人
+								                  </span>{/case}
+												{case value='2'}<span style="margin-right: 2px;" class="mark primary-color border-color">
+								                    公司
+								                  </span>{/case}
+												{/switch}
+												{/if}
+												{eq name="$val.is_bargain" value="1"}<span style="margin-right: 2px;" class="mark primary-color border-color">砍价</span>{/eq}
+												{eq name="$val.is_group" value="1"}<span style="margin-right: 2px;" class="mark primary-color border-color">拼团</span>
+												<span class="group-buying primary-background-color">{$val.group_num}人拼</span>{/eq}
+												{eq name="$val.is_limit" value="1"}<span style="margin-right: 2px;" class="mark primary-color border-color">抢购</span>{/eq}
+
+											</div>
+										</a>
+									</div>
+									{/volist}
+								</div>
+							</div>
+						</div>
+
+					</div>
+					</form>
+					 <!--遮罩层-->
+					  <div class="depreciate-cover" style="display: none;">
+					    <!--降价通知-->
+					    <div class="depreciate-box" style="display: none;">
+					      <div class="tit">
+					        降价通知
+					        <div class="right" >
+					          <img src="__RES__/imgs/my/close.png" alt="">
+					        </div>
+					      </div>
+
+					      <div class="hint">一旦此商品在3个月内降价，您将收到系统消息及手机推送消息</div>
+
+					      <div class="now-pic div">
+					        <span>当前价格:</span> <span class="price primary-color"></span>
+					      </div>
+					      <div class="hope-pic div">
+					        <span>期望价格:</span>
+					        <p>
+					          ￥ <input type="number" name="price" placeholder="低于此价会通知您">
+					        </p>
+					      </div>
+
+					      <a href="javascript:;" class="sure" >
+					        确定
+					      </a>
+					    </div>
+
+					<!--取消收藏-->
+					    <div class="collect-box" style="display: none;">
+					      <div class="tit">
+					        取消收藏
+					        <div class="right" >
+					          <img src="__RES__/imgs/my/close.png" alt="">
+					        </div>
+					      </div>
+
+					      <div class="eminder">
+					        <img src="__RES__/imgs/my/question-mark.png" alt="">
+					        取消收藏，确定吗？
+					      </div>
+
+					      <div class="btn-group">
+					        <a href="javascript:;" class="sure" >
+					          确定
+					        </a>
+					        <a href="javascript:;" class="countermand">
+					          取消
+					        </a>
+					      </div>
+					    </div>
+
+					  </div>
+
+				</div>
+				<!--右侧内容结束-->
+			</div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+	function search(){
+		var keyword  = $('input[name="keyword"]').val();
+		main.jump({'url':'/pc2.0/goods/collect_goods_list?keyword='+keyword})
+
+	}
+
+
+	//猜你喜欢切换
+	$('#new_like').on('click',function(){
+		main.ajax({'url':"{:url('/pc2.0/my/recommend_list')}",data:{'limit':8},callback:function(data){
+				var str='';
+				var shop=['自营','个人','公司'];
+				$.each(data.result,function(k,v){
+					var price=v.shop_price;
+					var label_str=group_str='';
+					var label=[shop[v.shop]];//门店自提
+					//判断当前商品处于哪个活动中
+					switch (v.is_group.toString()+v.is_bargain.toString()+v.is_limit.toString()) {
+						case '100':
+							price=v.group_price;
+							group_str='<span class="group-buying primary-background-color">'+v.group_num+'人拼</span>';
+							label.push('拼团');
+							break;
+						case '010':
+							price=v.cut_price;
+							label.push('砍价');
+							break;
+						case '001':
+							price=v.time_limit_price;
+							label.push('抢购');
+							break;
+						default :
+							if(v.is_vip===1){
+								price=(v.shop_price*data.discount).toFixed(2);
+							};
+					}
+					//处理商品标签
+					$.each(label,function(k,v){
+						label_str+='<span style="margin-right: 2px;" class="mark primary-color border-color">'+v+'</span>';
+					});
+					//拼接字符串
+					str+= '<div class="list" style="width: 25%">\n' +
+							'<a href="javascript:jump_goods('+v.goods_id+')">\n' +
+							'<img src="'+v.file+'" alt="">\n' +
+							'<p class="name">'+v.goods_name+'</p>\n' +
+							'<div class="money">\n' +
+							'<div class="pic primary-color">￥'+price+'</div>\n' +
+							'<div class="volume">\n' +
+							'销量 <span class="primary-color">'+v.sales_volume+'</span>\n' +
+							'</div></div>\n' +
+							'<div class="discounts">\n'
+							+ label_str + group_str +
+							'</div></a></div>';
+				});
+				$('.guess-like-list').html(str);
+			}});
+	});
+
+
+// 显示降价通知
+	$('.goods-collection .goods .goods-list .bottom .depreciate').click(function(){
+
+		$('.goods-collection .goods-list input').each(function () {
+			$(this).attr("checked", false);
+		})
+		$(this).parents('.goods-list').find("input[name='collect_goods_id']").attr("checked", true);
+
+		var pic = $(this).parents('.goods-list').find('.pic .money').text();
+		$('.depreciate-cover .price').html(pic)
+		$('.depreciate-box').show();
+		$('.depreciate-cover').show();
+	})
+
+//	x关闭降价通知
+	$('.depreciate-cover .right img').click(function(){
+		$('.goods-collection .goods-list input').each(function () {
+			$(this).attr("checked", false);
+		})
+		$('.depreciate-box').hide();
+		$('.depreciate-cover').hide()
+	})
+
+//	降价通知
+	$('.depreciate-cover .depreciate-box .sure').click(function(){
+
+		var str = '';
+		var goods_price = '';
+		var store_id = '';
+		$('.goods-collection .goods-list input[name="collect_goods_id"]:checked').each(function () {
+			console.log($(this).val());
+			str =$(this).val();
+			goods_price =$(this).attr('data_goods_price');
+			store_id =$(this).attr('data_store_id');
+		})
+		var arr = str.split('|');
+		var goods_id = arr[1];
+		var price = $('input[name="price"]').val();
+		if (price == ''){
+			layer.msg('请填写期望价格',{time:500});
+		}else{
+			if(parseFloat(price) >= parseFloat(goods_price)){
+				layer.msg('期望价格高于当前价格',{time:500});
+			}else{
+				main.ajax({'url':'{:url(\'pc2.0/goods/depreciate_goods\')}','data':{'goods_id': goods_id,'goods_price': goods_price,'price': price,'store_id':store_id},callback:function (t) {
+						if (t.code != 0) {
+							layer.msg(t.message);
+							$('.depreciate-box').hide();
+							$('.depreciate-cover').hide()
+						} else {
+							$('.depreciate-box').hide();
+							$('.depreciate-cover').hide()
+							layer.msg(t.message, {time: 500},function () {
+								location.reload();
+							});
+						}
+					}})
+
+			}
+		}
+
+
+
+	})
+
+
+
+	//	批量操作
+	$('.bulk-operation .operation-btn').click(function(){
+
+			$('.goods-collection .goods-list input').each(function () {
+				$(this).attr("checked", false);
+			})
+
+			$(this).hide().siblings('.all-check').show()
+			$('.cover').show()
+		})
+
+	//	全选
+	$('.allcheck').click(function(){
+		if($(this).hasClass('uncheck')){
+			$(this).removeClass('uncheck').addClass('check')
+			$('.goods-list').each(function(){
+				$(this).addClass('active').find('input').attr('checked',true);
+				$(this).addClass('active').find('input').prop('checked',true)
+			})
+		}else{
+			$(this).removeClass('check').addClass('uncheck')
+			$('.goods-list').each(function(){
+				$(this).removeClass('active').find('input').attr('checked',false);
+				$(this).removeClass('active').find('input').prop('checked',false)
+			})
+		}
+
+	})
+
+    //  单选
+	$('.cover label div').click(function(e){
+		if($(this).parents('.goods-list').hasClass('active')){
+			$(this).parents('.goods-list').removeClass('active')
+		}else{
+			$(this).parents('.goods-list').addClass('active')
+		}
+		var len = $('.goods-list').length;
+		var num =$('.goods-collection .active').length
+		if(num<len){
+			$('.allcheck').removeClass('check').addClass('uncheck')
+		}else{
+			$('.allcheck').removeClass('uncheck').addClass('check')
+		}
+		e.stopPropagation();
+	})
+
+	//	取消收藏
+	$('.disqualification').click(function(){
+		var collect_goods_id = '';
+		$('.goods-collection .goods-list input[name="collect_goods_id"]:checked').each(function () {
+			var arr = $(this).val().split('|');
+			collect_goods_id += arr[0]+',';
+		})
+		if(collect_goods_id){
+			$('.depreciate-cover').show();
+			$('.collect-box').show();
+		}else{
+			layer.msg('请选择要删除的商品',{time:800})
+		}
+
+		})
+
+	//	确定取消收藏
+	$('.depreciate-cover .collect-box .sure').click(function(){
+
+			var collect_goods_id = '';
+			var goods_id = '';
+			$('.goods-collection .goods-list input[name="collect_goods_id"]:checked').each(function () {
+				var arr = $(this).val().split('|');
+				collect_goods_id += arr[0]+',';
+				goods_id += arr[1]+',';
+			})
+			// console.log(collect_goods_id);
+			// console.log(goods_id);
+
+			main.ajax({'url':'{:url(\'pc2.0/goods/collect_goods_delete\')}','data':{'collect_goods_id': collect_goods_id,'goods_id':goods_id},callback:function (t) {
+					if (t.code != 0) {
+						layer.msg(t.message);
+						$('.collect-box').hide();
+						$('.depreciate-cover').hide();
+					} else {
+						$('.collect-box').hide();
+						$('.depreciate-cover').hide();
+						layer.msg(t.message, {time: 500},function () {
+							location.reload();
+						});
+					}
+				}})
+		})
+
+	//	取消
+	$('.depreciate-cover .collect-box .countermand').click(function(){
+			$('.collect-box').hide();
+			$('.depreciate-cover').hide();
+
+		})
+
+	//	完成
+	$('.success').click(function(){
+		$('.bulk-operation .operation-btn').show()
+		$('.all-check').hide()
+		$('.cover').hide()
+		$('.allcheck').removeClass('check').addClass('uncheck')
+		$('.goods-list').each(function(){
+			$(this).removeClass('active').find('input').removeAttr('checked')
+		})
+	})
+
+
+		</script>
+{/block}

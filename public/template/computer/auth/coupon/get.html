@@ -1,0 +1,367 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<!--领券中心css-->
+<!--<link rel="stylesheet" href="__RES__/css/index/indexHeader.css">-->
+<link rel="stylesheet" href="__RES__/css/TicketCenter/CouponRedemption.css">
+
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/js/swiper.min.js"></script>
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+{/block}
+
+{block name="content"}
+<style>
+    .top_coupon{
+        background:url("__RES__/imgs/ticket/jifen_bg.png");
+        height: 110px;
+        margin-bottom: 10px;
+    }
+    .coupon{
+        padding: 18px 15px 12px;
+        box-sizing: border-box;
+        width: 80%;
+        float: left;
+    }
+    .integral{
+        width: 12%;
+        float:right;
+        height: 70%;
+        padding: 13px 10px;
+    }
+    .integral span{
+        color:white;
+        font-size:18px;
+        text-align: center;
+    }
+</style>
+<!--<div class="container-tab border-color">-->
+    <!--<ul>-->
+        <!--<li class="primary-color-hover" onclick="main.jump({'url':'/pc2.0/coupon/get'})" {empty name=":input('category')"}   class="activeClassName primary-background-color" {/empty}>精选</li>-->
+        <!--{elt name="$num" value="10"}-->
+            <!--{volist name="$data.goods_classify" id="item" length="11"}-->
+            <!--<li  class="primary-color-hover" {eq name=":input('category')" value="$item.goods_classify_id"} class="activeClassName primary-background-color" {/eq} onclick="main.jump({'url':'/pc2.0/coupon/get?category={$item.goods_classify_id}'})">{$item.title}</li>-->
+            <!--{/volist}-->
+        <!--{else/}-->
+            <!--{volist name="$data.goods_classify" id="item" length="10"}-->
+            <!--<li  class="primary-color-hover" {eq name=":input('category')" value="$item.goods_classify_id"} class="activeClassName primary-background-color" {/eq} onclick="main.jump({'url':'/pc2.0/coupon/get?category={$item.goods_classify_id}'})">{$item.title}</li>-->
+            <!--{/volist}-->
+            <!--<li  class="primary-color-hover"  class="activeClassName primary-background-color" onclick="main.jump({'url':'/pc2.0/coupon/get?category={$data.goods_classify[$num][\'goods_classify_id\']}'})">{$data.goods_classify[$num]['title']}</li>-->
+        <!--{/elt}-->
+
+
+        <!--{if condition="count($data.goods_classify) gt 11"}-->
+        <!--<li class="all">-->
+            <!--<span>全部分类</span>-->
+            <!--<img src="__RES__/imgs/ticket/arrow1.png" alt="">-->
+            <!--<div class="show-block">-->
+                <!--{elt name="$num" value="10"}-->
+                    <!--{volist name="$data.goods_classify" id="item1" offset="11"}-->
+                    <!--<div  onclick="main.jump({'url':'/pc2.0/coupon/get?category={$item1.goods_classify_id}'})">{$item1.title}</div>-->
+                    <!--{/volist}-->
+                <!--{else/}-->
+                    <!--{volist name="$data.goods_classify" id="item1" key="k" offset="11"}-->
+                        <!--{eq name="k" value="$num-10"}-->
+                        <!--<div onclick="main.jump({'url':'/pc2.0/coupon/get?category={$data.goods_classify[10][\'goods_classify_id\']}'})">{$data.goods_classify[10]['title']}</div>-->
+                        <!--{else/}-->
+                        <!--<div onclick="main.jump({'url':'/pc2.0/coupon/get?category={$item1.goods_classify_id}'})">{$item1.title}</div>-->
+                        <!--{/eq}-->
+                    <!--{/volist}-->
+                <!--{/elt}-->
+            <!--</div>-->
+        <!--</li>-->
+        <!--{/if}-->
+    <!--</ul>-->
+<!--</div>-->
+
+<!--swiper开始-->
+<div class="ticket-center">
+    <div class="ticket-center-view">
+        <div class="ticket-center-swiper">
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+                    {volist name="$data.left_banner" id="adv"}
+                    <div class="swiper-slide">
+                        <a href="javascript:main.adv_jump('{$adv.type}','{$adv.content}');">
+                            <img src="{$adv.file|default=''}" alt="" style="width: 743px; height: 363px;">
+                        </a>
+                    </div>
+                    {/volist}
+                    {empty name="$data.left_banner"}
+                    <div class="swiper-slide"><a><img style="width: 743px;height: 363px" src="" alt=""></a></div>
+                    {/empty}
+                </div>
+                <div class="swiper-button-prev"><span></span></div><!--左箭头-->
+                <div class="swiper-button-next"><span></span></div><!--右箭头-->
+                <!-- Add Pagination -->
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+        <div class="ticket-center-broker">
+            <a href="javascript:main.adv_jump('{$adv.type}','{$adv.content}');">
+                <img src="{$data.right_banner.file|default=''}" width="458" height="362" alt="">
+            </a>
+            <a href="{:url('/pc2.0/coupon/exchange')}" class="go-shop">去逛逛 ></a>
+            <div class="ticket-view-list">
+                {volist name="$data.top_data" id="goods"}
+                <div class="top_coupon">
+                    <div class="coupon">
+                    <a href="{:url('/pc2.0/coupon/exchange')}">
+                        <div class="primary-color"><span>￥</span>{$goods.actual_price}</div>
+                        <div class="primary-color">满{$goods.full_subtraction_price}可用</div>
+                    </a>
+                </div>
+                   <div class="integral">
+                        <span>{$goods.integral}积分</span>
+                   </div>
+
+                </div>
+
+
+
+                {/volist}
+            </div>
+        </div>
+    </div>
+</div>
+<!--swiper结束-->
+
+<!--精选好券-->
+
+<div style="margin: 37px; auto;"></div>
+<!--<div class="tit" style="background: url('__RES__/imgs/ticket/jxhq.png') no-repeat center;width: 147px;height: 21px;margin: 37px auto;text-align: center">-->
+    <!--&lt;!&ndash;<img class="jxhq" src="" alt="">&ndash;&gt;-->
+    <!--&lt;!&ndash;<span style="display: inline-block;background: #F0F3EF;height: 21px;width: 95px;text-align: center;line-height: 21px;">&ndash;&gt;-->
+
+       <!--&lt;!&ndash;{if condition="$num === false"} 精选 {else/}{$data.goods_classify[$num]['title']}{/if}&ndash;&gt;-->
+    <!--&lt;!&ndash;</span>&ndash;&gt;-->
+<!--</div>-->
+
+<div class="get-coupon">
+    {volist name="$data.result" id="val"}
+        {gt name="$val.distance_start_time" value="0"}
+            <!--倒计时-->
+            <div class="get-coupon-item" data_type="{$val.type}" data_classify_str="{$val.classify_str}">
+                <a>
+                    <img class="right" src="__RES__/imgs/ticket/7.png" alt="">
+                    <div class="get-coupon-item-pos">
+                        <img width="106" height="106" src="{$val.file}" alt="">
+                        <!--<p style="position: absolute;font-size: 12px;left: 35px;bottom: 15px;color: #fa123e;">1235人已提醒</p>-->
+                        <div class="ticket-view-item">
+                            <div class="primary-color"><span>￥</span>{$val.actual_price}</div>
+                            <div class="primary-color">满{$val.full_subtraction_price}可用</div>
+                            <div class="count-down">
+                                <span>距离开抢还剩</span>
+                                <div class="count-down-time index_limit_time" data-time_str="{:date('Y-m-d H:i:s',time()+$val.distance_start_time)}">
+                                    <div>00</div>:<div>00</div>:<div>00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {else/}
+            {eq name="$val.exchange_num" value="0"}
+                <!--领取达到上限-->
+                <div class="get-coupon-item" data_type="{$val.type}"  data_classify_str="{$val.classify_str}">
+                    {eq name="$val.type" value="0"}
+                    <a href="javascript:main.jump({'url':'/pc2.0/store/index?store_id={$val.classify_str}'})">
+                        {else/}
+                        <a href="javascript:main.jump({'url':'/pc2.0/goods/index'})">
+                            {/eq}
+                        <img class="right"  src="__RES__/imgs/ticket/9.png" alt="">
+                        <div class="get-coupon-item-pos">
+                            <img width="106" height="106" src="{$val.file}" alt="">
+                            <div class="ticket-view-item">
+                                <div class="gray-color"><span>￥</span>{$val.actual_price}</div>
+                                <div class="gray-color gray=bg-color">满{$val.full_subtraction_price}可用</div>
+                                <p style="color: #666;font-size: 6px;margin-top: 12px;">已抢光</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {else/}
+                {eq name="$val.member_state" value="0"}
+                    <!--没有领取-->
+                    <div class="get-coupon-item get" data_type="{$val.type}"   data_classify_str="{$val.classify_str}"  data_coupon_id ="{$val.coupon_id}" {eq name="$val.type" value="0"}data_store_id="{$val.classify_str}" {else/} data_goods_classify_id="{$val.classify_str}" {/eq}>
+                        <a >
+                            <img class="right"  src="__RES__/imgs/ticket/bg01.png" alt="">
+                            <div class="get-coupon-item-pos">
+                                <img width="106" height="106" src="{$val.file}" alt="">
+                                <div class="ticket-view-item">
+                                    <div class="primary-color"><span>￥</span>{$val.actual_price}</div>
+                                    <div class="primary-color">满{$val.full_subtraction_price}可用</div>
+                                    <div class="progress">
+                                        <span>已抢{$val.radio_width}%</span><div class="progress-bar">
+                                        <div class="primary-background-color" style="width:{:round(($val.total_num-$val.exchange_num)/$val.total_num,2)*100}px;"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {else/}
+                    <!--领取-->
+                    <div class="get-coupon-item" data_type="{$val.type}"  data_classify_str="{$val.classify_str}">
+                        {eq name="$val.type" value="0"}
+                        <a href="javascript:main.jump({'url':'/pc2.0/store/index?store_id={$val.classify_str}'})">
+                        {else/}
+                            <a href="javascript:main.jump({'url':'/pc2.0/goods/index'})">
+                        {/eq}
+                            <img class="right"  src="__RES__/imgs/ticket/8.png" alt="">
+                            <div class="get-coupon-item-pos">
+                                <img width="106" height="106" src="{$val.file}"alt="">
+                                <div class="ticket-view-item">
+                                    <div class="primary-color"><span>￥</span>{$val.actual_price}</div>
+                                    <div class="primary-color">满{$val.full_subtraction_price}可用</div>
+                                    <p style="color: #666;font-size: 12px;margin-top: 12px;">已领取</p>
+
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                {/eq}
+            {/eq}
+        {/gt}
+    {/volist}
+</div>
+<!--精选好券结束-->
+
+<!--此处加分页-->
+<div id="page-container" class="pageContainer">{$data.result|raw}</div>
+<!--<div class="handle-next-category next">-->
+    <!--<img src="__RES__/imgs/ticket/10.png" alt="">-->
+    <!--<span >点击查看下一个分类</span>-->
+    <!--<img src="__RES__/imgs/ticket/11.png" alt="">-->
+<!--</div>-->
+
+<!--置顶-->
+<div class="to-top">
+    <!--<div class="top-view">-->
+        <!--<img src="__RES__/imgs/ranking/syssj.png" alt="">-->
+        <!--<span class="primary-color">扫一扫手机看榜单</span>-->
+    <!--</div>-->
+    <!--<div class="discount-coupon">-->
+        <!--<img src="__RES__/imgs/ticket/12.png" alt="">-->
+        <!--<span>优惠券</span>-->
+    <!--</div>-->
+
+    <div class="back-top">
+        <img src="__RES__/imgs/ticket/13.png" alt="">
+        <span>返回顶部</span>
+    </div>
+</div>
+
+{/block}
+{block name="js"}
+<script type="text/javascript">
+
+    //下一个分类
+    $('.next').click(function () {
+        var data={$array};
+        var num = '{:input("category")}' ? {$num}+1 : 0;
+        var category = data[num];
+        if (typeof(category)=="undefined" ) {
+           main.jump({'url':'/pc2.0/coupon/get'})
+        }else{
+            main.jump({'url':'/pc2.0/coupon/get?category='+category})
+        }
+
+    })
+
+    //领取优惠券
+   $('.get-coupon .get').click(function () {
+
+       if ($(this).hasClass('get')) {
+
+           var coupon_id = $(this).attr('data_coupon_id');
+           var goods_classify_id = $(this).attr('data_goods_classify_id');
+           var store_id = $(this).attr('data_store_id');
+           var that = $(this);
+
+           sessionStorage.return_url = ObjectOrJson({'use_url':'login/index','return_url':window.location.href});
+           main.ajax({
+               'url': '{:url(\'pc2.0/member_coupon/get\')}',
+               'data': {'coupon_id': coupon_id, 'goods_classify_id': goods_classify_id, 'store_id': store_id},
+               callback: function (t) {
+                   console.log(t.code);
+                   console.log(t);
+                   if (t.code == 0) {
+                       that.find('.ticket-view-item .progress').remove();
+                       that.find('.ticket-view-item').append('<p style="color: #666;font-size: 12px;margin-top: 12px;">已领取</p>');
+                       that.find('a .right').attr('src', '__RES__/imgs/ticket/8.png');
+                       that.removeClass('get');
+                       layer.msg(t.message);
+                   } else if (t.code != -200 || t.code != -201) {
+                       layer.msg(t.message, {time: 500}, function () {
+                           // location.reload();
+                       });
+                   }
+               }
+           })
+       }else{
+           var type = $(this).attr('data_type');
+           var classify_str = $(this).attr('data_classify_str');
+           if(type == 0){
+               main.jump({'url':'/pc2.0/store/index?store_id='+classify_str})
+           }else{
+               main.jump({'url':'/pc2.0/goods/index'})
+           }
+
+       }
+   });
+
+    if($('.count-down-time').length>0){
+        var index_limit_str='';
+        $('.count-down-time').each(function(k,v){
+             index_limit_str = $(v).data('time');
+            index_limit();
+        });
+    }
+    //倒计时
+   function index_limit() {
+       main.count_down({
+           'time_select':$('.index_limit_time'),
+           'function_name':index_limit,
+           'time':index_limit_str,
+           dispose_callback:function(time){
+                return '<div>'+time.h+'</div>:<div>'+time.m+'</div>:<div>'+time.s+'</div>';
+           },'callback':function(){}
+       })
+    }
+    index_limit();
+    var swiper = new Swiper('.swiper-container', {
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        autoplay:true,
+        loop : true,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        type:'custom',
+    });
+    $('.container-tab ul li').click(function () {
+        $(this).addClass('activeClassName primary-background-color').siblings().removeClass('activeClassName primary-background-color')
+    })
+    $('.show-block div').hover(function () {
+        $(this).addClass('primary-color act border-color').siblings().removeClass('act primary-color border-color')
+    })
+    $('.all').click(function () {
+        $('.show-block').css('display','block')
+        $('.all img').attr('src','__RES__/imgs/ticket/15.png')
+    })
+    $('.all').hover(function () {
+        $('.show-block').css('display','block')
+        $('.all img').attr('src','__RES__/imgs/ticket/15.png')
+    },function(){
+        $('.show-block').css('display','none')
+        $('.all img').attr('src','__RES__/imgs/ticket/arrow1.png')
+    })
+
+    $('.container-tab ul li:not(".all")').click(function () {
+        $('.show-block').css('display','none')
+        $('.all img').attr('src','__RES__/imgs/ticket/arrow1.png')
+    })
+</script>
+{/block}

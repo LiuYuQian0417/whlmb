@@ -1,0 +1,110 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<div class="main-content" id="mainContent">
+    <div class="explanation clear" id="explanation">
+        <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>
+        <ul>
+            <li>温馨提示：提交操作将会重新审核，请慎重提交确定。</li>
+            <li>修改运费，运费增加则支付金额增加；运费减少则支付金额减少；自动计算，修改运费后点击空白处即可。</li>
+        </ul>
+    </div>
+    <div class="ecsc-form-goods">
+        <form action="" method="post" class="layui-form">
+            <div class="wrapper-list border1">
+                <!--提现金额-->
+                <!--<dl>-->
+                    <!--<dt><span class="require-field">*</span>&nbsp;订单支付金额：</dt>-->
+                    <!--<dd>-->
+                        <!--<input type="text" name="subtotal_price" value="{$item.subtotal_price|default=''}" size="20" class="text"-->
+                               <!--placeholder="请输入金额，最多两位小数" autocomplete="off" maxlength="10" datatype="d" nullmsg="请输入金额！" errormsg="金额为两位小数！"-->
+                        <!--/>-->
+                        <!--<div class="form_prompt"></div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>修改支付金额：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="alter_price" value="{$item.subtotal_price|default=''}"
+                               datatype="d"
+                               nullmsg="请输入修改金额" errormsg="修改金额格式错误"
+                               autocomplete="off" placeholder="填写修改金额" class="layui-input">
+                    </div>
+                </div>
+                <!--提现金额-->
+                <!--<dl>-->
+                    <!--<dt><span class="require-field">*</span>&nbsp;运费：</dt>-->
+                    <!--<dd>-->
+                        <!--<input type="text" name="subtotal_freight_price" value="{$item.subtotal_freight_price|default=''}" size="20" class="text"-->
+                               <!--placeholder="请输入运费，最多两位小数" autocomplete="off" maxlength="10" datatype="d" nullmsg="请输入运费！" errormsg="运费为两位小数！"-->
+                               <!--onchange="editTotal()"-->
+                        <!--/>-->
+                        <!--<input type="hidden" id="subtotal_freight_price" value="{$item.subtotal_freight_price|default=''}">-->
+                        <!--<input type="hidden" name="order_attach_id" value="{$item.order_attach_id|default=''}">-->
+                        <!--<div class="form_prompt"></div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>修改运费金额：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="freight" value="{$item.subtotal_freight_price|default=''}"
+                               datatype="d"
+                               nullmsg="请输入运费" errormsg="运费错误"
+                               autocomplete="off" placeholder="填写运费" class="layui-input" onchange="editTotal()">
+                    </div>
+                </div>
+                <input type="hidden" id="subtotal_freight_price" value="{$item.subtotal_freight_price|default=''}">
+                <input type="hidden" name="order_goods_id" value="{:input('order_goods_id')}">
+                <div class="contentShellBtn">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                        <a class="layui-btn" onclick="chooseIt()">确定</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+    main.valid('.layui-form');
+
+    function editTotal() {
+    }
+    function chooseIt() {
+        layer.msg('确定修改价格吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                var order_goods_id = $('input[name="order_goods_id"]').val();
+                var total = parseFloat($('input[name="alter_price"]').val());
+                var subtotal_freight_price1 = parseFloat($('input[name="freight"]').val()); // 现运费
+                main.ajax({
+                    data: {order_goods_id: order_goods_id, alter_price: isNaN(total)?'':total,freight:isNaN(subtotal_freight_price1)?'':subtotal_freight_price1}, url: '/order/editPrice', callback: function (res) {
+                        layer.msg(res.message);
+                        if (res.code == 0) {
+                            var alter_price=parseFloat(parseFloat($('#alter_price_'+order_goods_id, parent.document).html())+total+subtotal_freight_price1);
+                            $('#subtotal_freight_price', parent.document).html(parseFloat(parseFloat($('#subtotal_freight_price', parent.document).html())+subtotal_freight_price1).toFixed(2));
+                            $('#sum_alter_goods_price', parent.document).html(parseFloat(parseFloat($('#sum_alter_goods_price', parent.document).html())+total+subtotal_freight_price1).toFixed(2));
+                            $('#subtotal_price', parent.document).html(parseFloat(parseFloat($('#subtotal_price', parent.document).html())+total+subtotal_freight_price1).toFixed(2));
+                            $('#alter_price_'+order_goods_id, parent.document).html(alter_price.toFixed(2));
+                            if(alter_price>0){
+                                $('#symbol_'+order_goods_id, parent.document).html('+');
+                            }else{
+                                $('#symbol_'+order_goods_id, parent.document).html('');
+                            }
+                            setTimeout(function () {
+                                layer.close(index);
+                                parent.layer.closeAll()
+                            },1000);
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+{/block}

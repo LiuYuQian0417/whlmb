@@ -1,0 +1,35 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css"  rel="stylesheet" type="text/css" />
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/layui/css/layui.css"  rel="stylesheet" type="text/css" />
+
+{/block}
+{block name='body'}
+{__block__}
+
+<form class="" >
+<div class="layui-form-item">
+    <label class="layui-form-label">单选框</label>
+    <div class="layui-input-block">
+        <input type="radio" name="sex" value="男" title="男" checked="">
+        <input type="radio" name="sex" value="女" title="女">
+        <input type="radio" name="sex" value="禁" title="禁用" >
+    </div>
+</div>
+</form>
+
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/uploadPreview.js"></script>
+<script>
+    new uploadPreview({UpBtn: "up_img", DivShow: "imgPrev", ImgShow: "imgShow", localPath: 'localPath'});
+    new uploadPreview({UpBtn: "up_img2", DivShow: "imgPrev2", ImgShow: "imgShow2", localPath: 'localPath2'});
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

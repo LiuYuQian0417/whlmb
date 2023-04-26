@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css"/>
+    {block name='mainCss'}
+    <link rel="stylesheet" type="text/css" href="__RES__/css/general.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/font/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC_RES__/upload/cropper.css"/>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC_RES__/upload/dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC_RES__/multiUpload/dialog.css" />
+    {/block}
+    <style>
+        cite {
+            position: relative;
+            padding-right: 10px;
+        }
+
+        cite::after {
+            width: 1px;
+            height: 12px;
+            background: #999;
+            transform: rotate(15deg);
+            content: '';
+            position: absolute;
+            top: 50%;
+            margin-top: -5px;
+            right: 2px;
+        }
+
+        cite:last-child {
+            padding-right: 0
+        }
+
+        cite:last-child::after {
+            display: none
+        }
+    </style>
+</head>
+<body class="childrenBody">
+{block name='body'}
+
+<!--导航面包屑-->
+{block name='breadcrumb'}
+<div class="ecsc-path">
+            <span>
+                {gt name=":count($breadcrumbArr)" value="2"}
+                <!--<a href="{:url_logs_up('client_logs')}"><i class="fa fa-reply fa-lg"></i></a>-->
+                    <a href="javascript:main.jumpFour('{:url_logs_replace(url_logs_up('client_logs'))}')"><i
+                            class="fa fa-reply fa-lg"></i></a>
+                {/gt}
+                {foreach name='$breadcrumbArr' item='v'}
+                    <cite>{$v}</cite>
+                {/foreach}
+            </span>
+</div>
+{/block}
+<!--导航面包屑-->
+
+<!--图片上传 start-->
+{block name='imgUpload'}
+<div class="imageUploadDialog" id="imageUploadDialog">
+    <!--图片处理区-->
+    <div class="handleArea">
+        <img id="imageHandle" alt="imageHandle">
+    </div>
+    <!--图片操作区-->
+    <div class="operationArea">
+        <p class="title">预览</p>
+        <div id="imageUploadPreview" class="imageUploadPreview"></div>
+        <div class="button-group">
+            <button id="imageRotateLeft" class="layui-btn layui-icon layui-icon-refresh-1" style="transform: rotateY(180deg)"></button>
+            <button id="imageRotateRight" class="layui-btn layui-icon layui-icon-refresh-1"></button>
+        </div>
+        <div class="button-group">
+            <button class="layui-btn" type="button" id="submitImage">裁剪</button>
+        </div>
+    </div>
+</div>
+<!--图片预览-->
+<div id="imageView" class="imageView">
+    <img>
+</div>
+{/block}
+<!--图片上传 end-->
+
+<!--多图上传 start-->
+{block name='multiImgUpload'}
+<div class="imageUploadDialog" id="multiImgUploadDialog">
+    <!--图片处理区-->
+    <div class="handleArea">
+        <img id="multiImgHandle" alt="imageHandle">
+    </div>
+    <!--图片操作区-->
+    <div class="operationArea">
+        <p class="title">预览</p>
+        <div id="multiImgUploadPreview" class="imageUploadPreview"></div>
+        <div class="button-group">
+            <button id="multiImgRotateLeft" class="layui-btn layui-icon layui-icon-refresh-1" style="transform: rotateY(180deg)"></button>
+            <button id="multiImgRotateRight" class="layui-btn layui-icon layui-icon-refresh-1"></button>
+        </div>
+        <div class="button-group">
+            <button class="layui-btn" type="button" id="multiImgSubmit">裁剪</button>
+        </div>
+    </div>
+</div>
+<!--图片预览-->
+<div id="multiImgView" class="imageView">
+    <img>
+</div>
+{/block}
+<!--多图上传 end-->
+{/block}
+{block name='js'}
+<script src="__RES__/js/jquery-1.9.1.min.js"></script>
+<script src="__RES__/js/main.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/js/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/jquery.from.js"></script>
+<script src="__PUBLIC_RES__/upload/cropper.js"></script>
+<script src="__PUBLIC_RES__/upload/main.js"></script>
+<script src="__PUBLIC_RES__/multiUpload/main.js"></script>
+{/block}
+<script>
+    //操作提示
+    $(document).on('click', '#explanationZoom', function () {
+        var flag = $(this).hasClass('shopUp'), that = $(this);
+        that.prop('title', flag ? '收起提示' : '提示相关设置操作时应注意的要点');
+        that.parents('.explanation').animate({
+            width: flag ? (parseInt($(this).parents(".content").width()) - 28) : '125'
+        }, 300, function () {
+            var ul = $(this).find('ul');
+            flag ? ul.show() : ul.hide();
+            that.toggleClass('shopUp', !flag).parent('.ex_tit').css('margin-bottom', flag ? 10 : 0);
+        });
+    });
+    $('.toolbar-wrap').css('height', window.innerHeight + 'px');
+    $(window).on('scroll', function () {
+        $('.toolbar-wrap').css('top', $(document).scrollTop())
+    })
+</script>
+</body>
+</html>
+
+
+

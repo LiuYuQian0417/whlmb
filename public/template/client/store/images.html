@@ -1,0 +1,573 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/map.css" rel="stylesheet" type="text/css"/>
+<style>
+    .area_dd{
+        width: 15% !important; margin-top: 0.5% !important;
+    }
+    .picShow{width: 150px;margin-top: 10px;}
+    .picShow>.pic{display: none}
+    .picShow>.pic:first-child{display: block}
+    .picShow>.pic a{position: relative;width: 150px;}
+    .picShow>.pic img{width: 150px;display: block;}
+    #tooltip{position:absolute;width:300px;border:1px solid #f4f4f4;background:#fff;color:#fff;display: none}
+    #tooltip img{width: 100%}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+        <!--TAB切换-->
+        <div class="tabmenu">
+            <ul class="tab">
+                <li><a href="javascript:void(0);" onclick="main.jumpFour('client/store/index')">基本信息</a></li>
+                <li><a href="javascript:void(0);" onclick="main.jumpFour('client/store/contact')">联系我们</a></li>
+                <li class="active"><a href="javascript:void(0);" onclick="main.jumpFour('client/store/images')">图片信息</a></li>
+            </ul>
+        </div>
+        <!--TAB切换-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请根据提示信息准确无误填写店铺信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+        <div class="ecsc-form-goods">
+            <form class="layui-form" method="post" action="" enctype="multipart/form-data">
+                <div class="wrapper-list hide">
+
+                    <dl class="setup store-logo">
+                        <dt>店铺类型：</dt>
+                        <dd>
+                            <div class="checkbox_items">
+                                <div class="checkbox_item">
+                                    <input type="radio" name="" value="1" title="入驻店铺 （* 注：入驻店铺需认证通过才可正常使用）" class="ui-radio" id="check_sellername_0"
+                                           {eq name="item.shop|default='1'" value="1" }checked{/eq}/>
+                                </div>
+                                <div class="checkbox_item">
+                                    <input type="radio" name="" value="0" title="自营店铺" class="ui-radio" id="check_sellername_1"
+                                           {eq name="item.shop|default=''" value="0" }checked{/eq}/>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+
+                    <!--公司名称-->
+                    <dl>
+                        <dt>店铺名称：</dt>
+                        <dd style="line-height:30px"><span>{$item.store_name|default=''}</span>
+                            {neq name="$item.shop" value="0"}
+                                <span style="margin-left: 20px;">
+                                    {switch name="item.status"}
+                                    {case value="0"}<a href="javascript:void(0);" onclick="main.jumpFour('client/store/storeAuth}')">立即认证</a>{/case}
+                                    {case value="1"}<span class="green">认证成功</span>{/case}
+                                    {case value="2"}<span class="yellow">认证审核中</span>{/case}
+                                    {/switch}
+                                </span>
+                            {/neq}
+                        </dd>
+                    </dl>
+
+                    <!--主营类目-->
+                    <dl>
+                        <dt>主营类目：</dt>
+                        <dd style="line-height:30px"><span>{$item.CategoryName|default=''}</span></dd>
+                    </dl>
+
+                    <!--创建时间-->
+                    <dl>
+                        <dt>创建时间：</dt>
+                        <dd style="line-height:30px"><span>{$item.create_time|default=''}</span></dd>
+                    </dl>
+
+                    <!--店铺关键字-->
+                    <dl>
+                        <dt>店铺关键字：</dt>
+                        <dd><input type="text" name="" value="{$item.keywords|default=''}" maxlength="100"
+                                   class="text" autocomplete="off"
+                                   placeholder="请输入关键字"/></dd>
+                    </dl>
+
+                    <!--店铺简介-->
+                    <dl>
+                        <dt>店铺简介：</dt>
+                        <dd>
+                            <textarea name="" maxlength="100" class="textarea">{$item.describe|default=''}</textarea>
+                        </dd>
+                    </dl>
+
+                    <!--创建时间-->
+                    <dl>
+                        <dt>创建时间：</dt>
+                        <dd><input type="text" value="{$item.create_time|default=''}" maxlength="100"
+                                   class="text" autocomplete="off" readonly/></dd>
+                    </dl>
+
+                </div>
+
+                <div class="wrapper-list hide">
+                    <!--店铺联系方式-->
+                    <dl>
+                        <dt>客服电话：</dt>
+                        <dd >
+                            <input type="text" name="" value="{$item.phone|default=''}"
+                                   size="40" placeholder="输入手机号" datatype="m"
+                                   nullmsg="请输入手机号" errormsg="请输入正确手机号" class="text" />
+                        </dd>
+                        <input type="hidden" name="province" value="{$item.province}">
+                    </dl>
+                    <!--所在省份-->
+                    <dl>
+                        <dt>所在省市区：</dt>
+                        <dd>
+                            <div class="layui-input-inline" style="width: 140px;float: left">
+                                <select id="province" name="province" class="state" lay-filter="state" lay-search="">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 140px;float: left;margin: 0 10px">
+                                <select id="city" name="city" class="state" lay-filter="state" >
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 140px;float: left">
+                                <select id="area" name="area" class="state" lay-filter="state">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                        </dd>
+                    </dl>
+
+                    <!--详细地址-->
+                    <dl>
+                        <dt>详细地址：</dt>
+                        <dd>
+                            <input type="text" id="tipinput" name="address" value="{$item.address|default=''}"
+                                   maxlength="200" class="text" autocomplete="off"  style="width: 450px;"
+                                   placeholder="请输入店铺详细地址"/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dd style="margin-left: 31%">
+                            <div id="container" style="width: 470px;height: 270px; " tabindex="0">
+                                <div id="interaction">111222</div>
+                            </div>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>经度（Y）：</dt>
+                        <dd>
+                            <input type="text" id="lng" name="lng" value="{$item.lng|default=''}" class="text"
+                                   autocomplete="off" placeholder="请根据地图获取经度"
+                                   readonly/>
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>纬度（X）：</dt>
+                        <dd>
+                            <input type="text" id="lat" name="" value="{$item.lat|default=''}"
+                                   autocomplete="off" class="text" placeholder="请根据地图获取纬度"
+                                   readonly/>
+                        </dd>
+                    </dl>
+                </div>
+                <div class="wrapper-list">
+
+                    <!--店铺logo-->
+                    <dl>
+                        <dt>店铺LOGO：</dt>
+                        <dd>
+                            <div>
+                                <div id="imgPrev">
+                                    <img id="imgShow" src="{$item.logo|default=''}" class="uploadImg"
+                                         onerror="this.src='__RES__/images/imageError.png'" alt="店铺logo"/>
+                                </div>
+                                <div class="uploader white">
+                                    <input type="text" class="filename" id="localPath" value="{$item.logo|default=''}" readonly/>
+                                    <input type="button" class="button" value="上传..."/>
+                                    <input type="file" id="up_img" name="image"/>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+
+                    <!--店铺背景图-->
+                    <dl>
+                        <dt>店铺背景图[720*235]：</dt>
+                        <dd>
+                            <div>
+                                <div id="imgPrev4">
+                                    <img id="imgShow4" src="{$item.back_image|default=''}" class="uploadImg" style="width: 360px;height:118px;"
+                                         onerror="this.src='__RES__/images/imageError235.png'" alt="店铺背景图"/>
+                                </div>
+                                <div class="uploader white">
+                                    <input type="text" class="filename" id="localPath4" value="{$item.back_image|default=''}" readonly/>
+                                    <input type="button" class="button" value="上传..."/>
+                                    <input type="file" id="up_img4" name="back_images"/>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+
+                    <!--pc店铺背景图-->
+                    <dl>
+                        <dt>PC店铺头部背景图[1920*111]：</dt>
+                        <dd>
+                            <div>
+                                <div id="imgPrev7">
+                                    <img id="imgShow7" src="{$item.pc_head_back_image|default=''}" class="uploadImg" style="width: 360px;height:118px;"
+                                         onerror="this.src='__RES__/images/imageError235.png'" alt="PC店铺头部背景图"/>
+                                </div>
+                                <div class="uploader white">
+                                    <input type="text" class="filename" id="localPath7" value="{$item.pc_head_back_image|default=''}" readonly/>
+                                    <input type="button" class="button" value="上传..."/>
+                                    <input type="file" id="up_img7" name="pc_head_back_image"/>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+
+                    <!--店铺品牌甄选展示图-->
+                    <dl>
+                        <dt>店铺品牌甄选展示图[684*304]：</dt>
+                        <dd>
+                            <div>
+                                <div id="imgPrev6">
+                                    <img id="imgShow6" src="{$item.brand_image|default=''}" class="uploadImg" style="width: 360px;height:118px;"
+                                         onerror="this.src='__RES__/images/imageError235.png'" alt="店铺发现好店展示图"/>
+                                </div>
+                                <div class="uploader white">
+                                    <input type="text" class="filename" id="localPath6" value="{$item.brand_image|default=''}" readonly/>
+                                    <input type="button" class="button" value="上传..."/>
+                                    <input type="file" id="up_img6" name="brand_images"/>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+
+                    <!--店铺发现好店展示图-->
+                    <dl>
+                        <dt>店铺发现好店展示图[400*400]：</dt>
+                        <dd>
+                            <div>
+                                <div id="imgPrev5">
+                                    <img id="imgShow5" src="{$item.good_image|default=''}" class="uploadImg" style="width: 360px;height:118px;"
+                                         onerror="this.src='__RES__/images/imageError235.png'" alt="店铺发现好店展示图"/>
+                                </div>
+                                <div class="uploader white">
+                                    <input type="text" class="filename" id="localPath5" value="{$item.good_image|default=''}" readonly/>
+                                    <input type="button" class="button" value="上传..."/>
+                                    <input type="file" id="up_img5" name="good_images"/>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+
+                </div>
+
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="hidden" name="store_id" value="{$item.store_id|default=''}">
+                        <input type="submit" class="sc-btn sc-blueBg-btn btn35" value="提交" id="submitBtn"/>
+                    </dd>
+                </dl>
+
+            </form>
+        </div>
+    </div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/uploadPreview.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script>
+
+    $(function () {
+        // 店铺模式切换
+        $(".style_item .checkbox_item").click(function () {
+            var num = $(this).index();
+            $(".picShow .pic").eq(num).show().siblings().hide();
+        })
+        var showId = $(".style_item").find("input:checked").val();
+        $('.picShow .pic').eq(showId).show().siblings().hide();
+
+        var x = 10;
+        var y = 20;
+        $("a.tooltip").mouseover(function (e) {
+            var tooltip = "<div id='tooltip'><img src='" + this.href + "' alt='预览图'/><\/div>"; //创建 div 元素
+            $("body").append(tooltip);	//把它追加到文档中
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                }).show("fast");	  //设置x坐标和y坐标，并且显示
+        }).mouseout(function () {
+
+            $("#tooltip").remove();	 //移除
+        }).mousemove(function (e) {
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                });
+        });
+    })
+
+    //模块切换
+    $('.tab li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("active").siblings().removeClass("active");
+        $(".wrapper-list").eq(index).show().siblings(".wrapper-list").hide();
+    });
+    main.form()
+    // 表单提交
+    main.valid('.layui-form');
+
+    // 上传图片
+    <!--店铺logo-->
+    new uploadPreview({UpBtn: "up_img", DivShow: "imgPrev", ImgShow: "imgShow", localPath: 'localPath'});
+    <!--店铺背景图-->
+    new uploadPreview({UpBtn: "up_img4", DivShow: "imgPrev4", ImgShow: "imgShow4", localPath: 'localPath4'});
+    <!--店铺发现好店展示图-->
+    new uploadPreview({UpBtn: "up_img5", DivShow: "imgPrev5", ImgShow: "imgShow5", localPath: 'localPath5'});
+    <!--店铺品牌甄选展示图-->
+    new uploadPreview({UpBtn: "up_img6", DivShow: "imgPrev6", ImgShow: "imgShow6", localPath: 'localPath6'});
+    <!--PC店铺头部背景图-->
+    new uploadPreview({UpBtn: "up_img7", DivShow: "imgPrev7", ImgShow: "imgShow7", localPath: 'localPath7'});
+
+    // 地图
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+
+        var map = new AMap.Map('container', {
+            zoom: 17,
+            resizeEnable: true,
+            scrollWheel: false
+        });
+
+        // 定位
+        map.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                buttonOffset: new AMap.Pixel(0, 10),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                buttonPosition: 'RB'
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+        });
+
+        //解析定位结果
+        function onComplete(data) {
+
+        }
+
+        //解析定位错误信息
+        function onError(data) {
+
+        }
+
+
+        //输入提示
+        var autoOptions = {
+            input: "tipinput",
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });
+        //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',
+            map: map
+        });
+
+        positionPicker.on('success', function (positionResult) {
+            // $('#topTwo').html('');
+            var adds = '';
+            var addsLen = positionResult.regeocode.pois;
+            var addres = '';
+            $('#interaction').html('<a class="submit" onclick="interaction(\'' + positionResult.address + '\',' + positionResult.position.lng + ',' + positionResult.position.lat + ')">设为地址</a>');
+            addsLen.forEach(function (data) {
+                addres = '<div class="weui-media-box weui-media-box_text box_text" onclick="interaction(\'' + data.address + '\',' + data.location.lng + ',' + data.location.lat + ')" style="padding:8px 3% 0 40px;" data-id="' + data.id + '" data-name="' + data.name + '">'
+                addres += '<h4 class="weui-media-box__title" font-size: 12px;line-height: 24px;color: #999;><i class="iconfont icon-icon1460191833045"></i>' + data.name + '</h4>'
+                addres += '<p class="weui-media-box__desc" style="border-bottom: 1px solid #e5e5e5;font-size: 12px;line-height: 24px;padding-bottom:5px;color: #999;">' + data.address + '</p>'
+                addres += '</div>'
+                adds += addres;
+            });
+            $('#topTwo').html(adds);
+
+        });
+        positionPicker.on('fail', function (positionResult) {
+            console.log(positionResult)
+
+        });
+
+        positionPicker.start();
+        map.panBy(0, 1);
+
+        map.addControl(new AMap.ToolBar({
+            liteStyle: true
+        }));
+    });
+
+    function interaction(address, lng, lat) {
+        $('#lng').val(lng);
+        $('#lat').val(lat);
+    }
+
+    // 联动
+    // layui.use(['form','laydate'], function () {
+    //     var $ = layui.jquery,
+    //         form = layui.form,
+    //         laydate = layui.laydate;
+    //     var url = '/member_address/area';                       //数据请求地址
+    //     var province = "{$item.province|default=''}";           //编辑需要的省
+    //     var city = "{$item.city|default=''}";                   //编辑需要的市
+    //     var district = "{$item.area|default=''}";               //编辑需要的县/区
+    //
+    //     getJSON(url, $("select[id='province']").closest("div"));
+    //     form.on('select(state)', function (data) {
+    //         var $that = $(data.elem);
+    //         var nameThat = $that.attr('id');
+    //         // $(namenameThat).val($that.find("option:selected").text());
+    //         $('input[name="'+nameThat+'"]').val($that.find("option:selected").text());
+    //         var urls = url + "?id=" + data.value;
+    //         getJSON(urls, $that.closest("div").next());
+    //     });
+    //
+    //     function getJSON(urls, even) {
+    //         $.getJSON(urls, function (json) {
+    //             var pid = 0;
+    //             var name = even.find("select").attr("id");
+    //             var select = "<select id=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+    //             select += "<option value=\"\">请选择 </option>";
+    //             $(json).each(function () {
+    //                 select += "<option value=\"" + this.area_id + "\"";
+    //                 if (province == this.area_name || city == this.area_name || district == this.area_name) {
+    //                     select += " selected=\"selected\" ";
+    //                     pid = this.area_id;
+    //                 }
+    //                 select += ">" + this.area_name + "</option>";
+    //             });
+    //             select += "</select>";
+    //             even.html(select);
+    //             var nextName = even.next().find("select").attr("id");
+    //             even.next().html("<select id=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+    //             form.render('select');
+    //             if (pid != 0) {
+    //                 getJSON(url + "?id=" + pid, even.next());
+    //             }
+    //         });
+    //     }
+    //     laydate.render({
+    //         elem: '#work_time',
+    //         type: 'time',
+    //         format: 'HH:mm',
+    //         range: true
+    //     });
+    // });
+
+    // 开户联动
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+
+        var url = '/member_address/area';            //数据请求地址
+
+        var province = "{$item.province|default=''}";           //编辑需要的省
+        var city = "{$item.city|default=''}";                   //编辑需要的市
+        var district = "{$item.area|default=''}";               //编辑需要的县/区
+
+        // 开户行三级联动
+        var bank_province = "{$item.auth.bank_province|default=''}";           //编辑需要的省
+        var bank_city = "{$item.auth.bank_city|default=''}";                   //编辑需要的市
+        var bank_district = "{$item.auth.bank_area|default=''}";               //编辑需要的县/区
+
+        getJSON(url, $("select[name='province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            var urls = url + "?id=" + data.value;
+            getJSON(urls, $that.closest("div").next());
+        });
+
+        function getJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("name");
+                var select = "<select name=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (province == this.area_name || city == this.area_name || district == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                var nextName = even.next().find("select").attr("name");
+                $("select[name='"+nextName+"']").html("<select name=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    getJSON(url + "?id=" + pid, even.next());
+                }
+            });
+        }
+
+        openJSON(url, $("select[name='bank_province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            var urls = url + "?id=" + data.value;
+            openJSON(urls, $that.closest("div").next());
+        });
+
+        function openJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("name");
+                var select = "<select name=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (bank_province == this.area_name || bank_city == this.area_name || bank_district == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                var nextName = even.next().find("select").attr("name");
+                $("select[name='"+nextName+"']").html("<select name=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    openJSON(url + "?id=" + pid, even.next());
+                }
+            });
+        }
+    });
+</script>
+{/block}
+

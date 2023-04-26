@@ -1,0 +1,177 @@
+{extend name="public/common"}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/Spellgroup/GroupDetail.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+{/block}
+
+{block name="content"}
+<div class="bargain">
+    <div class="title">
+        <div class="tittle-center">
+            <a href="javascript:main.jump({'url':'/pc2.0/index/index'})" class="logo">
+                <img src="__RES__/imgs/logo-color.png" alt="">
+            </a>
+            <p class="txt">
+                <span>拼团</span>
+            </p>
+
+        </div>
+    </div>
+
+    <div class="bargain-con">
+        <div class="bargain-box">
+            <div class="people">
+                <div class="rofile-photo">
+                    <img src="{$result.member.avatar}" alt="">
+                </div>
+                <p class="name">
+                    {$result.member.nickname}
+                </p>
+                <p>
+                    {eq name="$result.status" value="2"}“恭喜您拼团成功” {/eq}
+                </p>
+            </div>
+            <!--    成功的css-->
+
+            <div class="bargain-top {eq name="$result.status" value="2"}success-img {/eq} {eq name="$result.status" value="3"}error-img {/eq}">
+                <div class="goods-box">
+                    <a href="javascript:jump_goods('{$result.goods_id}')">
+                        <img class="goods-img" src="{$result.file}" alt="">
+                        <div class="goods-detail">
+                            <div class="goods-name">
+                                {$result.goods_name}
+                            </div>
+                            <p class="pic">
+                                <span class="low-price primary-color">
+                                    {$result.group_num}人团
+                                </span>
+                                <span class="low-price primary-color">
+                                    拼团立省{$result.original_price-$result.single_price}
+                                </span>
+
+                            </p>
+
+                            <div class="pic-box">
+                                <span class="now-pic primary-color">
+                                    ￥{$result.single_price}
+                                </span>
+                                <del>￥{$result.original_price}</del>
+                            </div>
+
+                            <div class=" plan-box">
+                                {eq name="$result.status" value="2"}<span class="primary-color">团长人气太高，已经拼购成功啦</span> {/eq}
+
+
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+
+                <div class="bargain-group">
+                    {switch name="$result.status"}
+                    {case value="1"}
+                    <div class="success-btn primary-color">
+                        扫码分享给好友拼团
+                        <div class="code" >
+                            <img src="{$result.qr_code.domain}{$result.qr_code.qr_code}" alt="">
+                        </div>
+                    </div>
+                    <p>还剩 <span class="primary-color data-time_str" data-time_str="{:date('Y-m-d H:i:s',time()+$result.continue_time)}"></span>结束，邀请朋友们一起吧~</p>
+
+                    {/case}
+                    {case value="2"}
+                    <!--拼团成功-->
+                    <a href="javascript:main.jump({'url':'/pc2.0/group/index'});" class="success-btn primary-color">
+                    去逛逛其他团购
+                    </a>
+                    {/case}
+                    {case value="3"}
+                    <!--拼团失败-->
+                    <a href="javascript:jump_goods('{$result.goods_id}');" class="success-btn primary-color">
+                    再开一团
+                    </a>
+                    {/case}
+                    {/switch}
+
+                </div>
+            </div>
+
+            <!--拼团帮-->
+
+            <div class="assist">
+                <div class="assist-title">
+                    <img src="__RES__/imgs/Spellgroup/pttitle.png" alt="">
+                </div>
+
+                <div class="assist-con">
+                    {volist name="$result.participant" id="item" length="3"}
+                    <div class="assist-list {eq name="$result.owner" value="$item.member_id"}colonel {/eq}">
+                        <div class="sightseer">
+                            <img src="{$item.avatar}" alt="">
+                            <span class="name">{$item.nickname}</span>
+                        </div>
+                    </div>
+                    {/volist}
+                {gt name=":count($result.participant)" value="3"}
+                    <div class="assist-list ">
+                        <div class="sightseer">
+                            <img src="__RES__/imgs/del/dot_img.png" alt="">
+                            <span class="name">展示更多</span>
+                        </div>
+                        <div class="po_box">
+                            <div class="po_assist-con">
+                                {volist name="$result.participant" id="item1" offset="3"}
+                                <div class="assist-list ">
+                                    <div class="sightseer">
+                                        <img src="{$item1.avatar}" alt="">
+                                        <span class="name">{$item1.nickname}</span>
+                                    </div>
+                                </div>
+                                {/volist}
+
+                            </div>
+                        </div>
+                    </div>
+                {/gt}
+                </div>
+
+            </div>
+
+            <!--拼团规则-->
+            <div class="rule">
+                <div class="rule-title">
+                    <img src="__RES__/imgs/Spellgroup/ptgz.png" alt="">
+                </div>
+                {$result.article.content|raw}
+            </div>
+
+        </div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    function limit(){
+        main.count_down({
+            'time_select': $('.data-time_str'),
+            'function_name': limit,
+            'dispose_callback':function(time){
+                var text = '';
+                return  text +time.h+'时'+time.m+'分'+time.s+'秒';
+            },
+            'callback': function () {
+                window.location.href=window.location.href;
+            }
+        });
+    }
+    if($('span.data-time_str').length>0) {
+        limit();
+    };
+
+
+</script>
+{/block}

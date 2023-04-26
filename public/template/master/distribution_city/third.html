@@ -1,0 +1,202 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="/template/client/resource/css/map.css" rel="stylesheet" type="text/css"/>-->
+<!--<link href="/template/client/resource/css/style.css" rel="stylesheet" type="text/css"/>-->
+<!--<link href="/template/client/resource/css/general.css" rel="stylesheet" type="text/css"/>-->
+
+<style>
+    .button-group .button {
+        height: 28px;
+        line-height: 28px;
+        background-color: #0D9BF2;
+        color: #FFF;
+        border: 0;
+        outline: none;
+        padding-left: 5px;
+        padding-right: 5px;
+        border-radius: 3px;
+        margin-bottom: 4px;
+        cursor: pointer;
+    }
+
+    .layui-form-radio {
+        margin: 0 !important;
+    }
+
+    .layui-form-checkbox[lay-skin=primary] {
+        margin-bottom: 0;
+        margin-top: 0
+    }
+
+    .layui-form-checked[lay-skin=primary] i {
+        background: #5FB878;
+        border-color: #5FB878
+    }
+
+    .layui-form-checked[lay-skin=primary]:hover i {
+        border-color: #5FB878
+    }
+
+    .layui-input {
+        width: 240px;
+    }
+
+    .text_center {
+        height: 30px;
+        line-height: 28px;
+        margin: 0 5px;
+    }
+
+    .table_item td {
+        text-align: left !important;
+        width: 25%;
+        padding: 3px 0;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li style="height: 34px;line-height:34px;"
+            onclick="main.jumpFour('distribution_city/edit?id={:input(\'get.id\')}')">
+            <a href="javascript:void(0);">自主配送</a>
+        </li>
+        <li class="curr" style="height: 34px;line-height:34px;"
+            onclick="main.jumpFour('distribution_city/third?id={:input(\'get.id\')}')">
+            <a href="javascript:void(0);">三方配送</a>
+        </li>
+    </ul>
+</div>
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>温馨提示：提交操作将会重新审核，请慎重提交确定。</span></li>
+        </ul>
+    </div>
+</div>
+<form action="" method="post" class="layui-form">
+    <div class="tabs_info" style="margin-top: 15px;">
+        <ul>
+            <li class="curr" style="height: 34px;line-height:34px;"
+                onclick="main.jumpFour('distribution_city/third?id={:input(\'get.id\')}')">
+                <a href="javascript:void(0);">创建商户</a>
+            </li>
+            <li  style="height: 34px;line-height:34px;"
+                onclick="main.jumpFour('distribution_city/shopList?id={:input(\'get.id\')}')">
+                <a href="javascript:void(0);">门店列表</a>
+            </li>
+        </ul>
+    </div>
+
+{if condition="$storeState == 0"}
+    <!--自营店铺-->
+        {if condition="!$find"}
+            <div class="contentShell">
+            <!--注册商户手机号-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 注册商户手机号：</label>
+                <div class="layui-input-block">
+                    <input type="tel" name="mobile" maxlength="11" datatype="m" nullmsg="请输入注册商户手机号" errormsg="请输入正确的注册商户手机号" value="{$item.contact|default=''}" placeholder="请输入注册商户手机号" title class="layui-input">
+                </div>
+            </div>
+            <!--商户城市名称-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 商户城市名称：</label>
+                <div class="layui-input-block" style="width:240px;">
+                    <select name="city_name" class="layui-select" datatype="*" errormsg="请选择商户城市名称" nullmsg="请选择商户城市名称" lay-search="" title>
+                        {foreach $area_list as $item}
+                        <option value="{$item['area_name']}">{$item['area_name']}</option>
+                        {/foreach}
+                    </select>
+                </div>
+            </div>
+            <!--企业全称-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 企业全称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="enterprise_name" datatype="*" nullmsg="请输入企业全称" errormsg="请输入企业全称" value="{$item.type|default=''}" title class="layui-input" placeholder="请输入企业全称">
+                </div>
+            </div>
+            <!--企业地址-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 企业地址：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="enterprise_address" maxlength="200" datatype="*" errormsg="请输入企业地址" nullmsg="请输入企业地址" value="{$item.type|default=''}" title class="layui-input" placeholder="请输入企业地址">
+                </div>
+            </div>
+            <!--联系人姓名-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 联系人姓名：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="contact_name" maxlength="10" datatype="*" errormsg="请输入联系人姓名" nullmsg="请输入联系人姓名" value="{$item.type|default=''}" title class="layui-input" placeholder="请输入联系人姓名">
+                </div>
+            </div>
+            <!--联系人电话-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 联系人电话：</label>
+                <div class="layui-input-block">
+                    <input type="tel" name="contact_phone" datatype="m" errormsg="请输入正确的联系人电话" nullmsg="请输入联系人电话" value="{$item.type|default=''}" title class="layui-input" placeholder="请输入联系人电话">
+                </div>
+            </div>
+            <!--邮箱地址-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 邮箱地址：</label>
+                <div class="layui-input-block">
+                    <input type="email" name="email" datatype="e" errormsg="请输入正确的邮箱格式" nullmsg="请输入邮箱地址" value="{$item.type|default=''}" title class="layui-input" placeholder="请输入邮箱地址">
+                </div>
+            </div>
+            </div>
+            <div class="contentShellBtn">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" id="submit">确定</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+    {else/}
+        <div class="contentShell">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 注册商户手机号：</label>
+                <div class="layui-input-block">
+                    <input type="tel" value="{$find.mobile|default=''}" readonly title class="layui-input">
+                </div>
+            </div>
+        </div>
+    {/if}
+    {elseif condition="in_array($storeState,[1,2])"}
+        <!--个人店铺,公司店铺-->
+        <div class="contentShell">
+            {if condition="$find"}
+                <!--联系人电话-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">注册商户手机号：</label>
+                    <div class="layui-input-block">
+                        <input type="tel" value="{$find['mobile']}" readonly title class="layui-input">
+                    </div>
+                </div>
+            {else/}
+                <p style="font-size: 20px;text-align: center;"><i class="layui-icon">&#xe702;</i> &nbsp;该店铺尚未创建商户</p>
+            {/if}
+        </div>
+    {/if}
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="/template/client/resource/layui/lay/modules/form.js"></script>
+<script src="/template/client/resource/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script type="text/javascript">
+    main.valid('.layui-form');
+</script>
+{/block}

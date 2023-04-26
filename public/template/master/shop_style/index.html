@@ -1,0 +1,579 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<link href="__RES__/css/shop_style/index.css" rel="stylesheet">
+<link href="__RES__/colorpicker/css/colorpicker.css" rel="stylesheet">
+<style>
+    /* 主颜色 */
+    .primary-color-background {
+        background-color: rgb({$data.current.primary.r}, {$data.current.primary.g}, {$data.current.primary.b});
+    }
+
+    .primary-color-font {
+        color: rgb({$data.current.primary.r}, {$data.current.primary.g}, {$data.current.primary.b});
+    }
+
+    .primary-color-border {
+        border-color: rgb({$data.current.primary.r}, {$data.current.primary.g}, {$data.current.primary.b});
+    }
+
+    .primary-color-img {
+        filter: drop-shadow(100px 0 rgb({$data.current.primary.r}, {$data.current.primary.g}, {$data.current.primary.b}));
+    }
+
+    /* 副颜色 */
+    .deputy-color-background {
+        background-color: rgb({$data.current.deputy.r}, {$data.current.deputy.g}, {$data.current.deputy.b});
+    }
+
+    .deputy-color-font {
+        color: rgb({$data.current.deputy.r}, {$data.current.deputy.g}, {$data.current.deputy.b});
+    }
+
+    .deputy-color-border {
+        border-color: rgb({$data.current.deputy.r}, {$data.current.deputy.g}, {$data.current.deputy.b});
+    }
+
+    .deputy-color-img {
+        filter: drop-shadow(100px 0 rgb({$data.current.deputy.r}, {$data.current.deputy.g}, {$data.current.deputy.b}));
+    }
+
+    /* 高对比颜色 默认是白色 */
+    .contrast-color-background {
+        background-color: rgb({$data.current.contrast.r}, {$data.current.contrast.g}, {$data.current.contrast.b});
+    }
+
+    .contrast-color-font {
+        color: rgb({$data.current.contrast.r}, {$data.current.contrast.g}, {$data.current.contrast.b});
+    }
+
+    .contrast-color-border {
+        border-color: rgb({$data.current.contrast.r}, {$data.current.contrast.g}, {$data.current.contrast.b});
+    }
+
+    .contrast-color-img {
+        filter: drop-shadow(100px 0 rgb({$data.current.contrast.r}, {$data.current.contrast.g}, {$data.current.contrast.b}));
+    }
+</style>
+<div id="content">
+    <div id="colorControlPanel">
+    <!--颜色列表-->
+        <div id="colorSelect">
+            <p>推荐配色方案:</p>
+            <div id="base" class="colorList">
+                {notempty name="data.base"}
+                {volist name="data.base" id="vo"}
+                <div {eq name="data.current.id" value="$vo.id" }class="checked" {/eq}>
+                <input type="radio" name="style" value="{$vo.id}" {eq name="data.current.id" value="$vo.id" }checked="checked" {/eq}>
+                <div style="background-color: rgb({$vo.primary_r}, {$vo.primary_g}, {$vo.primary_b})"
+                     data-r="{$vo.primary_r}" data-g="{$vo.primary_g}" data-b="{$vo.primary_b}"></div>
+                <div style="background-color: rgb({$vo.deputy_r}, {$vo.deputy_g}, {$vo.deputy_b})"
+                     data-r="{$vo.deputy_r}" data-g="{$vo.deputy_g}" data-b="{$vo.deputy_b}"></div>
+                <div class="light-color" style="background-color: rgb(255, 255, 255)"></div>
+            </div>
+            {/volist}
+            {/notempty}
+        </div>
+        <p>自定配色:</p>
+        <div id="diyColorList" class="colorList">
+            {notempty name="data.diy"}
+            {volist name="data.diy" id="vo"}
+            <div {eq name="data.current.id" value="$vo.id" }class="checked" {/eq}>
+            <input type="radio" name="style" value="{$vo.id}" {eq name="data.current.id" value="$vo.id" }checked="checked" {/eq}>
+            <div style="background-color: rgb({$vo.primary_r}, {$vo.primary_g}, {$vo.primary_b})"
+                 data-r="{$vo.primary_r}" data-g="{$vo.primary_g}" data-b="{$vo.primary_b}"></div>
+            <div style="background-color: rgb({$vo.deputy_r}, {$vo.deputy_g}, {$vo.deputy_b})" data-r="{$vo.deputy_r}"
+                 data-g="{$vo.deputy_g}" data-b="{$vo.deputy_b}"></div>
+            <div class="light-color" style="background-color: rgb(255, 255, 255)"></div>
+        </div>
+        {/volist}
+        {/notempty}
+    </div>
+</div>
+<div id="colorAdd">
+    <p>DIY配色:</p>
+    <ul>
+        <li>
+            <span>主要颜色:</span>
+            <div id="primary_color" class="color-picker" data-r="0" data-g="0" data-b="0">
+                <div style="background-color: rgb(0,0,0)"></div>
+            </div>
+        </li>
+        <li>
+            <span>次要颜色:</span>
+            <div id="deputy_color" class="color-picker" data-r="0" data-g="0" data-b="0">
+                <div style="background-color: rgb(0,0,0)"></div>
+            </div>
+        </li>
+    </ul>
+    <button class="layui-btn layui-btn-normal" id="addColor">添加当前配色</button>
+    <button class="layui-btn layui-btn-danger" id="delColor">删除当前配色</button>
+</div>
+</div>
+<!--预览-->
+<div id="preview">
+    <div>
+        <div class="header-bar">
+            <img src="__RES__/image/shop_style/back.jpg" style="float: left;">
+            <img src="__RES__/image/shop_style/more_ope.png" style="float: right;">
+            <img src="__RES__/image/shop_style/cart.png" style="float: right;">
+            <ul>
+                <li class="selected primary-color-font primary-color-border">商品</li>
+                <li>详情</li>
+                <li>评价</li>
+            </ul>
+        </div>
+        <div class="project-img">
+            <img src="__RES__/image/shop_style/pic12.jpg" alt="">
+            <div class="pic-num">1/4</div>
+        </div>
+        <div class="project-desc">
+            <div class="a">
+                <div class="left">
+                    <div class="price primary-color-font">
+                        <span>￥</span>
+                        <span>89.00</span>
+                    </div>
+                    <div class="old-price">
+                        <span>价格 99.00</span>
+                    </div>
+                </div>
+                <div class="right">
+                    <div>
+                        <img src="__RES__/image/shop_style/cut.png" alt="">
+                        <span>降价通知</span>
+                    </div>
+                    <div>
+                        <img src="__RES__/image/shop_style/share.png" alt="">
+                        <span>分享</span>
+                    </div>
+                </div>
+            </div>
+            <div class="b">
+                龙采冰海 俄罗斯原瓶进口 贝加尔湖天然饮用水进口水小分子弱碱水
+            </div>
+            <div class="c">
+                <span>销量:1989</span>
+                <span>黑龙江哈尔滨</span>
+            </div>
+        </div>
+        <div class="hr-m"></div>
+        <div class="project-act">
+            <div>
+                <span class="title">领券</span>
+                <div>
+                    <span class="coupon primary-color-background">满100减20</span>
+                    <span class="coupon primary-color-background">满100减20</span>
+                    <span class="coupon primary-color-background">满100减20</span>
+                </div>
+                <div class="more">
+                    <img src="__RES__/image/shop_style/more_det.png">
+                </div>
+            </div>
+            <div>
+                <span class="title">促销</span>
+                <div>
+                    <span class="icon primary-color-font primary-color-border">满减</span>
+                    <span>满99减3,满129减5元</span>
+                </div>
+                <div class="more">
+                    <img src="__RES__/image/shop_style/more_det.png">
+                </div>
+            </div>
+            <div class="express">
+                <span class="title">配送</span>
+                <div>
+                    <div>
+                        <div class="icon primary-color-img"></div>
+                        <span>同城配送</span>
+                    </div>
+                    <div>
+                        <div class="icon primary-color-img"></div>
+                        <span>门店自提</span>
+                    </div>
+                    <div>
+                        <div class="icon primary-color-img"></div>
+                        <span>全国邮寄</span>
+                    </div>
+                </div>
+                <div class="more">
+                    <img src="__RES__/image/shop_style/more_det.png">
+                </div>
+            </div>
+        </div>
+        <div class="project-footer">
+            <div class="control">
+                <div>
+                    <img src="__RES__/image/shop_style/service.png">
+                    <span>客服</span>
+                </div>
+                <div>
+                    <img src="__RES__/image/shop_style/enter_shop.png">
+                    <span>店铺</span>
+                </div>
+                <div>
+                    <div class="collect_icon primary-color-img">
+
+                    </div>
+                    <span>收藏</span>
+                </div>
+            </div>
+            <div class="buy">
+                <div class="deputy-color-background contrast-color-font">
+                    加入购物车
+                </div>
+                <div class="primary-color-background">
+                    立即购买
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="project-attr-check">
+        <div class="header-bar">
+            <img src="__RES__/image/shop_style/back.jpg" style="float: left;">
+            <img src="__RES__/image/shop_style/more_ope.png" style="float: right;">
+            <img src="__RES__/image/shop_style/cart.png" style="float: right;">
+            <ul>
+                <li class="selected primary-color-font primary-color-border">商品</li>
+                <li>详情</li>
+                <li>评价</li>
+            </ul>
+        </div>
+        <div class="project-img">
+            <img src="__RES__/image/shop_style/pic12.jpg" alt="">
+            <div class="pic-num">1/4</div>
+        </div>
+        <div class="attr-check">
+            <div class="content">
+                <div class="top">
+                    <img src="__RES__/image/shop_style/pic12.jpg">
+                    <div class="right">
+                        <div>
+                            <p class="primary-color-font">
+                                <span>￥</span>
+                                <span>89.00</span>
+                            </p>
+                            <span>(库存955)</span>
+                        </div>
+                        <span>请选择尺码</span>
+                    </div>
+                    <div class="close"></div>
+                </div>
+                <div class="selecter">
+                    <h4>容量</h4>
+                    <ul>
+                        <li class="primary-color-background active">300ML</li>
+                        <li>500ML</li>
+                        <li>1L</li>
+                    </ul>
+                </div>
+                <div class="selecter">
+                    <h4>规格</h4>
+                    <ul>
+                        <li class="primary-color-background active">6瓶/箱</li>
+                        <li>12瓶/箱</li>
+                        <li>24瓶/箱</li>
+                    </ul>
+                </div>
+                <div class="select-num">
+                    <span>数量</span>
+                    <div>
+                        <div class="minus">-</div>
+                        <div class="result">1</div>
+                        <div class="plus">+</div>
+                    </div>
+                </div>
+                <div class="submit primary-color-background">确定</div>
+            </div>
+        </div>
+    </div>
+    <div class="project-confirm">
+        <div class="header-bar">
+            <img src="__RES__/image/shop_style/back.jpg" style="float: left;">
+            <ul>
+                <li>确认订单</li>
+            </ul>
+        </div>
+        <div class="address">
+            <div>
+                <p>
+                    <span>收货人:牛牪犇</span>
+                    <span>18888888888</span>
+                </p>
+                <p>收货地址：黑龙江省 哈尔滨市 道外区 南平街72号 资海网络</p>
+            </div>
+            <div>
+                <img src="__RES__/image/shop_style/more_det.png" alt="">
+            </div>
+        </div>
+        <div class="shop-header">
+            <img src="__RES__/image/shop_style/place.png" alt="">
+            <p>龙采冰海官方旗舰店</p>
+        </div>
+        <div class="shop-goods">
+            <img src="__RES__/image/shop_style/pic12.jpg">
+            <div>
+                <p class="name">龙采冰海 俄罗斯原装进口 贝加尔湖原瓶进口水天然饮用水 小分子弱碱水低钠 500ml*12瓶 整箱</p>
+                <p class="attr">颜色：白色 尺码：M</p>
+                <p class="result">
+                        <span class="price primary-color-font">
+                            <span>¥</span>
+                            <span>89.00</span>
+                        </span>
+                    <span class="num">x1</span>
+                </p>
+            </div>
+        </div>
+        <div class="other">
+            <div class="buy-num">
+                <span>购买数量</span>
+                <div>
+                    <div class="plus">+</div>
+                    <div class="num">1</div>
+                    <div class="minus">-</div>
+                </div>
+            </div>
+            <div class="coupon">
+                <span>优惠券</span>
+                <div>
+                    <span>省10元: 50-10</span>
+                    <img src="__RES__/image/shop_style/more_det.png" alt="">
+                </div>
+            </div>
+            <div class="express-type">
+                <span>配送方式</span>
+                <ul>
+                    <li class="primary-color-font primary-color-border">快递邮寄</li>
+                    <li>同城速递</li>
+                    <li>预约自提</li>
+                </ul>
+            </div>
+            <div class="express-total">
+                <span>运费</span>
+                <div>
+                    <p>¥10.00元</p>
+                </div>
+            </div>
+            <div class="buyer-text">
+                <span>买家留言</span>
+                <span>选填:填写内容已和卖家协商确认</span>
+            </div>
+        </div>
+        <div class="result">
+            <span>共1件商品  小计：</span>
+            <span class="primary-color-font">¥89.00</span>
+        </div>
+        <div class="pay">
+            <div class="primary-color-background">提交订单</div>
+            <span class="primary-color-font">¥89.00</span>
+            <span>合计:</span>
+        </div>
+    </div>
+    <button class="layui-btn layui-btn-normal" id="save">保存为当前配色</button>
+</div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/colorpicker/js/colorpicker.js"></script>
+<script src="__RES__/layui/layui.all.js"></script>
+<script>
+
+    $('#addColor').on('click', function () {
+
+        var thEle = $(this)
+
+        thEle.prop('disabled', 'disabled')
+
+        var primaryColor = $('#primary_color').data()
+        var deputyColor = $('#deputy_color').data()
+
+        var colorData = {
+            primaryColor: primaryColor,
+            deputyColor: deputyColor,
+            contrastColor: {
+                r: 255,
+                g: 255,
+                b: 255
+            }
+        }
+
+        if ((765 - (deputyColor.r + deputyColor.g + deputyColor.b)) < 100) {
+            colorData.contrastColor.r = colorData.primaryColor.r
+            colorData.contrastColor.g = colorData.primaryColor.g
+            colorData.contrastColor.b = colorData.primaryColor.b
+        }
+
+        $.post('/shop_style/index', colorData, function (data) {
+            if (data.code === 0) {
+                var ele = $('<div></div>')
+                    .addClass('checked')
+
+                var input = $('<input type="radio" name="style">').prop('checked', 'checked').val(data.data)
+
+                var primaryEle = $('<div></div>')
+                    .css({backgroundColor: 'rgb(' + colorData.primaryColor.r + ',' + colorData.primaryColor.g + ',' + colorData.primaryColor.b + ')'})
+                    .data('r', colorData.primaryColor.r)
+                    .data('g', colorData.primaryColor.g)
+                    .data('b', colorData.primaryColor.b)
+
+                var deputyEle = $('<div></div>')
+                    .css({backgroundColor: 'rgb(' + colorData.deputyColor.r + ',' + colorData.deputyColor.g + ',' + colorData.deputyColor.b + ')'})
+                    .data('r', colorData.deputyColor.r)
+                    .data('g', colorData.deputyColor.g)
+                    .data('b', colorData.deputyColor.b)
+
+                var defEle = $('<div></div>')
+                    .addClass('light-color')
+                    .css({backgroundColor: 'rgb(255,255,255)'})
+
+                ele.append(input)
+                    .append(primaryEle)
+                    .append(deputyEle)
+                    .append(defEle)
+
+                $('.colorList').find('.checked').removeClass('checked')
+
+                setColor(primaryColor, deputyColor)
+
+                $('#diyColorList').prepend(ele)
+            }
+            thEle.removeAttr('disabled')
+            layer.msg(data.message)
+        })
+
+    })
+
+    /**
+     * 保存结果
+     */
+    $('#save').on('click',function () {
+        var inputVal = $('input[name=style]:checked').val()
+        if (inputVal === undefined){
+            layer.msg('请选择配色')
+            return
+        }
+
+        $.post('/shop_style/save',{
+            id:inputVal
+        },function (data) {
+            layer.msg(data.message)
+        })
+
+    })
+
+    $('#delColor').on('click', function () {
+
+        var checkedInputEle = $('input[name=style]:checked')
+
+        $.post('/shop_style/delete', {
+            id: checkedInputEle.val()
+        },function (data) {
+            if (data.code == 0){
+
+                var currentDivEle = checkedInputEle.parent()
+
+                // 父元素前面有元素
+                if (currentDivEle.prevAll().length > 0){
+                    // 设为当前
+                    setCurrent(currentDivEle.prev())
+                }else if (currentDivEle.nextAll().length > 0){
+                    setCurrent(currentDivEle.next())
+                } else{
+                    setCurrent($('.colorList').children('div').eq(0))
+                }
+                
+                checkedInputEle.parent().remove()
+            }
+            layer.msg(data.message)
+        })
+    })
+
+    function setCurrent(ele){
+        ele.children('input').prop('checked','checked')
+
+        $('.colorList').children('.checked').removeClass('checked')
+        ele.addClass('checked')
+
+        var colorDiv = ele.children('div')
+
+        setColor(colorDiv.eq(0).data(),colorDiv.eq(1).data())
+    }
+
+    $('.color-picker').ColorPicker({
+        color: {
+            r: 0,
+            g: 0,
+            b: 0,
+        },
+        flat: false,
+        onSubmit: function (hsb, hex, rgb, el) {
+            $('.colorList').find('.checked').removeClass('checked')
+            $('input[name=style]:checked').prop('checked', false)
+            $(el).data('r', rgb.r).data('g', rgb.g).data('b', rgb.b).children('div').css({backgroundColor: 'rgb(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ')'})
+            $('.colorpicker').hide()
+            setColor($('#primary_color').data(), $('#deputy_color').data())
+        }
+    });
+
+    $('.colorList').on('click', '> div', function () {
+        var th = $(this)
+        if (!th.hasClass('checked')) {
+            // 设置好选中哪个
+            th.addClass('checked').siblings('div.checked').removeClass('checked');
+            th.children('input').prop('checked', true)
+            th.parent().siblings('.colorList').children('.checked').removeClass('checked')
+
+            var children = th.children('div')
+            var primaryColor = children.eq(0).data()
+            var deputyColor = children.eq(1).data()
+
+            // 设置颜色
+            setColor(primaryColor, deputyColor)
+        }
+
+    })
+
+    function setColor(primaryColor, deputyColor) {
+        // 设置颜色
+        // 主颜色背景色
+        $('.primary-color-background').css({backgroundColor: `rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b})`})
+        // 主颜色文字颜色
+        $('.primary-color-font').css({color: `rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b})`})
+        // 主颜色边框颜色
+        $('.primary-color-border').css({borderColor: `rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b})`})
+        // 主颜色图片颜色
+        $('.primary-color-img').css({filter: `drop-shadow(100px 0 rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b}))`})
+
+        // 副颜色背景色
+        $('.deputy-color-background').css({backgroundColor: `rgb(${deputyColor.r},${deputyColor.g},${deputyColor.b})`})
+        // 副颜色文字颜色
+        $('.deputy-color-font').css({color: `rgb(${deputyColor.r},${deputyColor.g},${deputyColor.b})`})
+        // 副颜色边框颜色
+        $('.deputy-color-border').css({borderColor: `rgb(${deputyColor.r},${deputyColor.g},${deputyColor.b})`})
+        // 副颜色图片颜色
+        $('.deputy-color-img').css({filter: `drop-shadow(100px 0 rgb(${deputyColor.r},${deputyColor.g},${deputyColor.b}))`})
+
+        // 如果副颜色与白色太相近则对比颜色设置为主颜色
+        if ((765 - (deputyColor.r + deputyColor.g + deputyColor.b)) < 100) {
+            // 特殊颜色背景色
+            $('.contrast-color-background').css({backgroundColor: `rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b})`})
+            // 副颜色文字颜色
+            $('.contrast-color-font').css({color: `rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b})`})
+            // 副颜色边框颜色
+            $('.contrast-color-border').css({borderColor: `rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b})`})
+            // 副颜色图片颜色
+            $('.contrast-color-img').css({filter: `drop-shadow(100px 0 rgb(${primaryColor.r},${primaryColor.g},${primaryColor.b}))`})
+        } else {
+            // 特殊颜色背景色
+            $('.contrast-color-background').css({backgroundColor: `rgb(255,255,255)`});
+            // 副颜色文字颜色
+            $('.contrast-color-font').css({color: `rgb(255,255,255)`});
+            // 副颜色边框颜色
+            $('.contrast-color-border').css({borderColor: `rgb(255,255,255)`});
+            // 副颜色图片颜色
+            $('.contrast-color-img').css({filter: `drop-shadow(100px 0 rgb(255,255,255))`})
+        }
+    }
+</script>
+{/block}

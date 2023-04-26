@@ -1,0 +1,87 @@
+input:-webkit-autofill {
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
+}
+
+@-webkit-keyframes autofill {
+    to {
+        /*color: #fff;*/
+        background: transparent;
+    }
+}
+.sller_login .logo{
+    position: absolute;
+    top:48px;
+    left: 34px;
+    z-index: 3;
+}
+.tipPic{
+    width: 507px;
+    height: 482px;
+    background: rgba(0,0,0,0.5);
+}
+.formText{
+    background: #fff!important;
+    border-radius: 2px;
+    margin-bottom: 24px!important;
+}
+.submitDiv{
+    background: none!important;
+}
+.login_check .check + label {
+    -webkit-appearance: none;
+    background: url("../images/check_login.png") no-repeat center left;
+    background-size: 12px 12px;
+    padding-left: 20px;
+    display: inline-block;
+    margin-bottom: 0;
+    font-size: 12px;
+    line-height: 20px;
+    color: #fff;
+}
+.login_check .check{
+    display: none;
+}
+.login_check .check:checked + label {
+    background: url("../images/checked_login.jpg") no-repeat center left;
+    background-size: 12px 12px;
+    position: relative;
+}
+.formInfo .submitDiv{
+    padding-top: 15px!important;
+}
+#slider{
+    display: none;
+}
+
+@media screen and (max-width: 500px) {
+    .tipPic {
+        display: none;
+    }
+    .ecsc-login-container{
+        width: 100%;
+        margin-top: -270px;
+    }
+    .ecsc-login-container .container,.ecsc-login-container .container .wrap{
+        width: 320px;
+        margin: 0 auto;
+    }
+    .sller_login .logo{
+        display: none;
+    }
+    .sller_login{
+        overflow-y: hidden;
+        min-height: 100%;
+        position: absolute;
+        top:0;
+        left: 0;
+        width: 100%;
+    }
+    #slider{
+        display: block;
+    }
+    #drag{
+        display: none;
+    }
+
+}

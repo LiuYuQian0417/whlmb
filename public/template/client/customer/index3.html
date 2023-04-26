@@ -1,0 +1,336 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+<script src="__RES__/js/jquery-1.10.2.min.js"></script>
+<script src="__RES__/js/vue.min.js"></script>
+<script src="__RES__/js/axios.min.js"></script>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="serviceContent" id="app">
+    <div class="serviceList">
+        <div class="title">选择客服</div>
+        <div class="list">
+            <ul id="accordion" class="accordion">
+                {volist name="$data" id="customer"}
+                <li>
+                    <div class="link"><i class="fa fa-chevron-down"></i>{$customer.name}</div>
+                    <ul class="submenu">
+                        {volist name="$customer.customerRel" id="customer_list"}
+                        <li
+                                class="customer" id="{$customer_list.customer_id}"
+                                @click="customer({$customer_list.customer_id},'{$customer_list.account}','{$customer_list.img}')"><img
+                                src="{$customer_list.img}" alt=""
+                                class="icon">
+                            <div class="name">{$customer_list.account}</div>
+                        </li>
+                        {/volist}
+                    </ul>
+                </li>
+                {/volist}
+            </ul>
+
+        </div>
+
+    </div>
+    <div class="serviceDetail" :class="{'show':isShow}">
+        <div v-if="contactList.length != 0">
+            <div class="detHead">
+                <div>
+                    <div class="serviceName">{{serviceName}}</div>
+                    <div class="and">与</div>
+                    <div class="userList">
+                        <i class="fa fa-chevron-down iconMore" :class="{'rotate':isShowList}"></i>
+                        <div class="userInfo current" v-for="item in currentList" @click="contactor()">
+                            <img :src="item.avatar" :key="item.avatar" alt="" class="userPic">
+                            <div class="name">{{item.nickname}}</div>
+                        </div>
+                        <div class="linkman" v-show="isShowList">
+                            <ul>
+                                <li class="userInfo" v-for="(item,index) in contactList"
+                                    @click="current(item.member_id,index)">
+                                    <img :src="item.avatar" :key="item.avatar" alt="" class="userPic">
+                                    <div class="name">{{item.nickname}}</div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chatCon">
+                <div class="con" @scroll="scroll(this)" ref="con">
+                    <div style="text-align: center;padding: 10px" v-show="is_more"
+                         @click="current(currentList[0]['member_id'],'a')"><a href="javascript:">查看更多</a></div>
+                    <div v-if="!isFinish" v-for="item in messageList" :key="item.id">
+                        <!--收到的消息-->
+                        <div class="receive" v-if="item.type == 'USER'">
+                            <img :src="item.avatar" :key="item.avatar" class="icon">
+                            <div>
+                                <div class="state">
+                                    <div class="name">{{currentList[0].nickname}}</div>
+                                    <div class="time">{{new
+                                        Date(item.message.MESSAGE_ID).toLocaleDateString().replace(/\//g, "-") + " " +
+                                        new Date(item.message.MESSAGE_ID).toTimeString().substr(0, 8)}}
+                                    </div>
+                                </div>
+                                <!--文本-->
+                                <div class="info" v-if="item.message.MESSAGE_TYPE == 'TEXT'">
+                                    <div>{{item.message.MESSAGE_DATA}}</div>
+                                </div>
+                                <!--图片-->
+                                <div class="info image" v-else-if="item.message.MESSAGE_TYPE == 'IMAGE'">
+                                    <img :src="item.message.MESSAGE_DATA" alt="">
+                                </div>
+                                <!--语音-->
+                                <div class="info voice" v-else-if="item.message.MESSAGE_TYPE == 'VOICE'">
+                                    <audio preload="auto">
+                                        <source :src="item.message.MESSAGE_DATA" type="audio/weba">
+                                    </audio>
+                                </div>
+                                <!--商品-->
+                                <div class="info goods" v-else-if="item.message.MESSAGE_TYPE == 'GOODS'">
+                                    商品
+                                </div>
+                                <!--订单-->
+                                <div class="info image" v-else-if="item.message.MESSAGE_TYPE == 'ORDER'">
+                                    订单
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--收到的消息-->
+                        <!--发出的消息-->
+                        <div class="send" v-else>
+                            <div>
+                                <div class="state">
+                                    <div class="name">{{serviceName}}</div>
+                                    <div class="time">{{new
+                                        Date(item.message.MESSAGE_ID).toLocaleDateString().replace(/\//g, "-") + " " +
+                                        new Date(item.message.MESSAGE_ID).toTimeString().substr(0, 8)}}
+                                    </div>
+                                </div>
+                                <div class="info" v-if="item.message.MESSAGE_TYPE == 'TEXT'">
+                                    <div>{{item.message.MESSAGE_DATA}}</div>
+                                </div>
+                                <div class="info image" v-else-if="item.message.MESSAGE_TYPE == 'IMAGE'">
+                                    <img :src="item.message.MESSAGE_DATA" alt="">
+                                </div>
+                            </div>
+                            <img :src="serviceImg" alt="" class="icon">
+
+                        </div>
+                        <!--发出的消息-->
+                    </div>
+                </div>
+                <!--加载中-->
+                <div class="loadMask" v-show="show">
+                    <img src="__RES__/images/load.gif" alt="" class="load">
+                </div>
+                <div class="empty" v-if="isFinish">
+                    <div>
+                        <img src="__RES__/images/record.svg" alt="">
+                        暂无消息记录
+                    </div>
+                </div>
+
+            </div>
+            <!--<div style="display: flex;align-items: center;justify-content:flex-end;margin-top: 15px;">-->
+            <!--<div class="layui-input-block" style="margin-left: 0;font-size: 15px;line-height: 38px;font-weight: bold">选择消息记录时间</div>-->
+            <!--<input type="text" class="layui-input" id="date" style="width: 240px;margin-left: 10px;">-->
+            <!--</div>-->
+        </div>
+        <div class="none" v-show="show_contact">
+            <div>
+                <img src="__RES__/images/list.svg" alt="" class="">
+                <span>暂无联系人列表</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var Accordion = function (el, multiple) {
+            this.el = el || {};
+            this.multiple = multiple || false;
+            var links = this.el.find('.link');
+            links.on('click', {el: this.el, multiple: this.multiple}, this.dropdown)
+        }
+        Accordion.prototype.dropdown = function (e) {
+            var $el = e.data.el;
+            $this = $(this), $next = $this.next();
+            $next.slideToggle();
+            $this.parent().toggleClass('open');
+            if (!e.data.multiple) {
+                $el.find('.submenu').not($next).slideUp().parent().removeClass('open');
+            }
+            ;
+        }
+        var accordion = new Accordion($('#accordion'), false);
+
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#date' //指定元素
+                , range: true
+                , min: '2018-1-1'
+                , max: '2019-12-31'
+            });
+        });
+
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data() {
+            return {
+                // 展示聊天信息
+                isShow: false,
+                // 选中的客服昵称
+                serviceName: '',
+                serviceImg: '',
+                // 联系人列表
+                contactList: [],
+                currentList: [],
+                isShowList: false,
+                //记录上次获取聊天记录用户id
+                last_member_id: 0,
+                // 客服id
+                customer_id: 0,
+                // 用户id
+                member_id: 0,
+                //上一次消息id
+                last_id: 0,
+                isFinish: true,
+                // 消息列表
+                messageList: [],
+                //加载遮罩层
+                show: true,
+                //无联系人
+                show_contact: false,
+                //是否显示更多
+                is_more: true
+            }
+        },
+        mounted() {
+
+        },
+        methods: {
+            /**
+             * 监听滚动条
+             */
+            scroll(e) {
+                // console.log(e)
+            },
+            getUserList() {
+                axios({
+                    url: '/client/Customer/get_member_list',
+                    method: 'POST',
+                    data: {
+                        customer_id: this.customer_id,
+                    }
+                }).then(res => {
+                    this.isShow = true;
+                    this.contactList = res.data.data;
+                    this.currentList = this.contactList.slice(0, 1)
+
+                    console.log(this.currentList)
+
+                    if (this.contactList.length == 0) {
+                        this.show_contact = true;
+                        this.member_id = 0
+                    } else {
+                        this.show_contact = false;
+                        this.member_id = this.currentList[0].member_id
+                        this.show = true
+                    }
+                    this.getMessage()
+                })
+            },
+            getMessage() {
+
+                this.alter_more_state();
+
+                let conScrollHeight = 0
+
+                axios({
+                    url: '/client/Customer/get_message_list',
+                    method: 'POST',
+                    data: {
+                        customer_id: this.customer_id,
+                        member_id: this.member_id,
+                        last_id: this.last_id,
+                    }
+                }).then(res => {
+                    conScrollHeight = this.$refs.con.scrollHeight
+                    if (res.data.last_id == -1) {
+                        this.is_more = false;
+                    }
+                    if (this.last_member_id == this.member_id) {
+                        var data_list = res.data.data;
+                        this.messageList = data_list.concat(this.messageList)
+                    } else {
+                        this.last_member_id = this.member_id;
+                        this.messageList = res.data.data;
+                    }
+
+                    this.show = this.isFinish = false;
+                    this.last_id = res.data.last_id;
+
+                    this.$nextTick(() => {
+                        this.$refs.con.scrollTop = this.$refs.con.scrollHeight - conScrollHeight
+                    })
+
+                })
+            },
+            /**
+             * 客服选择
+             */
+            customer(customer_id, serviceName,serviceImg) {
+                this.serviceName = serviceName;
+                this.serviceImg = serviceImg;
+                this.customer_id = customer_id;
+                this.getUserList()
+            },
+            /**
+             * 选择用户
+             */
+            contactor() {
+                this.isShowList = !this.isShowList
+            },
+            /**
+             * 聊天记录
+             */
+            current(member_id, index) {
+                this.show = true;
+                this.currentList = index === 'a' ? this.currentList : this.contactList.slice(index, index + 1);
+                this.isShowList = false;
+                this.member_id = member_id;
+                // this.alter_more_state();
+                this.getMessage()
+            },
+            //判断是否获取更多消息操作
+            alter_more_state() {
+                console.log([this.last_member_id, this.member_id]);
+                if (this.last_member_id != this.member_id) {
+                    this.is_more = true;
+                    this.last_id = 0;
+                }
+            }
+
+        },
+    })
+</script>
+
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}

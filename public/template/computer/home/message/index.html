@@ -1,0 +1,284 @@
+{extend name='public/my_header' /}
+{block name='content_css'}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+
+<link rel="stylesheet" href="__RES__/css/my/InfoNotification.css"/>
+<!--物流消息css-->
+<link rel="stylesheet" href="__RES__/css/my/InfoLogistics.css"/>
+<!--消息css-->
+<link rel="stylesheet" href="__RES__/css/my/MyInfo.css"/>
+<!--优惠css-->
+<link rel="stylesheet" href="__RES__/css/my/InfoCoupon.css"/>
+{/block}
+{block name="content"}
+<!--我的消息主体-->
+<div class="my-info">
+    <div class="index-box">
+        <!--我的左侧-->
+        {include file="public/my_left" /}
+        <!-- 我的右侧 -->
+        <div class="index-right">
+            <div class="info-center" style="background-color: #fff">
+                {switch name=":input('type',0)"}
+                {case 0}
+                <!--普通通知-->
+                <div class="info-notification">
+                    <h5 class="title">
+                        通知
+                    </h5>
+                    <div class="info-notification-list">
+                        {empty name='$result'}
+                        <div class="indent-box indent-box-emty">
+                            <img src="__RES__/imgs/orderemty.png" alt="">
+                            <p>暂无数据</p>
+                        </div>
+                        {/empty}
+                        {volist name="$result" id="item"}
+                        <div class="list">
+                            <a href="javascript:jump_state(this,'{$item.jump_state}','{$item.attach_id}')" >
+                                <div class="tit">
+                                    {$item.title}
+                                    <span class="time">{$item.date_time}</span>
+                                </div>
+                                <div class="goods-list">
+                                    <img src="{$item.file}" alt="">
+                                    <div class="goods-right">
+                                        <p class="goods-name" style="white-space:normal">
+                                            {$item.describe}
+                                        </p>
+                                        {notin name='item.jump_state' value='-1,9,3,8,16'}
+
+                                        <p class="go primary-color">
+                                        go>>
+                                        </p>
+                                        {/notin}
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+                {/case}
+                {case 1}
+                <!--物流通知-->
+                <div class="info-logistics">
+                    <h5 class="title">
+                        交易物流
+                    </h5>
+                    <div class="info-logistics-list">
+                        {empty name='$result'}
+                        <div class="indent-box indent-box-emty">
+                            <img src="__RES__/imgs/orderemty.png" alt="">
+                            <p>暂无数据</p>
+                        </div>
+                        {/empty}
+                        {volist name="$result" id="item"}
+                        <div class="list">
+                            <a href="javascript:jump_state(this,'{$item.jump_state}','{$item.attach_id}')" data-express_type="{$item.express_type}" data-express_value="{$item.express_value}" data-express_number="{$item.express_number}">
+                                <div class="tit">
+                                    {$item.title}
+                                    <span class="time">{$item.date_time}</span>
+                                </div>
+                                <div class="goods-list">
+                                    <img src="{$item.file}" alt="">
+                                    <div class="goods-right">
+                                        <p class="goods-name">
+                                            {$item.describe}
+                                        </p>
+                                        {notempty name="$item.express_number"}
+                                        <p class="indent-number">
+                                            <span>运单编号：{$item.express_number}</span>
+                                        </p>
+                                        {/notempty}
+                                        <p class="go">
+                                            去看看
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+                {/case}
+                {case 2}
+                <!--优惠通知-->
+                <div class="info-coupon">
+                    <h5 class="title">
+                        优惠
+                    </h5>
+                    <div class="info-coupon-list">
+                        {empty name='$result'}
+                        <div class="indent-box indent-box-emty">
+                            <img src="__RES__/imgs/orderemty.png" alt="">
+                            <p>暂无数据</p>
+                        </div>
+                        {/empty}
+                        {volist name="$result" id="item"}
+                        <div class="list">
+                            <a {if time() <= strtotime($item.end_time)} href="javascript:jump_state(this,'{$item.jump_state}','{$item.attach_id}')" {/if}>
+                                <div class="tit">
+                                    {$item.title}
+                                </div>
+                                <div class="goods-list">
+                                    <div>
+                                        <img src="{$item.file}" alt="">
+                                        <!--活动结束-->
+                                        {if time() > strtotime($item.end_time)}
+                                        <div class="over">
+                                            活动结束
+                                        </div>
+                                        {/if}
+                                    </div>
+                                    <p style=" overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{$item.describe}</p>
+                                </div>
+                                <div class="list-bottom">
+					                <span class="time">
+					                  {$item.date_time}
+					                </span>
+                                    <div class="right">
+                                        <a href="/pc2.0/message/discounts_examine?article_id={$item.attach_id}">点击查看></a>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+                {/case}
+                {/switch}
+                <div >
+                    <!--分页-->
+                    <div class="pageContainer" style="width: auto">{$result|raw}</div>
+                </div>
+            </div>
+            <div class="info-right-list">
+                <!--active 选中-->
+                <a class="list " href="{:url('/pc2.0/message/index')}?type=1">
+                    <img class="default" src="__RES__/imgs/my/logistics.png" alt="">
+                    <img class="chosen" src="__RES__/imgs/my/active-logistics.png" alt="">
+                    <div class="list-right">
+                        <p class="tit">交易物流</p>
+                        <p class="info">{$statistics.express|default=0}条未读</p>
+                    </div>
+                </a>
+                <a class="list" href="{:url('/pc2.0/message/index')}?type=0">
+                    <img class="default" src="__RES__/imgs/my/notification.png" alt="">
+                    <img class="chosen" src="__RES__/imgs/my/active-notification.png" alt="">
+                    <div class="list-right">
+                        <p class="tit">通知</p>
+                        <p class="info">{$statistics.common|default=0}条未读</p>
+                    </div>
+                </a>
+                <a class="list" href="{:url('/pc2.0/message/index')}?type=2">
+                    <img class="default" src="__RES__/imgs/my/discounts.png" alt="">
+                    <img class="chosen" src="__RES__/imgs/my/active-discounts.png" alt="">
+                    <div class="list-right">
+                        <p class="tit">优惠</p>
+                        <p class="info">{$statistics.activity|default=0}条未读</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<!--我的消息主体结束-->
+<script type="text/javascript">
+    $(function(){
+        $('.pagination .active').addClass('primary-color')
+        //设置当前选择样式
+        switch ("{:input('type',0)}") {
+        case '0':
+            $('.info-right-list a').eq(1).addClass('active');
+            break;
+        case '1':
+            $('.info-right-list a').eq(0).addClass('active');
+            break;
+        case '2':
+            $('.info-right-list a').eq(2).addClass('active');
+            break;
+        }
+    });
+    //跳转
+    function jump_state(e,state,attach_id){
+        var jump_href='';
+        switch (state) {
+            //积分
+            case 'integral':
+                jump_href='/pc2.0/integral/my';
+                break;
+            case '11':
+                jump_href='/pc2.0/integral/my';
+                break;
+            //会员
+            case 'member':
+                jump_href='';
+                break;
+            case '3':
+                jump_href='';
+                break;
+            //红包
+            case 'packet':
+                jump_href='/pc2.0/member_packet/index';
+                break;
+            case '14':
+                jump_href='/pc2.0/member_packet/index';
+                break;
+            //优惠券
+            case 'coupon':
+                jump_href='/pc2.0/member_coupon/index';
+                break;
+            //购物车
+            case 'shopping':
+                jump_href='/pc2.0/cart/index';
+                break;
+            //收藏商品
+            case 'collect_goods':
+                jump_href='/pc2.0/goods/collect_goods_list';
+                break;
+            //商品
+            case 'goods':
+                jump_href='/pc2.0/goods/view?goods_id='+attach_id;
+                break;
+            //商品
+            case '4':
+                jump_href='/pc2.0/goods/view?goods_id='+attach_id;
+                break;
+            //订单
+            case 'order':
+                jump_href='/pc2.0/order/order_details?order_attach_id='+attach_id;
+                break;
+            case '0':
+                jump_href='/pc2.0/order/order_details?order_attach_id='+attach_id;
+                break;
+            //物流
+            case 'express':
+                jump_href='/pc2.0/order/order_details?order_attach_id='+attach_id;
+                break;
+            //退款
+            case 'refund':
+                jump_href='/pc2.0/order/order_details?order_attach_id='+attach_id;
+                break;
+            case '6':
+                jump_href='/pc2.0/order/order_details?order_attach_id='+attach_id;
+                break;
+            //文章
+            case 'article':
+                jump_href='/pc2.0/message/discounts_examine?article_id='+attach_id;
+                break;
+            case '5':
+                jump_href='/pc2.0/message/discounts_examine?article_id='+attach_id;
+                break;
+            //分销
+            case 'distribution':break;
+        }
+        if(jump_href != ''){
+            window.location.href=jump_href
+        }
+    }
+</script>
+{/block}

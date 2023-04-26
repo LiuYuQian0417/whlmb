@@ -1,0 +1,104 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+        <div class="main-content" id="mainContent">
+            <form method="get" class="layui-form" action="" >
+            <div class="tabmenu">
+            <ul class="tab">
+                <li class="active"> <a href="javascript:;">商品评价</a> </a></li>
+            </ul>
+        </div>
+                <div class="content">
+                    <div class="explanation" id="explanation">
+                        <div class="ex_tit">
+                            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                        </div>
+                        <ul>
+                            <li><span>展示了所有用户评论商品的相关信息</span></li>
+                            <li><span>可以屏蔽评论或者删除评论，也可以直接回复评论。</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-div" id="listDiv">
+                    <table class="ecsc-default-table">
+                        <thead>
+                        <tr>
+                            <th width="6%">
+                                <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" />
+                            </th>
+                            <th width="5%">编号</th>
+                            <th width="10%">用户名称</th>
+                            <th width="10%">商品名称</th>
+                            <th width="6%">商品评价等级</th>
+                            <th width="6%">店铺评价等级</th>
+                            <th width="6%">物流评价等级</th>
+                            <th width="15%">评价时间</th>
+                            <th width="5%">回复状态</th>
+                            <th width="15%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {empty name='data'}
+                        <tr><td class="no-records" colspan="10">没有找到任何记录</td></tr>
+                        {/empty}
+                        {volist name='data' id='item'}
+                        <tr>
+                            <td><input type="checkbox" value="{$item.goods_evaluate_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+                            <td>{$item.goods_evaluate_id}</td>
+                            <td>{$item.nickname|default='未设置'}</td>
+                            <td>{$item.goods_name}</td>
+                            <td>{$item.star_num}星</td>
+                            <td>{$item.store_star_num}星</td>
+                            <td>{$item.express_star_num}星</td>
+                            <td>{$item.create_time}</td>
+                            <td>{eq name="item.reply" value=""}
+                                 未回复
+                                {else/}
+                                  已回复
+                                {/eq}
+                             </td>
+                            <td class="ecsc-table-handle tr">
+                                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('client/goods_evaluate/edit?id={$item.goods_evaluate_id}')"><i
+                                        class="fa fa-edit"></i>查看</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="2">
+                                <a class="sc-btn sc-red-btn" onclick="main.destroy('/client/goods_evaluate/destroy')"><i class="fa fa-trash-o" style="margin-right: 5px;"></i>多选删除</a>
+                            </td>
+                            <td colspan="20">
+                                {:$data->render()}
+                            </td>
+
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+    main.form([{selector:'switch(status)',callback:function (data) {
+        main.ajax({type:'post',url:'/client/goods_evaluate/auditing',data:{'id': data.value},callback:main.callback});
+    }}]);
+</script>
+{/block}
+

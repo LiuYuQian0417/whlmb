@@ -1,0 +1,177 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+<div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+        <li class="{:input('get.type',0)?:'layui-this'}">
+            <a href="javascript:reloadSelf({type:0});">
+                充值记录
+            </a>
+        </li>
+
+        <!--<li class="{:input('get.type',0)?'layui-this':''}">-->
+            <!--<a href="javascript:reloadSelf({type:1});">-->
+                <!--提现申请-->
+            <!--</a>-->
+        <!--</li>-->
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>该页面展示所有充值会员信息列表。</span></li>
+            <li><span>可以输入会员名称关键字进行搜索，侧边栏可进行高级搜索。</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form" method="get">
+    <div class="common-head">
+        <div class="fl">
+            <!--<a href="javascript:void(0);" class="left" onClick="main.jumpFour('consumption/create')">-->
+                <!--<div class="fbutton">-->
+                    <!--<div class="add" title="添加申请"><span><i class="fa fa-plus"></i> 添加申请</span></div>-->
+                <!--</div>-->
+            <!--</a>-->
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i
+                        class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="layui-input-block" style="float: left;margin-left: 0;padding-top: 0;margin-right: 10px;">
+                    <div class="layui-input-inline">
+                        <input type="text" name="start_date" id="start_date" lay-verify="datetime" placeholder="不限" value="{:input('start_date','')}" readonly autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline" style="margin-left: 8px;">
+                        <input type="text" name="end_date" id="end_date" lay-verify="datetime" placeholder="至今" value="{:input('end_date','')}" readonly autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="imitate_select">
+                    <select name="way" class="cite ps-container">
+                        <option value="-1">支付方式</option>
+                        <option value="1" {eq name=":input('way')" value="1" }selected{/eq}>支付宝</option>
+                        <option value="2" {eq name=":input('way')" value="2" }selected{/eq}>微信</option>
+                        <!--<option value="3" {eq name=":input('way')" value="3" }selected{/eq}>银行卡</option>-->
+                        <!--<option value="4" {eq name=":input('way')" value="4" }selected{/eq}>余额</option>-->
+                        <option value="5" {eq name=":input('way')" value="5" }selected{/eq}>线下</option>
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入会员名称"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                    <!--<input type="submit" class="btn" name="secrch_btn" value="">-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="搜索">
+            </div>
+        </div>
+        <!--导航-->
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <!--<th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>-->
+            <th>编号</th>
+            <th>会员名称</th>
+            {eq name=':input("type")' value='1'}
+            <th>店铺名称</th>
+            {/eq}
+            <th>类型</th>
+            <th>金额</th>
+            <th>支付方式</th>
+            <th>到款状态</th>
+            <th>创建日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach name='data' item='v'}
+        <tr>
+            <!--<td><input type="checkbox" value="{$v.consumption_id}" class="chk" lay-filter="chk" title="" lay-skin="primary"/>-->
+            </td>
+            <td>{$v.consumption_id}</td>
+            <td>{$v.nickname?:'未设置'}</td>
+            {eq name=':input("type")' value='1'}
+            <td>{$v.store_name}</td>
+            {/eq}
+            <td>{$v.type}</td>
+            <td>{$v.price}元</td>
+            <td>{$v.way}</td>
+            <td>{$v.status}</td>
+            <td>{$v.create_time}</td>
+            <td>
+                <a class="btn_edit" onclick="main.jumpFour('consumption/edit?id={$v.consumption_id}')"><i class="fa fa-edit"></i>查看</a>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <!--<input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>-->
+                    </div>
+                    <!--<a class="btn_trash" onclick="main.destroy('/consumption/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>-->
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    //重定向本身
+    function reloadSelf(condition) {
+        var param = '', key = Object.keys(condition);
+
+        if (key.length > 0) {
+            for (var x in condition) {
+                param += '&' + x + '=' + condition[x];
+            }
+            param = param.substr(1);
+        }
+
+        location.href = '?' + param;
+    }
+
+    main.laydate([{
+        elem: '#start_date',
+        type: 'datetime'
+    },{
+        elem: '#end_date',
+        type: 'datetime'
+    }]);
+</script>
+{/block}

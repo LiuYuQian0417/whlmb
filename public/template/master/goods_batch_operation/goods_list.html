@@ -1,0 +1,145 @@
+{extend name='layout/frame' /}
+{block name='title'}
+{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>展示了商品类型的相关信息。</li>
+                <li>可以通过商品类型关键字搜索相关商品类型信息。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--导航-->
+<!--逐一编辑-->
+
+    <form class="layui-form" action="" method="post">
+    <div class="semi-circle3"></div>
+        {if condition="$type eq 1"}
+    <!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr class="batch_tr">
+            <th width="30" class="table_num">货号</th>
+            <th>商品名称</th>
+            <th>市场价</th>
+            <th>本店价格</th>
+            <th>库存</th>
+            <th>库存警示</th>
+            <th>品牌</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr >
+            <td style="width: 10%">{$item.goods_sn}</td>
+            <td style="width: 50%">{$item.goods_name}</td>
+            <td style="width: 5%" ><input value="{$item.market_price}" name="market_price[]" class="batch_td" ></td>
+            <td style="width: 5%"><input value="{$item.shop_price}"   name="shop_price[]" class="batch_td"></td>
+            <td style="width: 5%"><input value="{$item.goods_number}" name="goods_number[]" class="batch_td"></td>
+            <td style="width: 5%"><input value="{$item.warn_number}"  name="warn_number[]" class="batch_td"></td>
+            <td style="width:20%">
+                <select name="brand_id[]" class="cite ps-container">
+                    {volist name="brandData" id="brand"}
+                    {$brand.brand_id}<option value="{$brand.brand_id}" {eq name="$brand['brand_id']?:''" value="$item['brand_id']?:''"}selected{/eq}>{$brand.brand_name}</option>
+                    {/volist}
+                </select>
+            </td>
+           <input type="hidden" value="{$item.goods_id}" name="goods_id[]" >
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+        <!--逐一编辑end-->
+        {/if}
+        {if condition="$type eq 0"}
+        <!--列表-->
+
+        <table class="layui-table">
+            <thead>
+            <tr class="batch_tr">
+                <th>商品名称</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="item"}
+            <tr >
+                <td style="width: 5%">{$item.goods_name}</td>
+                <input type="hidden" value="{$item.goods_id}" name="goods_id[]" >
+            </tr>
+            {/volist}
+            </tbody>
+        </table>
+
+        <table class="layui-table">
+            <thead>
+            <tr class="batch_tr">
+                <th>市场价</th>
+                <th>本店价格</th>
+                <th>库存</th>
+                <th>库存警示</th>
+                <th>品牌</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr >
+
+                <td style="width: 5%"><input value="" name="market_price"   datatype="*"
+                                             nullmsg="请输入商品市场售价" errormsg="商品市场售价格式错误" class="batch_td"></td>
+                <td style="width: 5%"><input value=""    datatype="*"
+                                             nullmsg="请输入商品售价" errormsg="商品售价格式错误" name="shop_price" class="batch_td"></td>
+                <td style="width: 5%"><input value=""  datatype="*"
+                                             nullmsg="请输入商品库存" errormsg="商品库存格式错误" name="goods_number" class="batch_td"></td>
+                <td style="width: 5%"><input value=""    datatype="*"
+                                             onblur="if (this.value >= parseInt($('[name=\'goods_number\']').val())){layer.msg('预警值应小于库存值');this.value='';$(this).focus();}"
+                                             nullmsg="请输入商品库存预警值" errormsg="商品库存预警值格式错误" name="warn_number" class="batch_td"></td>
+                <td style="width:20%">
+                    <select name="brand_id" class="cite ps-container">
+                        {volist name="brandData" id="brand"}
+                        {$brand.brand_id}<option value="{$brand.brand_id}">{$brand.brand_name}</option>
+                        {/volist}
+                    </select>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+    \
+        {/if}
+        <div class="contentShellBtn">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                </div>
+            </div>
+        </div>
+</form>
+
+
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}
+

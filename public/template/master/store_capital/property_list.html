@@ -1,0 +1,192 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this{
+        background-color:#fff!important;
+    }
+    .show{
+        margin-top:1%;padding: 20px; background-color: #F2F2F2;
+    }
+    .font-style{
+        color: #f23030;font-weight: bold;font-size: 20px;
+    }
+    .collect_display td{border: hidden!important;}
+</style>
+<!--金额数据begin-->
+<div class="layui-table goods-list" style="width: 100%">
+    <table class="ecsc-default-table ecsc-table-seller mt20 layui-table">
+        <tbody>
+        <tr>
+            <td>
+                <p style="line-height: 30px">待结算金额</p>
+                <p><span class="font-style">{$for_the|number_format=###,2}</span>元</p>
+            </td>
+            <td>
+                <p style="line-height: 30px">已结算金额</p>
+                <p><span class="font-style">{$closing_already|default=0|number_format=###,2}</span>元</p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--金额数据end-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>每个商家都有自己的结算周期，每个结算周期都会生成一个结算账单，周期内所有订单出账后，商家可发起提现，提现到对公账户或个人账户；<li>
+            <li>账单计算公式：商家结算金额=商家订单实际收款金额+平台优惠券+平台红包-运费-分销返佣-平台使用费-退款；</span></li>
+            <li>账单处理流程：系统自动出账 > 账单对账>商家提现>平台审核>线下转账>提现成功；</li>
+            <li>账单出账时间：当周期内的所有订单都已经确认收货，并不在发生退款退货时，即可出账，例如：订单在1号确认收货，商城设置“申请售后期限：为7天，那么此笔订单会在8号出账；</li>
+            <li>平台承担活动款：是指由拼平台发起的活动所产生的金额，此金额是由平台承担，例如平台方红包、平台优惠券；</li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+
+
+
+<form class="layui-form" id="searchForm">
+
+
+    <div class="common-head">
+        <div style="height: 30px;">
+
+            <div style="float: left;line-height: 30px;">店铺结算列表（共{:$data->total()}条记录）</div>
+
+            <!--<div class="inquire_search" style="border: none">-->
+
+                <!--<div class="inquire" style="display: flex;border: none;overflow: visible">-->
+                    <!--<input type="text" name="keywords" value="{:input('keywords','')}" autocomplete="off" placeholder="请输入店铺名称关键词" class="layui-input" style="margin-right: 10px;">-->
+                    <!--<select name="keywords_type" lay-filter="word">-->
+                        <!--<option value="0" {eq name=":input('keywords_type','0')" value='0' } selected {/eq}>全部</option>-->
+                        <!--<option value="1" {eq name=":input('keywords_type','0')" value='1' } selected {/eq}>商品名称</option>-->
+                        <!--<option value="2" {eq name=":input('keywords_type','0')" value='2' } selected {/eq}>商品货号</option>-->
+                        <!--<option value="6" {eq name=":input('keywords_type','0')" value='6' } selected {/eq}>订单编号</option>-->
+                        <!--<option value="3" {eq name=":input('keywords_type','0')" value='3' } selected {/eq}>客户昵称</option>-->
+                        <!--<option value="4" {eq name=":input('keywords_type','0')" value='4' } selected {/eq}>收货人姓名</option>-->
+                        <!--<option value="5" {eq name=":input('keywords_type','0')" value='5' } selected {/eq}>收货人联系方式</option>-->
+                        <!--<option value="7" {eq name=":input('keywords_type','0')" value='7' } selected {/eq}>第三方支付单号</option>-->
+                    <!--</select>-->
+                    <!--&lt;!&ndash;<button class="layui-btn" lay-submit="">查询</button>&ndash;&gt;-->
+                    <!--<input type="submit" class="btn" name="secrch_btn" value="" style="margin-left: 10px;height:30px;padding-right:28px;border: 1px solid #dbdbdb">-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="inquire_search" >
+                <div class="imitate_select">
+                    <select name="shop" lay-filter="word">
+                        <option value="-1" {eq name=":input('shop','-1')" value='-1' } selected {/eq}>全部</option>
+                        <option value="0" {eq name=":input('shop','-1')" value='0' } selected {/eq}>自营店铺</option>
+                        <option value="2" {eq name=":input('shop','-1')" value='2' } selected {/eq}>公司店铺</option>
+                        <option value="1" {eq name=":input('shop','-1')" value='1' } selected {/eq}>个人店铺</option>
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="store_name" value="{:input('store_name','')}" autocomplete="off" placeholder="请输入店铺名称关键词" class="inquire_text nofocus" style="margin-right: 10px;">
+
+                    <!--<input type="submit" class="btn" name="secrch_btn" value="">-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+                <input type="button" class="btn search_btn" name="secrch_btn" onclick="dc()" value="导出店铺账单">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th width="10%" rowspan="2">所属店铺</th>
+                <th width="10%" rowspan="2">订单总数量</th>
+                <th width="30%" colspan="4">店铺应收金额</th>
+                <th width="10%" rowspan="2">本期应结</th>
+                <th width="10%" rowspan="2">结算状态</th>
+                <th width="10%" rowspan="2">账单日期</th>
+                <th width="20%" rowspan="2">操作</th>
+            </tr>
+            <tr>
+                <th>收款金额</th>
+                <th>活动款项</th>
+<!--                <th>运费</th>-->
+<!--                <th>退款金额</th>-->
+                <th>分销返佣</th>
+                <th>平台服务费</th>
+            </tr>
+            </thead>
+            <tbody>
+            {volist name="data" id="item"}
+            <tr>
+                <td>{$item.store_name}</td>
+                <td>{$item.order_number|default=0}</td>
+                <td>{$item.sum_pay_price|default=0}</td>
+                <td>{$item.sum_activity_price|default=0}</td>
+<!--                <td>{$item.sum_freight_price|default=0}</td>-->
+<!--                <td>{$item.sum_refund_price|default=0}</td>-->
+                <td>{$item.sum_brokerage_price}</td>
+                <td>{$item.costs}</td>
+                <td>{$item.should_be_price|default=0}</td>
+                <td>{eq name="item.check_status" value="1"}未出账{else/}<span style="color: #0BB20C">已出账，已转入余额</span>{/eq}</td>
+                <td>{$item.time}</td>
+                <td>
+                    <p>
+                        <a href="javascript:void(0);" onclick="main.jumpFour('store_capital/property_list_examine?check_order_id={$item.check_order_id|default=0}&check_status={$item.check_status|default=0}&order_number={$item.order_number|default=0}&should_be_price={$item.should_be_price|default=0}&time={$item.time|default=date(\'Y-m-d\')}')" class="btn_edit" style="margin-bottom: 3px;padding: 0px 7px">
+                            <i class="fa fa-edit"></i> 查看 </a>
+                    <a href="javascript:void(0);" class="btn_see" style="padding: 0px 7px" onclick="collect_display({$item.check_order_id})"> <i class="fa fa-navicon"></i> 支付汇总 </a></p>
+                </td>
+            </tr>
+            <tr style="display: none;" class="collect_display" id="collect_display_{$item.check_order_id}">
+                <td colspan="6">
+                    <table width="100%"  style="border: hidden" class="childTable">
+                        <tr>
+                            <td>支付宝支付</td>
+                            <td>微信支付</td>
+                            <td>银联支付</td>
+                            <td>余额支付</td>
+                            <td>货到付款</td>
+                        </tr>
+                        <tr>
+                            <td>{$item.alipay_price|default=0}</td>
+                            <td>{$item.wechat_price|default=0}</td>
+                            <td>{$item.unionpay_price|default=0}</td>
+                            <td>{$item.balance_price|default=0}</td>
+                            <td>{$item.offline_price|default=0}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <!--<tfoot>-->
+            <!--<tr>-->
+                <!--<td >-->
+                    <!--{:$data->render()}-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--</tfoot>-->
+        </table>
+        <div class="right">
+            {:$data->render()}
+        </div>
+    </div>
+</form>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    function dc(){
+        $("#searchForm").append("<input type='text' id='dc' name='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+    main.form();
+    //显示隐藏支付汇总
+    function collect_display(id){
+        $('#collect_display_'+id).toggle('5');
+    }
+</script>
+{/block}

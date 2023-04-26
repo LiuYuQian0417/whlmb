@@ -1,0 +1,158 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" class="layui-form">
+    <div class="main-content" id="mainContent">
+        <div class="tabmenu">
+            <ul class="tab">
+                <li><a href="javascript:;" onclick="main.jumpFour('client/group_activity/index')">拼团活动</a></li>
+                <li class="active"><a href="javascript:;" onclick="main.jumpFour('client/group_goods/index')">拼团商品</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <div class="explanation" id="explanation">
+                <div class="ex_tit">
+                    <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                </div>
+                <ul>
+                    <li>1、显示平台所有开团信息，可针对开团信息查看详情；</li>
+                    <li>2、进行中的拼团活动不可以删除，设置开团商品需要谨慎；</li>
+                    <li>3、同一商品只能参与一次拼团，同一个商品不可能有两种以上拼团活动；</li>
+                </ul>
+            </div>
+        </div>
+        <div class="btn-info">
+            <a class="sc-btn sc-blue-btn" href="javascript:void(0);"
+               onclick="main.jumpFour('client/group_goods/create')"><i class="icon-plus"></i>添加拼团商品</a>
+        </div>
+        <div class="search-info">
+            <div class="search-form">
+                <div class="imitate_select select_w145">
+                    <div class="cite">审核状态</div>
+                    <ul>
+                        <li><a href="javascript:;" data-value="-3" class="ftx-01">请选择审核状态</a></li>
+                        <li><a href="javascript:;" data-value="2" class="ftx-01">待审核</a></li>
+                        <li><a href="javascript:;" data-value="1" class="ftx-01">审核已通过</a></li>
+                        <li><a href="javascript:;" data-value="0" class="ftx-01">审核未通过</a></li>
+                    </ul>
+                    <input name="status" type="hidden" value="{:input('status','-3')}"/>
+                </div>
+                <div class="imitate_select select_w120 group_classify_id">
+                    <div class="cite" id="group_classify_id">商品分类</div>
+                    <ul>
+                        <li><a href="javascript:;" data-value="-3" class="ftx-01">请选择商品分类</a></li>
+                        {volist name="classifies" id="classify"}
+                        <li><a href="javascript:;" data-value="{$classify.group_classify_id}" class="ftx-01">{$classify.title}</a>
+                        </li>
+                        {/volist}
+                    </ul>
+                    <input name="group_classify_id" type="hidden" value="{:input('group_classify_id','-3')}">
+                </div>
+                <div class="search-key">
+                    <input type="text" name="keyword" value="{:input('get.keyword')}" size="30" class="text text_2"
+                           placeholder="商品名称"/>
+                    <!--<input type="submit" value=" 搜索 " class="submit"/>-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+
+        <div class="list-div" id="listDiv">
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll"
+                                                 lay-skin="primary"/></th>
+                    <th>编号</th>
+                    <th>名称</th>
+                    <th>拼购价</th>
+                    <th>原价</th>
+                    <th>库存</th>
+                    <th>几人团</th>
+                    <th>购买人次</th>
+                    <th>参与活动时间</th>
+                    <th>活动状态</th>
+                    <th>审核状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr>
+                    <td class="no-records" colspan="12">没有找到任何记录</td>
+                </tr>
+                {/empty}
+                {volist name="data" id="item"}
+                <tr>
+
+                    <td><input type="checkbox"
+                       {if condition="$item.status eq 1"} {if condition="$item.ActivityText neq '已结束'"} disabled {else/}class="chk" lay-filter="chk"{/if}{else/}class="chk" lay-filter="chk"{/if}
+                        value="{$item.group_goods_id}" title="" lay-skin="primary"/></td>
+                    <td>{$item.group_goods_id}</td>
+                    <td>{$item.goods_name?:'未设置'}</td>
+                    <td>{$item.group_price}</td>
+                    <td>{$item.shop_price}</td>
+                    <td>{$item.goods_number}</td>
+                    <td>{$item.group_num}人团</td>
+                    <td>{$item.CountText}</td>
+                    <td>{$item.up_shelf_time}至{$item.down_shelf_time}</td>
+                    <td>{$item.ActivityText}</td>
+                    <td>{$item.StatusText}</td>
+                    <td class="ecsc-table-handle tr">
+                        {if condition="$item.status eq 1"}
+                            {if condition="$item.ActivityText eq '进行中'"}
+                            <a href="javascript:void(0);"
+                               onclick="main.jumpFour('client/group_goods/inspect?id={$item.group_goods_id}')"
+                               class="btn_see"><i class="fa fa-eye"></i>查看</a>
+                            {else/}
+                            <a href="javascript:void(0);" onclick="main.jumpFour('client/group_goods/edit?id={$item.group_goods_id}')"
+                               class="btn_edit"><i class="fa fa-edit"></i>编辑</a>
+                            <a href="javascript:void(0);" onclick="main.destroy('/client/group_goods/destroy','{$item.group_goods_id}')"
+                               class="btn_trash"><i class="fa fa-trash"></i>删除</a>
+                            {/if}
+                        {else/}
+                        <a href="javascript:void(0);" onclick="main.jumpFour('client/group_goods/edit?id={$item.group_goods_id}')"
+                           class="btn_edit"><i class="fa fa-edit"></i>编辑</a>
+                        <a href="javascript:void(0);" onclick="main.destroy('/client/group_goods/destroy','{$item.group_goods_id}')"
+                           class="btn_trash"><i class="fa fa-trash"></i>删除</a>
+                        {/if}
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+                <tfoot>
+                {notempty name='data'}
+                <tr>
+                    <th class="batch-operation" colspan="20">
+                        <a href="javascript:void(0);" onclick="main.destroy('/client/group_goods/destroy')"
+                           class="btn_trash sc-btn" data-type="trash"><i
+                                class="fa fa-trash-o" style="margin-right: 5px;"></i>多选删除</a>
+                        <span class="page page_3">
+                            {:$data->render()}
+                        </span>
+                    </th>
+                </tr>
+                {/notempty}
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+</script>
+<script type="text/javascript" src="__RES__/js/jquery.purebox.js"></script>
+{/block}

@@ -1,0 +1,229 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<link rel="stylesheet" href="__RES__/css/Indent/AfterSale.css">
+{/block}
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+    <div class="index-right">
+        <div class="aftr-sale-box">
+            <div class="title">
+                退款退货
+            </div>
+            <div class="goods">
+                <div class="goods-tit">
+                    <div class="tit-con goods-name-tit">
+                        商品名称
+                    </div>
+                    <div class="tit-con">
+                        商品规格
+                    </div>
+                    <div class="tit-con">
+                        购买数量
+                    </div>
+                </div>
+                <div class="goods-list">
+                    <div class="goods-con">
+                        <img src="{$result.file}" alt="" onclick="jump_goods('{$result.goods_id}')">
+                        <p>{$result.goods_name}</p>
+                    </div>
+                    <div class="goods-pub">
+                        {$result.attr|default='无规格'}
+                    </div>
+                    <div class="goods-pub">
+                        x{$result.quantity}
+                    </div>
+                </div>
+            </div>
+            <div class="after-box">
+                <div class="mark">
+                    <span class="mark-tit">*提示:</span>
+                    <span>退款 — 未收到货（包含未签收）或卖家协商同意前提下</span>
+                    <span>退款退换 — 已收到货，需要退换已收到的货物</span>
+                </div>
+                <div class="after-con">
+                    <form action="{:url('/v2.0/order/refundAndReturn')}" id="form">
+                        <input type="hidden" name="order_goods_id" value="{$result.order_goods_id}">
+                        <input type="hidden" name="multiple_file" id="multiple_file" value="">
+                        <div class="table">
+                            <div class="table-tit">
+                                <span>*</span>服务类型:
+                            </div>
+                            <div class="table-con">
+                                {if ($result.distribution_type != 2) or ($result.distribution_type == 2 and $result.status < 3)}
+                                <!--是自提订单并且不是已自提-->
+                                <label class="btn header primary-color border-color">
+                                    仅退款
+                                    <input hidden type="radio" name="type" value="1" checked>
+                                </label>
+                                {/if}
+                                {if ($result.distribution_type != 2 and $result.status != 1) or ($result.distribution_type == 2 and $result.status >=3)}
+                                <!--不是自提订单并且不是代发货状态 或 是自提订单已自提-->
+                                <label class="btn header {if ($result.distribution_type == 2 and $result.status >= 3)}primary-color border-color{/if}">
+                                    退款退货
+                                    <input hidden type="radio" name="type" value="2" {if ($result.distribution_type == 2 and $result.status >= 3)}checked{/if}>
+                                </label>
+                                {/if}
+                            </div>
+                        </div>
+                        <div class="table-box">
+                            {if $result.status == 2 and $result.distribution_type != 2}
+                            <!--只有代收货状态有此选项  并且不是自提-->
+                            <div class="table-list" id="is_get_goods">
+                                <div class="table-tit">
+                                    <span>*</span>货物状态:
+                                </div>
+                                <div class="table-con">
+                                    <label class="sex-active">
+                                        <input type="radio" checked="checked" hidden="hidden" name="is_get_goods" value="1"/>
+                                        <img class="xz" src="__RES__/imgs/del/xz.png" alt="">
+                                        <img class="mxz" src="__RES__/imgs/mxz.png" alt="">
+                                        <span>未收到货品</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" hidden="hidden" name="is_get_goods" value="2"/>
+                                        <img class="xz" src="__RES__/imgs/del/xz.png" alt="">
+                                        <img class="mxz" src="__RES__/imgs/mxz.png" alt="">
+                                        <span>已收到货</span>
+                                    </label>
+                                </div>
+                            </div>
+                            {else/}
+                                {if $result.distribution_type == 2}
+                                <!--如果配送方式是预约自提-->
+                                    {if $result.status > 2}
+                                    <!--已自提  默认已收到货-->
+                                    <input type="hidden" name="is_get_goods" value="2">
+                                    {else/}
+                                    <!--待自提  默认未收到货-->
+                                    <input type="hidden" name="is_get_goods" value="1">
+                                    {/if}
+                                {else/}
+                                    {if $result.status < 2}
+                                    <!--未收到货-->
+                                    <input type="hidden" name="is_get_goods" value="1">
+                                    {else/}
+                                    <!--已收到货物-->
+                                    <input type="hidden" name="is_get_goods" value="1">
+                                    {/if}
+                                {/if}
+                            {/if}
+                            <div class="table-list">
+                                <div class="table-tit">
+                                    <span>*</span>退款原因:
+                                </div>
+                                <div class="table-con">
+                                    <input class="inp" name="reason" placeholder="请输入退款原因" type="text" datatype="*" nullmsg="请输入退款原因">
+                                </div>
+                            </div>
+                            <div class="table-list">
+                                <div class="table-tit">
+                                    <span>*</span>退款金额:
+                                </div>
+                                <div class="table-con">
+                                    <input class="inp" name="refund_amount" style="color: #FE9E74" value="{$result.max_total}" id="check_price" data-max_total="{$result.max_total}" placeholder="请输入退款金额"
+                                           type="text" datatype="*" nullmsg="请输入退款金额">
+                                    <p class="ts">最多¥{$result.max_total}，含快递邮费¥{$result.sub_freight_price}</p>
+                                </div>
+                            </div>
+
+                            <div class="table-list">
+                                <div class="table-tit">
+                                    <span>*</span>上传凭证:
+                                </div>
+                                <div class="table-con img-list">
+                                    <label for="file" class="label">
+                                        <img src="__RES__/imgs/xj.png" alt="">
+                                        <p>添加图片</p>
+                                        <span>(最多3张)</span>
+                                    </label>
+                                    <div class="file-list">
+                                        <input type="file" class="files" hidden id="file" name="file[]">
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="submit" id="submit" class="submit primary-background-color" value="提交">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+    $(' .table-box .table-con label').click(function () {
+        $(this).addClass('sex-active').siblings('label').removeClass('sex-active')
+    });
+    $('.table .btn').click(function () {
+        switch ($(this).index()) {
+            case 0:
+                $('#is_get_goods').show();
+                break;
+            case 1:
+                $('#is_get_goods').hide();
+                break;
+        }
+        $(this).addClass('primary-color border-color').siblings().removeClass('primary-color border-color');
+    });
+    main.valid({'select':'#form','call_back':function () {
+        var price=parseFloat($('#check_price').val()).toFixed(2);
+        var max_total=parseFloat($('#check_price').data('max_total')).toFixed(2);
+        if(isNaN(price)) {
+            layer.msg('请输入退款金额');
+            return false;
+        }
+        if(parseFloat(price)>parseFloat(max_total)){
+            layer.msg('最大可退款金额'+max_total);
+            return false;
+        }
+        if($('input[name=type]:checked').val()==2){
+            $('input[name="is_get_goods"]').val(2);
+        }
+        $('#multiple_file').val(main.upload({'data':{'type':2},'select':$('.files[name="file[]"]'),'file_name':'image'}));
+        sessionStorage.return_url = ObjectOrJson({'use_url':'order/apply_for_after_sale','return_url':'/pc2.0/order/orderaftersalelist'});
+    }});
+    // 上传图片
+    var num = 0;
+    $('.table-list').on('change', '#file', function () {
+        var files = this.files;
+        var len = files.length;
+        num += len;
+//       	上传图片
+        if (num > 3) {
+            num -=1;
+            layer.msg('最多只能传三张图片');
+        } else {
+            var inp = '<input type="file" class="files"  hidden  id="file"  value=""/>'
+            $('.img-list .file-list').append(inp)
+            $(this).removeAttr('id');
+            $(this).attr('name','file[]');
+            var imgRUL = null;
+            var windowURL = window.URL || window.webkitURL;
+            for (var a = 0; a < len; a++) {
+                imgRUL = windowURL.createObjectURL(files[a]);
+                var img = '<div class="img-box">' +
+                    '<img class="del" src="__RES__/imgs/up-del.png"/>' +
+                    '<img  src="' + imgRUL + '"/>' +
+                    '</div>'
+                $('.label').before(img);
+
+            }
+        }
+    });
+    // 删除图片
+    $('.img-list').on('click', '.del', function () {
+        num-=1;
+        var xuhao = $(this).parent().index('.img-box');
+        $(this).parent().remove();
+        $('.file-list .files').not('#file').eq(xuhao).remove();
+    })
+</script>
+{/block}

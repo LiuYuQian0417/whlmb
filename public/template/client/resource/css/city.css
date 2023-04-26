@@ -1,0 +1,113 @@
+.city-container{
+    overflow: hidden;
+    margin: 0;
+    padding:0;
+}
+.city-container .city_con{
+    display: flex;
+    /*align-items: center;*/
+    /*justify-content: space-between;*/
+}
+.city-list{
+    width:18%;
+    overflow: hidden;
+    overflow-y: auto;
+    /*float: left;*/
+    z-index:1;
+    position: relative;
+    border: 1px solid #62b3ff;
+    border-radius: 5px;
+    border-right: 0;
+}
+.city-list:first-child{
+    width: 20%!important;
+}
+.city-list:first-child .city-ul{
+    width: 172px!important;
+}
+.city-list .empty{
+    text-align: center;
+    top:40%;
+    color: #666;
+}
+.city-show{
+    width: 27%;
+    overflow: hidden;
+    overflow-y: auto;
+    z-index:1;
+    position: relative;
+    border: 1px solid #62b3ff;
+    border-radius: 5px;
+}
+.city-list em{
+    right: 0;
+    position: absolute;
+    display: block;
+    top:3px;
+    font-size: 14px;
+    line-height: 20px;
+    width:40%;
+    text-align: right;
+    cursor: pointer;
+}
+.city-list .city-ul,
+.city-show .city-ul
+{
+    height: 410px;
+    list-style: none;
+    margin:0;
+    padding:0 5px;
+}
+.city-list .city-ul{
+    border-right: 0;
+    /*width: 142px;*/
+}
+.city-tip{
+    width: 223px;
+    text-align: center;
+    color: #666;
+}
+.city-list .active span,
+.city-list .active em
+{
+    color: #62b3ff;
+}
+.city-list .city-ul li{
+    display: block;
+    height: 25px;
+    line-height: 25px;
+    position: relative;
+}
+.city-list span{
+    /*width: 90px;*/
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+/*滚动条样式*/
+.city-list::-webkit-scrollbar ,
+.city-show::-webkit-scrollbar {/*滚动条整体样式*/
+    width: 4px;     /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+    display: none;
+    position: absolute;
+    right:0;
+    top:0;
+}
+.city-list:hover::-webkit-scrollbar,
+.city-show:hover::-webkit-scrollbar{
+    display: block;
+}
+.city-list::-webkit-scrollbar-thumb,
+.city-show::-webkit-scrollbar-thumb{/*滚动条里面小方块*/
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.2);
+}
+.city-list::-webkit-scrollbar-track,
+.city-show::-webkit-scrollbar-track{/*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0);
+    border-radius: 0;
+    background: rgba(0,0,0,0);
+}
+
+.area_foot{display: flex;justify-content: flex-end;align-items: center;padding: 10px 0;}

@@ -1,0 +1,103 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='multiImgUpload'}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>新增标签；</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+
+<form class="layui-form" action="" style="width: 650px;margin: 30px auto 0" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">标签分类</label>
+        <div class="layui-input-block">
+            <select name="tag_classify_id" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="tagClassifyList" id="vo"}
+                <option value="{$vo.tag_classify_id}" {eq name="tag.tag_classify_id|default=''" value="$vo.tag_classify_id"}selected="selected"{/eq}>{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><font color="red">*</font> 标签名称</label>
+        <div class="layui-input-block">
+            <input
+                    type="text"
+                    name="name"
+                    value="{$tag['name']|default=''}"
+                    required
+                    lay-verify="required"
+                    placeholder="请输入标签名称"
+                    autocomplete="off"
+                    class="layui-input"
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"><font color="red">*</font> 服务内容</label>
+        <div class="layui-input-block">
+            <textarea
+                    name="content"
+                    placeholder="请输入服务内容,不能超过300个字符"
+                    class="layui-textarea"
+            >{$tag['content']|default=''}</textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">适用商品</label>
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" onclick="choose_goods()">选择商品</button>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" id="choose_goods_id" name="goods" value="{$goods|default=''}">
+            <input type="hidden" name="id" value="{$tag.tag_id|default=''}">
+            <button class="layui-btn" lay-submit id="submit">提交</button>
+        </div>
+    </div>
+</form>
+{/block}
+
+{block name='js'}
+{__block__}
+
+<script>
+    $(function () {
+        main.form()
+        main.valid('.layui-form')
+    })
+
+    function choose_goods() {
+        layer.open({
+            type: 2,
+            title: '选择商品',
+            content: '/tag/choose_goods?choose_goods_id=' + $('#choose_goods_id').val(),
+            area: [
+                '800px',
+                '800px',
+            ]
+        });
+    }
+
+    function set_choose_goods(val) {
+        $('#choose_goods_id').val(val)
+    }
+
+    function get_choose_goods() {
+        return $('#choose_goods_id').val()
+    }
+</script>
+{/block}

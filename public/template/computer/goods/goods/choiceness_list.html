@@ -1,0 +1,310 @@
+{extend name="public/index_header"}
+{block name="content_css"}
+    <!--好物推荐css-->
+    <link rel="stylesheet" href="__RES__/css/GoodRecommend/GoodRecommend.css">
+    <link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+    <!--iconfont-->
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1111076_0ls8xzat8vc.css">
+
+    <script src="__RES__/js/public/jquery.min.js"></script>
+    <script src="__RES__/js/swiper.min.js"></script>
+    <link rel="stylesheet" href="__RES__/css/swiper.min.css">
+{/block}
+
+{block name="content"}
+{if condition='!is_null($result.banner)'}
+<a class="pic-url">
+    <a href="javascript:void(0);" onclick="main.adv_jump('{$result.banner.type}','{$result.banner.content}')">
+        <img src="{$result.banner.file}" alt="">
+    </a>
+</a>
+{/if}
+<!--人气推荐-->
+<div class="recommended">
+    <div class="recommend">
+        <img src="__RES__/imgs/recommend/2.png"  class="recommend-pic" alt="">
+        <div class="recommend-container">
+            <div class="recommend-view">
+                 {notempty name="$result.popularity[0]['goods_name']"}
+                <div class="recommend-left">
+                    <a href="javascript:jump_goods('{$result.popularity[0][\'goods_id\']}')">
+                        <img src="{$result.popularity[0]['file']}" alt="">
+                    </a>
+                    <p>{$result.popularity[0]['goods_name']}</p>
+                    <a href="javascript:jump_goods('{$result.popularity[0][\'goods_id\']}');" class="buying">立即购买</a>
+                </div>
+                {/notempty}
+                <div class="recommend-right">
+                    <ul>
+                    {notempty name="$result.popularity[1]['goods_name']"}
+                        <li>
+                            <a href="javascript:jump_goods('{$result.popularity[1][\'goods_id\']}');">
+                                <img width="342" height="342"  src="{$result.popularity[1]['file']}" alt="">
+                            </a>
+                            <div class="rec-right-info">
+                                <p>{$result.popularity[1]['goods_name']}</p>
+                                <a href="javascript:jump_goods('{$result.popularity[1][\'goods_id\']}');" class="buying">立即购买</a>
+                            </div>
+                        </li>
+                         {/notempty}
+                         {notempty name="$result.popularity[2]['goods_name']"}
+                        <li>
+                            <a href="javascript:jump_goods('{$result.popularity[2][\'goods_id\']}');">
+                                <img width="342" height="342"  src="{$result.popularity[2]['file']}" alt="">
+                            </a>
+                            <div class="rec-right-info">
+                                <p>{$result.popularity[2]['goods_name']}</p>
+                                <a href="javascript:jump_goods('{$result.popularity[2][\'goods_id\']}');" class="buying">立即购买</a>
+                            </div>
+                        </li>
+                         {/notempty}
+                    </ul>
+                </div>
+            </div>
+            <ul>
+                {volist name="$result.popularity" id="item"  offset="3"}
+                <li>
+                    <a href="javascript:jump_goods('{$item.goods_id}')">
+                        <img width="255" height="255" src="{$item.file}" alt="">
+                        <div>
+                            <p>{$item.goods_name}</p>
+                            <span class="primary-color">￥{$item.goods_price}</span>
+                        </div>
+                    </a>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+</div>
+<!--人气推荐结束-->
+<!--特惠推荐-->
+<div class="recommended">
+    <div class="recommend">
+        <img src="__RES__/imgs/recommend/7.png"  class="recommend-pic" alt="">
+        <div class="recommend-container">
+            <div class="recommend-view">
+                {notempty name="$result.preference[0]['goods_id']"}
+                <div class="recommend-left">
+                    <a href="javascript:jump_goods('{$result.preference[0][\'goods_id\']}');">
+                        <img src="{$result.popularity[0]['file']}" alt="">
+                    </a>
+                    <p>{$result.preference[0]['goods_name']}</p>
+                    <a href="javascript:jump_goods('{$result.preference[0][\'goods_id\']}');" class="buying">立即购买</a>
+                </div>
+                {/notempty}
+                <div class="recommend-right">
+                    <ul>
+                        {notempty name="$result.preference[1]['goods_id']"}
+                        <li>
+                            <a href="javascript:jump_goods('{$result.preference[1][\'goods_id\']}');">
+                                <img width="342" height="342"  src="{$result.preference[1]['file']}" alt="">
+                            </a>
+                            <div class="rec-right-info">
+                                <p>{$result.preference[1]['goods_name']}</p>
+                                <a href="javascript:jump_goods('{$result.preference[1][\'goods_id\']}');" class="buying">立即购买</a>
+                            </div>
+                        </li>
+                        {/notempty}
+                        {notempty name="$result.preference[2]['goods_id']"}
+                        <li>
+                            <a href="javascript:jump_goods('{$result.preference[2][\'goods_id\']}');">
+                                <img width="342" height="342"  src="{$result.preference[2]['file']}" alt="">
+                            </a>
+                            <div class="rec-right-info">
+                                <p>{$result.preference[2]['goods_name']}</p>
+                                <a href="javascript:jump_goods('{$result.preference[2][\'goods_id\']}');" class="buying">立即购买</a>
+                            </div>
+                        </li>
+                        {/notempty}
+                    </ul>
+                </div>
+            </div>
+            <ul>
+                {volist name="$result.preference" id="item1" offset="3"}
+                <li>
+                    <a href="javascript:jump_goods('{$item1.goods_id}')">
+                        <img width="255" height="255" src="{$item1.file}" alt="">
+                        <div>
+                            <p>{$item1.goods_name}</p>
+                            <span class="primary-color">￥{$item1.goods_price}</span>
+                        </div>
+                    </a>
+                </li>
+                {/volist}
+
+            </ul>
+        </div>
+    </div>
+</div>
+<!--特惠推荐结束-->
+
+<!--商品分类-->
+<div class="goods-category">
+    <ul>
+        {volist name="$result.goods_classify" id="item2" length='9'}
+        <li  data_id="{$item2.goods_classify_id}" class=" category {eq name="$item2.goods_classify_id" value=":input('goods_classify_id',$goods_classify_id)"} active primary-background-color {/eq} primary-background-color-hover" data_id="{$item2.goods_classify_id}">
+            <!--<a href="{:url('/pc2.0/goods/choiceness_list')}?goods_classify_id={$item2.goods_classify_id}">-->
+            <a >
+                <div>
+                    <span>{$item2.title}</span>
+                </div>
+            </a>
+        </li>
+        {/volist}
+        <li class="all-menu primary-background-color-hover">
+            <a href="javascript:;">
+                <div>
+                    <span>全部分类</span>
+                    <img src="__RES__/imgs/findshop/20.png" alt="">
+                </div>
+            </a>
+        </li>
+    </ul>
+    <ul class="second-menu">
+        {volist name="$result.goods_classify" id="item2" offset="9"}
+        <li  data_id="{$item2.goods_classify_id}" class="category {eq name="$item2.goods_classify_id" value=":input('goods_classify_id')"} active primary-background-color {/eq} primary-background-color-hover" data_id="{$item2.goods_classify_id}">
+        <!--<a href="{:url('/pc2.0/goods/choiceness_list')}?goods_classify_id={$item2.goods_classify_id}">-->
+        <a>
+            <div>
+                <span>{$item2.title}</span>
+            </div>
+        </a>
+        </li>
+        {/volist}
+    </ul>
+
+</div>
+<!--商品分类结束-->
+
+<!--分类列表-->
+<div class="cate-list">
+    <ul id="goods_list">
+        {volist name="$result.goods_list" id="item3"}
+        <li>
+            <a href="javascript:jump_goods('{$item3.goods_id}')">
+                <img src="{$item3.file}" alt="">
+            </a>
+            <div class="cate-list-info">
+                <p>{$item3.goods_name}</p>
+                <span class="primary-color">￥{$item3.goods_price}</span>
+                <div class="primary-background-color" onclick="jump_goods('{$item3.goods_id}')">立即购买</div>
+            </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+<!--此处加分页-->
+<div id="page-container" class="pageContainer"><ul class="pagination"></ul></div>
+<div class="find-next-cate primary-background-color" onclick="jump_page()">查看下一分类 ></div>
+<!--分类列表结束-->
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    var pageInited = false //分页
+    var data = {
+        goods_classify_id:{$goods_classify_id} //分类
+    };  //默认参数
+    $(function () {
+        nearby_list();
+    })  //第一次加载数据
+
+    //分类点击
+    $('.goods-category .category').click(function () {
+        var goods_classify_id = $(this).attr('data_id');
+        $(this).addClass('active primary-background-color').siblings().removeClass('active primary-background-color');
+        data = {
+            'goods_classify_id': goods_classify_id,
+        };
+        pageInited = false
+        nearby_list();
+    })
+
+    //查看下一个分类
+    function jump_page() {
+        var category_id = $('.active').attr('data_id');
+        var array = [];
+        $('.goods-category .category').each(function () {
+            array.push($(this).attr('data_id'));
+        })
+
+        var select_category_id = array[array.indexOf(category_id)+1];
+        if (typeof(select_category_id)=="undefined" ) {
+            select_category_id = '{$goods_classify_id}';
+        }
+        $('li[data_id="'+select_category_id+'"]').addClass('active primary-background-color').siblings().removeClass('active primary-background-color')
+
+        data = {
+            'goods_classify_id': select_category_id,
+        };
+        pageInited = false
+        nearby_list();
+
+    }
+
+    //分页类
+    function init_pages(currentPage,lastPage) {
+        // 初始化分页
+        $('#page-container').find('ul.pagination').pagination({
+            currentPage: currentPage,
+            prevText: '«',
+            nextText: '»',
+            pages: lastPage, //总页数
+            edges: 2,
+            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+            displayedPages: 9, //显示几个
+            onPageClick: function(pageNumber, event) {
+                nearby_list(pageNumber)
+            }
+        });
+    }
+
+    //ajax
+    function nearby_list(pages){
+        data.page  = pages === undefined ? 1 : pages
+        main.ajax({
+            url:'{:url(\'pc2.0/goods/good_recommend_list\')}',
+            data:data,
+            callback:function (res) {
+
+                console.log(res);
+
+                if (!pageInited){
+                    if(parseInt(res.result.last_page) >1){
+                        init_pages(parseInt(res.result.current_page),parseInt(res.result.last_page))
+                        pageInited = true
+                    }
+                    else{
+                        $('#page-container').find('ul.pagination').html('')
+                    }
+                }
+
+                var str = '';
+                $.each(res.result.data, function (k, v) {
+                    str += '<li>' +
+                        '            <a href="javascript:jump_goods('+v.goods_id+')">' +
+                        '                <img src="'+v.file+'" alt="">' +
+                        '            </a>' +
+                        '            <div class="cate-list-info">' +
+                        '                <p>'+v.goods_name+'</p>' +
+                        '                <span class="primary-color">￥'+v.goods_price+'</span>' +
+                        '                <div class="primary-background-color" onclick="jump_goods('+v.goods_id+')">立即购买</div>' +
+                        '            </div>' +
+                        '        </li>';
+                });
+                $('#goods_list').html(str);
+            }})
+    }
+
+    //展示全部分类
+    $('.all-menu').mouseenter(function () {
+        $('.second-menu').show()
+    })
+    $('.goods-category').mouseleave(function () {
+        $('.second-menu').hide()
+    })
+</script>
+{/block}
+

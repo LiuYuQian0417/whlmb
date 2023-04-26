@@ -1,0 +1,156 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+
+<form action="" class="layui-form">
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label">奖品类型</label>
+            <div class="layui-input-block">
+                <select id="goods_type" name="a" lay-filter="goods_type">
+                    <option value="">请选择奖品类型</option>
+                    <option value="1">实物</option>
+                    <option value="2">积分</option>
+                    <option value="3">优惠券</option>
+                </select>
+            </div>
+        </div>
+        <div hidden id="prize_info_integral_1">
+            <label class="layui-form-label"><font color="red">*</font> 赠送积分</label>
+            <div class="layui-input-block">
+                <input type="number" id="prize_info_integral" maxlength="20" autocomplete="off" placeholder="请输入赠送积分"
+                       value=""
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" hidden id="prize_info_coupon_1">
+            <label class="layui-form-label"><font color="red">*</font> 赠送优惠券</label>
+            <div class="layui-input-block">
+                <select id="prize_info_coupon">
+                    <option value="">请选择优惠券</option>
+                    <option value="1">实物</option>
+                    <option value="2">积分</option>
+                    <option value="3">优惠券</option>
+                </select>
+            </div>
+        </div>
+        <label class="layui-form-label"><font color="red">*</font> 奖品名称</label>
+        <div class="layui-input-block">
+            <input type="text" id="prize_title" maxlength="20" autocomplete="off" placeholder="请输入奖品名称"
+                   value=""
+                   class="layui-input">
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 缩略图</label>
+            <div class="layui-input-inline">
+                <div>
+                    <div class="layui-upload-drag" style="padding:1px;" id="goods_file">
+                        <img src="" onerror=this.src="/template/master/resource/image/common/imageError.png" title=""
+                             class="uploadImg" alt="">
+                        <input type="text" name="file" value="" title="" style="display: none;" datatype="*"
+                               nullmsg="请上传缩略图" errormsg="请上传缩略图">
+                    </div>
+                    <input class="layui-upload-file" type="file" accept="image/*" name="goods_file">
+                </div>
+            </div>
+            <!--<div class="layui-form-mid layui-word-aux">-->
+            <!--建议尺寸，800 X 800-->
+            <!--</div>-->
+        </div>
+        <label class="layui-form-label"><font color="red">*</font> 中奖概率</label>
+        <div class="layui-input-block">
+            <input type="text" id="probability" maxlength="20" autocomplete="off" placeholder="请输入中奖概率"
+                   value=""
+                   class="layui-input">
+        </div>
+        <label class="layui-form-label"><font color="red">*</font> 奖品数量</label>
+        <div class="layui-input-block">
+            <input type="number" id="prize_number" maxlength="20" autocomplete="off" placeholder="请输入奖品数量"
+                   value=""
+                   class="layui-input">
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否开启</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_open" value="1" title="是" lay-filter="integral"
+                >
+                <input type="radio" name="is_open" value="0" title="否" lay-filter="integral"
+                >
+            </div>
+        </div>
+        <label class="layui-form-label"><font color="red">*</font> 奖品预警</label>
+        <div class="layui-input-block">
+            <input type="text" id="" maxlength="20" autocomplete="off" placeholder="请输入奖品预警"
+                   value=""
+                   class="layui-input">
+        </div>
+        <div class="contentShellBtn">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" onclick="save_edit_prize('+key+')">立即提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/layui/layui.all.js"></script>
+<script>
+    var form = layui.form, layer = layui.layer;
+    form.on('select(goods_type)', function (data) {
+        var prize_info_integral = $('#prize_info_integral_1');
+        var prize_info_coupon = $('#prize_info_coupon_1');
+        prize_info_integral.attr('hidden', 'hidden');
+        prize_info_coupon.attr('hidden', 'hidden');
+        switch (data.value) {
+            case '1':
+                break;
+            case '2':
+                prize_info_integral.removeAttr('hidden');
+                break;
+            case '3':
+                prize_info_coupon.removeAttr('hidden');
+                break;
+        }
+    });
+    main.upload([{
+        elem: '#goods_file',
+        size: 2 * 1024,
+        auto: false,
+        data: {name: 'goods_file', dir: 'goods_file'},
+        field: 'goods_file',
+        choose: function (obj) {  //上传前选择回调方法
+            var flag = true;
+            obj.preview(function (index, file, result) {
+                //file表示文件信息，result表示文件src地址
+                var img = new Image();
+                img.src = result;
+                img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
+                    if (img.width == 200 && img.height == 200) {
+                        obj.upload(index, file); //满足条件调用上传方法
+                    } else {
+                        flag = false;
+                        layer.msg("您上传的小图大小必须是200*200尺寸！");
+                        return false;
+                    }
+                };
+                return flag;
+            });
+        }, done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.domain+ res.data.url + '" class="uploadImg">' +
+                '<input type="text" name="file" value="' + res.data.url + '" title style="display:none;"/>';
+            $(this.elem).css('padding', '1px').html(html);
+            layer.closeAll('loading');
+        }
+    }]);
+    main.form();
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,386 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="/template/client/resource/css/map.css" rel="stylesheet" type="text/css"/>-->
+<!--<link href="/template/client/resource/css/style.css" rel="stylesheet" type="text/css"/>-->
+<!--<link href="/template/client/resource/css/general.css" rel="stylesheet" type="text/css"/>-->
+
+<style>
+    .button-group .button{  height: 28px;  line-height: 28px;  background-color: #0D9BF2;  color: #FFF;  border: 0;
+        outline: none;  padding-left: 5px;  padding-right: 5px;  border-radius: 3px;  margin-bottom: 4px;  cursor: pointer;  }
+
+    .layui-form-radio{
+        margin: 0!important;
+    }
+    .layui-form-checkbox[lay-skin=primary]{margin-bottom: 0;margin-top: 0}
+    .layui-form-checked[lay-skin=primary] i{background: #5FB878;border-color:#5FB878}
+    .layui-form-checked[lay-skin=primary]:hover i{border-color:#5FB878}
+    .layui-input{width: 240px;}
+    .text_center{height: 30px;line-height: 28px;margin: 0 5px;}
+    .table_item td{text-align: left!important;width: 25%;padding: 3px 0;}
+    .layui-input-block>.discount{
+        width: 100%;
+        overflow: hidden;
+        line-height: 30px;
+        margin-bottom: 10px;
+    }
+    .layui-input-block>.discount> *{
+        float: left;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--<div class="tabs_info" id="tabs" style="margin-top: 15px;">-->
+<!--    <ul>-->
+<!--        <li class="curr" style="height: 34px;line-height:34px;" onclick="main.jumpFour('distribution_city/edit?id={:input(\'get.id\')}')">-->
+<!--            <a href="javascript:void(0);">自主配送</a>-->
+<!--        </li>-->
+<!--        <li  style="height: 34px;line-height:34px;" onclick="main.jumpFour('distribution_city/third?id={:input(\'get.id\')}')">-->
+<!--            <a href="javascript:void(0);">三方配送</a>-->
+<!--        </li>-->
+<!--    </ul>-->
+<!--</div>-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>温馨提示：提交操作将会重新审核，请慎重提交确定。</span></li>
+            <li><span>温馨提示：请先设置店铺详细地址及经纬度。</span></li>
+        </ul>
+    </div>
+</div>
+<form action="" method="post" class="layui-form">
+    <input type="hidden" name="store_id" value="{$store_id|default=''}">
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label">详细地址:</label>
+            <div class="layui-input-block">
+                <input type="text" id="tipinput" name="shop_address" value="{$coordinate.address|default=''}"
+                       maxlength="200" class="text layui-input" autocomplete="off" style="width: 400px;" readonly
+                       placeholder="请输入店铺详细地址"/>
+            </div>
+        </div>
+        <div class="layui-form-item checkbox_items">
+            <label class="layui-form-label">配送范围方式:</label>
+            <div class="layui-input-block">
+                        <input type="radio"
+                               name="distribution_type"
+                               value="1" class="ui-radio"
+                               title="按服务半径"
+                               id="distribution_type_1"
+                               lay-filter="distribution_type"
+                               {eq name="item.distribution_type|default=1" value="1" }checked{/eq}
+                        />
+                        <input type="radio"
+                               name="distribution_type"
+                               value="2"
+                               class="ui-radio"
+                               title="按行政区域"
+                               id="distribution_type_2"
+                               lay-filter="distribution_type"
+                               {eq name="item.distribution_type|default=1" value="2" }checked{/eq}
+                        />
+            </div>
+        </div>
+        <div class="layui-form-item distribution_area1" style="{neq name="item.distribution_type|default='1'" value="1"}display:none{/neq}">
+            <label class="layui-form-label"><font color="red">*</font> 配送范围(公里):</label>
+            <div class="layui-input-block">
+                <input type='text' name='radius' id="radius" maxlength="20" value="{$item.radius|default='2'}"
+                       class="text layui-input" placeholder="请输入服务半径"
+                       datatype="*" nullmsg="请输入服务半径" errormsg="请输入服务半径" oninput="Circle();"/>
+                <div id="container" style="width: 470px;height: 270px;margin-top: 20px;" tabindex="0">
+                    <div id="interaction"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item distribution_area2" style="{neq name="item.distribution_type|default='1'" value="2"}display:none{/neq}">
+            <label class="layui-form-label"> <font color="red">*</font> 配送区域:</label>
+            <div class="layui-input-block">
+                {volist name="city_area" id="vo"}
+                <input type="checkbox" name="distribution_area_id[]" lay-skin="primary"
+                       lay-filter="week" title="{$vo.area_name}"
+                       value="{$vo.area_id}" style="margin-bottom: 10px;"
+                       {in name="$vo.area_id" value="$item.distribution_area_id|default=''" }checked{/in}>
+                {/volist}
+            </div>
+        </div>
+
+        <!--起送价-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 起送价:</label>
+            <div class="layui-input-block">
+                <input type='text' name='start_price' maxlength="10" value="{$item.start_price|default=''}"
+                       class="text layui-input" placeholder="请输入起送价"
+                       datatype="*" nullmsg="请输入起送价" errormsg="请输入起送价"/>
+                <div class="form_prompt"></div>
+            </div>
+        </div>
+        <!--起送价-->
+        <!--基础运费-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 基础运费:</label>
+            <div class="layui-input-block">
+                <input type='text' name='basic_freight' maxlength="10" value="{$item.basic_freight|default=''}"
+                       class="text layui-input" placeholder="请输入基础运费"
+                       datatype="*" nullmsg="请输入基础运费" errormsg="请输入基础运费"/>
+                <div class="form_prompt"></div>
+            </div>
+        </div>
+        <!--基础运费-->
+        <!--启用阶梯价-->
+        <div class="layui-form-item checkbox_items">
+            <label class="layui-form-label"> 启用阶梯价:</label>
+            <div class="layui-input-block price_item">
+                        <input type="radio"
+                               name="staircase"
+                               value="1" class="ui-radio"
+                               title="是"
+                               id="is_shop_0"
+                               {eq name="item.staircase|default=1" value="1" }checked{/eq}
+                        />
+                        <input type="radio"
+                               name="staircase"
+                               value="0"
+                               class="ui-radio"
+                               title="否"
+                               id="is_shop_1"
+                               {eq name="item.staircase|default=0" value="0" }checked{/eq}
+                        />
+            </div>
+        </div>
+        <!--启用阶梯价-->
+        <div class="layui-form-item" id="staircase" style="{neq name="item.staircase" value='1'}display:none{/neq}">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-block">
+                <table class="table_item">
+
+                    <tr>
+                        <td class="label">起送半径：</td>
+                        <td>
+                            <input name="starting_radius" type="text" class="text text_center" value="{$item.starting_radius|default=""}">
+                        </td>
+                        <td>起送重量：</td>
+                        <td>
+                            <input name="lift_weight" type="text" class="text text_center" value="{$item.lift_weight|default=""}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="label">起送距离每增加：</td>
+                        <td>
+                            <input name="distance_increase" type="text" class="text text_center"
+                                   value="{$item.distance_increase|default=""}">
+                        </td>
+                        <td>运费增加：</td>
+                        <td>
+                            <input name="distance_increase_price" type="text text_center" class="text text_center"
+                                   value="{$item.distance_increase_price|default=""}">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="label">配送重量每增加：</td>
+                        <td>
+                            <input name="weight_increase" type="text" class="text text_center" value="{$item.weight_increase|default=""}">
+                        </td>
+                        <td>运费增加：</td>
+                        <td>
+                            <input name="weight_increase_price" type="text text_center" class="text text_center"
+                                   value="{$item.weight_increase_price|default=""}">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮递优惠规则:</label>
+            <div class="layui-input-block">
+                <div class="discount">
+                    <input type="radio" name="discount_postage_rules" value="1" title="" lay-filter="discount_postage_rules" {eq name="item.discount_postage_rules|default=''" value="1" }checked{/eq}>
+                    <span>满</span>
+                    <input type="text" class="layui-input" name="discount" placeholder="满足条件" maxlength="8"
+                           {eq name="item.discount_postage_rules|default=''" value="1"} value="{$item.discount|default=''}" {else/} value="" {/eq}>
+                    <span>元，邮费</span>
+                    <input type="text" name="postage" class="layui-input"  placeholder="邮费" maxlength="8" {eq name="item.discount_postage_rules|default=''" value="1"} value="{$item.postage|default=''}" {else/} value="" {/eq}>
+                </div>
+                <div class="discount">
+                    <input type="radio" name="discount_postage_rules" value="2" title="" lay-filter="discount_postage_rules" {eq name="item.discount_postage_rules|default=''" value="2" }checked{/eq} >
+                    <span>满</span>
+                    <input type="text" class="layui-input" name="discount_1" placeholder="满足条件" maxlength="8"
+                           {eq name="item.discount_postage_rules|default=''" value="2"} value="{$item.discount|default=''}" {else/} value="" {/eq}>
+                    <span>件，邮费</span>
+                    <input type="text" name="postage_1" class="layui-input" placeholder="邮费" maxlength="8" {eq name="item.discount_postage_rules|default=''" value="2"} value="{$item.postage|default=''}" {else/} value="" {/eq}>
+                </div>
+                <div class="discount">
+                    <input type="radio" name="discount_postage_rules" value="3" title="" lay-filter="discount_postage_rules" {eq name="item.discount_postage_rules|default=''" value="3" }checked{/eq} >
+                    <span>满</span>
+                    <input type="text" class="layui-input" name="discount_2" placeholder="满足条件" maxlength="8"
+                           {eq name="item.discount_postage_rules|default=''" value="3"} value="{$item.discount|default=''}" {else/} value="" {/eq}>
+                    <span>公斤，邮费</span>
+                    <input type="text" name="postage_2" class="layui-input" placeholder="邮费" maxlength="8" {eq name="item.discount_postage_rules|default=''" value="3"} value="{$item.postage|default=''}" {else/} value="" {/eq}>
+                </div>
+                <div>
+                    邮递规则只能选择一个，会员购买商品时，如果满足优惠条件已优惠为主，如果不满足优惠条件按照默认邮递规则计算，填写0元视为包邮
+                </div>
+                <input type="hidden" id="discount_postage_rules" value="{$item.discount_postage_rules|default=''}">
+            </div>
+        </div>
+
+        <div class="layui-form-item checkbox_items">
+            <label class="layui-form-label"> 是否启用:</label>
+            <div class="layui-input-block price_item">
+                <input type="radio"
+                       name="is_pay_delivery"
+                       value="1" class="ui-radio"
+                       title="是"
+                       {eq name="coordinate.is_pay_delivery|default=0" value="1" }checked{/eq}
+                />
+                <input type="radio"
+                       name="is_pay_delivery"
+                       value="0"
+                       class="ui-radio"
+                       title="否"
+                       {eq name="coordinate.is_pay_delivery|default=0" value="0" }checked{/eq}
+                />
+                <div  style="overflow: hidden">
+                    <span class="remarks" style="float: left">选择是，则自主配送可支持货到付款</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+
+                <button type="submit" class="layui-btn" id="submit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+
+                {present name="$item.distribution_city_id"}
+                <input type="hidden" name="distribution_city_id" value="{$item.distribution_city_id}">
+                {/present}
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="/template/client/resource/layui/lay/modules/form.js"></script>
+<script src="/template/client/resource/layui/lay/modules/layer.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch,AMap.CircleEditor'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script src="__RES__/layui/layui.js"></script>
+<!-- UI组件库 1.0 -->
+<script type="text/javascript">
+    $(function () {
+        // 启用阶梯价
+        $(".price_item").click(function () {
+            var check= $("input[name='staircase']:checked").val();
+            if (check == 1){
+                $("#staircase").show();
+            }else {
+                $("#staircase").hide();
+            }
+        });
+
+        // $("input[name=distribution_type]").on('change', function () {
+        //     console.log(1)
+        //     if ($(this).val() == 1) {
+        //         $(".distribution_area1").show();
+        //         $(".distribution_area2").hide();
+        //     } else {
+        //         $(".distribution_area2").show();
+        //         $(".distribution_area1").hide();
+        //     }
+        //     // form.render();
+        // })
+        // 配送范围方式
+        // $(".area_item").click(function () {
+        //     var check= $("input[name='distribution_type']:checked").val();
+        //     if (check == 1){
+        //         $(".distribution_area1").show();
+        //         $(".distribution_area2").hide();
+        //     }else {
+        //         $(".distribution_area2").show();
+        //         $(".distribution_area1").hide();
+        //     }
+        //     layer.form.render();
+        // });
+
+        Circle();
+    });
+
+
+    layui.use(['form'],function () {
+        var form = layui.form;
+        form.render();
+
+        form.on("radio(distribution_type)",function (data) {
+            switch (data.value) {
+                case '1':
+                    $(".distribution_area1").show();
+                    $(".distribution_area2").hide();
+                    break;
+                case '2':
+                    $(".distribution_area2").show();
+                    $(".distribution_area1").hide();
+                    break;
+            }
+        })
+        form.on("radio(discount_postage_rules)",function (data) {
+            var discount_postage_rules = $('#discount_postage_rules').val();
+            if (data.value == discount_postage_rules) {
+                $(data.elem).removeAttr('checked')
+                $('#discount_postage_rules').val('');
+                form.render();
+            }
+            $('#discount_postage_rules').val(data.value);
+
+        });
+        main.valid('.layui-form');
+    });
+
+
+    function Circle() {
+        var lng = '{$coordinate.lng|default="126.643349"}';
+        var lat = '{$coordinate.lat|default="45.776473"}';
+        // 生成地图
+        AMapUI.loadUI(['misc/PositionPicker'], function () {
+            var map = new AMap.Map('container', {
+                zoom: 12,
+                resizeEnable: true,
+                center: [lng,lat],
+                scrollWheel: true
+            });
+
+            // 店铺位置
+            var marker = new AMap.Marker({
+                position:[126.64337,45.77669]
+            });
+            map.add(marker);
+
+            // 配送区域
+            var radius = ($('#radius').val())*1000;
+
+            var circle = new AMap.Circle({
+                center: new AMap.LngLat(lng, lat),
+                radius: radius,
+                strokeColor: "#F33",
+                strokeOpacity: 1,
+                strokeWeight: 3,
+                fillColor: "#ee2200",
+                fillOpacity: 0.35
+            });
+            circle.setMap(map);
+        });
+    }
+</script>
+{/block}

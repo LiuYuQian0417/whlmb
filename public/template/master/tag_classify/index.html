@@ -1,0 +1,80 @@
+{extend name='layout/frame' /}
+{block name='multiImgUpload'}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>管理标签分类，按照标签分类维护标签信息；</li>
+                <li>标签分类有标签时无法删除；</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+
+<form class="layui-form" action="" style="overflow: hidden; width: 100%;margin-top: 5px">
+    <div class="layui-form-item" style="float: left; width: 100%;margin-bottom: 0">
+        <div class="layui-inline" style="float:left;">
+            <div class="layui-input-inline">
+                <button type="button" class="layui-btn" onclick="main.jumpFour('tag_classify/create')">添加标签分类</button>
+            </div>
+        </div>
+        <div class="layui-inline" style="float: right; margin: 0;">
+            <div class="layui-input-inline" style="width: 52px; margin-right: 0;">
+                <button class="layui-btn" lay-submit lay-filter="create">搜索</button>
+            </div>
+        </div>
+        <div class="layui-inline" style="float: right;">
+            <div class="layui-input-inline">
+                <input type="text" name="name" autocomplete="off" value="{:input('name','')}" class="layui-input" placeholder="标签分类名称">
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="layui-table">
+    <colgroup>
+        <col>
+        <col width="200">
+    </colgroup>
+    <thead>
+    <tr>
+        <th>标签分类名称</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {notempty name="tagClassifyList"}
+    {volist name="tagClassifyList" id="vo"}
+    <tr>
+        <td>{$vo.name}</td>
+        <td>
+            <button class="layui-btn layui-btn-normal" onclick="main.jumpFour('tag_classify/edit?id={$vo.tag_classify_id}')">编辑</button>
+            <button class="layui-btn layui-btn-danger" onclick="main.destroy('/tag_classify/delete','{$vo.tag_classify_id}')">删除</button>
+        </td>
+    </tr>
+    {/volist}
+    {else/}
+    <tr>
+        <td colspan="2">暂无标签分类</td>
+    </tr>
+    {/notempty}
+    {if $tagClassifyList->lastPage() > 1}
+    <tfoot>
+    <tr>
+        <td colspan="2">
+            {:$tagClassifyList->render()}
+        </td>
+    </tr>
+    </tfoot>
+    {/if}
+    </tbody>
+</table>
+
+{/block}

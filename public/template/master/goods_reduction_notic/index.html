@@ -1,0 +1,162 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+    .layui-form-select{width: 114px;}
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、管理用户关注的商品降价通知，每个用户可多次设置降价提醒，每次提醒覆盖保存上一条通知设置；</span></li>
+            <li><span>2、可针对不同用户进行短信发送提醒；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form" method="get">
+    <div class="common-head">
+        <div class="layui-form-item order_item">
+            <label class="layui-form-label">关注降价时间：</label>
+            <div class="imitate_select" style="width: 180px;">
+                <input title="申请认证时间" name="date" type="text" class="layui-input"
+                       value="{:input('get.date','')}"
+                       id="date" readonly placeholder="关注降价时间范围查询">
+            </div>
+        </div>
+
+        <!--金额区间-->
+        <div class="layui-form-item order_item">
+            <label class="layui-form-label">期望价格区间：</label>
+            <div class="layui-input-block">
+                <input name="min" value="{:input('min','')}" type="number" placeholder="" class="text text_2 layui-input"  autocomplete="off" style="margin-right: 0"/>
+                <span class="bolang">&nbsp;&nbsp;至&nbsp;&nbsp;</span>
+                <input name="max" value="{:input('max','')}" type="number" placeholder="" class="text text_2 layui-input"   autocomplete="off" />
+            </div>
+        </div>
+
+        <div class="layui-form-item order_item">
+            <label class="layui-form-label">发送状态：</label>
+            <div class="imitate_select" style="width: 180px;">
+                <select name="status" class="cite ps-container">
+                    <option value="-1" {eq name=":input('status', '-1')" value="-1" }selected{/eq}>全部</option>
+                    <option value="0" {eq name=":input('status', '-1')" value="0" }selected{/eq}>未发送</option>
+                    <option value="1" {eq name=":input('status', '-1')" value="1" }selected{/eq}>已发送</option>
+                </select>
+            </div>
+            <div class="layui-input-block" style="padding-left: 20px;">
+                <input type="hidden" name="goods_id" value="{$goods_id|default=''}">
+                <button class="layui-btn layui-btn-submit" lay-submit="">查询</button>
+            </div>
+<!--            <hr class="layui-bg-gray">-->
+<!--            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('goods_reduction_notic/log?goods_id={$goods_id}')">-->
+<!--                <div class="fbutton">-->
+<!--                    <div title="发送记录"><span><i class="fa fa-bar-chart-o"></i> 发送记录</span></div>-->
+<!--                </div>-->
+<!--            </a>-->
+        </div>
+
+
+    </div>
+
+    <hr class="layui-bg-gray">
+</form>
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>
+            <th>会员</th>
+            <th>关注时价格</th>
+            <th>当前销售价</th>
+            <th>期望价</th>
+            <th>关注降价时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach name='data' item='item'}
+        <tr>
+            <td><input type="checkbox" value="{$item.goods_reduction_notic_id}" class="chk" lay-filter="chk" title="" lay-skin="primary"/>
+            </td>
+            <td><img src="{$item.avatar?:'?'}" class="avatar" alt="头像" onerror="this.src='__RES__/image/common/imageError.png'" />
+                {$item.nickname|default=''}</td>
+            <td>{$item.price}</td>
+            <td>{$item.shop_price}</td>
+            <td>{$item.expected_price}</td>
+            <td>{$item.create_time}</td>
+            <!--{if condition="$item.status eq 0"}-->
+            <!--<td>未发送</td>-->
+            <!--{/if}-->
+            <!--{if condition="$item.status eq 1"}-->
+            <!--<td>已发送</td>-->
+            <!--{/if}-->
+            <!--<td>-->
+                <!--<a class="btn_trash" onclick="main.destroy('/goods_reduction_notic/destroy','{$item.goods_reduction_notic_id}')"><i-->
+                        <!--class="fa fa-trash-o"></i>删除</a>-->
+            <!--</td>-->
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+<!--                    <a class="btn_trash" onclick="">发送提醒短信</a>-->
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+
+    </table>
+</div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.laydate([{
+        elem: '#date',
+        type: 'date',
+        range: true,
+        max:0
+    }]);
+    //重定向本身
+    function reloadSelf(condition) {
+        var param = '', key = Object.keys(condition);
+
+        if (key.length > 0) {
+            for (var x in condition) {
+                param += '&' + x + '=' + condition[x];
+            }
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+</script>
+{/block}

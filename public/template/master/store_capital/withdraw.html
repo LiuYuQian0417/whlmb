@@ -1,0 +1,288 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .value{color: #1e9fff;font-weight: bold;font-size: 20px;}
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、根据商家提现申请，核对信息后进行打款转账；</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+        <div class="order_stats">
+            <div class="order_stats_search">
+                <div class="list common-head" style="">
+                    <div class="layui-form-item order_item">
+                        <label class="layui-form-label">申请时间：</label>
+                        <input type="text" class="layui-input" id="date" name="date"
+                               value="{:input('get.date','')}" placeholder="申请时间范围查询" style="padding: 0 20px;width:300px">
+                    </div>
+
+                    <!--提现金额区间-->
+                    <div class="layui-form-item order_item">
+                        <label class="layui-form-label">提现金额区间：</label>
+                        <div class="layui-input-block">
+                            <input name="min" value="{:input('min','')}" type="number" placeholder="" class="text text_2 layui-input"  autocomplete="off" style="margin-right: 0"/>
+                            <span class="bolang">&nbsp;&nbsp;至&nbsp;&nbsp;</span>
+                            <input name="max" value="{:input('max','')}" type="number" placeholder="" class="text text_2 layui-input"   autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <!--提现状态-->
+                    <div class="layui-form-item order_item">
+                        <label class="layui-form-label">提现状态：</label>
+                        <div class="layui-input-block">
+                            <select name="status" lay-filter="time">
+                                <option value="-1" {eq name=":input('status','-1')" value='0' } selected {/eq}>全部</option>
+                                <option value="1.1" {eq name=":input('status','-1')" value='1.1' } selected {/eq}>待审核</option>
+                                <option value="1.4" {eq name=":input('status','-1')" value='1.4' } selected {/eq}>审核通过转账中</option>
+                                <option value="1.2" {eq name=":input('status','-1')" value='1.2' } selected {/eq}>提现成功</option>
+                                <option value="1.3" {eq name=":input('status','-1')" value='1.3' } selected {/eq}>提现失败</option>
+                                <option value="1.5" {eq name=":input('status','-1')" value='1.5' } selected {/eq}>审核失败</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="list" style="display: flex;justify-content:flex-start;">
+                    <!--提现类型-->
+                    <div class="layui-form-item order_item">
+                        <label class="layui-form-label">提现类型：</label>
+                        <div class="layui-input-block">
+                            <select name="back_type" lay-filter="time">
+                                <option value="0" {eq name=":input('back_type','0')" value='0' } selected {/eq}>全部</option>
+                                <option value="1" {eq name=":input('back_type','0')" value='2' } selected {/eq}>对公账户转账</option>
+                                <option value="2" {eq name=":input('back_type','0')" value='3' } selected {/eq}>对私账户转账</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <!--关键词-->
+                    <div class="layui-form-item order_item" style="margin-left: 23px">
+                        <label class="layui-form-label">关键词：</label>
+                        <div class="layui-input-block">
+                            <input name="keyword" value="{:input('keyword','','htmlspecialchars')}" type="text" placeholder="商家名称" class="text text_2 layui-input"  autocomplete="off" />
+                            <button class="layui-btn" lay-submit="">查询</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="layui-bg-gray">
+
+                <div class="layui-form-item order_item" style="margin-top: 20px;">
+                    <label class="layui-form-label" style="width: 106px;">待审核提现金额：</label>
+                    <div class="layui-input-inline">
+                        <span class="value"><em>¥</em>{$price.N_checking|number_format=###,2}</span>
+                    </div>
+
+                    <label class="layui-form-label">转账中金额：</label>
+                    <div class="layui-input-inline">
+                        <span class="value"><em>¥</em>{$price.Y_checking|default=0|number_format=###,2}</span>
+                    </div>
+
+                    <label class="layui-form-label">成功提现金额：</label>
+                    <div class="layui-input-inline">
+                        <span class="value"><em>¥</em>{$price.succeed|default=0|number_format=###,2}</span>
+                    </div>
+
+                    <label class="layui-form-label">提现失败金额：</label>
+                    <div class="layui-input-inline">
+                        <span class="value"><em>¥</em>{$price.field|default=0|number_format=###,2}</span>
+                    </div>
+
+                    <div class="f_right">
+                        <a class="layui-btn layui-btn-sm layui-btn-normal down_btn" href="#download" onclick="exportList()"><i class="layui-icon layui-icon-download-circle"></i> 导出</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!--列表-->
+        <!--<div class="list-div" id="listDiv">-->
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th width="10%">商家名称</th>
+                <th width="10%">提现金额</th>
+                <th width="10%">转账账户</th>
+                <th width="10%">提现类型</th>
+                <th width="10%">提现状态</th>
+                <th width="10%">申请时间</th>
+                <th width="10%">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr>
+                <td class="no-records" colspan="10">没有找到任何记录</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>{$item.store_name}</td>
+                <td>{$item.price}</td>
+                <td>开户行：{$item.account_bank_name}<br>
+                    开户名：{$item.account_name}<br>
+                    开户账户：{$item.bank_number}<br>
+                </td>
+                    {switch name="item.back_type"}
+                    {case value="1"}对公账户转账{/case}
+                    {case value="2"}对私账户转账{/case}
+                    {default /}出错啦
+                    {/switch}
+                <td>
+                    {switch name="item.type"}
+                    {case value="1"}微信账户{/case}
+                    {case value="2"}{$item.bank_number|default=''}{/case}
+                    {/switch}
+                </td>
+                <td>
+                    {switch name="item.status"}
+                    {case value="1.1"}待审核{/case}
+                    {case value="1.4"}审核通过转账中{/case}
+                    {case value="1.2"}提现成功{/case}
+                    {case value="1.3"}提现失败{/case}
+                    {case value="1.5"}审核失败{/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+                <td>{$item.create_time|default=''}</td>
+                <td>
+                    {switch name="$item.status"}
+                        {case value="1.1"}
+                        <a href="javascript:void(0);" onclick="isChecking({title:'审核提现',btn:[]},{$item.capital_id})" class="btn_see" style="background-color: #1e9fff;color: white">审核</a>
+                        {/case}
+                        {case value="1.4"}
+                        <a href="javascript:void(0);" style="background-color: #f98a10;color: white" onclick="isComplete({title:'转账中处理',btn:[]},{$item.capital_id})" class="btn_see">转账中</a>
+                        {/case}
+                        {case value="1.2"}<a href="javascript:void(0);" style="background-color: #00B83F;color: white" class="btn_see" onclick="isOkay({title:'提现成功',btn:[]},'{$item.capital_id}','1.2')">提现成功</a>{/case}
+                        {case value="1.3"}<a href="javascript:void(0);" style="background-color: #c42014;color: white" class="btn_see" onclick="isOkay({title:'提现失败',btn:[]},'{$item.capital_id}','1.3')">提现失败</a>{/case}
+                        {case value="1.5"}<a href="javascript:void(0);" style="background-color: #c42014;color: white" class="btn_see" onclick="checkedFail({title:'审核失败',btn:[]},{$item.capital_id})">审核失败</a>{/case}
+                    {/switch}
+
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        <!--</div>-->
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script type="text/javascript">
+    function isChecking(obj,id) {
+        var param = 'capital_id='+id;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['45%', '500px'],
+            btn: obj.btn,
+            content: '/store_capital/isChecking?' + param
+        });
+    }
+
+    function checkedFail(obj,id) {
+        var param = 'capital_id='+id;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['45%', '600px'],
+            btn: obj.btn,
+            content: '/store_capital/checkedFail?' + param
+        });
+    }
+    function isComplete(obj,id) {
+        var param = 'capital_id='+id;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['55%', '840px'],
+            btn: obj.btn,
+            content: '/store_capital/isComplete?' + param
+        });
+    }
+
+    function isOkay(obj,id,status) {
+        var param = 'capital_id='+ id + '&status=' + status;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['55%', '750px'],
+            btn: obj.btn,
+            content: '/store_capital/isOkay?' + param
+        });
+    }
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+</script>
+<script type="text/javascript">
+
+
+    main.form()
+
+    main.laydate([{
+        elem: "#date",
+        type: "datetime",
+        range: true,
+        max: 1
+    }]);
+</script>
+{/block}

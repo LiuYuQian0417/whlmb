@@ -1,0 +1,75 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css" />
+<div class="main-content" id="mainContent">
+    <form action="">
+        <div class="btn-info">
+            <a class="sc-btn sc-blue-btn" onclick="main.jumpFour('client/delivery_settings/create')">
+                <i class="icon-plus"></i>新建地址</a>
+        </div>
+        <div class="list-div" id="listDiv">
+            <!--列表-->
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th>联系人</th>
+                    <th>联系电话</th>
+                    <th>地址</th>
+                    <th>地址类型</th>
+                    <th class="tr pr20">操作
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr>
+                    <td class="no-records" colspan="9">没有找到任何记录</td>
+                </tr>
+                {/empty}
+                {volist name="data" id="item"}
+                <tr>
+                    <td>{$item.contact_name}</td>
+                    <td>{$item.contacts_number}</td>
+                    <td>{$item.address_location_text}</td>
+                    <td>
+                        {eq name="item.return_address" value="1"}
+                            退货地址
+                            {eq name="item.default_return_address" value="1"}
+                                <span class="layui-badge layui-bg-blue">默认</span>
+                            {/eq}
+                            <br>
+                        {/eq}
+                        {eq name="item.shipping_address" value="1"}
+                            发货地址
+                        {/eq}
+                    </td>
+                    <td class="ecsc-table-handle tr">
+                        <a href="javascript:void(0);"
+                           onclick="main.jumpFour('client/delivery_settings/edit?id={$item.store_address_id}')"
+                           class="btn_edit"><i class="fa fa-edit"></i>编辑</a></span>
+                        <a href="javascript:void(0);"
+                           onclick="main.destroy('/client/delivery_settings/destroy','{$item.store_address_id}')" class="btn_trash"><i
+                                class="fa fa-trash"></i>删除</a></span>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+                {notempty name="render"}
+                <tfoot>
+                <tr>
+                    <td colspan="20">
+                        {:$data->render()}
+                    </td>
+                </tr>
+                </tfoot>
+                {/notempty}
+            </table>
+            <!--列表-->
+        </div>
+    </form>
+</div>
+{/block}

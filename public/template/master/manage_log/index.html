@@ -1,0 +1,120 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>该页面展示管理员的操作日志。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form" action="">
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="inquire marri10">
+                    <input type="text" name="date" class="inquire_text nofocus" placeholder="选择查询的时间区间"
+                           value="{:input('get.date','')}" id="searchDate"
+                           autocomplete="off" readonly>
+                </div>
+                <div class="imitate_select">
+                    <select name="manage" class="ps-container cite" title="选择操作员">
+                        <option value="">选择操作员</option>
+                        {foreach name='$manage' item='v'}
+                        <option value="{$v.manage_id}" {eq name=":input('get.manage','')" value="$v.manage_id"}selected{/eq}>{$v.nickname}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="导航/IP/操作员名称"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                    <input type="submit" class="btn" value="">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--列表-->
+<div class="layui-form" >
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>ID</th>
+            <th>类型</th>
+            <th>操作导航</th>
+            <th>操作内容</th>
+            <th>IP</th>
+            <th>操作员</th>
+            <th>操作时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr  class='emptyTable'><td colspan="100" style="font-size: 25px;">暂无数据</td></tr>
+        {/empty}
+        {foreach name='data' item='v'}
+        <tr>
+            <td><input type="checkbox" value="{$v.manage_log_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>{$v.manage_log_id}</td>
+            <td>{$v.type}</td>
+            <td>{$v.breadcrumb}</td>
+            <td>
+                <a title="查看操作详情内容" href="javascript:void(0);" onclick="msg('{$v.content}')">
+                    <i class="fa fa-eye"></i>
+                </a>
+            </td>
+            <td>{$v.operate_ip}</td>
+            <td>{$v.nickname}</td>
+            <td>{$v.create_time}</td>
+            <td>
+                <a class="btn_trash" onclick="main.destroy('/manage_log/destroy','{$v.manage_log_id}')"><i class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/manage_log/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form();
+    main.laydate([{
+        elem: '#searchDate',
+        type: 'datetime',
+        range: true
+    }]);
+    function msg(content) {
+        layer.alert(content,{skin:'layui-layer-lan',closeBtn:0,anim:1,shade:false,title:'操作内容'});
+    }
+</script>
+{/block}
+{block name='form'}{/block}
+{block name='highSearch'}{/block}

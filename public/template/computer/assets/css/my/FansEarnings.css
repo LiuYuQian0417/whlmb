@@ -1,0 +1,161 @@
+.fans-earnings .fans-earnings-box {
+  padding: 0px 30px;
+  background: #fff;
+  margin-top: 20px;
+}
+.fans-earnings .fans-earnings-box .title {
+  height: 57px;
+  line-height: 57px;
+}
+.fans-earnings .fans-earnings-box .title .tit-left {
+  float: left;
+}
+.fans-earnings .fans-earnings-box .title .tit-left a {
+  color: #333333;
+}
+.fans-earnings .fans-earnings-box .title .tit-left span {
+  color: #D1D4E2;
+  font-size: 12px;
+  margin: 0px 20px;
+  position: relative;
+  top: -2px;
+}
+.fans-earnings .fans-earnings-box .title .tit-right {
+  float: right;
+}
+.fans-earnings .fans-earnings-box .title .tit-right .order-num {
+  margin-right: 15px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content {
+  margin-top: 5px;
+  margin-bottom: 35px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top {
+  height: 34px;
+  background: #F8F6F6;
+  display: flex;
+  line-height: 34px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top div {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top div a {
+  color: #666666;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top div span {
+  float: left;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top div .top {
+  display: inline-block;
+  width: 0px;
+  height: 0px;
+  border: 4px solid transparent;
+  border-bottom: 4px solid #666666;
+  position: relative;
+  top: -6px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top div .bottom {
+  display: inline-block;
+  width: 0px;
+  height: 0px;
+  border: 4px solid transparent;
+  border-top: 4px solid #666666;
+  margin-top: 2px;
+  position: relative;
+  top: 4px;
+  left: -12px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker {
+  width: 140px;
+  flex: none;
+  position: relative;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker img {
+  position: relative;
+  top: -3px;
+  transform: rotate(180deg);
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker > a {
+  position: relative;
+  z-index: 2;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker a {
+  display: block;
+  width: 100%;
+  height: 34px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker .date-picker-list {
+  position: absolute;
+  top: 34px;
+  left: 0px;
+  width: 100%;
+  background: #fff;
+  box-shadow: 0px 0px 10px #ddd;
+  display: none;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker .date-picker-list a {
+  position: relative;
+  z-index: 101;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker .date-picker-list a:hover {
+  background: #F5F5F5;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker-show {
+  box-shadow: 0px 0px 10px #ddd;
+  background: #FFFFFF;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker-show > a {
+  background: #fff;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker-show img {
+  transform: rotate(0deg) !important;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-top .date-picker-show .date-picker-list {
+  display: block;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-earnings-list .list {
+  height: 85px;
+  background: #fff;
+  border-bottom: 1px solid #F5F5F5;
+  display: flex;
+  padding-top: 10px;
+  box-sizing: border-box;
+  line-height: 65px;
+  text-align: center;
+  font-size: 14px;
+  color: #666666;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-earnings-list .list div {
+  flex: 1;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-earnings-list .list .goods {
+  flex: 1;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-earnings-list .list .goods img {
+  width: 65px;
+  height: 65px;
+  float: left;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-earnings-list .list .goods .goods-name {
+  float: left;
+  width: 235px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap ;
+  margin-left: 15px;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-earnings-list .list .user .name {
+  display: inline-block;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap ;
+}
+.fans-earnings .fans-earnings-box .fans-earnings-content .fans-earnings-list .list .user img {
+  margin-left: 10px;
+  display: inline-block;
+  position: relative;
+  top: -27px;
+}

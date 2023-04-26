@@ -1,0 +1,184 @@
+<link href="__RES__/font/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+
+<!--操作提示begin-->
+
+<div class="layui-tab layui-tab-brief">
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li class="{eq name='type' value='1'}curr{/eq}"><a href="javascript:void(0);" onclick="reloadSelf({type:1,store_id:{$store.store_id}})">转换处理</a>
+            </li>
+            <li class="{eq name='type' value='2'}curr{/eq}"><a href="javascript:void(0);" onclick="reloadSelf({type:2,store_id:{$store.store_id}})">转换记录</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--处理-->
+{eq name='type' value='1'}
+<form class="layui-form" id="form" style="margin-top: 20px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺名称：</label>
+        <div class="imitate_select" style="width: 250px;">
+            <input
+                    class="layui-input"
+                    title=""
+                    name="store_name"
+                    type="text"
+                    value="{$store.store_name|default=''}"
+                    readonly
+            >
+            <input type="hidden" name="store_id" value="{$store.store_id}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺类型：</label>
+        <div class="layui-input-block" style="width: 250px;">
+
+            <input
+                    type="radio"
+                    name="store_type"
+                    value="0"
+                    title="自营"
+                    {eq name="store.shop" value="0"}checked{/eq}
+            >
+            <input
+                    type="radio"
+                    name="store_type"
+                    value="1"
+                    title="入驻"
+                    {neq name="store.shop" value="0"}checked{/neq}
+            >
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否申请：</label>
+        <div class="layui-input-block" style="width: 250px;">
+
+            <input
+                    type="radio"
+                    name="is_apply"
+                    value="0"
+                    title="否&nbsp;&nbsp;&nbsp;"
+                    onclick="return false;"
+                    {eq name="is_apply" value="0"}checked{/eq}
+
+            >
+            <input
+                    type="radio"
+                    name="is_apply"
+                    value="1"
+                    title="是"
+                    onclick="return false;"
+                    {eq name="is_apply" value="1"}checked{/eq}
+            >
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</label>
+            <div class="layui-input-block" style="width: 250px;">
+                <textarea name="remark" placeholder="如需要 输入备注内容" class="layui-textarea"></textarea>
+            </div>
+
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label"> </label>
+        <div class="layui-input-block">
+            <button class="layui-btn-submit layui-btn" type="button" id="Submit">提交</button>
+            <input class="layui-btn" type="button" value="返回" onclick="turn_round()">
+        </div>
+    </div>
+</form>
+{/eq}
+
+<!--记录-->
+{eq name='type' value='2'}
+<table class="layui-table" lay-even lay-skin="nob">
+    <tr>
+        <td>店铺名称</td>
+<!--        <td>店铺申请</td>-->
+        <td>申请时间</td>
+        <td>处理时间</td>
+        <td>处理人</td>
+<!--        <td>处理状态</td>-->
+        <td>备注</td>
+    </tr>
+    {empty name='record'}
+    <tr>
+        <td colspan="7">暂无记录</td>
+    </tr>
+    {else/}
+    {volist name='record' id='rvo'}
+    <tr>
+        <td>{$store.store_name|default=''}</td>
+<!--        <td>{eq name='rvo.apply_type' value='1'}是{else/}否{/eq}</td>-->
+        <td>{$rvo.apply_time}</td>
+        <td>{$rvo.deal_time}</td>
+        <td>{$rvo.deal_person}</td>
+<!--        <td>{eq name='rvo.deal_status' value='1'}已处理{else/}未处理{/eq}</td>-->
+        <td>{$rvo.remark}</td>
+    </tr>
+    {/volist}
+    {/empty}
+</table>
+{/eq}
+<script src="__RES__/js/color_picker/spectrum.js" type="application/javascript"></script>
+<script src="__RES__/js/color_picker/docs.js" type="application/javascript"></script>
+<!--商品属性js-->
+<script src="__RES__/js/common/goods_attr.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/jQuery.toolTip.js"></script>
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/js/common/jquery.cookie.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<script src="__RES__/js/common/jquery.from.js"></script>
+<script src="__RES__/js/common/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/common/jquery.dataTables.min.js"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+    });
+
+    function reloadSelf(args) {
+        var param = '', key = Object.keys(args);
+        if (key.length > 0) {
+            $.each(args, function (i, o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+
+    function turn_round(){
+        parent.layer.closeAll();
+    }
+</script>
+<script>
+    $('#Submit').on('click',function () {
+
+        main.ajax({
+            type:'post',
+            data:$('#form').serializeArray(),
+            callback:function(res){
+                if (res.code == 0){
+                    layer.msg(res.message, {time: 1000},function(){
+                        parent.window.location.reload();
+
+                        // parent.layer.closeAll();
+
+                    });
+                } else {
+                    layer.msg(res.message, {time: 1000},function(){
+                        // parent.layer.closeAll();
+                    });
+                }
+            }
+        })
+    })
+</script>

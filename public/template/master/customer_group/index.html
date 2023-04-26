@@ -1,0 +1,170 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .kf_new{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .kf {
+        overflow: hidden;
+    }
+    .kf .pic{
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .kf .pic > img {
+        width: 36px;
+        height: 36px;
+        border-radius: 100%;
+        margin-left: -20px;
+        border:2px solid white;
+        position: relative;
+        float: right;
+    }
+
+    .kf > span {
+        display: inline-block;
+    }
+
+    .btn-info > .left{
+        color: #fff !important;
+    }
+</style>
+<form action="" name="searchForm" class="layui-form">
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>1、客服分组：按照客服任务创建分组；</span></li>
+                <li><span>2、客服管理：选择分组后，创建该分组的客服，可对客服进行编辑与删除；</span></li>
+                <li><span>3、客服分流：配合前端商城，不同业务由不同客服组进行受理；</span></li>
+                <li><span>4、消息记录：管理用户消息；</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('customer_group/index')">客服组</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('customer/index')">客服管理</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('customer_diversion/manage')">客服分流</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('customer/index3')">消息记录</a></li>
+        </ul>
+    </div>
+    <div class="main-content" id="mainContent">
+        <div style="display: flex;align-items: center;justify-content: space-between;margin-bottom: 20px">
+            <div class="layui-btn btn-info">
+                <a href="javascript:void(0);" class="left"
+                   onclick="main.jumpFour('customer_group/create')">
+                    创建客服组
+                </a>
+            </div>
+            <div class="search-info">
+                {eq name="single_store" value="1"}
+                <div class="imitate_select select_w145">
+                    <div class="cite">请选择店铺</div>
+                    <ul>
+                        <li><a href="javascript:;" data-value="0" class="ftx-01">请选择店铺</a></li>
+                        {notempty name="store_list"}
+                        {volist name="store_list" id="vo"}
+                        <li><a href="javascript:;" data-value="{$vo.store_id}" class="ftx-01">{$vo.store_name}</a></li>
+                        {/volist}
+                        {/notempty}
+                    </ul>
+                    <input name="store_id" type="hidden" value="{:input('store_id','0')}"/>
+                </div>
+                {/eq}
+                <div class="search-form">
+                    <form action="" name="searchForm">
+                        <div class="search-key">
+                            <input type="text" name="customer_group_name" size="30" class="text text_2" value="{:input('customer_group_name')}"
+                                   placeholder="输入客服组名"/>
+                        </div>
+                        <input type="submit" class="btn search_btn" value="查询">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--列表-->
+        <div class="list-div" id="listDiv">
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll"
+                                                 lay-skin="primary"/></th>
+                    <th>组名</th>
+                    <th>客服数量</th>
+                    {eq name="single_store" value="1"}<th>所属店铺</th>{/eq}
+                    <th class="tr pr20">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr>
+                    <td class="no-records" colspan="5">没有找到任何记录</td>
+                </tr>
+                {/empty}
+                {volist name="data" id="item"}
+                <tr>
+                    <td><input type="checkbox" value="{$item.customer_group_id}" class="chk" lay-filter="chk" title=""
+                               lay-skin="primary"/></td>
+                    <td>
+                        <span>{$item.name}</span>
+                    </td>
+                    <td class="kf">{$item.customer_count}</td>
+                    {eq name="single_store" value="1"}<td>
+                        <span>{$item.store_name}</span>
+                    </td>{/eq}
+                    <td class="ecsc-table-handle tr">
+                        <a href="javascript:void(0);"
+                           onclick="main.jumpFour('customer_group/update?customer_group_id={$item.customer_group_id}')"
+                           class="btn_edit">
+                            <i class="fa fa-edit"></i>编辑
+                        </a>
+                        <a href="javascript:void(0);"
+                           onclick="main.destroy('/customer_group/destroy','{$item.customer_group_id}')"
+                           class="btn_trash">
+                            <i class="fa fa-trash"></i>删除
+                        </a>
+                </tr>
+                {/volist}
+                </tbody>
+                <tfoot>
+                {notempty name='data'}
+                <tr>
+                    <th class="batch-operation" colspan="20">
+                        <a href="javascript:void(0);" onclick="main.destroy('/customer_group/destroy')"
+                           class="btn_trash" data-type="trash"><i
+                                class="fa fa-trash" style="margin-right: 5px;"></i>多选删除</a>
+                        <span class="page page_3">
+                            {:$data->render()}
+                        </span>
+                    </th>
+                </tr>
+                {/notempty}
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+</script>
+{/block}

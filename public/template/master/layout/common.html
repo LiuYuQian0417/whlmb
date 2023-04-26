@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!--网站图标-->
+    <link rel="shortcut icon" href="__RES__/image/common/favicon_48.ico" />
+    <link rel="bookmark" href="__RES__/image/common/favicon_64.ico" type="image/x-icon" />
+    <!--end-->
+    {block name='title'}<title>{$Think.INI_CONFIG['TITLE']}后台</title>{/block}
+    {block name='mainCss'}
+    <!--公共必须CSS-->
+    <link href="__RES__/font/css/font-awesome.min.css"  rel="stylesheet" type="text/css" />
+    <!--end-->
+    {/block}
+    {block name='css'}
+    <!--网站内部内容css-->
+    <link href="__RES__/css/common/jquery-ui/jquery-ui.min.css"  rel="stylesheet" type="text/css" />
+    <!--jq图片裁剪-->
+    <!--<link href="__RES__/css/common/jquery.Jcrop/jquery.Jcrop.min.css"  rel="stylesheet" type="text/css" />-->
+    <link href="__RES__/css/common/body.css"  rel="stylesheet" type="text/css" />
+    <link href="__RES__/css/login/master.css"  rel="stylesheet" type="text/css" />
+    <!--end-->
+    {/block}
+<!--    <style>-->
+<!--        *{-->
+<!--            cursor: url("/public_resource/image/pointer.png"),default;-->
+<!--        }-->
+<!--    </style>-->
+</head>
+<body>
+{block name='body'}
+<!--网站主体内容-->
+
+<!--头部导航-->
+<div class="admincp-header">
+    <div class="bgSelector"></div>
+    <div id="foldSidebar"><i class="fa fa-outdent " title="展开/收起侧边导航"></i></div>
+    <div class="admincp-name" data-param="0">
+        <!--<a href="javascript:void(0);">-->
+            <h1>{$Think.INI_CONFIG['TITLE']}后台</h1>
+        <!--</a>-->
+    </div>
+    <div class="nc-module-menu">
+        <ul class="nc-row">
+            <!--头部X轴导航数据-->
+            {$X_nav|raw}
+        </ul>
+    </div>
+    <div class="admincp-header-r">
+        <div class="manager">
+            <dl>
+                <dt class="name">{:session('manageName')?:'未设置'}</dt>
+                <dd class="group">{:session('manageAuthGroupTitle')?:'未设置'}</dd>
+            </dl>
+            <span class="avatar">
+                <img alt="管理员头像" src="{:session('manageAvatar')?:'__RES__/image/common/imageError.png'}">
+            </span>
+        </div>
+        <ul class="operate nc-row">
+            <li><a class="style-color show-option" id="trace_show" href="javascript:void(0);" title="给管理中心换个颜色">&nbsp;</a></li>
+            <li><a class="sitemap show-option" href="javascript:void(0);" onClick="main.clearCacheTest()" title="清理缓存">&nbsp;</a></li>
+            <!--<li><a class="homepage show-option" target="_blank" href="http://www.itkee.cn/topic.html" title="新窗口进入社区交流">&nbsp;</a></li>-->
+            <li><a class="login-out show-option" onClick="main.loginOut()" title="安全退出管理中心">&nbsp;</a></li>
+        </ul>
+    </div>
+    <div class="clear"></div>
+</div>
+<!--头部导航end-->
+<!--左侧导航-->
+<div class="admincp-container unfold">
+    <div class="admincp-container-left">
+        <div class="top-border"><span class="nav-side"></span><span class="sub-side"></span></div>
+        <!--左侧Y轴导航数据-->
+        {$Y_nav|raw}
+<!--        <div class="about" title="关于IShop">-->
+<!--            <i class="fa fa-copyright"></i>-->
+<!--            <span>IShop</span>-->
+<!--        </div>-->
+    </div>
+    <div class="admincp-container-right">
+        <div class="top-border"></div>
+        <iframe src="" id="workspace" name="workspace" style="overflow: visible;" frameborder="0" width="100%" height="94%" scrolling="yes" onload="window.parent"></iframe>
+    </div>
+</div>
+<!--左侧导航end-->
+
+<!--网站主体内容end-->
+{/block}
+{block name='js'}
+<!--外部引用JS-->
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/js/common/jquery.cookie.js"></script>
+<script src="__RES__/js/common/jsencrypt.min.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<script>
+    try{
+        //记录跳转和选项卡切换信息
+        window.Y_data_param={$Y_data_param|default=''|raw};
+    }catch (e) {
+
+    }
+</script>
+<script type="text/javascript">
+    $(function () {
+        var to1 = null
+        var to2 = null
+
+        // 从新设置页面宽高  防止瞎白屏
+        function set_kuangao() {
+            var iframeBody = $("#workspace").contents().find('body')
+            if (to1 !== null)
+            {
+                clearTimeout(to1)
+            }
+            if (to2 !== null)
+            {
+                clearTimeout(to2)
+            }
+
+            to1 = setTimeout(function () {
+                iframeBody.width(iframeBody.width() + 1)
+                to2 = setTimeout(function () {
+                    iframeBody.width(iframeBody.width() - 1)
+                }, 100)
+            }, 500)
+
+        }
+
+        var iframe = document.getElementById("workspace");
+        if (iframe !== null)
+        {
+            if (iframe.attachEvent) {
+                iframe.attachEvent("onload", function () {
+                    set_kuangao();
+                });
+            } else {
+                iframe.onload = function () {
+                    set_kuangao();
+                };
+            }
+        }
+    });
+</script>
+<!--end-->
+{/block}
+{block name='script'}
+<!--内联JS-->
+<!--end-->
+{/block}
+</body>
+</html>

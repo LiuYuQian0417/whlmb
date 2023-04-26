@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-title" content="iShop"/>
+    <meta name="App-Config" content="fullscreen=yes,useHistoryState=yes,transition=yes" />
+    <!--iphone设备中的safari私有meta标签，它表示：允许全屏模式浏览-->
+    <meta content=yes name=apple-mobile-web-app-capable />
+    <meta content=yes name=apple-touch-fullscreen />
+    <!--告诉设备忽略将页面中的数字识别为电话号码-->
+    <meta content="telephone=no,email=no" name=format-detection />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <title>收益说明</title>
+    <link rel="stylesheet" type="text/css" href="/template/interfaces/distribution/my/public.css">
+</head>
+<body style="background: #ff5f47">
+<div class="wrap">
+    <div class="representCon">
+        <img src="/template/interfaces/distribution/my/pic.png" alt="" class="pic">
+        {if condition="$data['income_explain']"}
+        <div class="con">
+            <div class="title">
+                <div>收益说明</div>
+            </div>
+            <div class="text">
+                {$data['income_explain']|raw}
+            </div>
+        </div>
+        {/if}
+        {if condition="$data['about_income']"}
+        <div class="con">
+            <div class="title">
+                <div>关于收益</div>
+            </div>
+            <div class="text">
+                {$data['about_income']|raw}
+            </div>
+        </div>
+        {/if}
+        {if condition="$data['noun_explain']"}
+        <div class="con">
+            <div class="title">
+                <div>名词解释</div>
+            </div>
+            <div class="text">
+                {$data['noun_explain']|raw}
+            </div>
+        </div>
+        {/if}
+        {if condition="$data['income_strategy']"}
+        <div class="con">
+            <div class="title">
+                <div>收益策略</div>
+            </div>
+            <div class="text">
+                {$data['income_strategy']|raw}
+            </div>
+        </div>
+        {/if}
+    </div>
+</div>
+</body>
+</html>

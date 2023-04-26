@@ -1,0 +1,146 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+<style>
+    form{
+        width: 500px;
+        margin: 0 auto;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、客服分组：按照客服任务创建分组；</span></li>
+            <li><span>2、客服管理：选择分组后，创建该分组的客服，可对客服进行编辑与删除；</span></li>
+            <li><span>3、客服分流：配合前端商城，不同业务由不同客服组进行受理；</span></li>
+            <li><span>4、消息记录：管理用户消息；</span></li>
+        </ul>
+    </div>
+</div>
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('customer_group/index')">客服组</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('customer/index')">客服管理</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('customer_diversion/manage')">客服分流</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('customer/index3')">消息记录</a></li>
+    </ul>
+</div>
+<form class="layui-form" id="form" action="" method="post">
+    <div class="layui-form-item">
+        <label class="layui-form-label">消息通知页</label>
+        <div class="layui-input-block">
+            <select name="1000" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="customer_group" id="vo"}
+                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['1000']"}{eq name="customer_diversion_map['1000']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品详情页</label>
+        <div class="layui-input-block">
+            <select name="1001" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="customer_group" id="vo"}
+                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['1001']"}{eq name="customer_diversion_map['1001']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">订单详情页</label>
+        <div class="layui-input-block">
+            <select name="1004" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="customer_group" id="vo"}
+                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['1004']"}{eq name="customer_diversion_map['1004']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">退款详情页</label>
+        <div class="layui-input-block">
+            <select name="1005" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="customer_group" id="vo"}
+                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['1005']"}{eq name="customer_diversion_map['1005']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">线下订单页</label>
+        <div class="layui-input-block">
+            <select name="1006" lay-verify="required">
+                <option value="">请选择</option>
+                {volist name="customer_group" id="vo"}
+                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['1006']"}{eq name="customer_diversion_map['1006']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">消息通知页</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <select name="5000" lay-verify="required">-->
+<!--                {volist name="customer_group" id="vo"}-->
+<!--                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['5000']"}{eq name="customer_diversion_map['5000']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>-->
+<!--                {/volist}-->
+<!--            </select>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">客户服务页</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <select name="5001" lay-verify="required">-->
+<!--                {volist name="customer_group" id="vo"}-->
+<!--                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['5001']"}{eq name="customer_diversion_map['5001']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>-->
+<!--                {/volist}-->
+<!--            </select>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">退款详情页</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <select name="5002" lay-verify="required">-->
+<!--                {volist name="customer_group" id="vo"}-->
+<!--                <option value="{$vo.customer_group_id}" {present name="customer_diversion_map['5002']"}{eq name="customer_diversion_map['5002']" value="$vo.customer_group_id"}selected="selected"{/eq}{/present}>{$vo.name}</option>-->
+<!--                {/volist}-->
+<!--            </select>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn" id="submit">保存</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript">
+    main.form()
+    $('#submit').on('click',function () {
+        $.post('/customer_diversion/manage',$('#form').serializeArray(),function (data) {
+            layer.msg(data.msg);
+        })
+    })
+</script>
+{/block}

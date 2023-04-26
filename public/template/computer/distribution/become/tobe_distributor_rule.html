@@ -1,0 +1,66 @@
+
+{extend name='public/common' /}
+
+{block name="content_css"}
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<!--公共搜索css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/indexHeader.css" />
+<!--代言人css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/spokesman/Spokesman.css" />
+{/block}
+{block name="content"}
+<!--头部搜索-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="spokesman-top">
+            <img src="__RES__/imgs/logo-color.png"    onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <div class="spokesman" style="line-height:15px;">
+                代言人
+            </div>
+        </div>
+        <ul class="spokesman-process">
+            <li class=" tit-acrive primary-background-color ">成为代言人
+                <span class="border-color-left"></span>
+            </li>
+            <li class="">
+                <div class=""></div>
+                申请代言
+                <span class=""></span>
+            </li>
+            <li class="">
+                <div></div>
+                申请结果
+                <span></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="spokesman-content">
+    <div class="spokesman-title">
+        <img src="__RES__/imgs/spokesman/biaoti.jpg" width="1200" height="62"/>
+    </div>
+    <ul class="spokesman-list">
+        {volist name="data" id="item"}
+        <li>
+            <div class="spokesman-rule"><img src="__RES__/imgs/spokesman/guize.png" />{$item.title}</div>
+            {volist name="item.rule" id="val" key="key"}
+                {switch name="$val.keyword"}
+                    {case value="apply"}
+                    <div class="spokesman-apply"><span>请点击“申请代言”按钮，审核通过后即可代言</span><a href="{:url('/pc2.0/distribution_become/distribution_form_set')}">申请代言人</a></div>
+                    {/case}
+                    {case value="special_area"}
+                    <div class="spokesman-apply"><span>{$key}.前往代言专区购买指定商品，下单后即可成为代言人</span><a href="{:url('/pc2.0/distribution_goods/goods_list')}">代言专区</a></div>
+                    {/case}
+                    {case value="full"}
+                    <div class="spokesman-stroll"><span>{$key}.在商城任意下单满{$val.condition}元即可成为代言人</span><a href="{:url('/pc2.0/distribution_goods/goods_list')}">去逛逛</a></div>
+                    {/case}
+                {/switch}
+            {/volist}
+        </li>
+        {/volist}
+    </ul>
+    <!--<div class="spokesman-tips">注:两种规则只能二选一，不能同时存在</div>-->
+</div>
+{/block}
+

@@ -1,0 +1,83 @@
+.index-box {
+  width: 1200px;
+  overflow: hidden;
+  margin: 0px auto;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+.index-box .index-left {
+  float: left;
+  background: #fff;
+  width: 170px;
+  padding-top: 1px;
+  padding-left: 12px;
+  padding-bottom: 20px;
+}
+.index-box .index-left .index-list {
+  margin-top: 23px;
+}
+.index-box .index-left .index-list .title {
+  margin-bottom: 10px;
+}
+.index-box .index-left .index-list .title img {
+  position: relative;
+  top: 4px;
+}
+.index-box .index-left .index-list a {
+  display: block;
+  font-size: 12px;
+  color: #333;
+  line-height: 25px;
+  padding-left: 26px;
+}
+.index-box .index-right {
+  float: right;
+  width: 1010px;
+  display: flex;
+}
+.index-box .index-right .info-center {
+  width: 760px;
+}
+.index-box .index-right .info-right-list {
+  width: 250px;
+  min-height: 832px;
+  background: #FFFCF2;
+}
+.index-box .index-right .info-right-list .list {
+  display: block;
+  height: 78px;
+  border-left: 4px solid transparent;
+  padding-top: 12px;
+  box-sizing: border-box;
+}
+.index-box .index-right .info-right-list .list img {
+  float: left;
+  margin-left: 15px;
+}
+.index-box .index-right .info-right-list .list .chosen {
+  display: none;
+}
+.index-box .index-right .info-right-list .list .default {
+  display: block;
+}
+.index-box .index-right .info-right-list .list .list-right {
+  float: left;
+  line-height: 24px;
+  font-size: 12px;
+  margin-left: 15px;
+  color: #000000;
+}
+.index-box .index-right .info-right-list .list .list-right .info {
+  color: #808080;
+}
+.index-box .index-right .info-right-list .active {
+  background: #F8ECCA;
+  border-left: 4px solid #FFB400;
+}
+.index-box .index-right .info-right-list .active .chosen {
+  display: block;
+}
+.index-box .index-right .info-right-list .active .default {
+  display: none;
+}
+/*# sourceMappingURL=MyInfo.css.map */

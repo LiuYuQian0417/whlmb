@@ -1,0 +1,415 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<link rel="stylesheet" href="__RES__/css/common/home.css">
+<style>
+    body{
+        padding-bottom: 50px !important;
+    }
+    .operation-title {
+        color: #999!important;
+        font-size: 15px!important;
+    }
+    .operation-desc {
+        color: #333333!important;
+        font-size: 19px!important;
+        font-weight: bold;
+    }
+    .operation-wrap > a .operation-bg {
+        text-align: center;
+    }
+    .goodsDataList .list {
+        width: 50.55% !important;
+    }
+    #tooltip{
+        font-size: 14px;
+        padding: 10px;
+    }
+    .dataTabList li , .fa-refresh{
+        cursor: pointer;
+    }
+    /*分页那 点击小手*/
+    .page-item:not(.active) > .page-link{
+        cursor: pointer;
+    }
+</style>
+<div>
+    <div>
+        <div>
+            {if !$single_shop}
+            <div class="sub-title">商品总量</div>
+            {/if}
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?shop_type=1&status=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_1.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">{if !$single_shop}自营商品{else/}商品总量{/if}</div>
+                            <div class="operation-desc">{$item.self_goods}</div>
+                        </div>
+                    </div>
+                </a>
+                {if !$single_shop}
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?shop_type=2&status=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_2.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">店铺商品</div>
+                            <div class="operation-desc">{$item.enter_goods}</div>
+                        </div>
+                    </div>
+                </a>
+                {/if}
+            </div>
+        </div>
+        {if !$single_shop}
+        <div>
+            <div class="sub-title">自营商品审核</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?shop_type=1&status=3')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_3.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待审核</div>
+                            <div class="operation-desc">{$item.self_checked}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?shop_type=1&status=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_4.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">已审核并上架</div>
+                            <div class="operation-desc">{$item.self_checked_yes}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/checked?shop_type=1&status=6')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_5.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">未通过</div>
+                            <div class="operation-desc">{$item.self_checked_no}</div>
+                        </div>
+                    </div>
+                </a>
+        </div>
+        <div>
+            <div class="sub-title">非自营商品审核</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?shop_type=2&status=3')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_6.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待审核</div>
+                            <div class="operation-desc">{$item.enter_checked}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?shop_type=2&status=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_7.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">已审核并上架</div>
+                            <div class="operation-desc">{$item.enter_checked_yes}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?shop_type=1&status=6')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_8.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">未通过</div>
+                            <div class="operation-desc">{$item.enter_checked_no}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {/if}
+        {if $Think.INI_CONFIG['IS_GROUP'] || $Think.INI_CONFIG['IS_CUT'] || $Think.INI_CONFIG['IS_LIMIT']}
+        <div>
+            <div class="sub-title">{if !$single_shop}自营参与活动{else/}活动商品{/if}</div>
+            <div class="operation-wrap">
+                {if $Think.INI_CONFIG['IS_GROUP']}
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?activity=2&shop_type=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_9.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">拼团</div>
+                            <div class="operation-desc">{$item.group_count}</div>
+                        </div>
+                    </div>
+                </a>
+                {/if}
+                {if $Think.INI_CONFIG['IS_CUT']}
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?activity=3&shop_type=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_10.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">砍价</div>
+                            <div class="operation-desc">{$item.bargain_count}</div>
+                        </div>
+                    </div>
+                </a>
+                {/if}
+                {if $Think.INI_CONFIG['IS_LIMIT']}
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?activity=1&shop_type=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_11.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">限时抢购</div>
+                            <div class="operation-desc">{$item.limit_count}</div>
+                        </div>
+                    </div>
+                </a>
+                {/if}
+            </div>
+        </div>
+        {/if}
+        <div>
+            <div class="sub-title">自营商品关注</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?is_collect=1&shop_type=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_13.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">关注收藏</div>
+                            <div class="operation-desc">{$item.collect_goods}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('goods/index?reduction_notic=1&shop_type=1')">
+                    <img class="operation-img" src="__RES__/image/general/goods_general_14.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">降价通知</div>
+                            <div class="operation-desc">{$item.goods_reduction_notic}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+        <div>
+            <div class="sub-title">销量排行</div>
+            <form class="layui-form">
+                <div class="stageWrap">
+                    <div class="goodsDataList">
+                        <div class="list">
+                            <div class="totalTitle">商品支付金额 <img src="__RES__/image/common/homeHelp.png" alt="" class="help"
+                                                                   title="统计时间内的商品所有付款订单金额总和(拼团在成团时计入付款金额;货到付款在发货时计入付款金额，不剔除退款金额)">
+                            </div>
+                            <table class="goodsDataTable layui-table" id="goodsPayTable">
+                                <thead>
+                                <tr>
+                                    <th style="width: 30px;">排名</th>
+                                    <th style="text-align: left!important;">商品名称</th>
+                                    <th style="width: 80px;">商品支付金额</th>
+                                </tr>
+                                </thead>
+                                <tbody id="goodsPay">
+
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="list">
+                            <div class="totalTitle">商品销量数 <img src="__RES__/image/common/homeHelp.png" alt="" class="help"
+                                                               title="统计时间内商品成功下单的数量（不包含已取消订单）"></div>
+                            <table class="goodsDataTable layui-table" id="goodsCountTable">
+                                <thead>
+                                <tr>
+                                    <th style="width: 30px;">排名</th>
+                                    <th style="text-align: left!important;">商品名称</th>
+                                    <th style="width: 80px;">商品销量数</th>
+                                </tr>
+                                </thead>
+                                <tbody id="goodsCount">
+
+                                </tbody>
+                                <tfoot>
+
+                                </tfoot>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    body{
+        background: #f6f6f6;
+    }
+
+    .childrenBody > div:first-child{
+        background: #f6f6f6!important;
+    }
+    .title{
+        font-size: 16px;
+        color: #8d8d8d;
+        margin: 30px auto;
+        text-align: center;
+    }
+
+    .sub-title{
+        font-size: 16px;
+        padding: 20px 0;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap{
+        overflow: hidden;
+    }
+
+    .operation-wrap > a{
+        float: left;
+        width: 22%;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        margin-right:3% ;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 2px 2px 2px #f2f5f6;
+
+        cursor: pointer;
+    }
+
+    .operation-wrap > a:nth-child(n + 5){
+        margin-top: 24px;
+    }
+
+    .operation-wrap > a .operation-img{
+        margin-left: 24px;
+    }
+
+    .operation-wrap > a .operation-bg{
+        margin-left: 30px;
+        width: 160px;
+    }
+
+    .operation-wrap > a .operation-title{
+        font-size: 15px;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap > a .operation-desc{
+        font-size: 14px;
+        color: #8d8d8d;
+        margin-top: 10px;
+    }
+    .operation-wrap > a .operation-bg {
+        text-align: center;
+        margin-left: 0px;
+        width: 100%;
+    }
+    .operation-wrap>a>div{
+        width: 100%;
+    }
+</style>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/jQuery.toolTip.js"></script>
+<script src="__RES__/js/pages.js"></script>
+<script>
+    $('.help').toolTip({fade: true});
+    $(function () {
+        goodsPay();
+        goodsCount();
+    })
+    function goodsPay(pages) {
+        var date = $('#date1').val();
+        $('tr[data_type="goodsPay"] ').remove();
+
+        main.ajax({
+            type: 'post',
+            async:true,
+            data: {date: date, page: pages === undefined ? 1 : pages}, url: '/home/goodsPay', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                } else {
+                    $('#goodsPayTable').children('tfoot').remove()
+
+                    res.page.current_page = parseInt(res.page.current_page)
+                    res.page.last_page = parseInt(res.page.last_page)
+
+                    if (res.page.last_page !== 0) {
+                        $('#goodsPayTable').append('<tfoot><tr><td colspan="100"><span style="float:right;"><ul class="pagination"></ul></span></td></tr></tfoot>')
+                        $('#goodsPayTable').find('ul.pagination').pagination({
+                            currentPage:res.page.current_page,
+                            prevText: '«',
+                            nextText: '»',
+                            pages: res.page.last_page, //总页数
+                            edges: 2,
+                            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+                            displayedPages: 9, //显示几个
+                            onPageClick: function(pageNumber, event) {
+                                goodsPay(pageNumber)
+                            },
+                            onInit: function(getid) {
+                                //刷新时或初始化调用
+                                // alert(getid);
+                            }
+                        });
+                    }
+                    $('#goodsPay').append(res.data);
+                }
+            }
+        });
+    }
+
+    function goodsCount(pages) {
+        var date = $('#date1').val();
+        $('tr[data_type="goodsCount"] ').remove();
+        main.ajax({
+            type: 'post',
+            async:true,
+            data: {date: date, page: pages === undefined ? 1 : pages}, url: '/home/goodsCountPay', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                } else {
+                    $('#goodsCountTable').children('tfoot').remove()
+
+                    res.page.current_page = parseInt(res.page.current_page)
+                    res.page.last_page = parseInt(res.page.last_page)
+
+                    if (res.page.last_page !== 0) {
+                        $('#goodsCountTable').append('<tfoot><tr><td colspan="100"><span style="float:right;"><ul class="pagination"></ul></span></td></tr></tfoot>')
+                        $('#goodsCountTable').find('ul.pagination').pagination({
+                            currentPage:res.page.current_page,
+                            prevText: '«',
+                            nextText: '»',
+                            pages: res.page.last_page, //总页数
+                            edges: 2,
+                            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+                            displayedPages: 9, //显示几个
+                            onPageClick: function(pageNumber, event) {
+                                goodsCount(pageNumber)
+                            },
+                            onInit: function(getid) {
+                                //刷新时或初始化调用
+                                // alert(getid);
+                            }
+                        });
+                    }
+                    $('#goodsCount').append(res.data);
+                }
+            }
+        })
+    }
+</script>
+{/block}

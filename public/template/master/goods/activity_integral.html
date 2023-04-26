@@ -1,0 +1,362 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css"  rel="stylesheet" type="text/css" />
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、根据不同活动设置商品信息；</span></li>
+            <li><span>2、活动包括限时抢购、拼团、砍价、积分商城；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示over-->
+<div class="layui-tab layui-tab-brief">
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li><a href="/goods/activity_limit?goods_id={$goods_id}">限时抢购</a></li>
+            <li><a href="/goods/activity_group?goods_id={$goods_id}">拼团</a></li>
+            <li><a href="/goods/activity_cut?goods_id={$goods_id}">砍价</a></li>
+            <li class="curr"><a href="/goods/activity_integral?goods_id={$goods_id}">积分商城</a></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShellFull">
+
+        <div class="contentShell65">
+            <!--商品名称-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 商品名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="integral_name" maxlength="20" autocomplete="off" placeholder="请输入商品名称"
+                           value="{$goods.goods_name|default=''}"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品图片</label>
+                <div class="layui-input-block">
+                    <div
+                            class="imageUpload"
+                            default="{$goods.file|default=''}"
+                            width="375"
+                            height="375"
+                            file-mime="image/gif,image/jpeg,image/png" 文件类型
+                            name="file"
+                            dir="integral/file"
+                            value="{$goods.file_data|default=''}"
+                    ></div>
+                    <div style="overflow: hidden">
+                        <span class="remarks" style="float: left">上传商品图片，尺寸要求375*375，如果不上传会影响展示效果</span>
+                    </div>
+                </div>
+            </div>
+
+            <!--商品Banner-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"> 商品组图</label>
+                <div class="layui-input-block">
+                    <div id="upload_area">
+                        <div id='photos_area' {if condition="!empty($item['multiple_file'])"}style="padding:0;"{/if} class="photos_area clearfix">
+                        {if condition="empty($item['multiple_file'])"}
+                        <p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>
+                        {else/}
+                        {if condition="$item['multiple_file'][0] neq ''"}
+                        {foreach $item['multiple_file'] as $mfKey => $mfVal}
+                        <div class="img-item"><img src="{$mfVal}" title="" class="uploadImg" onerror=this.src="/template/master/resource/image/common/imageError.png">
+                            <input type="hidden" name="picArr[]" value="{$item['multiple_file_extra'][$mfKey]}" />
+                            <div class="operate">
+                                <i class="toleft">左移</i>
+                                <i class="toright">右移</i>
+                                <i class="del">删除</i>
+                            </div>
+                        </div>
+                        {/foreach}
+                        {else/}
+                        <p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>
+                        {/if}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            <!--<div class="layui-form-mid layui-word-aux">-->
+                <!--建议尺寸，800 X 800-->
+            <!--</div>-->
+        </div>
+
+        <!--商品分类-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 商品分类</label>
+            <div class="layui-input-inline">
+                <select name="integral_classify_id" lay-search="" datatype="*"
+                        nullmsg="请选择商品分类" errormsg="请选择商品分类">
+                    <option value></option>
+                    {volist name='classify_list' id='classify'}
+                    <option {eq name="item.integral_classify_id|default=''"
+                            value="$classify.integral_classify_id" }selected{/eq}
+                    value="{$classify.integral_classify_id}">{$classify.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <!--商品库存-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>所需积分</label>
+            <div class="layui-input-inline">
+                <input type="number" name="integral" value="{$item.integral?:''}" title
+                       autocomplete="off" placeholder="填写积分数(正整数)" class="layui-input">
+            </div>
+        </div>
+
+        <!--兑换方式-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>兑换方式</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="type" value="0" title="积分兑换" lay-filter="type"
+                       {eq name="item.type|default='0'" value="0" }checked{/eq}>
+                <input type="radio" name="type" value="1" title="积分换购" lay-filter="type"
+                       {eq name="item.type|default=''" value="1" }checked{/eq}>
+            </div>
+        </div>
+
+        <!--换购所需金额-->
+        <div class="layui-form-item" id="category" {neq name="item.type|default=''" value="1" }hidden{/neq}>
+        <label class="layui-form-label"><em class="require">* </em>所需金额</label>
+        <div class="layui-input-inline">
+            <input type="number" name="price" value="{$item.price|default=''}" maxlength="10"
+                   autocomplete="off" placeholder="请输入所需金额" class="layui-input">
+        </div>
+    </div>
+
+    <!--商品库存-->
+    <div class="layui-form-item">
+        <label class="layui-form-label"><em class="require">* </em>商品库存</label>
+        <div class="layui-input-inline">
+            <input type="number" name="integral_number" value="{$item.integral_number?:''}" title
+                   autocomplete="off" placeholder="填写商品库存(正整数)" class="layui-input">
+        </div>
+    </div>
+
+    <!--库存预警值-->
+    <div class="layui-form-item">
+        <label class="layui-form-label"><em class="require">* </em>商品库存预警值</label>
+        <div class="layui-input-inline">
+            <input type="number" name="warn_number" value="{$item.warn_number?:''}" title
+                   autocomplete="off" placeholder="填写商品库存预警值(正整数)" class="layui-input">
+        </div>
+    </div>
+
+</form>
+<!--商品详细描述-->
+<label class="layui-form-label">积分商品详情</label>
+<hr class="layui-bg-gray">
+<div class="contentShell90">
+    <div class="layui-tab layui-tab-brief">
+        <ul class="layui-tab-title">
+            {if config("user.")["pc"]["is_include"]}
+            <li class="layui-this">
+                <a href="javascript:void(0);"
+                   onclick="$('.describe').eq(0).show().next('.layui-form-item').hide();">
+                    <i class="fa fa-laptop" aria-hidden="true"></i> PC端
+                </a>
+            </li>
+            {/if}
+            <li {if !config("user.")["pc"]["is_include"]}class="layui-this"{/if}>
+                <a href="javascript:void(0);"
+                   onclick="$('.describe').eq(1).show().prev('.layui-form-item').hide();">
+                    <i class="fa fa-mobile" aria-hidden="true"></i> 移动端
+                </a>
+            </li>
+        </ul>
+    </div>
+    {if config("user.")["pc"]["is_include"]}
+    <!--商品PC端详细描述-->
+    <div class="layui-form-item describe">
+        <input type="hidden" id="editorContent" name="content" value="{$item.content?:''}"/>
+        <iframe src="/goods/uEditor" id="content" style="overflow: auto;" frameborder="0" width="100%"
+                height="609px" scrolling="no"></iframe>
+    </div>
+    {/if}
+    <div class="layui-form-item describe" {if config("user.")["pc"]["is_include"]}style="display: none;"{/if}>
+        <div class="mobile-shell">
+            <div class="mobile-content">
+                <div class="container">
+                    {present name="$item.web_content"}
+                    <div class="info">{$item.web_content|raw|default=''}</div>
+                    {else/}
+                    <div class="info"></div>
+                    {/present}
+                </div>
+
+                <input type="hidden" title="" name="web_content" value=""/>
+                <div class="mo-btn">
+                    <a class="layui-btn layui-btn-normal" id="mobileImg" href="javascript:void(0);">
+                        <i class="fa fa-file-picture-o" aria-hidden="true"></i> 添加图片
+                    </a>
+                    <a class="layui-btn layui-btn-normal"
+                       href="javascript:step.addFont('.mobile-content .container .info');">
+                        <i class="fa fa-font" aria-hidden="true"></i> 添加文字
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="explain">
+            <p>
+                <strong>一、基本要求</strong>
+                <span><em>1、</em>手机详情总体大小：图片+文字，<i class="red">图片不超过20张，文字不超过5000字</i>；</span>
+                <span><em>建议：</em>所有图片都是本宝贝相关的图片。</span>
+            </p>
+            <p>
+                <strong>二、图片大小</strong>
+                <span><em>1、</em>建议使用宽度480 ~ 620像素、高度小于等于960像素的图片；</span>
+                <span><em>2、</em>格式为：JPG\JEPG\GIF\PNG；</span>
+                <span><em>举例：</em>可以上传一张宽度为480，高度为960像素，格式为JPG的图片。</span>
+            </p>
+            <p>
+                <strong>三、文字要求</strong>
+                <span><em>1、</em>每次插入文字不能超过500个字，标点、特殊字符按照一个字计算；</span>
+                <span><em>2、</em>请手动输入文字，不要复制粘贴网页上的文字，防止出现乱码；</span>
+                <span><em>3、</em>以下特殊字符“&lt;”、“&gt;”、“"”、“’”、“\”会被替换为空。</span>
+                <span><em>建议：</em>不要添加太多的文字，这样看起来更清晰。</span>
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!--提交-->
+<div class="contentShell65">
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            {present name="$item.integral_id"}
+            <input type="hidden" name="integral_id" value="{$item.integral_id}">
+            {/present}
+            <a type="reset" class="layui-btn layui-btn-primary"  href="/goods/index">返回</a>
+            <button class="layui-btn" type="submit" id="submit">提交</button>
+        </div>
+    </div>
+</div>
+</div>
+<!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{selector:'radio(type)',callback:function (data) {
+            var cate = $('#category');
+            if (data.value == 0) {
+                cate.prop('hidden', true);
+            }
+            if (data.value == 1) {
+                cate.prop('hidden', false);
+            }
+        }}]);
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+
+
+    // 上传图片
+    main.upload([{
+        elem: '#mobileImg',
+        size: 2 * 1024,
+        data: {name: 'content_img', dir: 'content_img'},
+        field: 'content_img',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                '<img src="' + res.data.domain + res.data.url + '" >'
+                + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#photos_area',
+        size: 2 * 1024,
+        data: {name: 'goods_album', dir: 'album'},
+        field: 'goods_album',
+        multiple: true,
+        number: 5,
+        auto: false,
+        choose: function (obj) {
+            var length = $('.img-item').length,num = 1;
+            obj.preview(function (index,file,result) {
+                if (length <= 5 && (length + num) <= 5 ) obj.upload(index, file);
+                num++;
+            });
+        },
+        done: function (res,index,upload) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="img-item">' +
+                '<img src="' + res.data.domain + res.data.url + '" class="uploadImg">' +
+                '<input type="hidden" name="picArr[]" value="'+ res.data.url +'" />' +
+                '<div class="operate">' +
+                '<i class="toleft">左移</i>' +
+                '<i class="toright">右移</i>' +
+                '<i class="del">删除</i>' +
+                '</div></div>';
+            if ($(this.elem).children('.img-item').length == 0) $(this.elem).empty();
+            $(this.elem).css('padding',0).append(html);
+            layer.closeAll('loading');
+        }
+    }]);
+    $("#photos_area").on("click", '.toright', function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_right = item.next(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_right.length == 0) {
+                item.insertBefore($(this).parents('#photos_area').children(".img-item:first"));
+            } else {
+                item.insertAfter(item_right);
+            }
+        }
+    }).on("click", ".toleft", function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_left = item.prev(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_left.length == 0) {
+                item.insertAfter($(this).parents('#photos_area').children(".img-item:last"));
+            } else {
+                item.insertBefore(item_left);
+            }
+        }
+    }).on("click", ".del", function () {
+        $(this).parent().parent(".img-item").remove();
+        var pa = $('#photos_area');
+        if (pa.html() == '')
+            pa.css({'padding':'60px'}).html('<p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>');
+
+    }).on('click', '.img-item', function (ev) {
+        var oEvent = ev || event;
+        oEvent.stopPropagation();
+    });
+    // 单图上传
+    new uploadPreview({UpBtn: "up_img", DivShow: "imgPrev", ImgShow: "imgShow",localPath:'localPath'});
+</script>
+{/block}
+{block name='highSearch'}{/block}

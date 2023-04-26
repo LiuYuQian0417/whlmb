@@ -1,0 +1,102 @@
+{extend name="public/common"}
+{block name="content_css"}
+<!--公共底部css-->
+<link rel="stylesheet" href="__RES__/css/public/PublicBottom.css">
+<!--公共头部css-->
+<link rel="stylesheet" href="__RES__/css/color.css">
+<link rel="stylesheet" href="__RES__/css/public/PublicHeader.css">
+<link rel="stylesheet" href="__RES__/css/public/GuessLike.css">
+<!--公共搜索css-->
+<link rel="stylesheet" href="__RES__/css/public/indexHeader.css">
+<!--支付成功css-->
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<link rel="stylesheet" href="__RES__/css/confirmorder/paysuccess.css">
+<style>
+    body{
+        background-color: #fff !important;
+    }
+</style>
+<!--公共JQ库-->
+<script src="__RES__/js/jquery-1.8.3.min.js"></script>
+{/block}
+{block name="content"}
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="logo" >
+            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <!--<span>换券中心</span>-->
+        </div>
+        <div class="order-process">
+            <ul>
+                <li><span>1</span>
+                    <p>确认订单</p></li>
+                <li><span>2</span>
+                    <p>付款</p></li>
+                <li><span>3</span>
+                    <p>支付成功</p></li>
+            </ul>
+            <div class="barline">
+                <div w="100" style="width: 25%;" class="charts"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--支付成功开始-->
+<div class="paysuccess-content">
+    <div class="pay-success">
+        <p class="pay-success-img"><img src="__RES__/imgs/paysuccess/zhifuchenggong.png" height="61" width="61"/></p>
+        <p class="pay-success">恭喜您支付成功</p>
+        <p class="real-pay">实付：¥{:input('total_price',0.00)}</p>
+        <a href="javascript:;" class="view-order border-color primary-color" onclick="main.jump({'url':'/pc2.0/order/order_list'})">查看订单</a><a href="javascript:;" onclick="main.jump({'url':'/pc2.0/index/index'})" class="view-order border-color primary-color">返回首页</a>
+        <div class="clear"></div>
+    </div>
+    <div class="guess-like">
+        <!--10个-->
+        {volist name='recommend_list' id='recommend_list_data'}
+        <div class="guess-like-list">
+            <a href="javascript:jump_goods('{$recommend_list_data.goods_id}');"> <img src="{$recommend_list_data.file}" width="165" height="140"></a>
+            <a href="javascript:jump_goods('{$recommend_list_data.goods_id}');" class="guess-like-name">{$recommend_list_data.goods_name}</a>
+            <p><span class="price primary-color">￥
+                                    {switch $recommend_list_data.is_group.$recommend_list_data.is_bargain.$recommend_list_data.is_limit}
+                                    {case 100}
+                                    {$recommend_list_data.group_price}
+                                    {/case}
+                                    {case 010}
+                                    {$recommend_list_data.cut_price}
+                                    {/case}
+                                    {case 001}
+                                    {$recommend_list_data.time_limit_price}
+                                    {/case}
+                                    {default /}
+                                    {$recommend_list_data.shop_price}
+                                    {/switch}
+            </span><span class="sales">销量：<span class="primary-color">{$recommend_list_data.sales_volume}</span></span></p>
+        </div>
+        {/volist}
+        <div class="clear"></div>
+    </div>
+</div>
+<!--支付成功结束-->
+<!--微信支付底部结束-->
+<!--<div class="wechat-pay-bottom">-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持 | 哈尔滨龙采科技集团</p>-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持</p>-->
+    <!--<p>版权所有：黑龙江龙采科技</p>-->
+<!--</div>-->
+<!--微信支付底部结束-->
+
+
+<script type="text/javascript">
+    //进度条
+    function animate() {
+        $(".charts").each(function (i, item) {
+            var a = parseInt($(item).attr("w"));
+            $(item).animate({
+                width: a + "%"
+            }, 1000);
+        });
+    };
+    animate();
+</script>
+{/block}

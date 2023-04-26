@@ -1,0 +1,1238 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-form-label {
+        width: 92px;
+        margin: 5px 15px !important;
+    }
+
+    .layui-input-block {
+        margin-left: 100px;
+        min-height: 30px !important;
+        line-height: 30px;
+        padding-top: 0;
+    }
+
+    .layui-form-checked[lay-skin=primary] i {
+        border-color: #5FB878 !important;
+        background: #5FB878 !important;
+    }
+
+    .layui-input-block:not(.status) > input:first-child + .layui-form-radio {
+        width: 60px;
+    }
+
+    .layui-input-block:not(.status) > input:not(.radio-all) + .layui-form-radio {
+        width: 125px;
+    }
+
+    .fl {
+        float: left;
+    }
+
+    .fr {
+        float: right;
+    }
+
+    .control {
+        max-width: 140px;
+        min-width: 140px;
+    }
+
+    .control > a {
+        width: 48px;
+    }
+
+    .layui-form {
+        display: block;
+    }
+
+    .introduce-td {
+        max-width: 200px;
+        min-width: 200px;
+    }
+
+    .goods-list .price-td {
+        min-width: 120px;
+        max-width: 120px;
+        width: unset;
+    }
+
+    .goods-list .introduce-td {
+        min-width: 200px;
+        max-width: 200px;
+    }
+
+    .status > .layui-form-radio {
+        height: 28px;
+        border: 1px solid #e6e6e6;
+        padding: 0 10px;
+        margin-right: 0;
+    }
+
+    .status > .layui-form-radio > i {
+        display: none;
+    }
+
+    .status > .layui-form-radio > div {
+        width: 100%;
+    }
+
+    .status > .layui-form-radioed {
+        background-color: #5FB878;
+        color: #fff;
+    }
+
+    .gun {
+        margin: 0 10px;
+        display: inline;
+        width: 0;
+        border-right: 1px solid #8e8e8e;
+    }
+    #tooltip{
+        position:absolute;
+        border:1px solid #cccccc;
+        background:#fff;
+        color:#fff;
+        display: none;
+        padding: 5px;
+        border-radius: 2px;
+    }
+    .layui-unselect+.help{
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    a.btn_edit{
+        background-color: #1e9fff;
+        color: #fff !important;
+    }
+    a.btn_trash{
+        background-color: #ec5151;
+        color: #fff !important;
+    }
+    a.btn_see{
+        background-color: #f0ad4e;
+        color: #fff !important;
+    }
+    a.btn_see:hover{
+        border-color: #f0ad4e !important;
+    }
+    a.link{
+        color: #1e9fff;
+        text-decoration: underline;
+    }
+    a.btn_edit.disabled,a.btn_trash.disabled{
+        background-color: #ccc !important;
+        color: #fff !important;
+        border-color:#ccc;
+    }
+    .layui-form-switch{
+        min-width: 50px !important;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>该页面展示了商城所有的商品信息，可对商品进行编辑修改操作。</li>
+            <li>处于促销活动中的商品，不允许进行编辑。</li>
+            {if condition="!config('user.one_more') && !config('user.hidden_live')"}
+            <li>点击商品名称,复制小程序商品详情链接,用来上架直播商品</li>
+            {/if}
+        </ul>
+    </div>
+</div>
+{eq name="single_shop" value="1"}
+<div class="layui-tab layui-tab-brief">
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li class="{eq name='shop_type' value='1'}curr{/eq}"><a href="javascript:void(0);"
+                                                                    onclick="reloadSelf({shop_type:1})">自营</a>
+            </li>
+            <li class="{eq name='shop_type' value='2'}curr{/eq}"><a href="javascript:void(0);"
+                                                                    onclick="reloadSelf({shop_type:2})">入驻</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{/eq}
+
+<form class="layui-form" method="get" action="" style="margin-top: 20px">
+
+    <input type="hidden" name="shop_type" value="{$shop_type}">
+
+    <!--商品分类-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品分类：</label>
+        <div class="imitate_select" style="width: 180px;">
+            <select
+                    class="cite ps-container"
+                    name="classify"
+                    lay-search
+            >
+                <option value="0">全部</option>
+                {volist name="goods_classify_list|default=[]" id="goods_classify"}
+                <option
+                    value="{$goods_classify.goods_classify_id}"
+                    {eq name="classify" value="$goods_classify.goods_classify_id" } selected="selected" {/eq}
+                >{for start="1" end="$goods_classify.level" }└ {/for}{$goods_classify.title}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    <!--商品状态-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品状态：</label>
+        <div class="layui-input-block status">
+            <input
+                    class="radio-all"
+                    type="radio"
+                    name="status"
+                    value="0"
+                    title="全部({$goods_all_count})"
+                    {eq name="status|default=0" value="0" }checked="checked" {/eq}
+            >
+            <img
+                    class="help"
+                    title="包含除商品回收站以外的商品"
+                    src="__RES__/image/common/homeHelp.png"
+            >
+            <input
+                    type="radio"
+                    name="status"
+                    value="1"
+                    title="上架商品({$goods_put_away_count})"
+                    {eq name="status|default=0" value="1" }checked="checked" {/eq}
+            >
+            <img
+                    class="help"
+                    title="仅包含上架的商品"
+                    src="__RES__/image/common/homeHelp.png"
+            >
+            <input
+                    type="radio"
+                    name="status"
+                    value="2"
+                    title="下架商品({$goods_put_away_down_count})"
+                    {eq name="status|default=0" value="2" }checked="checked" {/eq}
+            >
+            <img
+                    class="help"
+                    title="仅包含下架的商品"
+                    src="__RES__/image/common/homeHelp.png"
+            >
+            {eq name="single_shop" value="1"}
+            <input
+                    type="radio"
+                    name="status"
+                    value="3"
+                    title="待审核商品({$goods_wait_review_count})"
+                    {eq name="status|default=0" value="3" }checked="checked" {/eq}
+            >
+            <img
+                    class="help"
+                    title="仅包含待审核的商品"
+                    src="__RES__/image/common/homeHelp.png"
+            >
+            {/eq}
+            <input
+                    type="radio"
+                    name="status"
+                    value="4"
+                    title="库存预警商品({$goods_num_warn_count})"
+                    {eq name="status|default=0" value="4" }checked="checked" {/eq}
+            >
+            <img
+                    class="help"
+                    title="仅包含库存数量小于库存预警数量的商品"
+                    src="__RES__/image/common/homeHelp.png"
+            >
+            <input
+                    type="radio"
+                    name="status"
+                    value="5"
+                    title="商品回收站({$goods_delete_count})"
+                    {eq name="status|default=0" value="5" }checked="checked" {/eq}
+            >
+            <img
+                    class="help"
+                    title="仅包含被删除的商品"
+                    src="__RES__/image/common/homeHelp.png"
+            >
+            {eq name="single_shop" value="1"}
+            <input
+                    type="radio"
+                    name="status"
+                    value="6"
+                    title="审核未通过商品({$goods_review_field_count})"
+                    {eq name="status|default=0" value="6" }checked="checked" {/eq}
+            >
+            <img
+                    class="help"
+                    title="仅包含审核未通过的商品"
+                    src="__RES__/image/common/homeHelp.png"
+            >
+            {/eq}
+        </div>
+    </div>
+
+    {eq name="single_shop" value="1"}
+    <!--店铺名称-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺名称：</label>
+        <div class="imitate_select" style="width: 180px;">
+            <input
+                    class="layui-input"
+                    title="入驻时间"
+                    name="store_name"
+                    type="text"
+                    value="{$store_name|default=''}"
+                    placeholder="请输入您要查询的店铺名称"
+            >
+        </div>
+    </div>
+    {/eq}
+    <!--商品名称-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品名称：</label>
+        <div class="imitate_select" style="width: 180px;">
+            <input
+                    class="layui-input"
+                    title="入驻时间"
+                    name="goods_name"
+                    type="text"
+                    value="{$goods_name|default=''}"
+                    placeholder="请输入您要查询的商品名称"
+            >
+        </div>
+    </div>
+
+    <!--商品品牌-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">商品品牌：</label>
+        <div class="imitate_select" style="width: 180px;">
+            <select
+                    class="cite ps-container"
+                    name="brand"
+                    lay-search
+            >
+                <option value="0">全部</option>
+                {volist name="plat_form_brand_list|default=[]" id="plat_form_brand"}
+                <option value="{$plat_form_brand.brand_id}" {eq name="brand" value="$plat_form_brand.brand_id"
+                        }selected="selected" {
+                /eq}>{$plat_form_brand.brand_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+    {eq name="shop_type" value="2"}
+    <!--店铺类型-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺类型：</label>
+        <div class="layui-input-block">
+            <input
+                    class="radio-all"
+                    type="radio"
+                    name="store_type"
+                    value="0"
+                    title="全部"
+                    {eq name="store_type|default=0" value="0" }checked="checked" {/eq}
+            >
+            <input
+                    type="radio"
+                    name="store_type"
+                    value="1"
+                    title="个人"
+                    {eq name="store_type|default=0" value="1" }checked="checked" {/eq}
+            >
+            <input
+                    type="radio"
+                    name="store_type"
+                    value="2"
+                    title="公司"
+                    {eq name="store_type|default=0" value="2" }checked="checked" {/eq}
+            >
+        </div>
+    </div>
+    {/eq}
+
+    <!--推荐状态-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">推荐状态：</label>
+        <div class="layui-input-block">
+            <input
+                    class="radio-all"
+                    type="radio"
+                    name="recommend"
+                    value="0"
+                    title="全部"
+                    {eq name="recommend|default=0" value="0" }checked="checked" {/eq}
+            >
+            {if $Think.INI_CONFIG['IS_GOODS_RECOMMEND']}
+            <input
+                    type="radio"
+                    name="recommend"
+                    value="1"
+                    title="人气好物推荐"
+                    {eq name="recommend|default=0" value="1" }checked="checked" {/eq}
+            >
+            {/if}
+            {if !$Think.INI_CONFIG['SINGLE_STORE']}
+            <input
+                    type="radio"
+                    name="recommend"
+                    value="2"
+                    title="特价优惠推荐"
+                    {eq name="recommend|default=0" value="2" }checked="checked" {/eq}
+            >
+            {/if}
+            {if condition="($shop_type eq 1) and ($single_shop eq 1)"}
+            <!-- 如果是入住的店铺 隐藏 推荐状态 -->
+            <input
+                    type="radio"
+                    name="recommend"
+                    value="3"
+                    title="特别推荐"
+                    {eq name="recommend|default=0" value="3" }checked="checked" {/eq}
+            >
+            <input
+                    type="radio"
+                    name="recommend"
+                    value="4"
+                    title="普通推荐"
+                    {eq name="recommend|default=0" value="4" }checked="checked" {/eq}
+            >
+            <input
+                    type="radio"
+                    name="recommend"
+                    value="5"
+                    title="轮播推荐"
+                    {eq name="recommend|default=0" value="5" }checked="checked" {/eq}
+            >
+            {/if}
+        </div>
+    </div>
+
+    {if $Think.INI_CONFIG['IS_LIMIT'] || $Think.INI_CONFIG['IS_GROUP'] || $Think.INI_CONFIG['IS_CUT']}
+    <!--活动状态-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">活动状态：</label>
+        <div class="layui-input-block">
+            <input
+                    class="radio-all"
+                    type="radio"
+                    name="activity"
+                    value="0"
+                    title="全部"
+                    {eq name="activity|default=0" value="0" }checked="checked" {/eq}
+            >
+            {if $Think.INI_CONFIG['IS_LIMIT']}
+            <input
+                    type="radio"
+                    name="activity"
+                    value="1"
+                    title="限时抢购"
+                    {eq name="activity|default=0" value="1" }checked="checked" {/eq}
+            >
+            {/if}
+            {if $Think.INI_CONFIG['IS_GROUP']}
+            <input
+                    type="radio"
+                    name="activity"
+                    value="2"
+                    title="拼团"
+                    {eq name="activity|default=0" value="2" }checked="checked" {/eq}
+            >
+            {/if}
+            {if $Think.INI_CONFIG['IS_CUT']}
+            <input
+                    type="radio"
+                    name="activity"
+                    value="3"
+                    title="砍价"
+                    {eq name="activity|default=0" value="3" }checked="checked" {/eq}
+            >
+            {/if}
+        </div>
+    </div>
+    {/if}
+    {if $Think.INI_CONFIG['IS_DISTRIBUTION']}
+    <!--分销状态-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">分销状态：</label>
+        <div class="layui-input-block">
+            <input
+                    class="radio-all"
+                    type="radio"
+                    name="distribution"
+                    value="0"
+                    title="全部"
+                    {eq name="distribution|default=0" value="0" }checked="checked" {/eq}
+            >
+            <input
+                    type="radio"
+                    name="distribution"
+                    value="1"
+                    title="可分销商品"
+                    {eq name="distribution|default=0" value="1" }checked="checked" {/eq}
+            >
+            <input
+                    type="radio"
+                    name="distribution"
+                    value="2"
+                    title="购买成为分销商"
+                    {eq name="distribution|default=0" value="2" }checked="checked" {/eq}
+            >
+        </div>
+    </div>
+    {/if}
+    <!--分销状态-->
+    <div class="layui-form-item">
+        <label class="layui-form-label"> </label>
+        <div class="layui-input-block">
+            <button class="layui-btn-submit layui-btn" lay-submit="">查询</button>
+        </div>
+    </div>
+</form>
+<hr>
+<div style="margin-bottom: 10px;height: 30px">
+    <div class="fl">
+        {eq name="shop_type" value="1"}
+<!--        <button class="layui-btn">批量导入</button>-->
+        <button class="layui-btn" onclick="window.location.href='/goods/create?shop=0'">添加商品</button>
+        <div class="gun"></div>
+        {/eq}
+        <button
+            class="layui-btn layui-btn-primary help"
+            id="batchAll"
+            title="审核查询结果的全部商品"
+        >
+            审核全部
+            <img src="__RES__/image/common/homeHelp.png">
+        </button>
+        {neq name="status" value="1"}
+        <button
+            class="layui-btn layui-btn-primary help"
+            id="padAll"
+            title="上架查询结果的全部商品"
+        >
+            上架全部
+            <img src="__RES__/image/common/homeHelp.png">
+        </button>
+        {/neq}
+        {neq name="status" value="2"}
+        <button
+            class="layui-btn layui-btn-primary help"
+            id="pauAll"
+            title="下架查询结果的全部商品"
+        >
+            下架全部
+            <img src="__RES__/image/common/homeHelp.png">
+        </button>
+        {/neq}
+        {eq name="status" value="5"}
+        <button
+            class="layui-btn layui-btn-primary help"
+            id="restoreAll"
+            title="恢复查询结果的全部商品"
+        >
+            恢复全部
+            <img src="__RES__/image/common/homeHelp.png">
+        </button>
+        {else}
+        {eq name="shop_type" value="1"}
+        <button
+            class="layui-btn layui-btn-primary help"
+            id="deleteAll"
+            title="删除查询结果的全部商品"
+        >
+            删除全部
+            <img src="__RES__/image/common/homeHelp.png">
+        </button>
+        {/eq}
+        {/eq}
+    </div>
+    <div class="refresh">
+        <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i
+                class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+        <div class="refresh_span">共{$data_total}条记录&nbsp;&nbsp;每页<font> {$data_list_rows} </font>条</div>
+    </div>
+    <div class="fr">
+        {eq name="shop_type" value="1"}
+<!--        <button class="layui-btn">导出表格</button>-->
+        {/eq}
+    </div>
+</div>
+
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table goods-list">
+        <thead>
+        <tr>
+            <th class="table_num">
+                <input type="checkbox" title="" class="chkAll" lay-filter="chkAll"
+                       lay-skin="primary"/>
+            </th>
+            <th>商品名称</th>
+            <th>商家名称</th>
+            <th>分类</th>
+            <th>价格/货号</th>
+            <th>SKU/库存</th>
+            <th>销量</th>
+            <th>收藏</th>
+            <th>审核状态</th>
+            <th>上架状态</th>
+<!--            <th>排序</th>-->
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach name='data' item='v'}
+        <tr>
+            <td><input type="checkbox" value="{$v.goods_id}" class="chk" lay-filter="chk" title="" lay-skin="primary"/>
+            </td>
+            <td class="introduce-td">
+                <div style="display: flex;align-items: center;justify-content: flex-start">
+                    <div class="img-div">
+                        <img src="{$v.file}" alt="{$v.goods_name}" title="{$v.goods_name}" class="thumb-img"
+                             onerror="this.src='/template/master/resource/image/common/imageError.png'"/>
+                    </div>
+                    <div class="describe" style="flex: 1">
+                        <div class="name-div" title="{$v.goods_name}">
+                            {if condition="!config('user.one_more') && !config('user.hidden_live')"}
+                            <a class="copy_name" href="javascript:void(0);"  data-clipboard-text="nearby_shops/good_detail/good_detail?goods_id={$v.goods_id}">{$v.goods_name}</a>
+                            {else/}
+                            {$v.goods_name}
+                            {/if}
+                        </div>
+                        <div class="brand-div">品牌：<span>{$v.brand_name?:'暂无品牌'}</span></div>
+                        {if condition="env('distribution_status')"}
+                        <div class="brand-div">
+                            {if condition="$v.is_distributor"}
+                            <img src="/mobile/small/image/fx/fx_dybqzd.png" style="width: 50px;" alt="购买此商品升级为分销商"
+                                 title="购买此商品升级为分销商"/>
+                            {/if}
+                            {if condition="$v.is_distribution && !$v.is_distributor"}
+                            <img src="/mobile/small/image/fx/fx_dybq.png" style="width: 50px;" alt="此商品参加分销"
+                                 title="此商品参加分销"/>
+                            {/if}
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </td>
+            <td>{$v.store_name}</td>
+            <td>{$v.classify_name}</td>
+            <td class="price-td">
+                <div class="capital">
+                    <div class="price-div" title="{$v.shop_price}">价格：{$v.shop_price}</div>
+                    <div class="sn-div" title="{$v.goods_sn}">货号：{$v.goods_sn}</div>
+                    <div class="freight-div">运费： {eq name="$v.is_freight" value="1"}免运费{/eq}
+                        {eq name="$v.is_freight" value="0"}
+                        {eq name="$v.freight_status" value="1"}按运费模板收取{/eq}
+                        {eq name="$v.freight_status" value="0"}固定运费{$v.freight_price}{/eq}
+                        {/eq}
+                    </div>
+                </div>
+            </td>
+            {if condition="count($v['spec']) > 0"}
+                <td>
+                    <i class="fa fa-edit edit-sort product-show-btn" data-id="{$v.goods_id}" data-sn="{$v.goods_sn}"
+                       aria-hidden="true"></i>
+                </td>
+            {else/}
+                <td>{$v.goods_number}</td>
+            {/if}
+            <td>{$v.sales_volume}</td>
+            <td>
+                {gt name="v.collect_number" value="0"}
+                <a class="link" href="/goods/collect?goods_id={$v.goods_id}">{$v.collect_number}</a>
+                {else/}
+                    0
+                {/gt}
+            </td>
+            <td class="{$v.goods_id}">
+                {switch name='$v.review_status'}
+                {case value='0'}<font color="red">未通过</font>{/case}
+                {case value='1'}<font>已通过</font>{/case}
+                {case value='2'}<font color="red">待审核</font>{/case}
+                {/switch}
+            </td>
+            <td>
+                <input type="checkbox"
+                       lay-skin="switch"
+                       lay-filter="is_putaway"
+                       lay-text="上架|下架"
+                       value="{$v.goods_id}"
+                       {eq name="v.is_putaway" value="1" }checked{/eq}
+                />
+            </td>
+<!--            <td>-->
+<!--                <a href="javascript:void(0);" class="layui-btn layui-btn-xs layui-btn-normal"-->
+<!--                   onclick="main.tools.open({title:'智能权重',shadeClose: true,openUrl:'/goods/weight?id={$v.goods_id}',area:['50%', '35%']})"><i-->
+<!--                        class="fa fa-sort" aria-hidden="true"></i> 智能权重</a>-->
+<!--            </td>-->
+            <td class="control">
+                {switch shop_type}
+                {case 1}
+                <!--自营-->
+                {if condition="$v.in_activity"}
+                <a class="btn_edit" href="/goods/view?id={$v.goods_id}&shop=0">
+                    查看
+                </a>
+                {else/}
+                {neq name="status" value="5"}
+                <a class="btn_edit {eq name=":input('status',0)" value="5"}  disabled {/eq}" href="/goods/create?id={$v.goods_id}&shop=0">
+                    编辑
+                    {$v.in_activity}
+                </a>
+                {/neq}
+                {/if}
+                {eq name="$v.review_status" value="2"}
+                <a class="btn_edit review" data-goods_id="{$v.goods_id}">
+                    审核
+                </a>
+                {/eq}
+                 {neq name="status" value="5"}
+                <a
+                    class="btn_edit disabled_on_put_away_down {if condition="$v.review_status==0 || $v.is_putaway!=1"}disabled{/if}"
+                    data-href="/goods/recommend?goods_id={$v.goods_id}"
+                    {if condition="$v.review_status!=0 && $v.is_putaway==1"}href="/goods/recommend?goods_id={$v.goods_id}"{/if}
+
+                >
+                    推荐设置
+                </a>
+                {/neq}
+                {eq name="status" value="5"}
+                <a
+                        class="btn_see"
+                        onclick="restoreGoods('{$v.goods_id}')"
+                >
+                    恢复
+                </a>
+                {else/}
+                <a
+                    class="btn_trash"
+                    onclick="deleteGoods('{$v.goods_id}')"
+                >
+                    删除
+                </a>
+                {/eq}
+                {if $Think.INI_CONFIG['IS_DISTRIBUTION']}
+                {neq name="status" value="5"}
+                <a
+                        class="btn_edit disabled_on_put_away_down {if condition="$v.review_status==0 || $v.is_putaway!=1 || $v.can_distribution == 0"}disabled{/if}"
+                        data-href="/goods/distribution?goods_id={$v.goods_id}"
+                        {if condition="$v.review_status!=0 && $v.is_putaway==1 && $v.can_distribution == 1"}href="/goods/distribution?goods_id={$v.goods_id}"{/if}
+                >
+                分销设置
+                </a>
+                {/neq}
+                {/if}
+                 {neq name="status" value="5"}
+                <a
+                    class="btn_edit {eq name=":input('status',0)" value="5"}  disabled {/eq}"
+                href="/goods_reduction_notic/index?goods_id={$v.goods_id}"
+                >
+                    降价通知
+                </a>
+                <a
+                    class="btn_edit {eq name=":input('status',0)" value="5"}  disabled {/eq}"
+                href="/goods/evaluate?goods_id={$v.goods_id}"
+                >
+                    查看评论
+                </a>
+                {/neq}
+                {/case}
+                {case 2}
+                <!--非自营-->
+                <a class="btn_edit" href="/goods/view?id={$v.goods_id}&shop=1">
+                    查看
+                </a>
+                {eq name="$v.review_status" value="2"}
+                <a class="btn_edit review" data-goods_id="{$v.goods_id}">
+                    审核
+                </a>
+                {/eq}
+                <a class="btn_edit" href="/goods/recommend?goods_id={$v.goods_id}">
+                    推荐设置
+                </a>
+                {/case}
+                {/switch}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label
+                            for="all">当页全选</label>
+                    </div>
+                    {eq name=":input('status',0)" value="5"}
+                        <!-- 商品回收站 批量永久删除-->
+                        <a class="btn_trash" onclick="main.destroy('/goods/foreverDestroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                    {else/}
+                        <a class="btn_edit" id="batch-review" href="javascript:;"><i
+                                class="fa fa-check-square-o"></i>批量审核</a>
+                        {if condition="in_array(input('get.term',0),[4]) && in_array(input('get.type',0),[0])"}
+                        <a class="btn_trash" onclick="main.destroy('/goods/foreverDestroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                        {else/}
+                        <a class="btn_trash" onclick="main.destroy('/goods/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                        {/if}
+                        {if condition="in_array(input('get.term',0),[0,1,2,3]) && in_array(input('get.type',0),[0])"}
+                        <a class="btn_edit" onclick="main.shelves('/goods/shelves',0,1,'审核未通过的商品无法上架<br>确定要批量操作吗？')"><i class="fa fa-level-up"></i>批量上架</a>
+                        <a class="btn_trash" onclick="main.shelves('/goods/shelves',0,0,'下架商品会同时下架商品的活动<br>确定要批量操作么？')"><i class="fa fa-level-down"></i>批量下架</a>
+                        {/if}
+                    {/eq}
+
+
+                </div>
+                <span style="float:right;">{$data_paginate|raw}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/color_picker/spectrum.js" type="application/javascript"></script>
+<script src="__RES__/js/color_picker/docs.js" type="application/javascript"></script>
+<!--商品属性js-->
+<script src="__RES__/js/common/goods_attr.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/jQuery.toolTip.js"></script>
+<script src="__RES__/js/common/clipboard.min.js"></script>
+<script>
+    function edit(id, type) {
+        main.ajax({
+            data: {id: id, type: type}, url: '/goods/getActive', callback: function (res) {
+                if (res.code == 0) {
+                    main.jumpFour('goods/create?id=' + id + '&shop=' + type);
+                } else {
+                    layer.msg('此活动正在处于活动中,不可编辑');
+                    return false;
+                }
+            }
+        })
+    }
+
+    main.form([
+        {
+            selector: 'switch(changeSwitch)',
+            callback: function (data) {
+                main.ajax({
+                    data: {
+                        switchType: data.value,
+                        goods_id: data.elem.getAttribute('data-id'),
+                        store_id: data.elem.getAttribute('data-store-id'),
+                        checked: data.elem.checked ? 1 : 0,
+                    },
+                    url: '/goods/editVal',
+                    callback: function (res) {
+                        if (res.code == -201) {
+                            switch (data.value) {
+                                case '8':
+                                    layer.confirm(res.message, function () {
+                                        layer.closeAll();
+                                        main.ajax({
+                                            data: {
+                                                switchType: data.value,
+                                                goods_id: data.elem.getAttribute('data-id'),
+                                                store_id: data.elem.getAttribute('data-store-id'),
+                                            },
+                                            url: '/goods/editValStoreBanner',
+                                        });
+                                        window.location.reload();
+                                    }, function () {
+                                        window.location.reload();
+                                    });
+                                    break;
+                            }
+                        }
+                    }
+                })
+            }
+        },
+        {
+            selector: 'switch(is_putaway)',
+            callback: function (data) {
+                // console.log(data);
+                main.ajax({
+                    data: {
+                        goods_id: data.value,
+                        checked: data.elem.checked ? 1 : 0,
+                    },
+                    url: '/goods/put_away',
+                    callback: function (res) {
+                        if (res.code != 0) {
+                            data.elem.checked = !data.elem.checked
+                            main.form()
+                        }else {
+                            if (data.elem.checked){
+                                // 如果更改为上架
+                                $(data.elem).parent().next().next().find('a.disabled').removeClass('disabled').attr('href',function () {
+                                    return $(this).data('href')
+                                })
+                            } else{
+                                // 如果更改为下架
+                                $(data.elem).parent().next().next().find('.disabled_on_put_away_down').addClass('disabled').removeAttr('href')
+                            }
+                        }
+                        layer.msg(res.message);
+                    }
+                })
+            }
+        }
+    ]);
+    main.laydate();
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '', key = Object.keys(args);
+        if (key.length > 0) {
+            $.each(args, function (i, o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+
+    var txt = '';
+    $(document).on('click', '.edit-show', function () {
+        if ($(this).children('.edit-con').length == 0) {
+            txt = $(this).text().trim();
+            $(this).html('<input type="text" class="edit-con" value="' + txt + '" />');
+            $('.edit-con').focus();
+        }
+    }).on('blur', '.edit-con', function () {
+        var newVal = parseInt($(this).val().trim());
+        if (txt != newVal) {
+            $.post('/goods/editVal', {goods_id: $(this).parent('.edit-show').attr('data-id'), goods_number: newVal});
+        }
+        $(this).parent('.edit-show').html(newVal);
+    }).on('click', '.product-show-btn', function () {
+        main.tools.open({
+            title: '属性库存',
+            openUrl: '/goods/productShow?id=' + $(this).attr('data-id') + '&sn=' + $(this).attr('data-sn'),
+            area: ['50%', '40%']
+        })
+    });
+
+    // 批量审核
+    $('#batch-review').on('click', function () {
+        var checked = $('tbody .chk:checked');
+        if (checked.length === 0) {
+            layer.msg('请选择操作数据', {offset: '400px', time: 2000});
+            return false;
+        }
+        var id = [];
+        checked.each(function (i, o) {
+            id.push($(o).val());
+        });
+        if (id.length > 0) id = id.join(',');
+
+        layer.open({
+            type: 2,
+            title: '批量审核',
+            content: '/goods/batch_review?id=' + id,
+            resize: false,
+            scrollbar: true,
+            area: ['360px', '300px']
+        });
+    })
+
+    $('.btn_edit.review').on('click',function () {
+        layer.open({
+            type: 2,
+            title: '审核商品',
+            content: '/goods/batch_review?id=' + $(this).data('goods_id'),
+            resize: false,
+            scrollbar: true,
+            area: ['360px', '300px']
+        });
+    })
+
+    // 审核全部
+    $('#batchAll').on('click', function () {
+        layer.open({
+            type: 2,
+            title: '审核全部',
+            content: '/goods/review_all'+location.search,
+            resize: false,
+            scrollbar: true,
+            area: ['360px', '300px']
+        });
+    })
+
+    // 上架全部
+    $('#padAll').on('click', function () {
+        layer.msg('审核未通过的商品无法上架!<br>是否上架所有查询结果么？', {
+            offset: 'auto',
+            time:false,
+            btn: ['确定', '取消'], yes: function () {
+                main.ajax({
+                    type: 'post',
+                    url: '/goods/put_away_all'+ location.search,
+                    data: {
+                        type: 1
+                    },
+                    callback: function (res) {
+                        res.reload = true;
+                        main.callback(res);
+                    }
+                });
+            }
+        })
+    })
+
+    // 下架全部
+    $('#pauAll').on('click', function () {
+        layer.msg('下架商品同时会使活动的审核状态变为未通过!<br>是否下架所有查询结果么?', {
+            offset: 'auto',
+            time:false,
+            btn: ['确定', '取消'], yes: function () {
+                main.ajax({
+                    type: 'post',
+                    url: '/goods/put_away_all'+ location.search,
+                    data: {
+                        type: 2
+                    },
+                    callback: function (res) {
+                        res.reload = true;
+                        main.callback(res);
+                    }
+                });
+            }
+        })
+    })
+
+    // 删除全部
+    $('#deleteAll').on('click', function () {
+        layer.msg('删除商品同时会使活动的审核状态变为未通过!<br>是否删除所有查询结果么？', {
+            offset: 'auto',
+            time:false,
+            btn: ['确定', '取消'], yes: function () {
+                main.ajax({
+                    type: 'post',
+                    url: '/goods/delete_all'+ location.search,
+                    data: {
+                        type: 1
+                    },
+                    callback: function (res) {
+                        res.reload = true;
+                        main.callback(res);
+                    }
+                });
+            }
+        })
+    })
+
+    // 恢复全部
+    $('#restoreAll').on('click', function () {
+        layer.msg('是否恢复所有查询结果么？', {
+            offset: 'auto',
+            time:false,
+            btn: ['确定', '取消'], yes: function () {
+                main.ajax({
+                    type: 'post',
+                    url: '/goods/delete_all'+ location.search,
+                    data: {
+                        type: 2
+                    },
+                    callback: function (res) {
+                        res.reload = true;
+                        main.callback(res);
+                    }
+                });
+            }
+        })
+    })
+
+    // 删除商品
+    function deleteGoods(id){
+        layer.msg('删除商品同时会使活动的审核状态变为未通过!<br>是否删除当前商品？', {
+            offset: 'auto',
+            time:false,
+            btn: ['确定', '取消'], yes: function () {
+                main.ajax({
+                    type: 'post',
+                    url: '/goods/delete',
+                    data: {
+                        goods_id: id
+                    },
+                    callback: function (res) {
+                        res.reload = true;
+                        main.callback(res);
+                    }
+                });
+            }
+        })
+    }
+
+    function restoreGoods(id){
+        layer.msg('是否恢复当前商品？', {
+            offset: 'auto',
+            time:false,
+            btn: ['确定', '取消'], yes: function () {
+                main.ajax({
+                    type: 'post',
+                    url: '/goods/restore',
+                    data: {
+                        goods_id: id
+                    },
+                    callback: function (res) {
+                        res.reload = true;
+                        main.callback(res);
+                    }
+                });
+            }
+        })
+    }
+
+
+    //商品审核 start
+    $(document).on("click", "a[ectype='review_status']", function () {
+
+        var goods_name = $(this).data('goodsname');
+
+        var goods_id = $(this).data('goodsid');
+        var type = $(this).data('type');
+
+        var content = '<form id="reviewForm" enctype="multipart/form-data" method="post" action="dialog.php?act=update_review_status">' +
+            '<div class="item fl" style=" width:333px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">' +
+            '商品名称：<em title="' + goods_name + '">' + goods_name + '</em>' +
+            '</div>' +
+            '<div class="item fl" style="width:333px">' +
+            '<div class="fl" style="padding-top:9px">商品审核：</div>' +
+            '<div class="checkbox_items" style="padding-top:10px; width:80%">' +
+            '<div class="checkbox_item">' +
+            '<input name="review_status" class="ui-radio review_status" id="pro_no" value="1" checked="checked" type="radio" onclick="handleReviewStatus(this);">' +
+            '<label for="pro_no" class="ui-radio-label">审核通过</label>' +
+            '</div>' +
+            '<div class="checkbox_item mr15">' +
+            '<input name="review_status" class="ui-radio review_status" id="pro_yes" value="0" type="radio" onclick="handleReviewStatus(this);">' +
+            '<label for="pro_yes" class="ui-radio-label">审核未通过</label> ' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '<div class="item fl hide" id="review_content" style="padding:50px 0px; width:333px">' +
+            '<textarea name="review_content" value="" cols="30" rows="4" class="textarea"></textarea>' +
+            '</div>' +
+            '<input name="goods_id" type="hidden" value="' + goods_id + '">' +
+            '</form>';
+
+
+        layer.open({
+            id: "review_status_dialog",
+            skin: 'layui-layer-hulan',
+            title: "商品审核",
+            area: ['20%', '350px'],
+            content: content,
+            drag: true,
+            foot: true,
+            offset: '300px',
+            btn: ['提交'],
+            yes: function () {
+                insert_review_status();
+            }
+        });
+    });
+
+    function insert_review_status() {
+        var review_status = $("input[name='review_status']:checked").val();
+        var goods_id = $("input[name='goods_id']").val();
+        var review_content = $(".textarea").val();
+
+        $.post('/goods/reviewStatus', {
+            review_status: review_status,
+            goods_id: goods_id,
+            review_content: review_content
+        });
+        if (review_status == 0) {
+            $("." + goods_id).html("未通过");
+        } else {
+            $("." + goods_id).html("已通过");
+        }
+        layer.close(layer.index);
+
+    }
+
+    function handleReviewStatus(t) {
+        if (t.value == '0') {
+            $("#review_content").show();
+        } else {
+            $("#review_content").hide();
+            $(":input[name='review_content']").val('');
+        }
+    }
+
+    // 分销设置 - Joy
+    function distribution(goods_id) {
+        layer.open({
+            type: 2,
+            title: '分销设置',
+            shadeClose: true,
+            shade: 0.01,
+            area: ['50%', '90%'],
+            content: ['/goods/distribution.html?goods_id=' + goods_id]
+        });
+    }
+
+    // 批量分销设置 - Joy
+    function distributionAll() {
+
+        var chkIds = "";
+        $("input[class='chk']:checked").each(function (i) {
+            chkIds += $(this).val() + ",";
+        });
+
+        if (!chkIds) {
+            layer.msg('请选择操作的商品');
+            return false;
+        }
+
+        layer.open({
+            type: 2,
+            title: '分销设置',
+            shadeClose: true,
+            scrollbar: true,
+            shade: 0.01,
+            area: ['50%', '90%'],
+            content: ['/goods/distributionAll.html?goods_id=' + chkIds]
+        });
+    }
+
+    $('.help').toolTip({fade: true});
+    $('.tip').toolTip({fade: true});
+
+
+    var clipboard = new ClipboardJS('.copy_name');
+
+    clipboard.on('success',function (e) {
+        layer.msg('复制成功',{time:1000});
+    });
+
+
+</script>
+{/block}

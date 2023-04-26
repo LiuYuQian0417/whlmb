@@ -1,0 +1,163 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .inline-input{
+        display: inline-block;
+        width: calc(100% - 86px)
+    }
+    .inline-button{
+        display: inline-block;
+    }
+    .button-upload{
+        position: relative;
+        overflow: hidden;
+    }
+    .button-upload>input{
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+</style>
+<form class="layui-form" action="" method="post">
+
+    <!--<div class="tabs_info">-->
+    <!--<ul>-->
+    <!--<li class="curr"><a href="javascript:void(0);">基本配置</a></li>-->
+    <!--</ul>-->
+    <!--</div>-->
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>配置前先需要申请一个微信服务号，并且通过微信认证。（认证服务号需要注意每年微信官方都需要重新认证，如果认证过期，接口功能将无法使用，具体请登录微信公众号平台了解详情）</span>
+                </li>
+                <li><span>网站域名 需要通过ICP备案并正确解析到空间服务器，临时域名与IP地址无法配置。</span></li>
+                <li><span>登录 微信公众号平台 ，获取且依次填写好 公众号名称，公众号原始ID，Appid，Appsecret，token值。</span></li>
+                <li><span>自定义Token值，必须为英文或数字（长度为3-32字符），如 weixintoken，并保持后台与公众号平台填写的一致。</span></li>
+                <li><span>复制接口地址，填写到微信公众号平台 开发=> 基本配置，服务器配置下的 URL地址，验证提交通过后，并启用。（注意仅支持80端口） </span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!----------------------------------------------------基本设置------------------------------------------------------>
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label">微信支付商户号</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="wechat-pay_mch_id"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="微信支付商户号"
+                        value="{$data['wechat-pay_mch_id']['value']|default=''}"
+                        class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">微信支付秘钥</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="wechat-pay_key"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="微信支付秘钥"
+                        value="{$data['wechat-pay_key']['value']|default=''}"
+                        class="layui-input inline-input">
+                <button class="layui-btn layui-btn-primary inline-button" type="button" onclick="buildToken()" >随机生成</button>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">apiclient_cert.pem 证书</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="Token"
+                        value="{$data['wechat-pay_cert_uploaded']?'已上传':'未上传'}"
+                        class="layui-input inline-input"
+                        disabled="disabled"
+                >
+                <a class="layui-btn layui-btn-primary inline-button button-upload" type="button">
+                    <input type="file"
+                           name="apiclient_cert"
+                           class="need-change-prev-status"
+                    >选择文件
+                </a>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">apiclient_key.pem 证书</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        maxlength="100"
+                        autocomplete="off"
+                        value="{$data['wechat-pay_key_uploaded']?'已上传':'未上传'}"
+                        class="layui-input inline-input"
+                        disabled="disabled"
+                >
+                <a class="layui-btn layui-btn-primary inline-button button-upload" type="button">
+                    <input type="file"
+                           name="apiclient_key"
+                           class="need-change-prev-status"
+                    >选择文件
+                </a>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-danger">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+
+    $(function () {
+        $('.need-change-prev-status').on('change',function () {
+            var file = $(this)[0].files
+            var msg_text = file.length > 0 ? '已选择 <'+file[0].name+'>':'未选择'
+            $(this).parent().prev().val(msg_text);
+        })
+    })
+
+    function randomWord(randomFlag, min, max) {
+        var str = "",
+            range = min,
+            arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+        // 随机产生
+        if (randomFlag) {
+            range = Math.round(Math.random() * (max - min)) + min;
+        }
+        for (var i = 0; i < range; i++) {
+            var pos = Math.round(Math.random() * (arr.length - 1));
+            str += arr[pos];
+        }
+        return str;
+    }
+
+    function buildToken() {
+        $('input[name=wechat_token]').val(randomWord(false,32,32))
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

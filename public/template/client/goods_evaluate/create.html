@@ -1,0 +1,192 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+<style>
+    /*preview 样式*/
+    #preview img{ height:400px;}
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #e6e6e6;
+        border-radius: 100%
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>可直接对评价进行回复</span></li>
+            <li><span>可以屏蔽评论或者删除评论，也可以直接回复评论。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <!--用户名-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">会员：</label>
+            <div class="layui-input-block">
+                <img src="{$item.avatar?:'?'}" class="avatar" alt="头像" onerror="this.src='/template/master/resource/image/common/imageError.png'" />
+                {$item.nickname|default=''}
+            </div>
+        </div>
+
+        <!--商品名称-->
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">商品名称：</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" value="{$item.goods_name|default=''}|{$item.attr}"-->
+                       <!--title readonly-->
+                       <!--class="layui-input">-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--商品评价星数-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品评价星数：</label>
+            <div class="layui-input-block">
+                {switch name="item.star_num"}
+                {case value="1"}<img src="/template/master/resource/image/common/evaluate_1.png">{/case}
+                {case value="2"}<img src="/template/master/resource/image/common/evaluate_2.png">{/case}
+                {case value="3"}<img src="/template/master/resource/image/common/evaluate_3.png">{/case}
+                {case value="4"}<img src="/template/master/resource/image/common/evaluate_4.png">{/case}
+                {case value="5"}<img src="/template/master/resource/image/common/evaluate_5.png">{/case}
+                {default /}出错啦
+                {/switch}
+            </div>
+        </div>
+
+        <!--店铺评价星数-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺评价星数：</label>
+            <div class="layui-input-block">
+                {switch name="item.store_star_num"}
+                {case value="1"}<img src="/template/master/resource/image/common/evaluate_1.png">{/case}
+                {case value="2"}<img src="/template/master/resource/image/common/evaluate_2.png">{/case}
+                {case value="3"}<img src="/template/master/resource/image/common/evaluate_3.png">{/case}
+                {case value="4"}<img src="/template/master/resource/image/common/evaluate_4.png">{/case}
+                {case value="5"}<img src="/template/master/resource/image/common/evaluate_5.png">{/case}
+                {default /}出错啦
+                {/switch}
+            </div>
+        </div>
+
+        <!--物流评价星数-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">物流评价星数：</label>
+            <div class="layui-input-block">
+                {switch name="item.express_star_num"}
+                {case value="1"}<img src="/template/master/resource/image/common/evaluate_1.png">{/case}
+                {case value="2"}<img src="/template/master/resource/image/common/evaluate_2.png">{/case}
+                {case value="3"}<img src="/template/master/resource/image/common/evaluate_3.png">{/case}
+                {case value="4"}<img src="/template/master/resource/image/common/evaluate_4.png">{/case}
+                {case value="5"}<img src="/template/master/resource/image/common/evaluate_5.png">{/case}
+                {default /}出错啦
+                {/switch}
+            </div>
+        </div>
+
+
+        <!--描述-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">评价内容</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容"  maxlength="100" class="layui-textarea" readonly>{$item.content|default=''}</textarea>
+            </div>
+        </div>
+
+        <!--评论图片-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">评论图片 / 视频：</label>
+            <div class="layui-input-block" style="display: flex;">
+                {notempty name="item.video"}
+                <video src="{$item.video}" controls="controls" style="max-height: 200px">
+                    您的浏览器不支持 video 标签。
+                </video>
+                {/notempty}
+                {volist name="item['multiple_file']" id="vo"}
+                <a rel="{$vo}" class="preview" style="width: 200px;height: 200px;align-items: center;
+                justify-content: center;display: flex"><img src="{$vo}" style="max-width: 100%;max-height: 100%"></a>
+                {/volist}
+            </div>
+        </div>
+
+        <!--物流评价内容-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">物流评价内容</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容"  maxlength="100" class="layui-textarea" readonly>{$item.express_content|default=''}</textarea>
+            </div>
+        </div>
+
+        <!--回复评论-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label"><font color="red">*</font> 回复评价</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入回复内容"
+                          maxlength="100" name="reply" {neq name="item.reply" value=""}disabled{/neq}
+                nullmsg="请填回复内容" errormsg="请填回复内容"  datatype="*"
+                class="layui-textarea">{$item.reply|default=''}</textarea>
+            </div>
+        </div>
+
+        <!--商品名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">评价时间：</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$item.create_time|default=''}"
+                       title readonly
+                       class="layui-input">
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.goods_evaluate_id"}
+                <input type="hidden" name="goods_evaluate_id" value="{$item.goods_evaluate_id}">
+                {/present}
+                {eq name="item.reply" value=""}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                {/eq}
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/preview.js"></script>
+<script>
+    main.form();
+    main.valid('.layui-form');
+    layui.use(['carousel', 'form'], function(){
+        var carousel = layui.carousel;
+        carousel.render({
+            elem: '#test1'
+            ,arrow: 'always'
+        });
+    });
+    if ($('a.preview').length) {
+        var img = preloadIm();
+        imagePreview(img);
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

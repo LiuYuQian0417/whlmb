@@ -1,0 +1,319 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/map.css" rel="stylesheet" type="text/css"/>
+<!--<link href="/template/client/resource/css/style.css" rel="stylesheet" type="text/css"/>-->
+<!--<link href="/template/client/resource/css/general.css" rel="stylesheet" type="text/css"/>-->
+
+<style>
+    .button-group .button {
+        height: 28px;
+        line-height: 28px;
+        background-color: #0D9BF2;
+        color: #FFF;
+        border: 0;
+        outline: none;
+        padding-left: 5px;
+        padding-right: 5px;
+        border-radius: 3px;
+        margin-bottom: 4px;
+        cursor: pointer;
+    }
+
+    .layui-form-radio {
+        margin: 0 !important;
+    }
+
+    .layui-form-checkbox[lay-skin=primary] {
+        margin-bottom: 0;
+        margin-top: 0
+    }
+
+    .layui-form-checked[lay-skin=primary] i {
+        background: #5FB878;
+        border-color: #5FB878
+    }
+
+    .layui-form-checked[lay-skin=primary]:hover i {
+        border-color: #5FB878
+    }
+
+    .layui-input {
+        width: 240px;
+    }
+
+    .text_center {
+        height: 30px;
+        line-height: 28px;
+        margin: 0 5px;
+    }
+
+    .table_item td {
+        text-align: left !important;
+        width: 25%;
+        padding: 3px 0;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li style="height: 34px;line-height:34px;"
+            onclick="main.jumpFour('distribution_city/edit?id={:input(\'get.id\')}')">
+            <a href="javascript:void(0);">自主配送</a>
+        </li>
+        <li class="curr" style="height: 34px;line-height:34px;"
+            onclick="main.jumpFour('distribution_city/third?id={:input(\'get.id\')}')">
+            <a href="javascript:void(0);">三方配送</a>
+        </li>
+    </ul>
+</div>
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>温馨提示：提交操作将会重新审核，请慎重提交确定。</span></li>
+        </ul>
+    </div>
+</div>
+<form action="" method="post" class="layui-form">
+    <div class="tabs_info" style="margin-top: 15px;">
+        <ul>
+            <li style="height: 34px;line-height:34px;"
+                onclick="main.jumpFour('distribution_city/third?id={:input(\'get.id\')}')">
+                <a href="javascript:void(0);">创建商户</a>
+            </li>
+            <li class="curr"  style="height: 34px;line-height:34px;"
+                 onclick="main.jumpFour('distribution_city/shopList?id={:input(\'get.id\')}')">
+                <a href="javascript:void(0);">门店列表</a>
+            </li>
+        </ul>
+    </div>
+    <div class="contentShell">
+        {if condition="$dada_shop_id = input('dada_shop_id',0)"}
+        <input title type="hidden" name="dada_shop_id" value="{$dada_shop_id = input('dada_shop_id',0)}" />
+        <input title type="hidden" name="origin_shop_id" value="{$shop_data.origin_shop_id}" />
+        {/if}
+        <!--门店名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 门店名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="station_name" datatype="*" nullmsg="请输入门店名称" errormsg="请输入门店名称" value="{$shop_data.station_name|default=''}" placeholder="请输入门店名称" title class="layui-input">
+            </div>
+        </div>
+        {if condition="$dada_shop_id"}
+        <!--上线状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 门店状态：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" {if condition="is_object($shop_data)"} {$shop_data.status?'checked':''} {/if} title="上线">
+                <input type="radio" name="status" value="0" {if condition="is_object($shop_data)"} {$shop_data.status?'':'checked'} {/if} title="下线">
+            </div>
+        </div>
+        {/if}
+        <!--门店主营-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 门店主营：</label>
+            <div class="layui-input-block" style="width:240px;">
+                <select name="business" class="layui-select" datatype="*" errormsg="请选择门店主营" nullmsg="请选择门店主营" lay-search="" title>
+                    {foreach $business_list as $_business_list}
+                    <option value="{$_business_list['business_id']}" {if condition="is_object($shop_data)"} {$shop_data->getData('business') == $_business_list['business_id'] ? 'selected' : ''} {/if}>{$_business_list['name']}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <!--联系人/店长姓名-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 联系人/店长姓名：</label>
+            <div class="layui-input-block">
+                <input type="text" name="contact_name" datatype="*" nullmsg="请输入联系人/店长姓名" errormsg="请输入联系人/店长姓名" value="{$shop_data.contact_name|default=''}" title class="layui-input" placeholder="请输入联系人/店长姓名">
+            </div>
+        </div>
+        <!--联系人电话-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 联系人电话：</label>
+            <div class="layui-input-block">
+                <input type="tel" name="phone" datatype="m" errormsg="请输入联系人电话" nullmsg="请输入正确的联系人电话" value="{$shop_data.phone|default=''}" title class="layui-input" placeholder="请输入联系人电话">
+            </div>
+        </div>
+        <!--所在市区-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 所在市区</label>
+            <div class="layui-input-inline" style="width: 240px">
+                <select name="city_name" class="layui-select" lay-filter="state" lay-search="" title>
+                    {foreach $area_list as $item}
+                    <option value="{$item['area_name']}" flag="{$item['area_id']}" {if condition="is_object($shop_data)"} {$shop_data['city_name'] == $item['area_name']?'selected':''} {/if}>{$item['area_name']}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 240px;">
+                <select name="area_name" class="state" title lay-search="">
+                    {foreach $area_data as $_i}
+                    <option value="{$_i['area_name']}" flag="{$_i['area_id']}" {if condition="is_object($shop_data)"} {$shop_data['area_name'] == $item['area_name']?'selected':''} {/if}>{$_i['area_name']}</option>
+                    {/foreach}
+                </select>
+            </div>
+        </div>
+        <!--详细地址-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 详细地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="station_address" id="tipinput" value="{$shop_data.station_address|default=''}" maxlength="200"
+                       autocomplete="off" datatype="*" errormsg="请输入详细地址" nullmsg="请输入详细地址" style="width: 550px;"
+                       placeholder="请输入详细地址"
+                       class="layui-input">
+                <br>
+                <div id="container" style="width: 550px;height: 300px;" tabindex="0">
+                    <div id="interaction"></div>
+                </div>
+            </div>
+        </div>
+        <!--经度-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 经度（Y）：</label>
+            <div class="layui-input-block">
+                <input type="text" name="lng" datatype="*" errormsg="请选择地图坐标" nullmsg="请选择地图坐标" value="{$shop_data.lng|default=''}" title class="layui-input" readonly placeholder="请选择地图坐标">
+            </div>
+        </div>
+        <!--纬度-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 纬度（X）：</label>
+            <div class="layui-input-block">
+                <input type="text" name="lat" datatype="*" errormsg="请选择地图坐标" nullmsg="请选择地图坐标" value="{$shop_data.lat|default=''}" title class="layui-input" readonly placeholder="请选择地图坐标">
+            </div>
+        </div>
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" id="submit">确定</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script src="/template/client/resource/layui/lay/modules/form.js"></script>
+<script src="/template/client/resource/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.valid('.layui-form');
+    layui.use(['form'], function () {
+        var form = layui.form;
+        form.on('select(state)',function (data) {
+            $.ajax({
+                url: '/distribution_city/getNextArea',
+                dataType: 'json',
+                type: 'post',
+                data: {area_id: $(data.elem).find('option:selected').attr('flag')},
+                success:  function (res) {
+                    if (res.code == 0){
+                        var html = '';
+                        $.each(res.data,function (i,o) {
+                            html += '<option value="' + o.area_name + '" flag="' + o.area_id + '">'+ o.area_name +'</option>';
+                        });
+                        $('[name="area_name"]').html(html);
+                        form.render();
+                    }else{
+                        layer.msg('未查询到对应城市',{time:2000});
+                    }
+                }
+            })
+        });
+    });
+    // 地图
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+
+        var map = new AMap.Map('container', {
+            zoom: 17,
+            resizeEnable: true,
+            scrollWheel: false,
+            center:[113.523312,22.250751]
+        });
+
+        // 定位
+        map.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                buttonOffset: new AMap.Pixel(0, 10),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                buttonPosition: 'RB'
+            });
+            map.addControl(geolocation);
+            if ('{$dada_shop_id}' == 0){
+                geolocation.getCurrentPosition();
+            }
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+        });
+
+        //解析定位结果
+        function onComplete(data) {
+            if ('{$dada_shop_id}' == 0){
+                $('[name="station_address"]').val(data.formattedAddress);
+                $('[name="lng"]').val(data.position.lng);
+                $('[name="lat"]').val(data.position.lat);
+            }
+        }
+
+        //解析定位错误信息
+        function onError(data) {
+            layer.msg('定位失败');
+        }
+
+
+        //输入提示
+        var autoOptions = {
+            input: "tipinput",
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });  //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',
+            map: map
+        });
+
+        positionPicker.on('success', function (positionResult) {
+            $('#interaction').html('<a class="submit" onclick="interaction(\'' + positionResult.address + '\',' + positionResult.position.lng + ',' + positionResult.position.lat + ')">定位坐标</a>');
+
+        });
+        positionPicker.on('fail', function (positionResult) {
+            console.log(positionResult)
+
+        });
+
+        positionPicker.start();
+        map.panBy(0, 1);
+
+        map.addControl(new AMap.ToolBar({
+            liteStyle: true
+        }));
+    });
+    function interaction(address, lng, lat) {
+        $('[name="station_address"]').val(address);
+        $('[name="lng"]').val(lng);
+        $('[name="lat"]').val(lat);
+    }
+</script>
+{/block}

@@ -1,0 +1,103 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>该页面展示所有文章分类</li>
+                <li>可添加子分类以及编辑修改、删除分类。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+
+<!--导航-->
+<div class="common-head">
+    <div class="fl">
+        <a href="javascript:void(0);" class="left" onclick="main.jumpFour('article_classify/create')">
+            <div class="fbutton">
+                <div class="add" title="添加帮助中心分类"><span><i class="fa fa-plus"></i>添加帮助中心分类</span></div>
+            </div>
+        </a>
+        {notempty name=":input('get.classify_id')"}
+        <a href="{:url_logs_up('master_logs')}" class="left">
+            <div class="fbutton">
+                <div class="add" title="返回上级"><span><i class="fa fa-mail-reply (alias)"></i>返回上级</span></div>
+            </div>
+        </a>
+        {/notempty}
+        <div class="refresh" onclick="location.reload();">
+            <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+            <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+        </div>
+    </div>
+</div>
+<hr class="layui-bg-gray">
+<!--列表-->
+<form class="layui-form" action="">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th width="30">编号</th>
+            <th>分类名称</th>
+            <th>描述</th>
+            <th width="50">排序</th>
+            <th width="60">显示状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td>{$item.article_classify_id}</td>
+            <td id="title{$item.article_classify_id}"><span class="onpress" onclick="main.viewText('{$item.article_classify_id}','title','/article_classify/text_update')">{$item.title}</span></td>
+            <td>{$item.describe}</td>
+            <td>
+                <input type="text" id="sort{$item.article_classify_id}" value="{$item.sort}" class="text_center" oninput="main.triggerText('{$item.article_classify_id}','sort','/article_classify/text_update')">
+            </td>
+            <td>
+                <input type="checkbox" name="status" lay-skin="switch"
+                       lay-filter="status"
+                       lay-text="开|关"
+                       value="{$item.article_classify_id}"
+                       {eq name="item.status" value="1" }checked{/eq}
+                >
+            </td>
+            <td>
+                {eq name='item.is_delete' value='0'}
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('article_classify/edit?article_classify_id={$item.article_classify_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/article_classify/destroy','{$item.article_classify_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+                {else/}
+                <a class="btn_see" href="javascript:void(0);"><i class="fa fa-ban"></i>无操作</a>
+                {/eq}
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div class="right">{:$data->render()}</div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{selector:'switch(status)',callback:function (data) {
+        main.ajax({type:'post',url: '/article_classify/auditing',data:{'id': data.value}});
+    }}]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

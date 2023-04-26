@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="__RES__/css/registered.css" />
+		<link rel="stylesheet" type="text/css" href="__RES__/css/color.css" />
+		<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css" />
+		<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<style type="text/css">
+			.now {
+				font-size: 30px;
+				color: #fff;
+				display: block;
+				text-align: center;
+				width: 275px;
+				height: 70px;
+				margin: 0px auto;
+				margin-top: 20px;
+				line-height: 70px;
+				
+			}
+			
+			.cover {
+				width: 100%;
+				height: 100%;
+				background: rgba(0, 0, 0, 0.5);
+				position: fixed;
+				top: 0px;
+				left: 0px;
+				display: none;
+			}
+			
+			.cover-content {
+				width: 504px;
+				height: 620px;
+				background: url("__RES__/imgs/registerd/xrdlb.png") no-repeat top center;
+				position: absolute;
+				top: 110px;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+			
+			.coupon-list {
+				width: 237px;
+				height: 198px;
+				margin: 0px auto;
+				margin-top: 240px;
+			}
+			
+			.coupon-list .list {
+				width: 235px;
+				height: 90px;
+				background: url("__RES__/imgs/registerd/coupon_bg.png") no-repeat center;
+				margin-bottom: 13px;
+			}
+			
+			.list-left {
+				width: 200px;
+				float: left;
+				height: 90px;
+				padding-top: 10px;
+				padding-left: 12px;
+				box-sizing: border-box;
+			}
+			
+			.img_box {
+				float: left;
+				width: 66px;
+				height: 66px;
+				box-sizing: border-box;
+				border: 1px solid #F7F7FA;
+				padding: 5px;
+			}
+			
+			.img_box img {
+				width: 61px;
+				height: 61px;
+			}
+			
+			.goods {
+				float: left;
+				margin-left: 8px;
+				width: 113px;
+			}
+			
+			.pic {
+				font-size: 20px;
+			}
+			
+			.pic span {
+				font-size: 12px;
+				position: relative;
+				top: -5px;
+			}
+			
+			.condition span {
+				font-size: 12px;
+				background: #FFF3EB;
+				padding: 3px;
+			}
+			
+			.limit {
+				font-size: 12px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				margin-top: 2px;
+			}
+			
+			.progress {
+				font-size: 12px;
+			}
+			
+			.progress span {
+				float: left;
+				color: #7E7E7E;
+				transform: scale(0.8);
+				margin-left: -5px;
+			}
+			
+			.progress-bar {
+				float: left;
+				width: 60px;
+				height: 5px;
+				border-radius: 2.5px;
+				background: #EEEEEE;
+				position: relative;
+				top: 5px;
+			}
+			
+			.progress-bar .bar {
+				height: 5px;
+				border-radius: 2.5px;
+			}
+			
+			.list-right {
+				float: right;
+				width: 30px;
+				height: 90px;
+			}
+			
+			.list-right a {
+				display: block;
+				width: 30px;
+				height: 90px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="registered">
+			<div class="top">
+				<div class="top-center">
+					<a href="javascript:;">
+						<img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+					</a>
+					<span>欢迎注册</span>
+
+					<div class="top-right">
+						已有账号？
+						<a class="primary-color" href="{:url('pc2.0/login/index')}">
+							请登录>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="registered-box">
+				<!--注册成功-->
+				<div v-else class="success">
+					<p class="tit">恭喜您，<span id="phone"></span>账号注册成功</p>
+					<p class="registered-success">您已成功注册为用户，祝您购物愉快~</p>
+
+					<a href="{:url('/pc2.0/index/index')}" class="btn primary-background-color">
+						去购物>
+					</a>
+					<a class="show-cover" href="{:url('/pc2.0/register/coupon_list')}">
+						<img src="__RES__/imgs/registerd/dlb.png" alt="">
+					</a>
+
+				</div>
+
+			</div>
+			<!--遮罩层-->
+			<div class="cover" >
+				<div class="cover-content">
+					<div class="coupon-list">
+						<div class="list" >
+							<div class="list-left">
+								<div class="img_box">
+									<img src="__RES__/imgs/del/r1.jpg" alt="">
+								</div>
+								<div class="goods">
+									<p class="pic primary-color">
+										<span>￥</span>300
+									</p>
+									<p class="condition">
+										<span class="primary-color">满2000可用</span>
+									</p>
+									<p class="limit">
+										满2000可用满2000可用满2000可用满2000可用
+									</p>
+
+									<div class="progress">
+										<span>已抢60%</span>
+										<div class="progress-bar">
+											<div class="bar primary-background-color" style="width:60%"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="list-right">
+								<a href="javascript:;"> </a>
+							</div>
+						</div>
+												<div class="list" >
+							<div class="list-left">
+								<div class="img_box">
+									<img src="__RES__/imgs/del/r1.jpg" alt="">
+								</div>
+								<div class="goods">
+									<p class="pic primary-color">
+										<span>￥</span>300
+									</p>
+									<p class="condition">
+										<span class="primary-color">满2000可用</span>
+									</p>
+									<p class="limit">
+										满2000可用满2000可用满2000可用满2000可用
+									</p>
+
+									<div class="progress">
+										<span>已抢60%</span>
+										<div class="progress-bar">
+											<div class="bar primary-background-color" style="width:60%"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="list-right">
+								<!--立即领取-->
+								<a href="JavaScript:;"> </a>
+							</div>
+						</div>
+
+
+					</div>
+					<!--立即抢购-->
+					<div class="router">
+						<a class="now" href="javascript;">立即抢购 </a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<!--<div class="bottom-formation" style="background: #fff;">-->
+			<!--<div class="bottom-formation-center">-->
+				<!--<p>-->
+					<!--技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+					<!--<span>|</span> 技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+					<!--<span>|</span> 技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+					<!--<span>|</span> 技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+				<!--</p>-->
+				<!--<p>-->
+					<!--技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+					<!--<span>|</span> 技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+					<!--<span>|</span> 技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+					<!--<span>|</span> 技术支持：-->
+					<!--<a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+				<!--</p>-->
+			<!--</div>-->
+		<!--</div>-->
+		
+		
+		<script type="text/javascript">
+			// $('.show-cover').click(function(){
+			// 	$('.cover').fadeIn()
+			// })
+			// $('.cover').click(function(){
+			// 	$('.cover').fadeOut()
+			// })
+			$(function () {
+				$('#phone').html(window.sessionStorage.getItem('register_one_phone'));
+			})
+		</script>
+	</body>
+
+</html>

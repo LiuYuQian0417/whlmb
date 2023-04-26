@@ -1,0 +1,117 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>可从管理平台手动添加一名新会员，并填写相关信息。</span></li>
+                <li><span>新增会员后可从会员列表中找到该条数据，并再次进行编辑操作，但该会员手机号不可变。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 会员手机号（账号）</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" maxlength="11" autocomplete="off" placeholder="请输入会员手机号（账号）"
+                       value=""
+                       datatype="m"
+                       nullmsg="请输入会员手机号（账号）" errormsg="请输入正确手机号"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 登录密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" maxlength="20" autocomplete="new-password" placeholder="请输入登录密码"
+                       value=""
+                       datatype="*"
+                       nullmsg="请输入登录密码" errormsg="请输入登录密码"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="confirm_password" maxlength="20" autocomplete="off" placeholder="请输入确认密码"
+                       value=""
+                       recheck="password"
+                       datatype="*6-18"
+                       nullmsg="请输入确认密码" errormsg="两次输入的密码不一致"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 增加余额</label>
+            <div class="layui-input-block">
+                <input type="text" name="add_money" maxlength="20" autocomplete="off" placeholder="请输入增加的余额"
+                       value=""
+                       onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 增加积分</label>
+            <div class="layui-input-block">
+                <input type="text" name="add_integral" maxlength="20" autocomplete="off" placeholder="请输入增加的积分"
+                       value=""
+                       onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="1" title="男" checked>
+                <input type="radio" name="sex" value="2" title="女">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="开通" checked>
+                <input type="radio" name="status" value="0" title="禁用">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="hidden" name="usable_money" value="0">
+                <a type="reset" class="layui-btn layui-btn-primary" href="/member/index">返回</a>
+                <button class="layui-btn" type="submit" id="submit">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

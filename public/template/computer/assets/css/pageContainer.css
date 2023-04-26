@@ -1,0 +1,73 @@
+ .pageContainer {
+    overflow: hidden;
+    padding-bottom: 10px;
+  }
+
+  .page-skip {
+    float: right;
+    margin-right: 17px;
+    margin-top: 9px;
+    font-size: 12px;
+  }
+
+  .page-txt {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #CCCCCC;
+    outline: none;
+    text-align: center;
+  }
+
+  .page-jump {
+    width: 55px;
+    height: 36px;
+    border: 1px solid #ccc;
+    background: #fff;
+    outline: none;
+    margin-left: 5px;
+    cursor: pointer;
+  }
+
+  .page {
+    float: right;
+    margin-right: 17px;
+    margin-top: 15px;
+  }
+
+  .page li:first-child {
+    width: 79px;
+  }
+
+  .page li:last-child {
+    width: 79px;
+  }
+
+  .page li {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+    width: 36px;
+    height: 26px;
+    border: 1px solid #DDDDDD;
+    background: #F6F5F5;
+    text-align: center;
+    line-height: 26px;
+    color: #333333;
+    border-radius: 3px;
+    font-size: 12px;
+    float: left;
+    margin-left: 3px;
+    cursor: pointer;
+  }
+
+  .page .active {
+    border: none;
+    background: none;
+  }
+ input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none !important;
+        margin: 0;
+    }

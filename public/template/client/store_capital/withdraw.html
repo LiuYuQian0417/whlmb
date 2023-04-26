@@ -1,0 +1,320 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<style>
+    a:last-child {
+        margin-left: 7px;
+    }
+    dl span {
+        line-height: 30px;
+    }
+    .contentShell {
+        width: auto;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="main-content" id="mainContent">
+    <!--<div class="explanation clear" id="explanation">-->
+        <!--<div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>-->
+        <!--<ul>-->
+            <!--<li>温馨提示：提交操作将会重新审核，请慎重提交确定。</li>-->
+            <!--<li>如若修改新的银行卡，修改后须平台重新审核，审核期间暂不能提现</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+    <div class="tabmenu">
+        <ul class="tab">
+            <li {eq name="$item.bank_type" value="1" }class="active"{else/}class=""{/eq}><a href="javascript:void(0);">对公账户</a></li>
+            <li {eq name="$item.bank_type" value="2" }class="active"{else/}class=""{/eq}><a href="javascript:void(0);">个人银行卡转账</a></li>
+        </ul>
+    </div>
+    <div class="ecsc-form-goods">
+        <form action="" method="post" name="theForm" enctype="multipart/form-data" id="bonus_form" class="layui-form">
+            <!--对公-->
+            <div class="contentShell" {neq name="$item.bank_type" value="1"} hidden {/neq}>
+                <!--开户地址-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;开户地址：</dt>
+                    <dd>
+                        {eq name="$item.bank_type" value="1"}
+                        <span>{$item.bank_province}{$item.bank_city}{$item.bank_area}</span>
+                        {else}
+                        {/eq}
+                        <input type="hidden" name="province_1" value="{$item.bank_province}">
+                        <input type="hidden" name="city_1" value="{$item.bank_city}">
+                        <input type="hidden" name="area_1" value="{$item.bank_area}">
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+            <!--开户名-->
+            <dl>
+                <dt><span class="require-field">*</span>&nbsp;开户名：</dt>
+                <dd>
+                    {eq name="$item.bank_type" value="1"}
+                    <span>{$item.account_name}</span>
+                    {else}
+                    {/eq}
+                    <input type="hidden" name="account_name_1" value="{$item.account_name}">
+                    <div class="form_prompt"></div>
+                </dd>
+            </dl>
+                <!--开户行-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;开户行：</dt>
+                    <dd>
+                        {eq name="$item.bank_type" value="1"}
+                        <span>{$item.account_bank_name}</span>
+                        {else}
+                        {/eq}
+                        <input type="hidden" name="account_bank_name_1" value="{$item.account_bank_name}">
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--开户账户-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;开户账户：</dt>
+                    <dd>
+                        {eq name="$item.bank_type" value="1"}
+                        <span>{$item.bank_number}</span>
+                        {else}
+                        {/eq}
+                        <input type="hidden" name="bank_number_1" value="{$item.bank_number}">
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+            </div>
+            <!--对私-->
+            <div class="contentShell" {neq name="$item.bank_type" value="2"} hidden {/neq}>
+                <!--店铺所在地-->
+                <dl>
+                    <dt><font color="red">*</font> 开户省市：</dt>
+                    <dd>
+                        <div class="layui-input-inline" style="width: 140px">
+                            <select id="bank_province" class="state" lay-filter="state" lay-search="">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width: 140px">
+                            <select id="bank_city" class="state" lay-filter="state">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width: 140px">
+                            <select id="bank_area" class="state" lay-filter="state">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="bank_province" value="{$item.bank_province}">
+                        <input type="hidden" name="bank_city" value="{$item.bank_city}">
+                        <input type="hidden" name="bank_area" value="{$item.bank_area}">
+                    </dd>
+                </dl>
+                <!--开户名-->
+                <dl id="account_name">
+                    <dt><span class="require-field">*</span>&nbsp;开户名：</dt>
+                    <dd>
+                        <input type='text' name='account_name' maxlength="20" {eq name="$item.bank_type" value="1" }value=""{else/}value="{$item.account_name}"{/eq} size='20'
+                               class="text" autocomplete="off"/>
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--开户行-->
+                <dl id="account_bank_name">
+                    <dt><span class="require-field">*</span>&nbsp;开户行：</dt>
+                    <dd>
+                        <input type='text' name='account_bank_name' maxlength="20" {eq name="$item.bank_type" value="1" }value=""{else/}value="{$item.account_bank_name}"{/eq}
+                               class="text" autocomplete="off" />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--银行卡号-->
+                <dl id="bank_number">
+                    <dt><span class="require-field">*</span>&nbsp;银行卡号：</dt>
+                    <dd>
+                        <input type='text' name='bank_number' maxlength="19" minlength="16" size='20'
+                               class="text" autocomplete="off" {eq name="$item.bank_type" value="1" }value=""{else/}value="{$item.bank_number}"{/eq}/>
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+            </div>
+            <div class="wrapper-list border1">
+                <!--提现金额-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;提现金额：</dt>
+                    <dd>
+                        <input type="text" name="price" value="" size="20" class="text"
+                               placeholder="提现金额不能大于可用余额，保留两位小数" autocomplete="off" maxlength="10"/>
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="hidden" name="bank_type" value="{$item.bank_type|default='1'}">
+                        <input type="button" value="提交" onclick="chooseIt()" class="sc-btn sc-blueBg-btn btn35" id="submitBtn"/>
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript">
+    main.form();
+    var bank_type = {$item.bank_type};
+    if (bank_type == 1) {
+        //内容页切换
+        $('.tabmenu li').click(function () {
+            var index = $(this).index();
+            $(this).addClass("active").siblings().removeClass("active");
+            $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+            if (index == 0) {
+                $('input[name="bank_type"]').val(1);
+            } else {
+                $('input[name="bank_type"]').val(2);
+            }
+        });
+    }
+    function chooseIt() {
+
+        var account_bank_name = $("input[name='account_bank_name']").val();
+        var account_bank_name_1 = $("input[name='account_bank_name_1']").val();
+        var bank_number = $("input[name='bank_number']").val();
+        var bank_number_1 = $("input[name='bank_number_1']").val();
+        var account_name = $("input[name='account_name']").val();
+        var account_name_1 = $("input[name='account_name_1']").val();
+        var province = $("input[name='bank_province']").val();
+        var province_1 = $("input[name='province_1']").val();
+        var city = $("input[name='bank_city']").val();
+        var city_1 = $("input[name='city_1']").val();
+        var area = $("input[name='bank_area']").val();
+        var area_1 = $("input[name='area_1']").val();
+        var price = $("input[name='price']").val();
+        var bank_type = $("input[name='bank_type']").val();
+
+        layer.msg('确定申请提现吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({type:'post',url:'/client/store_capital/withdraw',
+                    data:{
+                        'account_bank_name': account_bank_name,
+                        'account_bank_name_1': account_bank_name_1,
+                        'bank_number':bank_number,
+                        'bank_number_1':bank_number_1,
+                        'account_name':account_name,
+                        'account_name_1':account_name_1,
+                        'province':province,
+                        'province_1':province_1,
+                        'city':city,
+                        'city_1':city_1,
+                        'area':area,
+                        'area_1':area_1,
+                        'price':price,
+                        'bank_type':bank_type,
+                    },
+                    callback: function (res){
+                        if (res.code == 0){
+                            layer.msg('操作成功');
+                        }else {
+                            layer.msg(res.message);
+                        }
+                        setTimeout(function () {
+                            parent.location.reload();
+                        },1000)
+                    }});
+            }
+        });
+    }
+
+    layui.use(['form','laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            laydate = layui.laydate;
+        var url = '/member_address/area';                       //数据请求地址
+
+        if ('{$item.bank_type|default=2}' == 1) {
+            var province = "";           //编辑需要的省
+            var city = "";                   //编辑需要的市
+            var district = "";               //编辑需要的县/区
+        } else {
+            var province = "{$item.bank_province|default=''}";           //编辑需要的省
+            var city = "{$item.bank_city|default=''}";                   //编辑需要的市
+            var district = "{$item.bank_area|default=''}";               //编辑需要的县/区
+        }
+
+        console.log(province+city+district);
+        getJSON(url, $("select[id='bank_province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            var nameThat = $that.attr('id');
+            if (!data.value){
+                $that.closest(".layui-input-inline").nextAll('.layui-input-inline').find('select').val('').html('<option value="">请选择</option>')
+                $("input[name='bank_province']").val('');
+                $("input[name='bank_city']").val('');
+                $("input[name='bank_area']").val('');
+                form.render()
+                return;
+            }
+
+            $('input[name="'+nameThat+'"]').val($that.find("option:selected").val());
+            var urls = url + "?id=" + data.value;
+            getJSON(urls, $that.closest("div").next());
+        });
+
+        function getJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("id");
+                var select = "<select id=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                // console.log(json);
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if(pid == 0){
+                        if (province == this.area_name || city == this.area_name || district == this.area_name) {
+                            select += " selected=\"selected\" ";
+                            pid = this.area_id;
+                        }
+                        
+                    }
+                   select += ">" + this.area_name + "</option>"; 
+                });
+                select += "</select>";
+                even.html(select);
+                $('input[name="'+even.children('select').attr('id')+'"]').val(pid);
+                var nextName = even.next().find("select").attr("id");
+                even.next().html("<select id=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                // console.log(pid);
+                if (pid != 0) {
+                    getJSON(url + "?id=" + pid, even.next());
+                }
+                if ($(even).find('select').attr('id') == 'area'){
+                    $('#submit').removeClass('layui-btn-disabled').removeAttr('disabled');
+                }
+            });
+        }
+        laydate.render({
+            elem: '#work_time',
+            type: 'time',
+            format: 'HH:mm',
+            range: true
+        });
+    });
+
+</script>
+{/block}

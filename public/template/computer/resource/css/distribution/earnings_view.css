@@ -1,0 +1,237 @@
+.current-yield{
+    display: flex;
+    box-sizing: border-box;
+    background: #fff;
+    padding:10px 0 20px;
+    margin-top: 10px;
+    height: 154px;
+}
+.current-yield-left{
+    width: 710px;
+    padding-left:30px;
+    box-sizing: border-box;
+    border-right: 1px solid #eee;
+}
+.now-yield{
+    color: #333;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    margin-top: 33px ;
+}
+.yield-price{
+    font-size: 21px;
+    font-weight: bold;
+    color: #474e5d;
+}
+.dot{
+    font-weight: bold;
+    font-size: 18px;
+    color: #474e5d;
+}
+.balance{
+    display: flex;
+    margin-top: 27px;
+    color: #777777;
+}
+.question{
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    border:1px solid #fbb257;
+    border-radius: 50%;
+    margin-left: 13px;
+    color: #fbb257;
+    cursor: pointer;
+}
+.withdraw{
+    width: 154px;
+    height: 32px;
+    text-align: center;
+    line-height: 32px;
+    color: #fff;
+    cursor: pointer;
+    margin:50px 0 0 60px;
+}
+.yield-detail{
+    display: flex;
+    height: 353px;
+    margin-top: 10px;
+    background-color: #fff;
+}
+.yield-detail-left{
+    display: flex;
+    flex-direction: column;
+    height: 353px;
+    width: 340px;
+}
+.yield-detail-left-item{
+    padding: 20px 0 0 30px;
+    box-sizing: border-box;
+    flex:1;
+}
+.y-top{
+    border-bottom: 1px solid #eee;
+}
+.yield-detail-right{
+    flex:1;
+    border-left:1px solid #eee;
+}
+.seven{
+    box-sizing: border-box;
+    padding: 20px 0 0 30px;
+}
+.account{
+    display: flex;
+}
+.already-account{
+    padding-top: 45px;
+    box-sizing: border-box;
+    flex: 1;
+}
+.no-account{
+    padding-top: 45px;
+    box-sizing: border-box;
+    flex: 1;
+}
+.account-title{
+    font-size: 14px;
+    color: #777777;
+}
+.account-price{
+    color: #333;
+    margin-top: 16px;
+    font-size: 22px;
+    font-weight:500;
+}
+#main{
+    padding: 0 20px;
+    box-sizing: border-box;
+    height: 310px!important;
+}
+.record{
+    padding: 20px 30px 0 ;
+    background-color: #fff;
+    margin-top: 10px;
+}
+.record-title{
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.record-title a{
+    color: #333;
+}
+.record-title span{
+    margin:0 19px 0 23px;
+    display: block;
+    width: 1px;
+    background-color: #d1d4e2;
+    height: 15px;
+}
+
+.record-tit{
+    color: #434343;
+    height: 33px;
+    display: flex;
+    align-items: center;
+    background-color: #f8f6f6;
+}
+.record-tit span{
+    line-height: 33px;
+}
+.record-info{
+    display: flex;
+    align-items: center;
+    height: 86px;
+    border-bottom:1px solid #f5f5f5;
+}
+.thumb{
+    width: 64px;
+    height: 64px;
+    margin: 0 20px;
+}
+.order-detail{
+    width: 240px;
+    height: 20px;
+    overflow: hidden;
+    color: #666;
+    /*text-overflow: ellipsis;*/
+    /*white-space: nowrap;*/
+    /*-webkit-line-clamp: 1;*/
+}
+.order-price{
+    margin-left: 94px;
+    font-size: 14px;
+}
+.user{
+    margin-left: 127px;
+    color: #666;
+}
+.user-img{
+    margin-left: 11px;
+}
+.date{
+    margin-left: 104px;
+    color: #959595;
+}
+.time{
+    margin-left:23px;
+    color: #959595;
+}
+.find-all{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 44px;
+    background-color: #fff;
+}
+.find-all a{
+    cursor: pointer;
+    color: #005ea7;
+}
+.container{
+    background-color: #fff;
+    margin-top: 10px;
+}
+.record-view{
+    display: flex;
+    justify-content: space-between;
+}
+.record-info-view{
+    padding: 0 30px 20px;
+}
+.pageContainer{
+    margin-top: 35px;
+}
+
+.now-date:hover{
+    background: #fff;
+}
+.now-date{
+    display: flex;
+    align-items: center;
+}
+/*.now-date:hover .hover-list{*/
+    /*display: block;*/
+/*}*/
+.hover-list{
+    display: none;
+    position: absolute;
+    top:302px;
+    width: 140px;
+    background-color: #fff;
+    z-index: 999;
+}
+.hover-list ul li{
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.hover-list ul li:hover{
+    background-color: #f5f5f5;
+}

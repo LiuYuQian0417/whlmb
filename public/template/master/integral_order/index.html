@@ -1,0 +1,133 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、用户在商城通过积分兑换或换购的订单；</li>
+                <li>2、商品：创建积分商品后，将展示在积分商城中，不在普通商品分类中展示</li>
+                <li>3、分类：此分类为积分商品的分类，设置开启后将展示在积分商城中</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('integral_order/index')">订单</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('integral/index')">商品</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('integral_classify/index')">分类</a></li>
+    </ul>
+</div>
+<!--导航-->
+<form class="layui-form" action="">
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh" onclick="location.reload();">
+                <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select" id="type">
+                    <select name="type" class="cite ps-container" lay-filter="changeType">
+                        <option value="-1">订单类型</option>
+                        <option value="0" {eq name=":input('type')" value="0"}selected{/eq}>积分兑换</option>
+                        <option value="1" {eq name=":input('type')" value="1"}selected{/eq}>积分换购</option>
+                    </select>
+                </div>
+                <div class="imitate_select">
+                    <select name="status" class="cite ps-container">
+                        <option value="-1" {eq name=":input('status')" value=""}selected{/eq}>订单状态</option>
+                        <option value="0" {eq name=":input('status')" value="0"}selected{/eq}>待发货</option>
+                        <option value="1" {eq name=":input('status')" value="1"}selected{/eq}>已发货</option>
+                        <option value="2" {eq name=":input('status')" value="2"}selected{/eq}>已收货</option>
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="订单编号"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                    <!--<input type="submit" class="btn" name="secrch_btn" value="">-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>订单号</th>
+            <th>积分商品名称</th>
+            <th>类型</th>
+            <th>所需积分</th>
+            <th>所需金额</th>
+            <th>购买数量</th>
+            <th>订单来源</th>
+            <th>订单状态</th>
+            <th>生成日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td>{$item.order_number}</td>
+            <td>{$item.integral_name}</td>
+            <td>
+                {switch name="$item.type"}
+                    {case value="0"}积分兑换{/case}
+                    {case value="1"}积分换购{/case}
+                {/switch}
+            </td>
+            <td>{$item.integral}</td>
+            <td>{$item.price}</td>
+            <td>{$item.number}</td>
+            <td>{$item.FormText}</td>
+            <td>{$item.statusText}</td>
+            <td>{$item.create_time}</td>
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('integral_order/edit?integral_order_id={$item.integral_order_id}')"><i
+                        class="fa fa-edit"></i>查看</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div class="right">
+        {:$data->render()}
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    // main.form();
+    var form = layui.form;
+    main.form([{
+        selector: 'select(changeType)', callback: function (data) {
+            console.log(data.value);
+            main.ajax({
+                data:{type:data.value},
+                url:'/integral_order/index',
+                success:function () {
+                    form.render();
+                }
+            })
+        }
+    }]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

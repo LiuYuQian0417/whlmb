@@ -1,0 +1,80 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<!--账户安全css-->
+<!--我的 头部css-->
+<link rel="stylesheet" href="__RES__/css/my/my.css" />
+<!--我的设置左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MySetting.css" />
+<link rel="stylesheet" href="__RES__/css/my/AccountSecurity.css" />
+<link rel="stylesheet" href="__RES__/css/accountassociated/accountassociated.css">
+{/block}
+
+{block name="content"}
+<!--我的设置主体-->
+<div class="setting">
+	<!--据中部分-->
+	<div class="setting-center">
+		{include file="public/setting_left" /}
+
+		<div class="setting-right">
+			<div class="setting-right-top">
+				账号关联
+			</div>
+			<div class="wechat-account-content">
+				<div class="wechat-account">
+					<p class="wechat-account-left"><span><img src="__RES__/imgs/accountassociated/weixin.png" width="50" height="50"></span> 微信</p>
+
+					{empty name="$data"}
+					<p class="wechat-account-right"><span class="wechat-account-right-span" onclick="bind_wx()">未关联</span><span class="wechat-account-right-symbol">></span></p>
+					{else/}
+					<p class="wechat-account-right"><span class="wechat-account-right-span" onclick="bind_wx()">重新关联</span><span class="wechat-account-right-symbol">></span></p>
+					{/empty}
+
+
+				</div>
+				<div class="clear"></div>
+				<p class="wechat-account-prompt">账号关联之后，用户可使用微信账号快速登录。在各个渠道进行购物时，均可同步会员账号，享受会员特权同步订单物流信息。</p>
+				<div class="associated">
+					<!--<div class="associated-content">-->
+					<!--<div class="associated-content-the-title">-->
+					<!--账号关联<span>×</span>-->
+					<!--</div>-->
+					<!--<p class="associated-content-top">-->
+					<!--您是否要解除关联？-->
+					<!--</p>-->
+					<!--<p class="associated-content-title">-->
+					<!--解除后将不同步订单/物流信息-->
+					<!--</p>-->
+					<!--<a href="javascript:;" class="wechat-account-cancel">取消</a>-->
+					<!--<a href="javascript:;" class="wechat-account-remove border-color primary-background-color">解除关联</a>-->
+					<!--</div>-->
+				</div>
+			</div>
+			<!--账号安全右侧开始-->
+		</div>
+	</div>
+</div>
+
+
+{/block}
+
+
+{block name="js"}
+<script src="//res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+
+	//绑定微信
+	function bind_wx(){
+		layer.open({
+			type: 2,
+			title: false,
+			shade: [0],
+			area: ['310px', '330px'],
+			anim: 5,
+			scrollbar: false,
+			content: ['{:url("bind_wx")}', 'no'], //iframe的url，no代表不显示滚动条
+		});
+	}
+</script>
+{/block}

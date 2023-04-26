@@ -1,0 +1,100 @@
+.fans {
+  background: #fff;
+}
+.fans .details {
+  background: #fff;
+}
+.fans .fans-box {
+  padding: 0px 30px;
+  background: #fff;
+  margin-top: 20px;
+  margin-bottom: 35px;
+}
+.fans .fans-box .title {
+  height: 57px;
+  line-height: 57px;
+}
+.fans .fans-box .title .tit-left {
+  float: left;
+}
+.fans .fans-box .title .tit-left a {
+  color: #333333;
+}
+.fans .fans-box .title .tit-left span {
+  color: #D1D4E2;
+  font-size: 12px;
+  margin: 0px 20px;
+  position: relative;
+  top: -2px;
+}
+.fans .fans-box .title .tit-right {
+  float: right;
+}
+.fans .fans-box .fan-content {
+  margin-top: 5px;
+}
+.fans .fans-box .fan-content .fans-top {
+  height: 34px;
+  background: #F8F6F6;
+  display: flex;
+  line-height: 34px;
+}
+.fans .fans-box .fan-content .fans-top div {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+}
+.fans .fans-box .fan-content .fans-top div a {
+  color: #666666;
+}
+.fans .fans-box .fan-content .fans-top div span {
+  float: left;
+}
+.fans .fans-box .fan-content .fans-top div .top {
+  display: inline-block;
+  width: 0px;
+  height: 0px;
+  border: 4px solid transparent;
+  border-bottom: 4px solid #666666;
+  position: relative;
+  top: -6px;
+}
+.fans .fans-box .fan-content .fans-top div .bottom {
+  display: inline-block;
+  width: 0px;
+  height: 0px;
+  border: 4px solid transparent;
+  border-top: 4px solid #666666;
+  margin-top: 2px;
+  position: relative;
+  top: 4px;
+  left: -12px;
+}
+.fans .fans-box .fan-content .fans-list .list {
+  height: 85px;
+  border-bottom: 1px solid #F5F5F5;
+  line-height: 85px;
+  display: flex;
+}
+.fans .fans-box .fan-content .fans-list .list div {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  color: #666666;
+}
+.fans .fans-box .fan-content .fans-list .list .name {
+  box-sizing: border-box;
+}
+.fans .fans-box .fan-content .fans-list .list .name img {
+  width: 65px;
+  height: 65px;
+  float: left;
+  border-radius: 50% ;
+  position: relative;
+  top: 10px;
+  margin-right: 15px;
+  margin-left: 20px;
+}
+.fans .fans-box .fan-content .fans-list .list .name span {
+  float: left;
+}

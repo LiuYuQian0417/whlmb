@@ -1,0 +1,95 @@
+<!--css-->
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/MyHome.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/swiper.min.css"/>
+<!--我的页面左侧公共部分开始-->
+<div class="index-left">
+    <div class="index-list">
+        <h5 class="title">
+            <img src="__RES__/imgs/my/wddd.png" alt="">
+            我的订单
+        </h5>
+        <a class='primary-color-hover' href="{:url('pc2.0/order/order_list')}">我的订单</a>
+        <a class='primary-color-hover' href="{:url('pc2.0/order/orderUnderLineList')}">线下订单</a>
+        <a class='primary-color-hover' href="{:url('pc2.0/order/orderAfterSaleList')}">退款/售后</a>
+        <a class='primary-color-hover' href="{:url('pc2.0/evaluate/myEvaluateList')}">我的评价</a>
+    </div>
+
+    <div class="index-list">
+        <h5 class="title">
+            <img src="__RES__/imgs/my/wdqb.png" alt="">
+            我的钱包
+        </h5>
+        {if $function_status.is_balance==1}
+        <a class='primary-color-hover' href="{:url('pc2.0/recharge/balance_record')}" active-class='primary-color'>账户余额</a>
+        {/if}
+        {if $function_status.is_coupon=1}
+        <a class='primary-color-hover' href="{:url('pc2.0/member_coupon/index')}" active-class='primary-color'>优惠券</a>
+        {/if}
+        {if $function_status.is_red_packet==1}
+        <a class='primary-color-hover' href="{:url('pc2.0/member_packet/index')}" active-class='primary-color'>红包</a>
+        {/if}
+        <a class='primary-color-hover' href="{:url('pc2.0/integral/my')}" active-class='primary-color'>积分</a>
+        <a class='primary-color-hover' href="{:url('pc2.0/member_card/index')}" active-class='primary-color'>银行卡</a>
+    </div>
+
+    <div class="index-list">
+        <h5 class="title">
+            <img src="__RES__/imgs/my/wdgz.png" alt="">
+            我的关注
+        </h5>
+        <a class='primary-color-hover' href="{:url('pc2.0/goods/collect_goods_list')}"
+           active-class='primary-color border-color'>商品收藏</a>
+        {if $function_status.one_or_more===true}
+        <a class='primary-color-hover' href="{:url('pc2.0/store/collect_store_list')}"
+           active-class='primary-color border-color'>店铺关注</a>
+        {/if}
+        <a class='primary-color-hover' href="{:url('/pc2.0/home/article_list')}"
+           active-class='primary-color border-color'>内容收藏</a>
+    </div>
+
+    <div class="index-list">
+        <h5 class="title">
+            <img src="__RES__/imgs/my/wdhd.png" alt="">
+            我的活动
+        </h5>
+        {if $function_status.is_group==1}
+        <a class='primary-color-hover' href="{:url('/pc2.0/group/my_index')}">我的拼团</a>
+        {/if}
+        {if $function_status.is_cut==1}
+        <a class='primary-color-hover' href="{:url('/pc2.0/bargain/my_cut')}">我的砍价</a>
+        {/if}
+        <a class='primary-color-hover' href="{:url('/pc2.0/lottery_activity/order_list')}">我的抽奖</a>
+    </div>
+    {if $function_status.distribution_status==1}
+    <div class="index-list">
+        <h5 class="title" style="position: relative">
+            <img src="__RES__/imgs/my/wddy.png" alt="">
+            代言中心
+<!--            {:empty(session('member_info')['distribution'])?'':'<span style="padding-left:10px;font-size: 12px;background: url(__RES__/imgs/yield/circle.png) no-repeat; background-size: cover;position: absolute;display: block; width: 80px;white-space: nowrap;overflow: hidden;top: 5px;right:5px; " id="my_distribution_jump"> <i style="transform: scale(0.8);font-style: inherit;color: #fff;font-weight: 300;display: inline-block">v'.session('member_info')['distribution']['level_pos'].session('member_info')['distribution']['level_title'].'</i></span>'}-->
+            </h5>
+        <a class='primary-color-hover' href="{:url('/pc2.0/distribution_my/earnings_view')}" active-class='primary-color border-color'>收益</a>
+        <a class='primary-color-hover' href="{:url('/pc2.0/distribution_my/fans')}" active-class='primary-color border-color'>粉丝</a>
+        <a class='primary-color-hover' href="{:url('/pc2.0/distribution_share/to_invite')}">邀请</a>
+    </div>
+    {/if}
+    <div class="index-list">
+        <h5 class="title">
+            <img src="__RES__/imgs/my/wdkf.png" alt="">
+            客户服务
+        </h5>
+        <a class='primary-color-hover' href="javascript:main.jump({'url':'/pc2.0/setting/help_center'})">帮助中心</a>
+        <!--<a class='primary-color-hover' href="">在线客服</a>-->
+        <!--<a class='primary-color-hover' href="">电话客服</a>-->
+        <a class='primary-color-hover' href="javascript:main.jump({'url':'/pc2.0/setting/help_center?status=feedback'})">问题反馈</a>
+    </div>
+</div>
+<!--我的页面左侧公共部分结束-->
+<script>
+    main.pitch_on_style('.index-left a', 'primary-color');
+    $('#my_distribution_jump').click(function(){
+        main.jump({'url':'/pc2.0/distribution_level/my_level'});
+    });
+</script>
+</script>

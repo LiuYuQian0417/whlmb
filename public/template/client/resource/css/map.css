@@ -1,0 +1,40 @@
+.amap-logo, .amap-copyright {
+    display: none !important;
+}
+
+.amap-geolocation-con {
+    left: 4px !important;
+    right: auto !important;
+}
+
+.submit {
+    width: 60px;
+    font-size: 12px;
+    line-height: 28px;
+    background: rgb(99, 140, 254);
+    text-align: center;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    color: #fff;
+    display: block;
+}
+
+.amap-touch-toolbar .amap-zoomcontrol {
+    bottom: 80px !important;
+}
+
+#interaction {
+    width: 540px;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 99;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#interaction a:link, #interaction a:hover, #interaction a:visited, #interaction a:active {
+    color: #fff;
+    cursor: pointer;
+}

@@ -1,0 +1,128 @@
+{extend name='layout/frame' /}
+{block name='title'}
+{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>展示了品牌分类的相关信息。</li>
+                <li>可以通过品牌关键字搜索相关品牌分类信息。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--操作提示end-->
+<!--导航-->
+<form class="layui-form" method="get" action="">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onclick="main.jumpFour('brand_classify/create')">
+                <div class="fbutton">
+                    <div class="add" title="添加品牌分类"><span><i class="fa fa-plus"></i>添加品牌分类</span></div>
+                </div>
+            </a>
+            <div class="refresh" onclick="location.reload();">
+                <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入关键字"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+
+    </div>
+    <hr class="layui-bg-gray">
+    <div class="semi-circle3"></div>
+    <!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th style="width: 4%;" class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th width="30">编号</th>
+            <th>品牌分类名称</th>
+            <th>排序</th>
+            <th>显示状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td><input type="checkbox" value="{$item.brand_classify_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>{$item.brand_classify_id}</td>
+            <td>{$item.brand_classify_name}</td>
+            <td>
+                <input type="text" id="sort{$item.brand_classify_id}" value="{$item.sort}" class="text_center" oninput="main.triggerText('{$item.brand_classify_id}','sort','/brand_classify/text_update')">
+            </td>
+            <td>
+                <input type="checkbox" name="status" lay-skin="switch"
+                       lay-filter="status"
+                       lay-text="开|关"
+                       value="{$item.brand_classify_id}"
+                       {eq name="item.status" value="1" }checked{/eq}
+                >
+            </td>
+            <td>{$item.create_time}</td>
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('brand_classify/edit?id={$item.brand_classify_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/brand_classify/destroy','{$item.brand_classify_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+
+    <tfoot>
+    {notempty name='data'}
+    <tr>
+        <td colspan="100">
+            <div class="left left_all">
+                <div class="allCheck">
+                    <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                </div>
+                <a class="btn_trash" onclick="main.destroy('/brand_classify/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+            </div>
+            <span style="float:right;">{:$data->render()}</span>
+        </td>
+    </tr>
+    {/notempty}
+    </tfoot>
+    </table>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/preview.js"></script>
+<script>
+    main.form();
+    main.form([{selector:'switch(status)',callback:function (data) {
+        main.ajax({type:'post',url:'/brand_classify/auditing',data:{'id': data.value},callback:main.callback});
+    }}]);
+
+    if ($('a.preview').length) {
+        var img = preloadIm();
+        imagePreview(img);
+    }
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

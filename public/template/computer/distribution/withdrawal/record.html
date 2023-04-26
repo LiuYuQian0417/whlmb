@@ -1,0 +1,87 @@
+{extend name="public/my_header"}
+{block name="content_css"}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<link rel="stylesheet" href="__RES__/css/distribution/withdrawal_record.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    {include file="public/my_left"}
+
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div>
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="{:url('/pc2.0/distribution_withdrawal/index')}" >提现</a>
+                    <a href="{:url('/pc2.0/distribution_withdrawal/record')}" class='primary-color border-color'>提现记录</a>
+                </div>
+            </div>
+
+            <div  class="recorded">
+                <div class="recorded-title" style="display: flex;">
+                    <span style="flex: 2;">订单编号</span>
+                    <span style="flex: 1;">提现方式</span>
+                    <span style="flex: 1;">金额</span>
+                    <span style="flex: 1;">下单时间</span>
+                    <span style="flex: 1;">状态</span>
+                </div>
+
+                {empty name="$data"}
+                <div class="indent-box indent-box-emty">
+                    <img src="__RES__/imgs/orderemty.png" alt="">
+                    <p>暂无提现记录</p>
+                </div>
+                {else/}
+                {volist name="$data" id="item"}
+                <div class="recorded-info" style="display: flex;">
+                    <span style="flex: 2;">{$item.withdraw_number}</span>
+                    <div style="flex: 1;">
+                        {if condition="$item.distribution_type eq 1"}
+                        <img src="__RES__/imgs/yield/ye.png" alt="">
+                        <span>余额&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {elseif condition="$item.distribution_type eq 2"/}
+                        <img src="__RES__/imgs/yield/wx.png" alt="">
+                        <span>微信&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        {else/}
+                        <img width="18px" height="14px" src="__RES__/imgs/yield/card.png" alt="">
+                        <span>银行卡</span>
+                        {/if}
+                    </div>
+                    <span class="primary-color" style="flex: 1;">+￥{$item.price}</span>
+                    <span style="flex: 1;">{$item.apply_time}</span>
+                    <span style="flex: 1;">{$item.status_text}</span>
+                </div>
+                {/volist}
+                {/empty}
+                <!--分页-->
+                <div class="pageContainer" style="width: auto;">{$data|raw}</div>
+            </div>
+        </div>
+
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    // $('.tit a').click(function (e) {
+    //     e.preventDefault()
+    //     $(this).addClass('primary-color border-color').siblings().removeClass('primary-color border-color')
+    //     if($.trim($(this).text()) == '提现记录'){
+    //         $('.tip-img-view').css('display','none')
+    //         $('.recorded').css('display','block')
+    //     }else{
+    //         $('.tip-img-view').css('display','block')
+    //         $('.recorded').css('display','none')
+    //     }
+    // })
+</script>
+{/block}
+

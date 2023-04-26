@@ -1,0 +1,165 @@
+.public-bottom-box{
+    margin-top: 0;
+}
+.flash-sale{
+    background: url(../../imgs/flashsale/top.png) #f6f6f6 top center no-repeat;
+    border-top: 1px solid;
+    padding-bottom: 125px;
+}
+.clear{
+    clear: both;
+    overflow: hidden;
+    height: 0;
+    width: 100%;
+}
+.already-robbed{
+    float: left;
+    width: 300px;
+    text-align: center;
+    font-size: 28px;
+    color: #fff;
+    padding: 10px 0 0 0;
+    line-height: 40px;
+}
+.already-robbed p{
+    font-size: 14px;
+    line-height: 18px;
+}
+.begin{
+    float: left;
+    width: 200px;
+    text-align: center;
+    font-size: 28px;
+    color: #fff;
+    padding: 10px 0 0 0;
+    line-height: 40px;
+}
+.begin p{
+    font-size: 14px;
+    line-height: 18px;
+}
+.limited-time{
+    width: 1200px;
+    margin: 0 auto;
+    padding: 150px 0 0 0;
+    height: 80px;
+}
+.time-item{
+    float: right;
+    color: #fff;
+    margin-right: 72px;
+    height: 99px;
+    margin-top: -19px;
+}
+.time-item p{
+    height:19px;
+    line-height: 19px;
+    text-align: center;
+    margin-top: 10px;
+}
+.time-item strong{
+    font-size: 30px;
+    margin:8px  0 0 0;
+    float: left;;
+    display: inline-block;
+    width: 50px;
+    height: 46px;
+    background: url(../../imgs/xianshiqianggou/daojishi.png) center center no-repeat;
+    text-align: center;
+    line-height: 46px;
+}
+.time-item img{
+    float: left;
+    margin: 8px 0 0 0;
+}
+.rush-buy-commodity-title{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    display:-webkit-box;
+    -webkit-box-orient:vertical;
+    -webkit-line-clamp:2;
+    display: box;
+    width: 255px;
+    height: 42px;
+    line-height: 21px;
+    margin: 0 auto;
+}
+.rush-buy{
+    width: 1200px;
+    margin: 0 auto;
+}
+.rush-buy-commodity{
+    width: 292.5px;
+    float: left;
+    margin: 10px 10px 0 0;
+    background: #fff;
+}
+.rush-buy-commodity:nth-child(4n){
+    margin-right: 0;
+}
+.rush-buy .clear{
+    clear: both;
+    overflow: hidden;
+    width: 100%;
+    height: 0;
+}
+.barline{
+    width:182px;
+    background:#fed8c5;
+    height:8px;
+    overflow:hidden;
+    border-radius: 8px;
+    float: left;
+    margin-top: 4px;
+}
+.charts{
+    height:8px;
+    overflow:hidden;
+    border-radius:8px;
+}
+.surplus{
+    float: right;
+    font-size: 12px;line-height: 16px;
+}
+.commodity-surplus{
+    width: 255px;
+    margin: 5px auto;
+    overflow: hidden;
+}
+.original-price{
+    text-decoration: line-through;
+    font-size: 12px;
+    padding:12px 0 0 8px;
+    float: left;
+    line-height: 20px;
+    color: #666;
+}
+.discount-price{
+    float: left;
+    font-size: 22px;
+    line-height: 30px;
+    padding-top: 5px;
+}
+.discount-price span{
+    font-size: 16px;
+}
+.price-purchase{
+    padding: 12px 0 18px;
+    width: 258px;
+    margin: 0 auto;
+}
+.discount-immediate-purchase{
+    width: 88px;
+    height: 38px;
+    line-height: 38px;
+    font-size: 14px;
+    text-align: center;
+    color: #fff;
+    float: right;
+    background: -webkit-linear-gradient(left, red , blue);
+    background: -o-linear-gradient(left, red, blue);
+    background: -moz-linear-gradient(left, red, blue);
+    background: linear-gradient(to left, #fd4701 , #fe7e0c);
+    border-radius: 8px;
+    box-shadow:0px 5px 10px #f8c2ab ;
+}

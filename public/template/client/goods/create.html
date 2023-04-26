@@ -1,0 +1,1454 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/step.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css">
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .set_default_express ,.default_express {
+        display: inline-block;
+    }
+    .set_default_express{
+        background-color: #f98a10 ;
+        color: #fff;
+        padding: 0 12px;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+    .default_express{
+        border: 1px solid #00CC99;
+        color: #00CC99;
+        padding: 0 12px;
+        border-radius: 2px;
+    }
+
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>请按提示栏信息进行商品添加/编辑。
+            <li>
+            <li>标注<font>*</font>的为必填项。
+            <li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+
+<div>
+<div class="contentHeader">
+    <!--步骤开始-->
+    <ul class="nav nav-pills nav-justified step step-round">
+        <li class="step1 active dynamic">
+            <a>选择商品分类</a>
+        </li>
+        <li class="step2">
+            <a>填写商品基本信息</a>
+        </li>
+        <li class="step3">
+            <a>填写商品规格及图片</a>
+        </li>
+
+    </ul>
+    <!--步骤结束-->
+    <!--表单开始-->
+    <form class="layui-form" action="/client/goods/createAct" method="post" enctype="multipart/form-data">
+        <!--第一步开始-->
+
+        <div class="contentShellFull stepList">
+            <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 选择商品分类</label>
+            <hr class="layui-bg-gray">
+            <div class="common-head">
+                <div class="curCate">
+                    <label>您当前选择的商品分类是：</label>
+                    <input type="text" title="" placeholder="请选择" id="curCateContent" value="{$goodsData['cateTitle']?:''}" readonly/>
+                    <!--商品分类id-->
+                    <input type="text" title="" name="goods_classify_id" value="{$goodsData['goods_classify_id']?:''}" datatype="*" nullmsg="请选择一级商品分类"
+                           class="classifyId" readonly/>
+                    <input type="hidden" class="speed_two_class_id" value="">
+                    <input type="hidden" class="speed_two_class_title" value="">
+                    <input type="hidden" class="speed_three_class_id" value="">
+                    <input type="hidden" class="speed_three_class_title" value="">
+                </div>
+                <div class="inquire_search">
+                    <label class="tips">您最近使用的商品分类：</label>
+                    <div class="imitate_select">
+                        <select class="ps-container" lay-filter="cateHistory" title="选择您最近使用的商品分类">
+                            <option value="">请选择</option>
+                            {foreach $cateCache as $cateCacheKey => $cateCache}
+                            <option value="{:implode(',',$cateCache.goods_classify_id)}">{$cateCache.goods_classify_info}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="category_box">
+                <div class="category_content category-1">
+                    <div class="category_list_all">
+                        <div class="category_list">
+                            <ul>
+                                <li>请选择一级分类</li>
+                                {foreach $categoryOne as $key => $_categoryOne}
+                                <li onclick="step.getSon(1,'{$_categoryOne.goods_classify_id}');"
+                                    {notempty name="$goodsData"}
+                                    class="{$_categoryOne.goods_classify_id == $goodsData['firstCate']?'cur':''}"
+                                    {/notempty}
+                                id="cate_{$_categoryOne.goods_classify_id}">
+                                <a href="javascript:void(0);"><i></i>{$_categoryOne.title}</a>
+                                </li>
+                                {/foreach}
+                                {empty name='$categoryOne'}
+                                <li class="empty">暂无此级分类</li>
+                                {/empty}
+                            </ul>
+                        </div>
+<!--                        <a href="javascript:void(0);" class="left" onclick="addGoodsClassify()">-->
+<!--                            <div class="btn-info">-->
+<!--                                <div class="sc-btn sc-blue-btn" title="快捷添加分类"><span><i class="fa fa-plus"></i>快捷添加分类</span></div>-->
+<!--                            </div>-->
+<!--                        </a>-->
+                        <div class="category_flag"></div>
+                    </div>
+                </div>
+                <div class="category_content category-2">
+                    <div class="category_list_all">
+                        <div class="category_list">
+                            <ul>
+                                <li>请选择二级分类</li>
+                                {notempty name='$goodsData["cateArr"][0]'}
+                                {foreach $goodsData['cateArr'][0]?:[] as $cKeyOne => $_cKeyOne}
+                                <li  onclick="step.getSon(2,'{$_cKeyOne.goods_classify_id}');"
+                                     class="{$_cKeyOne['checked']?'cur':''}"
+                                     id="cate_{$_cKeyOne.goods_classify_id}">
+                                    <a href="javascript:void(0);"><i></i>{$_cKeyOne.title}</a>
+                                </li>
+                                {/foreach}
+                                {if condition="count($goodsData['cateArr']) lt 1"}
+                                <li class="empty">暂无此级分类</li>
+                                {/if}
+                                {/notempty}
+                            </ul>
+                        </div>
+<!--                        <a href="javascript:void(0);" class="left" onclick="addGoodsClassify(2)">-->
+<!--                            <div class="btn-info">-->
+<!--                                <div class="sc-btn sc-blue-btn" title="快捷添加二级分类"><span><i class="fa fa-plus"></i>快捷添加二级分类</span></div>-->
+<!--                            </div>-->
+<!--                        </a>-->
+                        <div class="category_flag"></div>
+                    </div>
+                </div>
+                <div class="category_content category-3" style="margin: 0">
+                    <div class="category_list_all">
+                        <div class="category_list">
+                            <ul>
+                                <li>请选择三级分类</li>
+                                {notempty name='$goodsData["cateArr"][1]'}
+                                {foreach $goodsData['cateArr'][1]?:[] as $cKeyTwo => $_cKeyTwo}
+                                <li  onclick="step.getSon(2,'{$_cKeyTwo.goods_classify_id}');"
+                                     class="{$_cKeyTwo['checked']?'cur':''}"
+                                     id="cate_{$_cKeyTwo.goods_classify_id}">
+                                    <a href="javascript:void(0);"><i></i>{$_cKeyTwo.title}</a>
+                                </li>
+                                {/foreach}
+                                {if condition="count($goodsData['cateArr']) lt 2"}
+                                <li class="empty">暂无此级分类</li>
+                                {/if}
+                                {/notempty}
+                            </ul>
+                        </div>
+<!--                        <a href="javascript:void(0);" class="left" onclick="addGoodsClassify(3)">-->
+<!--                            <div class="btn-info">-->
+<!--                                <div class="sc-btn sc-blue-btn" title="快捷添加三级分类"><span><i class="fa fa-plus"></i>快捷添加三级分类</span></div>-->
+<!--                            </div>-->
+<!--                        </a>-->
+                    </div>
+                </div>
+            </div>
+            <hr class="layui-bg-gray">
+            <!--更新商品ID-->
+            {if condition="$goods_id = input('get.id','')"}
+            <input type="hidden" name="goods_id" value="{$goods_id}"/>
+            {/if}
+            <input type="hidden" name="shop" value="{:input('shop',0)}" />
+        </div>
+        <!--第一步结束-->
+        <!--第二步开始-->
+        <div class="contentShellFull stepList">
+            <!--商品基本信息-->
+            <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写商品基本信息</label>
+            <hr class="layui-bg-gray">
+            <div class="contentShell65" style="width: 80%">
+                <!--商品分类-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品分类</label>
+                    <div class="layui-input-inline">
+                        <!--选定的商品分类名称拼接串-->
+                        <input type="text" name="goods_classify_info" id="goods_classify_info_new" title autocomplete="off" value="{$goodsData['cateTitle']?:''}"
+                               class="layui-input hiddenInput" readonly>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux pointer" title="点击修改商品分类" onclick="step.toPrev(1)">
+                        <i class="fa fa-edit" aria-hidden="true"></i>
+                    </div>
+                </div>
+
+                <!--店铺商品分类-->
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label"><em class="require">* </em>店铺商品分类</label>
+                        <div class="layui-input-inline">
+                            <select name="store_goods_classify" lay-search="" lay-filter='store_goods_classify'>
+                                <option value="">店铺商品分类</option>
+                                {volist name='storeGoodsClassify' id='store_goods_classify' key="fi"}
+                                <option
+                                        {eq name="$goodsData.store_goods_classify_id|default=''"
+                                        value="$store_goods_classify.store_goods_classify_id" }selected="selected"{/eq}
+                                {if condition="isset($storeGoodsClassify[$fi]) && $storeGoodsClassify[$fi]['level'] > $store_goods_classify['level']"}disabled="disabled"{/if}
+                                value="{$store_goods_classify.store_goods_classify_id}"
+                                >{for start="1" end="$store_goods_classify.level" }└ {/for}{$store_goods_classify.title}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <input type="text" readonly title style="opacity: 0;" name="store_goods_classify_id" value="{$goodsData['store_goods_classify_id']?:''}" datatype="*" nullmsg="选择店铺商品分类" errormsg="选择店铺商品分类" />
+
+                    </div>
+                </div>
+
+                <!--商品名称-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>商品名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="goods_name" value="{$goodsData['goods_name']?:''}" title autocomplete="off"
+                               placeholder="填写商品名称,30字符以内"
+                               datatype="s30" maxlength="30" minlength="1"
+                               nullmsg="请填写商品名称" errormsg="商品名称格式错误"
+                               class="layui-input">
+                        <input type="hidden" name="goods_name_style" value="{$goodsData['goods_name_style']?:'#000000'}" title autocomplete="off"/>
+                    </div>
+                </div>
+
+                <!--商品品牌-->
+                <div class="layui-form-item brand_form">
+                    <label class="layui-form-label">商品品牌</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="brand_name" title autocomplete="off" readonly
+                               placeholder="请选择商品品牌" value="{$goodsData['brand_name']|default=''}"
+                               class="layui-input drop-down" style="height: 38px;">
+                        <input type="hidden" name="brand_id" value="{$goodsData['brand_id']?:''}" title/>
+                        <div class="brand-container" style="display: none;">
+                            <div class="brand-header">
+                                <div class="letter">
+                                    <ul>
+                                        <li class="backStyle"><a class="backStyle" rel=""
+                                                                 onclick="step.getBrand({link_url:'/client/brand/getBrand',data:{'letter':'','keyword':''}})"
+                                                                 href="javascript:void(0);">全部品牌</a>
+                                        </li>
+                                        {foreach $brandFirstChr as $key => $item}
+                                        <li>
+                                            <a href="javascript:void(0);"
+                                               onclick="step.getBrand({link_url:'/client/brand/getBrand',data:{'letter':'{$item}','keyword':''}})"
+                                               rel="{$item}">{$item}</a></li>
+                                        {/foreach}
+                                    </ul>
+                                </div>
+                                <div class="search">
+                                    <input type="text" value="" placeholder="请输入品牌关键字" class="brand-search-input"/>
+                                    <a href="javascript:void(0);"
+                                       onclick="step.getBrand({link_url:'/client/brand/getBrand',data:{'letter':$('a[class=\'backStyle\']').attr('rel'),'keyword':$('.brand-search-input').val()}})"
+                                       class="brand-search-btn">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                    <a title="点击清空品牌输入框内容"
+                                       href="javascript:$('[name=\'brand_name\']').val('');$('[name=\'brand_id\']').val('');"
+                                       class="brand-clear-btn">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="brand-list">
+                                <ul>
+                                    {foreach $brand as $key => $item}
+                                    <li title="{$item.brand_name}" {eq name="$item.brand_id" value="($goodsData[\'brand_id\']?:0)"}class="choose"{/eq} value="{$item.brand_id}"><em>{$item.brand_first_char}</em>{$item.brand_name}
+                                    </li>
+                                    {/foreach}
+                                    {empty name="$brand"}
+                                    <li class="empty">暂无品牌数据</li>
+                                    {/empty}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--商品货号-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品货号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="goods_sn" value="{$goodsData['goods_sn']?:''}" title
+                               onblur="checkUnique(this,this.value,'{:input(\'get.id\',\'\')}')"
+                               autocomplete="off" placeholder="填写商品货号" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        若不填写商品货号，则系统自动生成一个唯一的货号
+                    </div>
+                </div>
+
+                <!--商品库存-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>商品库存</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="goods_number" value="{$goodsData['goods_number']?:''}" title
+                               datatype="zNum"
+                               nullmsg="请输入商品库存" errormsg="商品库存格式错误"
+                               autocomplete="off" placeholder="填写商品库存(正整数)" class="layui-input">
+                    </div>
+                </div>
+
+                <!--库存预警值-->
+                <!--onblur="if (this.value >= parseInt($('[name=\'goods_number\']').val())){layer.msg('预警值应小于库存值');this.value='';$(this).focus();}"-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>商品库存预警值</label>
+                    <div class="layui-input-inline">
+                        <input type="number" name="warn_number" value="{$goodsData['warn_number']?:''}" title
+                               datatype="zNum"
+                               nullmsg="请输入商品库存预警值" errormsg="商品库存预警值格式错误"
+                               autocomplete="off" placeholder="填写商品库存预警值(正整数)" class="layui-input">
+                    </div>
+                </div>
+
+                <!--商品关键词-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>商品关键词</label>
+                    <div class="layui-input-block">
+                             <textarea type="text" name="keyword" title autocomplete="off"
+                                       placeholder="填写商品关键词（作为站内商品搜索关键词和互联网搜索引擎SEO收录用,词语之间用|号隔开），200字符以内"
+                                       style="resize: none;width: 100%;height: 150px;"
+                                       datatype="s200" minlength="1" maxlength="200"
+                                       nullmsg="请填写商品关键词" errormsg="商品关键词格式错误"
+                                       class="layui-textarea">{$goodsData['keyword']?:''}</textarea>
+                    </div>
+                </div>
+
+                <!--商品简单描述-->
+<!--                <div class="layui-form-item">-->
+<!--                    <label class="layui-form-label"><em class="require">* </em>商品简单描述</label>-->
+<!--                    <div class="layui-input-block">-->
+<!--                            <textarea type="text" name="describe" title autocomplete="off" placeholder="填写商品描述,200字符以内"-->
+<!--                                      style="resize: none;width: 100%;height: 150px;"-->
+<!--                                      datatype="s200" minlength="1" maxlength="200"-->
+<!--                                      nullmsg="请填写商品简单描述" errormsg="商品简单描述格式错误"-->
+<!--                                      class="layui-textarea">{$goodsData['describe']?:''}</textarea>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+                <!--商品参数-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品参数</label>
+                    <div class="layui-input-block">
+                        <div class="extra-div">
+                            <table class="table-div">
+                                <tbody>
+                                <tr class="head">
+                                    <th>参数名称</th>
+                                    <th>参数值</th>
+                                    <th>操作</th>
+                                </tr>
+                                {notempty name='$goodsData'}
+                                {foreach $goodsData['parameter'] as $parameterKey => $parameterVal}
+                                <tr>
+                                    <td>
+                                        <input title="" class="text" type="text" name="parameter_name[]" autocomplete="off" value="{$parameterVal['parameter_name']}" />
+                                    </td>
+                                    <td>
+                                        <input title="" class="text" type="text" name="parameter_val[]" autocomplete="off" value="{$parameterVal['parameter_val']}" />
+                                    </td>
+                                    <td>
+                                        <a class="btn_trash" href="javascript:void(0);" onclick="$(this).parents('tr').remove();">
+                                            <i class="fa fa-trash-o"></i>删除
+                                        </a>
+                                    </td>
+                                </tr>
+                                {/foreach}
+                                {/notempty}
+                                <tr class="addTrDiv">
+                                    <td colspan="3">
+                                        <a href="javascript:void(0);" class="addTr" onclick="step.addTr(this,'is_parameter');"></a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--图片信息-->
+            <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 图片信息</label>
+            <hr class="layui-bg-gray">
+            <div class="contentShell90">
+
+                <!-- 商品展示图 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>商品展示图</label>
+                    <div class="layui-input-inline">
+                        <div
+                                class="imageUpload"
+                                default="{$goodsData.file|default=''}"
+                                width="800"
+                                height="800"
+                                file-mime="image/gif,image/jpeg,image/png"
+                                name="file"
+                                dir="goods_image_file"
+                                value="{$goodsData.file_data|default=''}"
+                                valid-type="*"
+                                valid-msg="请选择商品展示图"
+                        >
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">
+                            商品展示图为商品列表与商品详情主图，建议尺寸800*800
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 多图上传 -->
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>多图上传</label>
+                    <div class="layui-input-block">
+                        <div
+                                class="multiImageUpload"
+                                default="{$goodsData.multiple_file_data|default=''}"
+                                width="800"
+                                height="800"
+                                file-mime="image/gif,image/jpeg,image/png"
+                                name="picArr"
+                                dir="goods_image_album"
+                                value="{$goodsData.multiple_file_extra_data|default=''}"
+                                valid-min="1"
+                                valid-max="5"
+                                valid-msg="请上传商品多图"
+                        >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品视频</label>
+                    <div class="layui-input-inline">
+                        <div>
+                            <div class="layui-upload-drag" id="goods_video" {if condition="!empty($goodsData['video'])"}style="padding:1px;"{/if}>
+                            {empty name="$goodsData['video']"}
+                            <i class="layui-icon">&#xe681;</i>
+                            <p>点击上传，或将文件拖拽到此处</p>
+                            {else}
+                            <video controls="controls" style="width: 300px;float: left">
+                                <source src="{$goodsData['video']}" type="video/mp4" />
+                            </video>
+                            {/empty}
+                        </div>
+                        <input type="hidden" name="video" id="video" value="{$goodsData['video_data']?:''}" title/>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        大小不应超过10M，支持mp4
+                    </div>
+                    <div id="deleteVideo" class="layui-form-mid layui-word-aux" style="{empty name="$goodsData['video']"}display:none{/empty}">
+                        <button class="layui-btn" type="button">删除</button>
+                    </div>
+                </div>
+
+            </div>
+
+            </div>
+            <!--商品详细描述-->
+            <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写商品详细描述</label>
+            <hr class="layui-bg-gray">
+            <div class="contentShell90">
+                <div class="layui-tab layui-tab-brief">
+                    <ul class="layui-tab-title">
+                        {if config("user.")["pc"]["is_include"]}
+                        <li class="layui-this">
+                            <a href="javascript:void(0);"
+                               onclick="$('.describe').eq(0).show().next('.layui-form-item').hide();">
+                                <i class="fa fa-laptop" aria-hidden="true"></i> PC端
+                            </a>
+                        </li>
+                        {/if}
+                        <li {if !config("user.")["pc"]["is_include"]}class="layui-this"{/if}>
+                            <a href="javascript:void(0);"
+                               onclick="$('.describe').eq(1).show().prev('.layui-form-item').hide();">
+                                <i class="fa fa-mobile" aria-hidden="true"></i> 移动端
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                {if config("user.")["pc"]["is_include"]}
+                <!--商品PC端详细描述-->
+                <div class="layui-form-item describe">
+                    <input type="hidden" id="editorContent" name="content" value="{$goodsData['content']?:''}"/>
+                    <iframe src="/client/goods/uEditor" id="content" style="overflow: auto;" frameborder="0" width="100%"
+                            height="609px" scrolling="no"></iframe>
+                </div>
+                {/if}
+                <div class="layui-form-item describe" {if config("user.")["pc"]["is_include"]}style="display: none;"{/if}>
+                    <div class="mobile-shell">
+                        <div class="mobile-content">
+                            <div class="container">
+                                <div class="info">{$goodsData['web_content']|raw|default=''}</div>
+                            </div>
+                            <input type="hidden" title="" name="web_content" value="{$goodsData['web_content']?:''}"/>
+                            <div class="mo-btn">
+                                <a class="layui-btn layui-btn-normal" id="mobileImg" href="javascript:void(0);">
+                                    <i class="fa fa-file-picture-o" aria-hidden="true"></i> 添加图片
+                                </a>
+                                <a class="layui-btn layui-btn-normal"
+                                   href="javascript:step.addFont('.mobile-content .container .info',20000);">
+                                    <i class="fa fa-font" aria-hidden="true"></i> 添加文字
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="explain">
+                        <p>
+                            <strong>一、基本要求</strong>
+                            <span><em>1、</em>手机详情总体大小：图片+文字，<i class="red">图片不超过20张，文字不超过20000字</i>；</span>
+                            <span><em>建议：</em>所有图片都是本宝贝相关的图片。</span>
+                        </p>
+
+                        <p>
+                            <strong>二、图片大小</strong>
+                            <span><em>1、</em>建议使用宽度480 ~ 620像素、高度小于等于960像素的图片；</span>
+                            <span><em>2、</em>格式为：JPG\JEPG\GIF\PNG；</span>
+                            <span><em>举例：</em>可以上传一张宽度为480，高度为960像素，格式为JPG的图片。</span>
+                        </p>
+                        <p>
+                            <strong>三、文字要求</strong>
+                            <span><em>1、</em>每次插入文字不能超过500个字，标点、特殊字符按照一个字计算；</span>
+                            <span><em>2、</em>请手动输入文字，不要复制粘贴网页上的文字，防止出现乱码；</span>
+                            <span><em>3、</em>以下特殊字符“&lt;”、“&gt;”、“"”、“’”、“\”会被替换为空。</span>
+                            <span><em>建议：</em>不要添加太多的文字，这样看起来更清晰。</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        <!--配送方式-->
+        <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 配送方式</label>
+        <hr class="layui-bg-gray">
+        <div class="contentShell65">
+            <!-- 快递邮寄 -->
+            <div class="layui-form-item" id="express">
+                <label class="layui-form-label">快递邮寄</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="express" title="否" value="2" lay-filter="express" {eq name="goodsData.express|default=1" value="2"}checked="checked"{/eq}>
+                    <input type="radio" name="express" title="是" value="1" lay-filter="express" {eq name="goodsData.express|default=1" value="1"}checked="checked"{/eq}>
+                    <div class="default_express" {neq name="goodsData.default_express_type|default=1" value="1"} style="display: none"{/neq}>默认配送方式</div>
+                    <div class="set_default_express" data-id="1" {eq name="goodsData.default_express_type|default=1" value="1"} style="display: none"{/eq}>设为默认</div>
+                </div>
+            </div>
+
+            <!-- 运费设置 -->
+            <div class="layui-form-item" id="freight_status" {eq name="goodsData.express|default=1" value="2"}style="display:none"{/eq}>
+            <label class="layui-form-label">运费设置</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="freight_status" title="固定运费"  value="0" lay-filter="freight_status" {eq name="goodsData.freight_status|default=0" value="0"}checked="checked"{/eq}>
+                    <input type="radio" name="freight_status" title="运费模板" value="1" lay-filter="freight_status" {eq name="goodsData.freight_status|default=0" value="1"}checked="checked"{/eq}>
+                </div>
+            </div>
+
+            <!-- 运费价格 -->
+            <div class="layui-form-item" id="freight_price" {if condition="(($goodsData['express']??1) == 2) OR (($goodsData['freight_status']??0) != 0)"}style="display:none"{/if}>
+            <label class="layui-form-label">运费价格</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="freight_price" value="{$goodsData['freight_price']?:'0'}"
+                           autocomplete="off" placeholder="运费价格" class="layui-input" message="运费价格最大9999999.999" max_price="9999999.999" onblur="verify_max(this)">
+                </div>
+            </div>
+
+            <!-- 运费模板 -->
+            <div class="layui-form-item" id="freight_id" {if condition="(($goodsData['express']??2) == 2) OR (($goodsData['freight_status']??0) != 1)"}style="display:none"{/if}>
+            <label class="layui-form-label">运费模板</label>
+                <div class="layui-input-inline">
+                    <select name="freight_id" lay-search datatype="*" nullmsg="请选择运费模板" errormsg="请选择运费模板">
+                        <option value="0">-请选择运费模板-</option>
+                        {notempty name="freight"}
+                        {volist name="freight" id="vo"}
+                        <option value="{$vo.freight_express_classify_id}" {eq name="goodsData.freight_id|default=''" value="$vo.freight_express_classify_id"}selected="selected"{/eq}>{$vo.name}</option>
+                        {/volist}
+                        {/notempty}
+                    </select>
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <a onclick="create_express_template()" style="color: rgb(94, 175, 251)">添加运费模板</a>
+                </div>
+            </div>
+
+
+            <!-- 同城速递 -->
+            <div class="layui-form-item" id="express_one_city">
+                <label class="layui-form-label">同城速递</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="express_one_city" title="否" value="2" lay-filter="express_one_city" {eq name="goodsData.express_one_city|default=1" value="2"}checked="checked"{/eq}>
+                    <input type="radio" name="express_one_city" title="是" value="1" lay-filter="express_one_city" {eq name="goodsData.express_one_city|default=1" value="1"}checked="checked"{/eq}>
+                    <div class="default_express" {neq name="goodsData.default_express_type|default=1" value="2"} style="display: none"{/neq}>默认配送方式</div>
+                    <div class="set_default_express" data-id="2" {eq name="goodsData.default_express_type|default=1" value="2"} style="display: none"{/eq}>设为默认</div>
+                </div>
+            </div>
+
+            <!-- 到店自提 -->
+            <div class="layui-form-item" id="express_self_lifting">
+                <label class="layui-form-label">到店自提</label>
+                <div class="layui-input-inline">
+                    <input type="radio" name="express_self_lifting" title="否" value="2" lay-filter="express_self_lifting" {eq name="goodsData.express_self_lifting|default=1" value="2"}checked="checked"{/eq}>
+                    <input type="radio" name="express_self_lifting" title="是" value="1" lay-filter="express_self_lifting" {eq name="goodsData.express_self_lifting|default=1" value="1"}checked="checked"{/eq}>
+                    <div class="default_express" {neq name="goodsData.default_express_type|default=1" value="3"} style="display: none"{/neq}>默认配送方式</div>
+                    <div class="set_default_express" data-id="3" {eq name="goodsData.default_express_type|default=1" value="3"} style="display: none"{/eq}>设为默认</div>
+                </div>
+            </div>
+
+            <!-- 商品重量(kg) -->
+            <div id="goods_weight" class="layui-form-item" {if condition="(($goodsData['express']??1) == 2) AND (($goodsData['express_one_city']?? 2) == 2)"}style="display:none"{/if}>
+                <label class="layui-form-label">商品重量(kg)</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="goods_weight" value="{$goodsData['goods_weight']?:''}" title
+
+                           autocomplete="off" placeholder="商品重量" class="layui-input" message="商品重量最大9999999" max_price="9999999" onblur="verify_max(this)">
+                </div>
+            </div>
+            <input id="default_express_type" name="default_express_type" type="hidden" value="{$goodsData.default_express_type|default=1}">
+        </div>
+    </div>
+    <!--第二步结束-->
+    <!--第三步开始-->
+    <div class="contentShellFull stepList">
+        <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 基础价格</label>
+        <hr class="layui-bg-gray">
+        <div class="contentShell90">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><em class="require">* </em>本店售价</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="shop_price" value="{$goodsData['shop_price']?:''}" title
+                           datatype="num"
+                           nullmsg="请输入商品本店售价" errormsg="商品本店售价格式错误"
+                           autocomplete="off" placeholder="填写本店售价(最大99999999.99)" class="layui-input"  message="本店售价最大99999999.99" max_price="99999999.99" onblur="verify_max(this)"
+                    >
+                </div>
+                    <!--<div class="layui-form-mid layui-word-aux">-->
+                    <!--<a href="javascript:;">按市场价换算</a>-->
+                    <!--</div>-->
+            </div>
+
+            <!--商品市场售价-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><em class="require">* </em>市场售价</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="market_price" value="{$goodsData['market_price']?:''}" title
+                           datatype="num"
+                           nullmsg="请输入商品市场售价" errormsg="商品市场售价格式错误"
+                           autocomplete="off" placeholder="填写商品市场售价(最大99999999.99)" class="layui-input"  message="商品市场售价最大99999999.99" max_price="99999999.99" onblur="verify_max(this)">
+                </div>
+                <div class="layui-form-mid layui-word-aux">
+                    <a href="javascript:var mp = $('[name=\'market_price\']');mp.val(Math.round(mp.val()));">科学取整</a>
+                </div>
+            </div>
+
+
+            <!--商品成本价-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><em class="require">* </em>成本价</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="cost_price" value="{$goodsData['cost_price']?:''}" title
+                           datatype="num"
+                           nullmsg="请输入商品成本价" errormsg="商品成本价格式错误"
+                           autocomplete="off" placeholder="填写商品成本价(最大99999999.99)" message="成本价最大99999999.99" max_price="99999999.99" onblur="verify_max(this)" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 设置商品属性</label>
+        <hr class="layui-bg-gray">
+        <div class="contentShell90">
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品类型</label>
+                <div class="layui-input-inline">
+                    <select name="attr_type_id" lay-filter="attrType" title="选择商品类型">
+                        {notempty name="$goodsData['attr_type_id']"}
+                        <option value="0">-请选择商品属性-</option>
+                        {foreach $arrData as $attrKey => $attrVal}
+                        <option value="{$attrVal['attr_type_id']}" {if condition="$goodsData['attr_type_id'] eq $attrVal['attr_type_id']"}selected{/if}>{$attrVal['type_name']}</option>
+                        {/foreach}
+                        {/notempty}
+                        {empty name="$goodsData['attr_type_id']"}
+                        <option value="0">-请选择商品属性-</option>
+                        {foreach $arrData as $attrKey => $attrVal}
+                        <option value="{$attrVal['attr_type_id']}" >{$attrVal['type_name']}</option>
+                        {/foreach}
+                        {/empty}
+                    </select>
+                </div>
+            </div>
+            <!--规格容器-->
+            <div class="layui-form-item attr-container"></div>
+            <!--结果容器-->
+            <div class="layui-form attr-ret"></div>
+        </div>
+    </div>
+<!--第三步结束-->
+<div class="step_footer ">
+    <div class="step_btn step_btn_fixed">
+        <a href="javascript:void(0);" data-num="0" onclick="step.toPrev($(this).attr('data-num'))"
+           class="layui-btn layui-btn-primary prev"></a>
+        <a href="javascript:void(0);" class="layui-btn sub_2 next" id="submit"></a>
+    </div>
+</div>
+<!--第四步结束-->
+</form>
+</div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/jquery.json.js"></script>
+<script type="text/javascript" src="__RES__/js/ueditor.all.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/goods_attr.js"></script>
+<script type="text/javascript" src="__RES__/js/step.js"></script>
+
+<script type="text/javascript" src="__RES__/js/spectrum.js"></script>
+<script type="text/javascript" src="__RES__/js/docs.js"></script>
+<script type="text/javascript" src="__RES__/js/Validform_v5.3.2_ncr_min.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.dataTables.min.js"></script>
+
+
+<script>
+
+
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    //验证输入金额大小
+    function verify_max(e){
+        var max_price=parseFloat($(e).attr('max_price'));
+        var input_price=parseFloat($(e).val());
+        var message=$(e).attr('message');
+        if(input_price>max_price){
+            $(e).val(max_price);
+            $(e).focus();
+            layer.msg(message);
+        }
+    }
+
+    $(function () {
+        changeExpress(parseInt('{$storeData.is_delivery|default=1}'),parseInt('{$storeData.is_city|default=1}'),parseInt('{$storeData.is_shop|default=1}'))
+    })
+
+    var freight_statuss =  $('input[name="freight_status"]:checked ').val();
+    if(freight_statuss==0){
+
+        $('.moban').attr("style","display:none;");
+    }
+    function length() {
+        var test = document.getElementById('goods_classify_info_new').value,len = 0;
+        for (var i=0; i<test.length; i++) {
+            var c = test.charCodeAt(i);
+            //单字节加1
+            if ((c >= 0x0001 && c <= 0x007e) || (0xff60<=c && c<=0xff9f)) {
+                len++;
+            }
+            else {
+                len+=2;
+            }
+        }
+        if (test > 0) {
+            $("#goods_classify_info_new").css('width', len*14 + 'px');
+        }
+    }
+    //内容页切换
+    $('.tabs_info li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShells").eq(index).show().siblings(".contentShells").hide();
+    });
+    window.onload=function () {
+        length()
+    };
+    if ($('.extra-div').find("tr:not(.head):not(.addTrDiv)").length === 0) {
+        $('.addTrDiv').before(step.trSample('is_parameter'));
+    }
+    $(document).on('mouseover', '.chose', function () {
+        var _this = $(this);
+        _this.removeClass('chose');
+        main.upload([
+            {
+                elem: _this,
+                field: 'attr_file',
+                data: {name: 'attr_file', dir: 'attr_file'},
+                before: function () {
+                    layer.load(0, {shade: false});
+                },
+                done: function (res, index, upload) {
+                    layer.closeAll();
+                    layer.msg(res.message);
+                    if (res.code == 0) {
+                        var ctd = _this.parent('td').next('td');
+                        ctd.children('.attr_file').val(res.data.url);
+                        ctd.children('img').prop('src', res.data.domain + res.data.url);
+                        _this.unbind('hover');
+                    }
+                }, error: function () {
+                    layer.closeAll();
+                    layer.msg('上传失败');
+                }
+            }
+        ]);
+    });
+    main.form([{
+        selector: 'select(attrType)', callback: function (data) {
+            attrControl.init('',data.value);
+            attrControl.init("{$goods_id?:''}",data.value);
+            if ("{$goods_id}"){
+                if ("{$goodsData['attr_type_id']|default=''}" == data.elem.value) {
+                    editAttr();
+                }
+            }
+        }
+    },
+       {
+        selector: 'checkbox(attr-val)',callback: function (data) {
+            attrControl.changeTable($(data.elem));
+        }
+    },{
+            selector: 'select(store_goods_classify)',callback: function (data) {
+                $('[name="store_goods_classify_id"]').val(data.value);
+            }
+    },{
+        selector: 'select(cateHistory)',callback: function (data) {
+            if (data.value == ''){
+                $('.category-2').find('ul').html('<li>请选择二级分类</li>');
+                $('.category-3').find('ul').html('<li>请选择三级分类</li>');
+                $('.cur').removeClass('cur');
+                $('.classifyId').val('');
+                $('[name="goods_classify_info"]').val('');
+                $('#curCateContent').val('');
+            }else{
+                var cateIdArr = data.value.split(',') || {};
+                $('#cate_'+cateIdArr[0]).addClass('cur').siblings('li').removeClass('cur');
+                main.ajax({data:{id:cateIdArr},url:'/client/goods/getCateHistory',callback: function (res) {
+                    $.each(res.data,function (i,o) {
+                        $('.category-'+(i+2)).find('ul').html(o);
+                    });
+                    $('#curCateContent').val(res.title);
+                    $('[name="goods_classify_info"]').val(res.title);
+                    $('.classifyId').val(cateIdArr.pop());
+                    length()
+                }});
+            }
+        }
+    },{
+        selector: 'radio(dis_set)', callback: function (data) {
+            if (data.value === "1") {
+                $('#rtp').show();
+                $('.tabs_info').show();
+                $('.lel_set').show();
+            } else {
+                $('#rtp').hide();
+                $('.tabs_info').hide();
+                $('.lel_set').hide();
+            }
+        }
+    },{
+        selector: 'select(cateHistory)',callback: function (data) {
+            if (data.value == ''){
+                $('.category-2').find('ul').html('<li>请选择二级分类</li>');
+                $('.category-3').find('ul').html('<li>请选择三级分类</li>');
+                $('.cur').removeClass('cur');
+                $('.classifyId').val('');
+                $('[name="goods_classify_info"]').val('');
+                $('#curCateContent').val('');
+            }else{
+                var cateIdArr = data.value.split(',') || {};
+                $('#cate_'+cateIdArr[0]).addClass('cur').siblings('li').removeClass('cur');
+                main.ajax({data:{id:cateIdArr},url:'/goods/getCateHistory',callback: function (res) {
+                        $.each(res.data,function (i,o) {
+                            $('.category-'+(i+2)).find('ul').html(o);
+                        });
+                        $('#curCateContent').val(res.title);
+                        $('[name="goods_classify_info"]').val(res.title);
+                        $('.classifyId').val(cateIdArr.pop());
+                    }});
+            }
+        }
+    },{
+        selector: 'radio(dis_set)', callback: function (data) {
+            if (data.value === "1") {
+                $('#rtp').show();
+                $('.tabs_info').show();
+                $('.lel_set').show();
+            } else {
+                $('#rtp').hide();
+                $('.tabs_info').hide();
+                $('.lel_set').hide();
+            }
+        }
+    },{
+        // 快递邮寄
+        selector:'radio(express)',
+        callback:function (data) {
+            if (data.value == 1){
+                // 是
+                // 显示商品重量
+                $('#goods_weight').show();
+                // 显示运费设置
+                $('#freight_status').show();
+                // 判断运费设置
+                switch($('input[name=freight_status]:checked').val()){
+                    case '0':   // 固定运费
+                        // 显示运费价格
+                        $('#freight_price').show()
+                        // 隐藏运费模板
+                        $('#freight_id').hide()
+                        break;
+                    case '1':   // 运费模板
+                        // 显示运费模板
+                        $('#freight_id').show()
+                        // 隐藏运费价格
+                        $('#freight_price').hide()
+                        break;
+                }
+            } else{
+                // 否
+
+                // 判断其他两个是否也是否,如果 是 则不能让他也是否
+                if ($('input[name=express_one_city]:checked').val() == 2 && $('input[name=express_self_lifting]:checked').val() == 2){
+                    layer.msg("请至少保留一项配送方式")
+                    $('input[name=express][value=1]').prop('checked',true)
+                    main.form()
+                    return false
+                }
+
+                if ($('#default_express_type').val() == 1){
+                    // 如果同城速递选择了
+                    if ($('input[name=express_one_city]:checked').val() == 1){
+                        // 设置为快递邮寄
+                        $('#default_express_type').val(2).trigger('input');
+                    } else {
+                        // 设置为到店自提
+                        $('#default_express_type').val(3).trigger('input');
+                    }
+                }
+
+                // 隐藏 运费设置
+                $('#freight_status').hide();
+                // 隐藏 运费价格
+                $('#freight_price').hide();
+                // 隐藏 运费模板
+                $('#freight_id').hide();
+                // 判断同城速递是否为是, 如果为否则隐藏商品重量
+                if($('input[name=express_one_city]:checked').val() == 2){
+                    $('#goods_weight').hide()
+                }
+            }
+            // console.log(data.value)
+        }
+    },{
+        // 同城速递
+        selector:'radio(express_one_city)',
+        callback:function (data) {
+            if (data.value == 1){
+                // 是
+                // 显示商品重量
+                $('#goods_weight').show();
+            } else{
+                // 否
+                // 判断其他两个是否也是否,如果 是 则不能让他也是否
+                if ($('input[name=express]:checked').val() == 2 && $('input[name=express_self_lifting]:checked').val() == 2){
+                    layer.msg("请至少保留一项配送方式")
+                    $('input[name=express_one_city][value=1]').prop('checked',true)
+                    main.form()
+                    return false
+                }
+
+                // 如果 同城快递 是 默认的
+                if ($('#default_express_type').val() == 2){
+                    // 如果快递邮寄选择了
+                    if ($('input[name=express]:checked').val() == 1){
+                        // 设置为快递邮寄
+                        $('#default_express_type').val(1).trigger('input');
+                    } else {
+                        // 设置为到店自提
+                        $('#default_express_type').val(3).trigger('input');
+                    }
+                }
+
+                // 判断同城速递是否为是, 如果为否则隐藏商品重量
+                if($('input[name=express]:checked').val() == 2){
+                    $('#goods_weight').hide()
+                }
+            }
+        }
+    },{
+        // 到店自提
+        selector:'radio(express_self_lifting)',
+        callback:function (data) {
+            if (data.value == 2){
+                // 否
+                // 判断其他两个是否也是否,如果 是 则不能让他也是否
+                if ($('input[name=express]:checked').val() == 2 && $('input[name=express_one_city]:checked').val() == 2){
+                    layer.msg("请至少保留一项配送方式")
+                    $('input[name=express_self_lifting][value=1]').prop('checked',true)
+                    main.form()
+                    return false
+                }
+
+                if ($('#default_express_type').val() == 3){
+                    // 如果快递邮寄选择了
+                    if ($('input[name=express]:checked').val() == 1){
+                        // 设置为快递邮寄
+                        $('#default_express_type').val(1).trigger('input');
+                    } else {
+                        // 设置为同城速递
+                        $('#default_express_type').val(2).trigger('input');
+                    }
+                }
+            }
+        }
+    },{
+        // 运费设置
+        selector:'radio(freight_status)',
+        callback:function (data) {
+            if (data.value == 0){
+                // 固定运费
+                $('#freight_price').show()
+                $('#freight_id').hide()
+            }else{
+                // 运费模板
+                $('#freight_price').hide()
+                $('#freight_id').show()
+            }
+        }
+    }]);
+    layui.use('element', function(){
+    });
+    // 初始化表单验证对象
+    step.sub(1,'/client/goods/createAct');
+    var editAttr = function () {
+        $.ajax({type:'post',data:{id:"{$goods_id}",type:4},url:'/client/goods/getProducts',success: function (res) {
+                if (res.code != 0){
+                    layer.msg(res.message);
+                    return false;
+                }
+                if (res.data != ''){
+                    $('.attr-ret').prepend(attrControl.tableHeader);
+                    var arr = [];
+                    $('.spec_table',document).append(res.data).children('tbody').children('tr').each(function (i,o) {
+                        arr.push($(o).children('td:first-child').children('span').attr('class').split('#!@!#'));
+                    });
+                    attrControl.insDT();
+                }
+            }});
+    };
+    if ("{$goods_id}" != ''){
+        attrControl.init("{$goods_id}","{$goodsData['attr_type_id']?:''}");
+        editAttr();
+    }
+    // 上传图片
+    main.upload([{
+        elem: '#mobileImg',
+        size: 20 * 1024,
+        data: {name: 'content_img', dir: 'content_img', auth: 'public-read', style: 3, crypt: 0},
+        field: 'content_img',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                    '<img src="' + res.data.domain+res.data.url + '">'
+                    + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_file',
+        size: 20 * 1024,
+        data: {name: 'goods_file', dir: 'goods_file', auth: '', style: 1, crypt: 1},
+        field: 'goods_file',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" alt="' + res.data.name + '" class="uploadImg">' +
+                    '<input type="text" name="file" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+            $(this.elem).css('padding','1px').html(html);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_recomme_file',
+        size: 20 * 1024,
+        data: {name: 'goods_recomme_file', dir: 'goods_recomme_file', auth: '', style: 1, crypt: 1},
+        field: 'goods_recomme_file',
+
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" alt="' + res.data.name + '" class="uploadImg">' +
+                    '<input type="text" name="recomme_file" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+            $(this.elem).css('padding','1px').html(html);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_video',
+        size: 10 * 1024,
+        data: {name: 'goods_video', dir: 'video', auth: 'public-read', style: '', crypt: ''},
+        auto:true,
+        field: 'goods_video',
+        accept: 'video',
+        acceptMime: 'video/*',
+        exts: 'mp4',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<video controls><source src="'+ res.data.domain + res.data.url +'" type="video/mp4" /></video>';
+            $(this.elem).css('padding','1px').html(html);
+            $('#video').val(res.data.url);
+
+            $('#deleteVideo').show();
+
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#photos_area',
+        size: 2 * 1024,
+        data: {name: 'goods_album', dir: 'album', auth: '', style: 1, crypt: 1},
+        field: 'goods_album',
+        multiple: true,
+        number: 5,
+        auto: false,
+        choose: function (obj) {
+            var length = $('.img-item').length,num = 1;
+            obj.preview(function (index,file,result) {
+                if (length <= 5 && (length + num) <= 5 ) obj.upload(index, file);
+                num++;
+            });
+        },
+        done: function (res,index,upload) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="img-item">' +
+                    '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                    '<input type="hidden" name="picArr[]" value="'+ res.data.ossUrl +'" />' +
+                    '<div class="operate">' +
+                    '<i class="toleft">左移</i>' +
+                    '<i class="toright">右移</i>' +
+                    '<i class="del">删除</i>' +
+                    '</div></div>';
+            if ($(this.elem).children('.img-item').length == 0) $(this.elem).empty();
+            $(this.elem).css('padding',0).append(html);
+            layer.closeAll('loading');
+        }
+    }]);
+
+
+
+    $('.set_default_express').on('click',function () {
+        var parent = $(this).parent();
+
+        if(parent.find('input:checked').val() == 2){
+            layer.msg('不能将未开启的配送方式设置为默认')
+            return false
+        }
+
+        $('#default_express_type').val($(this).data('id')).trigger('input');
+    })
+
+    $('#default_express_type').on('input',function () {
+
+        $('.set_default_express').show()
+        $('.default_express').hide()
+
+        switch ($(this).val()) {
+            case '1':
+                $('#express .default_express').show()
+                $('#express .set_default_express').hide()
+                break;
+            case '2':
+                $('#express_one_city .default_express').show()
+                $('#express_one_city .set_default_express').hide()
+                break;
+            case '3':
+                $('#express_self_lifting .default_express').show()
+                $('#express_self_lifting .set_default_express').hide()
+                break;
+        }
+    })
+
+    /**
+     * 修改 配送方式
+     */
+    function changeExpress(express,express_one_city,express_self_lifting){
+        // 如果设置了全国邮寄
+        if(express){
+            if ('{$goodsData.express|default=0}' ==  1) {
+                // 判断快递设置 是 0=> 固定运费 1=> 运费模板
+                if ($('input[name=freight_status]:checked').val() == 0) {
+                    // 固定运费
+
+                    // 运费价格 显示
+                    $('#freight_price').show()
+                    // 运费模板选择 隐藏
+                    $('#freight_id').hide()
+                } else {
+                    // 运费模板
+
+                    // 运费价格 隐藏
+                    $('#freight_price').hide()
+                    // 运费模板选择 显示
+                    $('#freight_id').show()
+                }
+
+                // 设置默认配送方式为 快递邮寄
+                // $('#default_express_type').val(1).trigger('input');
+
+                // 显示 快递邮寄
+                $('#express').show()
+                // 显示 商品重量
+                $('#freight_status').show()
+                // 快递邮寄的选择设置为是
+                $('input[name=express][value="1"]').prop('checked', true)
+
+            }else{
+                //新建 默认选择
+                if ($('input[name=express]:checked').val() == 1) {
+                    // 固定运费
+                    // 运费价格 显示
+                    $('#freight_price').show()
+                    // 运费模板选择 隐藏
+                    $('#freight_id').hide()
+                } else {
+                    $('#freight_status').hide()
+                    $('#freight_price').hide()
+                    $('#freight_id').hide()
+                }
+
+            }
+        }else
+        {
+            // 掩藏快递邮寄
+            $('#express').hide()
+            // 运费设置 隐藏
+            $('#freight_status').hide()
+            // 运费价格 隐藏
+            $('#freight_price').hide()
+            // 运费模板Id 隐藏
+            $('#freight_id').hide()
+            // 快递邮寄的选择设置为否
+            $('input[name=express][value="2"]').prop('checked',true)
+        }
+
+        // 如果设置了同城速递
+        if(express_one_city){
+            if (!express)
+            {
+                // 设置同城速递为 是
+                $('input[name=express_one_city][value="1"]').prop('checked',true)
+                // 设置默认配送方式为 同城速递
+                $('#default_express_type').val(2).trigger('input');
+                // 显示 同城速递
+                $('#express_one_city').show()
+            }
+        }else{
+            // 隐藏同城速递
+            $('#express_one_city').hide()
+            // 设置 同城速递为 否
+            $('input[name=express_one_city][value="2"]').prop('checked',true)
+        }
+
+        // 如果设置了到店自提
+        if(express_self_lifting){
+            // 如果 快递邮寄和 同城速递 都未设置
+            if (!express && !express_one_city){
+                // 到店自提 设置为 是
+                $('input[name=express_self_lifting][value="1"]').prop('checked',true)
+                // 默认配送方式为 到店自提
+                $('#default_express_type').val(3).trigger('input');
+            }
+            // 到店自提 显示
+            $('#express_self_lifting').show()
+        }else{
+            // 到店自提 隐藏
+            $('#express_self_lifting').hide()
+            // 到店自提 设置为 否
+            $('input[name=express_self_lifting][value="2"]').prop('checked',true)
+        }
+
+        // 如果 快递邮寄 和 同城速递 都未设置的话
+        if (!express && !express_one_city){
+            // 商品重量隐藏
+            $('#goods_weight').hide()
+        }
+
+        main.form()
+    }
+
+    $("#photos_area").on("click", '.toright', function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_right = item.next(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_right.length == 0) {
+                item.insertBefore($(this).parents('#photos_area').children(".img-item:first"));
+            } else {
+                item.insertAfter(item_right);
+            }
+        }
+    }).on("click", ".toleft", function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_left = item.prev(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_left.length == 0) {
+                item.insertAfter($(this).parents('#photos_area').children(".img-item:last"));
+            } else {
+                item.insertBefore(item_left);
+            }
+        }
+    }).on("click", ".del", function () {
+        $(this).parent().parent(".img-item").remove();
+        var pa = $('#photos_area');
+        if (pa.html() == '')
+            pa.css({'padding':'60px'}).html('<p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>');
+
+    }).on('click', '.img-item', function (ev) {
+        var oEvent = ev || event;
+        oEvent.stopPropagation();
+    });
+    // 检测商品货号唯一性
+    function checkUnique(o, val, goods_id) {
+        $.ajax({
+            url: '/client/goods/checkGoodsSn',
+            dataType: 'json',
+            type: 'post',
+            data: {goods_sn: val, goods_id: goods_id},
+            success: function (res) {
+                if (res.code !== 0) {
+                    layer.msg(res.message);
+                    $(o).focus();
+                }
+            }
+        })
+    }
+    $('#deleteVideo').on('click',function () {
+        var html = '<i class="layui-icon">&#xe681;</i><p>点击上传，或将文件拖拽到此处</p>';
+        $('#goods_video').css('padding','30px').html(html);
+        $('#video').val('');
+
+        $('#deleteVideo').hide();
+    })
+    function freight_status(){
+        var status =  $('input[name="freight_status"]:checked ').val();
+        //1  运费模板  0固定模板
+        if(status==1){
+            $('.guding').attr("style","display:none;");
+            $('.moban').attr("style","display:block;");
+        }else{
+
+            $('.guding').attr("style","display:block;");
+            $('.moban').attr("style","display:none;");
+        }
+    }
+
+    function create_express_template() {
+        // console.log(1212);
+        layer.open({
+            type:2,
+            title:'添加运费模板',
+            content:'/client/business_express/create?create_from_goods=1',
+            area:['1000px','600px']
+        })
+    }
+
+    function getBusinessExpress() {
+        $.ajax({
+            url: '/client/business_express/get_list',
+            dataType: 'json',
+            type: 'post',
+            success: function (res) {
+                if(res.code == 0){
+                    var html = '<option value="">-请选择运费模板-</option>'
+
+                    for (var i = 0; i< res.data.length;i++){
+                        html += '<option value="' + res.data[i].id + '">' + res.data[i].name + '</option>'
+                    }
+
+                    $('select[name=freight_id]').html(html)
+
+                    main.form()
+                }
+            }
+        })
+    }
+</script>
+<script>
+    // 快捷添加分类
+    // function addGoodsClassify(level,parent_id,parent_title) {
+    //     //   快捷添加二级 三级 分类
+    //     var speed_three_class_id = $('.speed_three_class_id').val();
+    //     var speed_two_class_id = $('.speed_two_class_id').val();
+    //     var speed_three_class_title = $('.speed_three_class_title').val();
+    //     var speed_two_class_title = $('.speed_two_class_title').val();
+    //     console.log(speed_two_class_id);
+    //     if(level == 2){
+    //         if(speed_two_class_id == '' ||  speed_two_class_title == ''){
+    //             layer.msg('没有选择一级分类，不能快速添加二级分类');
+    //             return false;
+    //         }
+    //         parent_id = speed_two_class_id;
+    //         parent_title = speed_two_class_title;
+    //     }
+    //
+    //     if(level == 3){
+    //         if(speed_three_class_id == '' ||  speed_three_class_title == ''){
+    //             layer.msg('没有选择二级分类，不能快速添加三级分类');
+    //             return false;
+    //         }
+    //         parent_id = speed_three_class_id;
+    //         parent_title = speed_three_class_title;
+    //     }
+    //     var url
+    //     if (level === undefined || parent_id === undefined){
+    //         url = '/client/store_goods_classify/fast_create'
+    //     } else{
+    //         url = '/client/store_goods_classify/fast_create?level='+ level +'&parent_id='+parent_id
+    //     }
+    //
+    //     var title = '快捷添加分类'
+    //
+    //     if (parent_title !== undefined){
+    //         title = '上级分类: ' + parent_title
+    //     }
+    //
+    //
+    //     layer.open({
+    //         type: 2,
+    //         title: title,
+    //         shadeClose: true,
+    //         shade: 0.8,
+    //         area: ['60%', '60%'],
+    //         content: [url]
+    //     });
+    // }
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

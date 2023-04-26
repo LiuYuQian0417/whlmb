@@ -1,0 +1,174 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .layui-laydate{
+        margin: 40px 0 !important;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、订单：参与活动的用户生成的抽奖订单；</li>
+                <li>2、活动：创建活动，可在活动中制定活动规则并选择参与活动的商品，进行中的活动不可编辑，每次只能启动一个活动</li>
+                <li>3、优惠券：生成优惠券供抽奖活动使用</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('lottery/order_list')">订单</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('lottery/activity_list')">活动</a></li>
+        {if $Think.INI_CONFIG['IS_COUPON']}<li><a href="javascript:void(0);" onclick="main.jumpFour('lottery/coupon_list')">优惠券</a></li>{/if}
+    </ul>
+</div>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="post">
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css"/>
+    <!--起止时间开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">起止时间：</label>
+        <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <input type="text" name="start_date" id="start_date" lay-verify="datetime" placeholder="不限" value="{:input('start_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="end_date" id="end_date" lay-verify="datetime" placeholder="至今" value="{:input('end_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--起止时间结束-->
+    <!--奖品类型开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">奖品类型：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="goods_type" {if condition="in_array('0',input('goods_type/a',[])) || input('goods_type/a','')==''"} checked{/if} value="0" lay-skin="primary" title="不限" lay-filter="allChk" class="chkAll">
+            <input type="checkbox" name="goods_type[]" {in name="1" value=":input('goods_type/a')"} checked{/in} value="1" lay-filter="check" class="chk" lay-skin="primary" title="实物">
+            <input type="checkbox" name="goods_type[]" {in name="2" value=":input('goods_type/a')"} checked{/in} value="2" lay-filter="check" class="chk" lay-skin="primary" title="积分">
+            {if $Think.INI_CONFIG['IS_COUPON']}<input type="checkbox" name="goods_type[]" {in name="3" value=":input('goods_type/a')"} checked{/in} value="3" lay-filter="check" class="chk" lay-skin="primary" title="优惠券">{/if}
+        </div>
+    </div>
+    <!--奖品类型开始-->
+    <!--订单状态开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">订单状态：</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="status" {if condition="in_array('0',input('status/a',[])) || input('status/a','')==''"} checked {/if} value="0" lay-skin="primary" title="不限"  lay-filter="allChk" class="chkAll">
+            <input type="checkbox" name="status[]" {in name="1" value=":input('status/a')"} checked{/in} value="1" lay-filter="check" class="chk" lay-skin="primary" title="待发货">
+            <input type="checkbox" name="status[]" {in name="2" value=":input('status/a')"} checked{/in} value="2" lay-filter="check" class="chk" lay-skin="primary" title="待收货">
+            <input type="checkbox" name="status[]" {in name="3" value=":input('status/a')"} checked{/in} value="3" lay-filter="check" class="chk" lay-skin="primary" title="已完成">
+        </div>
+    </div>
+    <!--订单状态结束-->
+    <!--关键词开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">关键词：</label>
+        <div class="layui-input-block">
+            <input type="text" name="keywords" value="{:input('keywords','')}" autocomplete="off" placeholder="" class="layui-input">
+            <button class="layui-btn" lay-submit="">查询</button>
+        </div>
+    </div>
+    <!--关键词结束-->
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th>用户账号</th>
+                <th>用户昵称</th>
+                <th>中奖时间</th>
+                <th>中奖奖品</th>
+                <th>奖励状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>
+                    {$item.member.phone|default=''}
+                </td>
+                <td>{$item.member.nickname|default=''}</td>
+                <td>{$item.create_time|date='Y-m-d H:i'}</td>
+                <td>{$item.prize_title|default=''}</td>
+                <td>
+                    {switch name="item.status"}
+                    {case value="0"}待领取{/case}
+                    {case value="1"}待发货{/case}
+                    {case value="2"}已发货{/case}
+                    {case value="3"}已完成{/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+                <td>
+                    <a href="javascript:void(0);" onclick="main.jumpFour('lottery/order_examine?id={$item.lottery_order_id}')" class="btn_see"><i class="fa fa-eye"></i>详情</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{
+        selector: 'checkbox(allChk)', callback: function (data, formObj) {
+            if (data.elem.checked)
+                $(data.elem).nextAll().prop('checked', false);
+            formObj.render();
+        }
+    }, {
+        selector: 'checkbox(check)', callback: function (data, formObj) {
+            if (data.elem.checked)
+                $(data.elem).siblings('.chkAll').prop('checked', false);
+            formObj.render();
+        }
+    }]);
+
+    // main.valid('.layui-form');
+
+
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+
+    main.laydate([{
+        elem: '#start_date',
+        type: 'datetime'
+    },{
+        elem: '#end_date',
+        type: 'datetime'
+    }]);
+</script>
+{/block}

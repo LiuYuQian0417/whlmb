@@ -1,0 +1,77 @@
+.index-box .title {
+  text-align: center;
+  margin-top: 20px;
+}
+.index-box .title img {
+  position: relative;
+}
+.index-box .title .tit-con {
+  display: inline-block;
+  text-align: left;
+  position: relative;
+  top: -10px;
+  margin-left: 20px;
+}
+.index-box .title .tit-con p {
+  font-size: 20px;
+  color: #010101;
+  margin-bottom: 5px;
+}
+.index-box .evaluate-con {
+  width: 1200px;
+  height: 655px;
+  background: url("../../imgs/evaluate.png") no-repeat;
+  margin-top: 55px;
+  padding: 20px 15px;
+  padding-top: 100px;
+  box-sizing: border-box;
+}
+.index-box .evaluate-con .bg-img {
+  text-align: center;
+}
+.index-box .evaluate-con .list-con {
+  padding: 20px;
+  background: #fff;
+  height: 535px;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+.index-box .evaluate-con .list-con .list {
+  height: 104px;
+  border-bottom: 1px solid #E5E5E5;
+  padding: 20px 0px;
+  box-sizing: border-box;
+}
+.index-box .evaluate-con .list-con .list:last-child {
+  border-bottom: none;
+}
+.index-box .evaluate-con .list-con .list .list-left {
+  float: left;
+}
+.index-box .evaluate-con .list-con .list .list-left img {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #E5E5E5;
+  float: left;
+}
+.index-box .evaluate-con .list-con .list .list-left .goods {
+  float: left;
+  color: #333333;
+  margin-left: 15px;
+  line-height: 22px;
+}
+.index-box .evaluate-con .list-con .list .list-left .goods .goods-name {
+  max-width: 350px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.index-box .evaluate-con .list-con .list .go {
+  float: right;
+  width: 74px;
+  height: 24px;
+  border: 1px solid #fff;
+  text-align: center;
+  line-height: 24px;
+  border-radius: 3px;
+  margin-top: 18px;
+}

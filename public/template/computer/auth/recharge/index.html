@@ -1,0 +1,267 @@
+{extend name="public/common"}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/color.css">
+<link rel="stylesheet" href="__RES__/css/public/PublicHeader.css">
+<link rel="stylesheet" href="__RES__/css/public/GuessLike.css">
+<!--公共搜索css-->
+<link rel="stylesheet" href="__RES__/css/public/indexHeader.css">
+<!--我的钱包css-->
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<link rel="stylesheet" href="__RES__/css/wechatpay/wechatpay.css">
+<link rel="stylesheet" href="__RES__/css/wallet/wallet.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+<style>
+    .face-pic-view .pic{
+        font-size: 14px;
+        color: #fff;
+        top: 15px;
+        left: 20px;
+    }
+    .face-pic{
+        border: 1px solid #fff;
+    }
+
+    .face-pic-view .pic span{
+        font-size: 28px;
+        line-height: 40px;
+        margin-right: 5px;
+    }
+    .face-pic-view .box{
+        height: 25px;
+        line-height: 25px;
+        background: rgba(255,255,255,0.3);
+        position: absolute;
+        font-size: 12px;
+        bottom: 15px;
+        left: 20px;
+        color: #fff;
+        padding-left: 10px;
+        width: 175px;
+        box-sizing: border-box;
+    }
+
+    .border{
+        border-color: #EA5413 !important ;
+    }
+    .swiper-container{
+        width: 100%;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="logo" >
+            <img src="__RES__/imgs/logo-color.png"onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <span></span>
+        </div>
+        <div class="order-process">
+            <ul>
+                <li><span>1</span>
+                    <p>选择充值金额</p></li>
+                <li><span>2</span>
+                    <p>付款</p></li>
+                <li class="order-process-gray"><span>3</span>
+                    <p>支付成功</p></li>
+            </ul>
+            <div class="barline">
+                <div w="75" style="width: 25%;" class="charts"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--支付开始-->
+<div class="wechatpay-top" style="height: 20px;">
+<!--    <div class="triangle"></div>-->
+</div>
+<div class="recharge">
+    <div class="user-recharge">账户充值</div>
+    <div class="recharge-view">
+        <p>充值账户：<span>{$Think.session.member_info.phone}</span></p>
+        <div class="select-money">
+            <span>选择充值金额：</span>
+            <div class="face-value">
+                <!-- Swiper -->
+                <div class="swiper-container">
+                    <div class="swiper-wrapper">
+                        {volist name="$result" id="item"}
+                        <div class="swiper-slide">
+                            <div class="face-pic-view" data_recharge_id="{$item.recharge_id}" style="position: relative">
+                                <input type="hidden" name="recharge" value="{$item.recharge_money}">
+                                <div class="pic" style="position: absolute;">
+                                    <span>{$item.recharge_money}</span>元
+                                </div>
+                                <div class="box">
+                                    {notempty name="item.award_money"}
+                                    奖励{$item.award_money}元现金存入钱包账户
+                                    {/notempty}
+                                </div>
+                                <!--border-color-->
+                                <img class="face-pic " src="{$item.file}" alt="">
+
+                                <div class="true-container" style="display: none">
+                                    <div class="true-view">
+                                        <img class="true" src="__RES__/imgs/wallet/5.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/volist}
+                    </div>
+                    <!-- Add Pagination -->
+                    <div class="swiper-pagination"></div>
+                </div>
+
+            </div>
+        </div>
+        <input type="hidden" name="recharge_id">
+        <!--<p class="price">500元</p>-->
+        <!--<p class="price-user">奖励10元现金存入钱包账户</p>-->
+        <div class="payment">
+            <span>选择支付方式：</span>
+            <label class="wechart-pay primary-background-color primary-border" style="display: block" >
+                <input type="radio" value="1" checked hidden name="zxc">
+                微信支付
+            </label>
+            <label class="alipay primary-border primary-color" >
+                <input type="radio" value="2" hidden name="zxc">
+                支付宝
+            </label>
+            <!--<div class="wechart-pay primary-background-color primary-border">微信支付</div>-->
+            <!--<div class="alipay primary-border primary-color">支付宝</div>-->
+        </div>
+        <div class="sure-pay primary-background-color">需支付<i class="recharge_money">0</i>元</div>
+        <div class="pay-explain">
+            <p class="explain">支付说明：</p>
+            <p class="explain-item">{$info.content|raw}</p>
+        </div>
+    </div>
+
+</div>
+<!--微信支付结束-->
+<!--侧边栏-->
+<div class="side-navigation">
+    <div class="side-navigation-view">
+        <div class="shop-vip primary-background-color" onclick="main.jump({'url':'/pc2.0/rank/index'})">
+            <span class="shop-vip-text" >会员</span>
+            <img src="__RES__/imgs/cart/my.png" alt="">
+        </div>
+        <div class="collect" onclick="main.jump({'url':'/pc2.0/cart/index'})">
+            <img src="__RES__/imgs/shophome/gouwuche.png" alt="">
+        </div>
+        <div class="collect" style="top: 453px;" onclick="main.jump({'url':'/pc2.0/goods/collect_goods_list'})">
+            <img src="__RES__/imgs/cart/collect.png" alt="">
+        </div>
+        <!--/template/computer/resource/imgs/shophome/xiaoxi.png-->
+        <div class="collect" style="top: 489px;" onclick="main.jump({'url':'/pc2.0/message/index.html?type=1'})">
+            <img src="__RES__/imgs/shophome/xiaoxi.png" alt="">
+        </div>
+        <!--<div class="qrcode">-->
+        <!--<img src="__RES__/imgs/cart/qrcode.png" alt="">-->
+        <!--</div>-->
+        <div class="top back-top">
+            <img src="__RES__/imgs/cart/top.png" alt="">
+        </div>
+        <div class="question" onclick="main.jump({'url':'/pc2.0/setting/help_center?status=feedback'})">
+            <img src="__RES__/imgs/cart/question.png" alt="">
+        </div>
+    </div>
+
+</div>
+
+{/block}
+
+{block name="js"}
+<!--<script rel="stylesheet" href="__RES__/css/swiper.min.css">-->
+<script type="text/javascript" src="__RES__/js/swiper.min.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function(){
+        window.onload=recharge;
+
+    });
+
+    function recharge(){
+        $('.face-pic-view').each(function () {
+            var recharge_id =  $(this).attr('data_recharge_id');
+            if(recharge_id == '{:input("recharge_id")}'){
+                $(this).trigger("click");
+            }else{
+                $('.face-pic-view:first').trigger("click");
+            }
+        })
+    }
+
+
+    //支付
+    $('.sure-pay').click(function () {
+        var type = $('input[name="zxc"]:checked').val();
+        var recharge_id = $('input[name="recharge_id"]').val();
+        if (recharge_id){
+            main.ajax({
+                'url': '/pc2.0/recharge/generate_order',
+                'data': { 'recharge_id': recharge_id},
+                'callback': function (res) {
+                    if (type == 1){
+                        //微信支付
+                        main.jump({'url':'/pc2.0/order/we_chat_pay?order_data='+res.order_data});
+                    }else{
+                        main.jump({'url':'/pc2.0/ali_pay/pay?order_data='+res.order_data});
+                    }
+                }
+            });
+
+        }else{
+            layer.msg('请选择充值金额',{time:500});
+        }
+
+    })
+
+
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 4,
+        spaceBetween: 30,
+
+    });
+
+    //进度条
+    function animate() {
+        $(".charts").each(function (i, item) {
+            var a = parseInt($(item).attr("w"));
+            $(item).animate({
+                width: a + "%"
+            }, 1000);
+        });
+    };
+    animate();
+
+    //支付方式
+    $('.payment label').click(function () {
+        if($(this).hasClass('primary-background-color')){
+            $(this).addClass('primary-background-color primary-border')
+            $(this).removeClass('primary-color')
+            $(this).prev().removeClass('primary-background-color')
+            $(this).prev().addClass('primary-color')
+        }else{
+            $(this).addClass('primary-background-color primary-border')
+            $(this).removeClass('primary-color')
+            $(this).css('color','#fff')
+            $(this).next().removeClass('primary-background-color')
+            $(this).next().addClass('primary-color')
+        }
+    })
+
+    $('.face-pic-view').click(function(){
+        $('input[name="recharge_id"]').val($(this).attr('data_recharge_id'));
+        $(this).find('.face-pic').addClass('border-color');
+        $(this).parents('.swiper-slide').siblings('.swiper-slide').find('.face-pic').removeClass('border-color')
+        $('.true-container').css('display','none')
+        $(this).find('.true-container').css('display','block')
+        $('.recharge_money').text($(this).find('input').val());
+    })
+</script>
+{/block}
+

@@ -1,0 +1,301 @@
+{extend  name="public/index_header"}
+
+{block name="content_css"}
+<!--客服样式-->
+<link rel="stylesheet" href="__RES__/css/CustomerService/CustomerService.css">
+<!--<link rel="stylesheet" href="__RES__/css/public/indexHeader.css">-->
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+<link rel="stylesheet" href="__RES__/css/evaluate/evaluate.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/color.css"/>
+
+<style>
+    .upload {
+        display: flex;
+        justify-content: flex-start;
+    }
+  .upload .img-list {
+        overflow: hidden;
+        padding-top: 15px;
+    }
+
+   .upload .video-list video {
+        width: 100% ;
+        height: 100%;
+    }
+    .upload .img-box {
+        float: left;
+        width: 100px;
+        height: 100px;
+        position: relative;
+        background: #eee;
+        margin-right: 10px;
+    }
+   .upload .img-box .play {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+    }
+   .upload .img-box .del {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        z-index: 9;
+    }
+    .upload .img-box .del {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        cursor: pointer;
+        width: 20px;
+        height: 20px;
+        z-index: 9;
+    }
+   .upload .img-box img {
+        width: 100%;
+        height: 100%;
+    }
+ .upload .label {
+     position: relative;
+     width: 100px;
+     display: block;
+     height: 100px;
+     border-radius: 5px;
+     border: 1px dashed #DCE1E7;
+     background: url(__RES__/imgs/CustomerService/add_img.png) no-repeat;
+     margin-top: 15px;
+    }
+  .upload .label img {
+        width: 17px;
+    }
+   .upload .label p {
+        transform: scale(0.8);
+    }
+    .public-bottom-box{
+        margin-top: 0;
+    }
+</style>
+<!--客服-->
+<!--<script type="text/javascript" src="__RES__/js/updateimg.js"></script>-->
+{/block}
+
+{block name="content"}
+<!--头部样式-->
+<!--<div class="head-container">-->
+<!--    <div class="head-container-center">-->
+<!--        <div class="logo" >-->
+<!--            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">-->
+<!--            <span>帮助中心</span>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<section class="customer-service-new" style="width: 100%">
+    <!--<div class="customer-service-top">-->
+        <!--<img src="__RES__/imgs/CustomerService/customerservice_top.png">-->
+    <!--</div>-->
+    <div class="customer-content">
+
+        <div class="content-left ">
+            <div class="content-title">
+                <img src="__RES__/imgs/CustomerService/customerservice_wen.png" class="">
+                <a href="javascript:;">帮助中心</a>
+            </div>
+            <div class="subNavBox ">
+                <!--primary-color 高亮css-->
+                {volist name="$result" id="item"}
+                <div class="subNav">{$item.title}</div>
+                <ul class="navContent " style="display:block">
+                    {volist name="$item.article" id="val"}
+                    <li class="content" data_article_id ={$val.article_id}><a href="javascript:;" {eq name=":input('article_id',$article_id)" value="$val.article_id"} class="primary-color" {/eq}>{$val.title}</a></li>
+                    {/volist}
+                </ul>
+                {/volist}
+               <div class="subNav">在线客服</div>
+                <ul class="navContent " style="display:block">
+                    <li class="content" ><a href="javascript:;" {notempty name="$status"}  class="primary-color" {/notempty}  >问题反馈</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="content-right">
+            <div class="content-right-top">
+                <div class="tits">购物指南</div>
+                <div class="tits2"> > </div>
+                <div class="tits3">购物流程</div>
+            </div>
+            <div class="content-right-center">
+                <div class="center-in" {notempty name="$status"} style="display: none" {/notempty}>
+                    <!--内容-->
+                    {$info.content|raw}
+                </div>
+
+                <div class="theme-popbod dform"  {empty name="$status"} style="display: none" {/empty}>
+                    <form class="theme-signin" name="loginform" action="{:url('/pc2.0/setting/feedback')}" method="post">
+                        <ol>
+                            <li><h4>问题类型</h4></li>
+                            <li>
+                                <div class="method-of-payment" >
+                                    <input class="radio" name="type" value="要投诉" type="hidden">
+                                    <a href="javascript:;"  data-type="提建议"  class="">提建议<div class="triangle border-color"></div> <img src="__RES__/imgs/CustomerService/duigou.png" class="hook"></a>
+                                    <a href="javascript:;"  data-type="想咨询" class="">想咨询<div class="triangle border-color"></div><img src="__RES__/imgs/CustomerService/duigou.png" class="hook"></a>
+                                    <a href="javascript:;"  data-type="要投诉" class="border-color">要投诉<div class="triangle border-color"></div><img src="__RES__/imgs/CustomerService/duigou.png" class="hook"></a>
+                                    <div class="clear"></div>
+                                </div>
+                            </li>
+
+                        </ol>
+                        <ol>
+                            <li><h4>您的反馈详情</h4></li>
+                            <li>
+                                <textarea name="content" datatype="*" nullmsg="请填写反馈详情" errormsg="请填写反馈详情"></textarea>
+
+                            </li>
+
+
+                        </ol>
+                        <ol>
+                            <li><h4>添加图片（选填，最多三张）</h4></li>
+                            <!--上传图片和视频-->
+                            <div class="upload">
+                                <!--图片和视频放置的位置-->
+                                <div class="img-list"></div>
+                                <label for="file" class="label">
+                                </label>
+                                <div class="img-file-list">
+                                    <input type="file" accept="image/jpeg,image/png,image/gif" class="files"  hidden id="file" name="files[]">
+                                </div>
+                                <input type="hidden" name="file" id="file_str">
+                            </div>
+                        </ol>
+                        <ol>
+                            <li><h4>联系方式（手机或者邮箱都可以哦）</h4></li>
+                            <li><div><input class="ipt" type="text" name="contact" datatype="m|e" nullmsg="请填写联系方式"  errormsg="请填写正确的联系方式" value="" size="20" /></div></li>
+                            <li><div><input class="btn btn-primary" type="submit" id="submit" name="submit" value=" 提 交 " /></div></li>
+                        </ol>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<div class="theme-popover-mask"></div>
+<!--公共尾部结束-->
+{/block}
+
+
+{block name="js"}
+<script type="text/javascript">
+
+    $('.content-left  .subNav').click(function () {
+        $(this).next('.navContent').stop().slideToggle();
+    })
+
+    //选择
+    $(".method-of-payment a").click(function () {
+        $(this).addClass("border-color").siblings().removeClass("border-color")
+        var txt = $(this).attr('data-type');
+        $(this).siblings('.radio').val(txt)
+    })
+
+
+    //问题反馈
+    main.valid({'select':'.theme-signin','call_back':function () {
+            $('#file_str').val(main.upload({
+                'data': {'type': 2},
+                'select': $('.files[name="file[]"]'),
+                'file_name': 'image'
+            }));
+        }});
+
+    $('.img-file-list').on('change','#file',function () {
+        var num =$('.img-list .img-box').length;
+        var files =this.files;
+        var len = files.length;
+
+        // console.log(num);
+        if(num<=2){
+    //       	上传图片
+    //         console.log(num)
+            var inp =  '<input type="file" class="files"  accept="image/jpeg,image/png,image/gif"  hidden id="file"  value=""/>'
+            $('.img-file-list').append(inp)
+            $(this).removeAttr('id');
+            $(this).attr('name','file[]');
+            var imgRUL = null;
+            var windowURL = window.URL || window.webkitURL;
+            for(var a=0;a<len;a++){
+                imgRUL = windowURL.createObjectURL(files[a]);
+                var img = '<div class="img-box">' +
+                    '<img class="del" src="__RES__/imgs/up-del.png"/>' +
+                    '<img  src="'+imgRUL+'"/>'+
+                    '</div>'
+                $('.img-list').append(img);
+
+            }
+        }else{
+            layer.msg('最多只能传三张图片',{time:500})
+        }
+
+
+    })
+    // 删除图片
+    $('.img-list').on('click','.del',function(){
+        var xuhao = $(this).parent().index('.img-box');
+        $(this).parent().remove();
+        $('.img-file-list .files').not('#file').eq(xuhao).remove();
+    })
+
+    //帮助中心
+    $('.content').click(function () {
+        // currentDt
+        $(this).parents('.subNavBox').find('li a').removeClass('primary-color')
+        $(this).find('a').addClass('primary-color');
+        $(this).siblings().find('a').removeClass('primary-color')
+        $(this).parents('.navContent ').prev('.subNav').addClass('currentDd').siblings().removeClass('currentDd');
+        $(".tits3").text($(this).text());
+        $(".tits").text($(this).parents('.navContent ').prev('.subNav').text());
+
+        var article_id = $(this).attr('data_article_id');
+        if (article_id){
+            $('.center-in').show();
+            $('.theme-popbod').hide();
+            main.ajax({'url':'{:url(\'pc2.0/html/article_view\')}','data':{'article_id': article_id},callback:function (t) {
+                    console.log(t);
+                    if (t.code == 0) {
+                        $('.center-in').html(t.info.content);
+                    } else {
+                        layer.msg(t.message, {time: 500},function () {
+                            location.reload();
+                        });
+                    }
+                }})
+        }else{
+            $('.center-in').hide();
+            $('.theme-popbod').show();
+        }
+
+    })
+
+
+    $(function () {
+        $('.subNavBox ul li a').each(function () {
+            if ($(this).hasClass('primary-color')){
+                $(this).parents('.navContent').prev('.subNav').addClass('currentDd')
+                $(".tits").text($(this).parents('.navContent ').prev('.subNav').text());
+                $(".tits3").text($(this).text());
+            }
+        })
+    })
+
+
+
+
+</script>
+{/block}

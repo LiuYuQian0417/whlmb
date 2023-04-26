@@ -1,0 +1,236 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>
+
+<style>
+    .drop-down{
+        background: #fff url(__RES__/images/xljt.png) 280px 11px no-repeat !important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请按提示文案填写信息，以免出错。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+            <div class="ecsc-form-goods">
+                <form action="" method="post" name="theForm" id="mbrand_form" class="layui-form">
+                    <div class="wrapper-list border1">
+                        <!--商品品牌-->
+                        <dl class="layui-input-inline brand_keyword">
+                            <dt><span class="require-field">*</span>&nbsp;关联品牌：</dt>
+                            <dd style="width: 300px">
+                            <input type="text" value="{$item.brand_name|default=''}" title autocomplete="off"
+                                   placeholder="请选择关联品牌" class="brand_name_keyword layui-input drop-down"
+                                   datatype="*"
+                                   nullmsg="请选择关联品牌" errormsg="请选择关联品牌">
+                            {empty name="$item.brand_id"}
+                                <input type="hidden" name="brand_id" class="brand_id_keyword" value="" title/>
+                            {else/}
+                                <input type="hidden" name="brand_id" class="brand_id_keyword" value="{$item.brand_id}" title/>
+                           {/empty}
+                            <div class="brand-container" style="display: none;width: 300px;z-index: 9999;top: 45px;">
+                                <div class="brand-header">
+                                    <div class="letter">
+                                        <ul>
+                                            <li class="backStyle">
+                                                <a class="backStyle" rel="" href="javascript:void(0);"
+                                                   onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'','keyword':''}})">全部品牌</a>
+                                            </li>
+                                            {foreach $brandFirstChr as $key => $brandfirstchr}
+                                            <li>
+                                                <a href="javascript:void(0);"
+                                                   onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'{$brandfirstchr}','keyword':''}})"
+                                                   rel="{$brandfirstchr}">{$brandfirstchr}</a></li>
+                                            {/foreach}
+                                        </ul>
+                                    </div>
+                                    <div class="search">
+                                        <input type="text"  placeholder="请输入品牌关键字" class="brand-search-input"/>
+                                        <a href="javascript:void(0);"
+                                           onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':$('.brand_keyword a[class=\'backStyle\']').attr('rel'),'keyword':$('.brand_keyword .brand-search-input').val()}})"
+                                           class="brand-search-btn">
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </a>
+                                        <a title="点击清空品牌输入框内容"
+                                           href="javascript:$('.brand_name_keyword').val('');$('.brand_id_keyword').val('');"
+                                           class="brand-clear-btn">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="brand-list">
+                                    <ul>
+                                        {foreach $brand as $key => $brand}
+                                        <li title="{$brand.brand_name}" value="{$brand.brand_id}"><em>{$brand.brand_first_char}</em>{$brand.brand_name}
+                                        </li>
+                                        {/foreach}
+                                        {empty name="$brand"}
+                                        <li class="empty">暂无品牌数据</li>
+                                        {/empty}
+                                    </ul>
+                                </div>
+                            </div>
+                            </dd>
+                        </dl>
+                        <!--关键字-->
+
+
+
+                        <dl>
+                            <dt><span class="require-field">*</span>&nbsp;品牌名称：</dt>
+                            <dd>
+                                <input type="text" name="store_brand_name" value="{$item.store_brand_name|default=''}" size="40" class="text"
+                                       placeholder="请输品牌名称"
+                                       datatype="*"
+                                       nullmsg="请输品牌名称" errormsg="请输品牌名称"/>
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+
+                        <dl>
+                            <dt><span class="require-field">*</span>&nbsp;品牌英文名称：</dt>
+                            <dd>
+                                <input type="text" name="brand_letter" value="{$item.brand_letter|default=''}" size="40" class="text"
+                                       placeholder="请输品牌英文名称"
+                                       datatype="*"
+                                       nullmsg="请输品牌英文名称" errormsg="请输品牌英文名称"/>
+
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><span class="require-field">*</span>&nbsp;品牌LOGO：<br>684 X 305 &nbsp;</dt>
+                            <dd style="width:19%">
+                                <div class="layui-input-inline">
+                                    <div
+                                            class="imageUpload"
+                                            default="{$item.brand_logo|default=''}"
+                                            width="684"
+                                            height="305"
+                                            file-mime="image/gif,image/jpeg,image/png"
+                                            name="brand_logo"
+                                            dir="brand_image_logo"
+                                            value="{$item.brand_logo_data|default=''}"
+                                    >
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><span class="require-field"></span>&nbsp;品牌描述：</dt>
+                            <dd>
+                                <input type="text" name="brand_describe" value="{$item.brand_describe|default=''}" size="40" class="text" />
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+
+
+                        <dl>
+                            <dt>是否显示：</dt>
+                            <dd>
+                                <div class="checkbox_items">
+                                    <div class="checkbox_item">
+                                        <input type="radio" class="ui-radio" name="status" value="1" title="显示"
+                                               {eq name="item.status|default='1'" value="1" }checked{/eq}
+                                        >
+
+                                    </div>
+                                    <div class="checkbox_item">
+                                        <input type="radio" class="ui-radio" name="status" value="0" title="不显示"
+                                               {eq name="item.status|default=''" value="0" }checked{/eq}
+                                        >
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+
+                        <dl class="button_info">
+                            <dt>&nbsp;</dt>
+                            <dd>
+                                <a type="reset" class="sc-btn btn35 sc-blue-btn"  href="/client/brand/index">返回</a>
+                                <button class="sc-btn sc-blueBg-btn btn35" type="submit" id="submit">提交</button>
+
+                                {present name="$item.store_brand_id"}
+                                <input type="hidden" name="store_brand_id" value="{$item.store_brand_id}">
+                                {/present}
+                            </dd>
+                        </dl>
+                    </div>
+                </form>
+            </div>
+{/block}
+{block name='js'}
+{__block__}
+<!--商品属性js-->
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script type="text/javascript">
+    main.form();
+    main.valid('.layui-form');
+
+    main.upload([
+        {
+            elem: '#goods_file',
+            size: 2 * 1024,
+            auto : false,
+            data: {name: 'friendship_file', dir: 'friendship_file', auth: '', style: 1, crypt: 1},
+            field: 'friendship_file',
+            choose: function(obj){  //上传前选择回调方法
+                console.log(obj);
+                var flag = true;
+                obj.preview(function(index, file, result){
+                    console.log(file);            //file表示文件信息，result表示文件src地址
+                    var img = new Image();
+                    img.src = result;
+                    img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
+                        if(img.width ==684 && img.height ==305){
+                            obj.upload(index, file); //满足条件调用上传方法
+                        }else{
+                            flag = false;
+                            layer.msg("您上传的小图大小必须是684*305尺寸！");
+                            return false;
+                        }
+                    }
+                    return flag;
+                });
+            },
+            done: function (res) {
+                if (res.code !== 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                        '<input type="text" name="brand_logo" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+                $(this.elem).css('padding','1px').html(html);
+                layer.closeAll('loading');
+            }
+        }
+    ])
+    function ccc(){
+        var status =  $('input[name="attr_input_type"]:checked ').val();
+        if(status==0){
+            $('textarea').attr("disabled",true);
+        }else{
+            $('textarea').removeAttr("disabled",true);
+        }
+    }
+
+</script>
+{/block}
+

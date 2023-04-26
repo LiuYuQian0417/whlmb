@@ -1,0 +1,148 @@
+.public-bottom-box{
+    margin-top: 0;
+}
+.flash-sale{
+    background: url(../../imgs/newzone/top.png) #f6f6f6 top center no-repeat;
+    border-top: 1px solid;
+    padding-bottom: 125px;
+}
+.barline{
+    width:100px;
+    background:#fed8c5;
+    height:8px;
+    overflow:hidden;
+    border-radius: 8px;
+    float: left;
+    margin-top: 4px;
+    float: left;
+}
+.charts {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+.new-people{
+    background: url(../../imgs/newzone/xinrenbeijing.png) top center no-repeat;
+}
+.new-people-height{
+   height: 624px;
+}
+.new-people-gift{
+    width: 1220px;
+    padding: 30px 10px;
+    background: url(../../imgs/newzone/liwujianbian.png) top center no-repeat;
+    margin: 0 auto;
+    border-radius: 32px;
+    overflow: hidden;
+}
+.new-people-title{
+    width: 1075px;
+    height: 122px;
+    margin: 0 auto 82px auto;
+    font-size: 32px;
+    line-height: 122px;
+    text-align: center;
+    color: #fff;
+    background: url(../../imgs/newzone/xinrenbiaoti.png) center center no-repeat;
+}
+.new-people-gift li{
+    float: left;
+    width: 359px;
+    height: 126px;
+    background: url(../../imgs/newzone/liwubeijing.png) left top no-repeat;
+    padding: 20px 0 0 20px;
+    margin: 0 0 20px 20px;
+}
+.new-people-gift ul{
+    padding: 20px 0 0 6px;
+}
+.new-people-gift .clear{
+    width: 100%;
+    height:0;
+    overflow: hidden;
+    clear: both;
+    padding: 0;
+    margin: 0;
+}
+.new-people-gift li img{
+    border:1px solid #f1f2f6;
+    float: left;
+}
+.gift{
+    float: left;
+    width: 175px;
+    margin-left: 12px;
+}
+.rob{
+    float: left;
+    color: #666;
+    font-size: 12px;
+}
+.gift-content span{
+   font-size: 12px;
+    float: left;
+}
+.gift-content {
+    font-size: 24px;
+}
+.available{
+    width: 110px;
+    height:18px;
+    line-height: 18px;
+    text-align: center;
+    background: #fff4ec;
+    margin: 7px 0;
+    font-size: 12px;
+}
+.available-title{
+    display: block;
+    width: 150px;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    margin: 0 0 10px 0 ;
+}
+.receive{
+    display: block;
+    width: 50px;
+    float: right;
+    font-size: 16px;
+    color: #fff;
+    text-align: center;
+    background: url(../../imgs/newzone/lingqu.png) left center no-repeat;
+    height: 146px;
+    margin: -20px 0 0 0;
+    padding: 30px 0 0 0;
+    box-sizing: border-box;
+}
+.key-get{
+    display: block;
+    width: 637px;
+    height: 117px;
+    line-height: 117px;
+    text-align: center;
+    font-size: 36px;
+    color: #fff;
+    background: #cf49d8;
+    margin: 56px auto;
+    border-radius: 60px;
+}
+.Introduce-title{
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 110px;
+    text-align: center;
+    color: #fff;
+}
+.Introduce{
+    width: 1052px;
+    padding: 0 74px;
+    text-align: left;
+    color: #fff;
+    font-size: 20px;
+    line-height: 40px;
+    margin: 0 auto;
+}
+.Introduce span{
+    text-align: center;
+}

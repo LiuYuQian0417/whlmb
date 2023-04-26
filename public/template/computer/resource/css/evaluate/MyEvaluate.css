@@ -1,0 +1,82 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+.index-box .index-right .title {
+  line-height: 58px;
+  font-size: 14px;
+  font-weight: bolder;
+  background: #fff;
+  text-indent: 20px;
+  margin-bottom: 20px;
+}
+.index-box .index-right .aftr-sale-box {
+  background: #fff;
+  padding: 10px 25px 20px;
+  height: 827px;
+  box-sizing: border-box;
+}
+.index-box .index-right .aftr-sale-box .goods {
+  border: 1px solid #E5E5E5;
+  border-bottom: none;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-tit {
+  height: 32px;
+  line-height: 32px;
+  background: #F9F9F9;
+  border-bottom: 1px solid #E5E5E5;
+  display: flex;
+  font-size: 12px;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-tit .tit-con {
+  flex: 1;
+  text-align: center;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-tit .goods-name-tit {
+  flex: 2;
+  text-indent: 110px;
+  text-align: left;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-list {
+  display: flex;
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #E5E5E5;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-list .goods-con {
+  flex: 2;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-list .goods-con img {
+  width: 62px;
+  height: 62px;
+  float: left;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-list .goods-con p {
+  line-height: 64px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  margin-left: 18px;
+  float: left;
+  width: 80%;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-list .goods-pub {
+  flex: 1;
+  line-height: 64px;
+  text-align: center;
+  font-size: 12px;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-list .goods-pub .time {
+  color: #7B7B7B;
+}
+.index-box .index-right .aftr-sale-box .goods .goods-list .goods-pub a {
+  color: #666666;
+}

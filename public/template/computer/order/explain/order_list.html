@@ -1,0 +1,323 @@
+{extend name='public/my_header'/}
+
+
+{block name='content_css'}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css"/>
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<link rel="stylesheet" href="__RES__/css/Indent/myIndent.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+
+    <!--右侧内容开始-->
+    <div class="index-right">
+        <div class="title">
+            我的订单
+        </div>
+        <div class="table-list">
+            <div class="tit">
+                <a href="{:url('pc2.0/order/order_list')}" {eq name=":input('status')" value="" } class='primary-color border-color' {/eq}>
+                全部订单
+                </a>
+                <a href="{:url('pc2.0/order/order_list')}?status=0&share_time={:input('share_time')}" {eq name=":input('status')" value="0" }
+                   class='primary-color border-color' {/eq}>
+                待付款
+                </a>
+                <a href="{:url('pc2.0/order/order_list')}?status=1&share_time={:input('share_time')}" {eq name=":input('status')" value="1" }
+                   class='primary-color border-color' {/eq}>
+                待发货
+                </a>
+                <a href="{:url('pc2.0/order/order_list')}?status=2&share_time={:input('share_time')}" {eq name=":input('status')" value="2" }
+                   class='primary-color border-color' {/eq}>
+                待收货
+                </a>
+                <a href="{:url('pc2.0/order/order_list')}?status=3&share_time={:input('share_time')}" {eq name=":input('status')" value="3" }
+                   class='primary-color border-color' {/eq}>
+                待评价
+                </a>
+
+                <div class="tit-right">
+                    <div class="search-box">
+                        <input class="txt" type="text" name="keyword" value="{:input('keyword','')}" placeholder="商品名称/订单号">
+                        <input class="search-btn" type="button" value=" " onclick="search()">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <style>
+            .indent-tit{
+                margin-bottom: 10px;
+            }
+        </style>
+        <div class="indent-content">
+            <!--title开始-->
+            <div class="indent-tit">
+                <!--时间选择-->
+                <div class="time-filtrate ">
+                    <a class="now-time" href="{:url('pc2.0/order/order_list')}?share_time={:input('share_time')}&status={:input('status')}">
+                        <span>
+                            {switch name=":input('share_time')"}
+                            {case 1}近三个月订单{/case}
+                            {case 2}今年内订单{/case}
+                            {case 3}{:date('Y',strtotime('-1 year'))}年订单{/case}
+                            {case 4}{:date('Y',strtotime('-2 year'))}年订单{/case}
+                            {case 5}{:date('Y',strtotime('-3 year'))}年订单{/case}
+                            {default /}全部时间
+                            {/switch}
+                        </span>
+                        <img src="__RES__/imgs/xs.png" alt="">
+                    </a>
+
+                    <div class="time-list">
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/order_list')}?share_time=0&status={:input('status')}">
+                            全部时间
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/order_list')}?share_time=1&status={:input('status')}">
+                            近三个月订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/order_list')}?share_time=2&status={:input('status')}">
+                            今年内订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/order_list')}?share_time=3&status={:input('status')}">
+                            {:date('Y',strtotime('-1 year'))}年订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/order_list')}?share_time=4&status={:input('status')}">
+                            {:date('Y',strtotime('-2 year'))}年订单
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/order/order_list')}?share_time=5&status={:input('status')}">
+                            {:date('Y',strtotime('-3 year'))}年订单
+                        </a>
+                    </div>
+                </div>
+
+                <div class="indent">
+                    订单详情
+                </div>
+                <div class="consignee-title">
+                    收货人
+                </div>
+                <div class="figure-title">
+                    金额
+                </div>
+                <div class="state">
+                    <a class="now-state" href="{:url('pc2.0/order/order_list')}?status={:input('status')}">
+                        <span>
+                            {switch name=":input('status')"}
+                            {case 0}等待付款{/case}
+                            {case 2}等待收货{/case}
+                            {case 3}已完成{/case}
+                            {case 6}已取消{/case}
+                            {default /}全部状态
+                            {/switch}
+                        </span>
+                        <img src="__RES__/imgs/xs.png" alt="">
+                    </a>
+
+                    <div class="state-list">
+                        <a class="primary-color-hover" href="{:url('pc2.0/order/order_list')}?share_time={:input('share_time')}">
+                            全部状态
+                        </a>
+                        <a class="primary-color-hover" href="{:url('pc2.0/order/order_list')}?status=0&share_time={:input('share_time')}">
+                            等待付款
+                        </a>
+                        <a class="primary-color-hover" href="{:url('pc2.0/order/order_list')}?status=1&share_time={:input('share_time')}">
+                            等待发货
+                        </a>
+                        <a class="primary-color-hover" href="{:url('pc2.0/order/order_list')}?status=2&share_time={:input('share_time')}">
+                            等待收货
+                        </a>
+                        <a class="primary-color-hover" href="{:url('pc2.0/order/order_list')}?status=3&share_time={:input('share_time')}">
+                            已完成
+                        </a>
+                        <a class="primary-color-hover" href="{:url('pc2.0/order/order_list')}?status=6&share_time={:input('share_time')}">
+                            已取消
+                        </a>
+                    </div>
+                </div>
+                <div class="operation-title">
+                    操作
+                </div>
+            </div>
+            <!--title结束-->
+            <!--订单为空-->
+            {empty name='$result'}
+            <div class="indent-box indent-box-emty">
+                <img src="__RES__/imgs/orderemty.png" alt="">
+                <p>暂无订单</p>
+                <span>“暂无订单，忙里偷闲下一单吧”</span>
+            </div>
+            {/empty}
+            <!--订单内容开始-->
+            <div class="indent-box">
+                {volist name="$result" id="item"}
+                <!--每个订单-->
+                <div class="indent-list">
+                    <!--头部信息-->
+                    <div class="list-title">
+                        <span>
+                            下单时间：{$item.create_time}
+                        </span>
+                        <span>
+                            订单号：{$item.order_attach_number}
+                        </span>
+                        <span class="shop-name">
+                            {$item.store_list.store_name}
+                            {if INI_CONFIG['IS_CUSTOMER'] == 1}
+                            <a href="javascript:;" onclick="jump_service({store_id:'{$item.store_id}',order_attach_id:'{$item.order_attach_id}',diversion_id:'1004'})">
+                                <img src="__RES__/imgs/my/info.png" alt="">
+                            </a>
+                            {/if}
+                        </span>
+                        {in name="item.status" value="4,6"}
+                        <a class='del-indent' href='javascript:destroy_order("{$item.order_attach_id}");'
+                           style='float: right;line-height: 28px;margin-right: 15px;position: relative;top: 2px;'>
+                            <img src='__RES__/imgs/my/del_brow.png' alt=''>
+                        </a>
+                        {/in}
+                    </div>
+                    <!--头部信息结束-->
+                    <!--商品开始-->
+                    <div class="goods-box">
+                        <div class="goods-left">
+                            {volist name="$item.order_goods_list" id="val"}
+                            <div class="goods-list" onclick="jump_goods('{$val.goods_id}');">
+                                <a href="JavaScript:;">
+                                    <img src="{$val.file}" alt="" >
+                                    <p class="goods-name">
+                                        {$val.goods_name}
+                                    </p>
+                                    <div class="number">x{$val.quantity}</div>
+                                    {if !empty($val.refund_operation.action)}
+                                    <div class="state" {$val.refund_operation.action|raw|default=''}>
+                                        退款/退换货
+                                    </div>
+                                    {/if}
+                                </a>
+                            </div>
+                            {/volist}
+                        </div>
+                        <div class="purchaser" style="cursor: default;">
+                            <div class="name">
+                                {$item.consignee_name}
+                                <img src="__RES__/imgs/my/fans/user.png" alt="">
+                                <div class="purchaser-detail">
+                                    <div class="top">
+                                        <span class="name">
+                                            {$item.consignee_name}
+                                        </span>
+                                        <span class="iphone">
+                                            {$item.consignee_phone}
+                                        </span>
+                                    </div>
+
+                                    <div class="address">
+                                        {$item.address_province} {$item.address_city} {$item.address_area}
+                                        {$item.address_street} {$item.address_details}
+                                    </div>
+                                    <span class="triangle"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="money-box">
+                            <span>￥{$item.subtotal_price}</span>
+                            {notin name="$item.status" value="0,6"}
+                            <p>{eq name="$item.pay_type" value="1"}在线支付{else/}货到付款{/eq}</p>
+                            {/notin}
+                        </div>
+                        <div class="indent-state">
+                            {in name="$item.status" value="3,4"}
+                            <a class="finish" href="javascript:;">交易成功</a>
+                            {else/}
+                            <span class="state primary-color">{$item.OrderOperation.OrderStatusText}</span>
+                            {/in}
+                            <a href="{:url('pc2.0/order/order_details')}?order_attach_id={$item.order_attach_id}">订单详情</a>
+                        </div>
+                        <div class="indent-operation">
+                            <!--操作-->
+                            {$item.OrderOperation.operation|raw}
+                            <!--发票-->
+                        </div>
+                    </div>
+                </div>
+                <!--每个订单结束-->
+                {/volist}
+            </div>
+
+            <div class="pageContainer" style="width: auto;">{$result|raw}</div>
+        </div>
+        <!--订单内容结束-->
+        <!--猜你喜欢-->
+        <div class="guess">
+            <!-- 猜你喜欢 -->
+            <div class="guess-like">
+                <div class="title">
+                    <span>猜你喜欢</span>
+                    <div onclick="main.new_like({'select':'.guess-like-list'});">换一换 <img src="__RES__/imgs/hyh.png" alt=""></div>
+                </div>
+
+                <div class="guess-like-list">
+                    {volist name="$recommend_list" id="val"}
+                    <div class="list" style="width: 25%">
+                        <a href="javascript:jump_goods('{$val.goods_id}');">
+                            <img src="{$val.file}" alt="">
+                            <p class="name">{$val.goods_name}</p>
+                            <div class="money">
+                                <div class="pic primary-color">￥{$val.shop_price}</div>
+                                <div class="volume">
+                                    销量 <span class="primary-color">{$val.sales_volume}</span>
+                                </div>
+                            </div>
+                            <div class="discounts">
+                                {if condition="config('user.one_more') eq 1"}
+                                {switch name="$val.shop"}
+                                {case value='0'}<span style="margin-right: 2px;"
+                                                      class="mark primary-color border-color">
+								                    自营
+								                  </span>{/case}
+                                {case value='1'}<span style="margin-right: 2px;"
+                                                      class="mark primary-color border-color">
+								                    个人
+								                  </span>{/case}
+                                {case value='2'}<span style="margin-right: 2px;"
+                                                      class="mark primary-color border-color">
+								                    公司
+								                  </span>{/case}
+                                {/switch}
+                                {/if}
+                                {eq name="$val.is_bargain" value="1"}<span style="margin-right: 2px;"
+                                                                           class="mark primary-color border-color">砍价</span>{/eq}
+                                {eq name="$val.is_group" value="1"}<span style="margin-right: 2px;"
+                                                                         class="mark primary-color border-color">拼团</span>
+                                <span class="group-buying primary-background-color">{$val.group_num}人拼</span>{/eq}
+                                {eq name="$val.is_limit" value="1"}<span style="margin-right: 2px;"
+                                                                         class="mark primary-color border-color">抢购</span>{/eq}
+                            </div>
+                        </a>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+    function search() {
+        var keyword = $('input[name="keyword"]').val();
+        main.jump({'url': '/pc2.0/order/order_list?keyword=' + keyword})
+    }
+</script>
+{/block}

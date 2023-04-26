@@ -1,0 +1,7 @@
+/.well-known
+/dist
+/msg
+/advocacy
+*.log
+/adminer.css
+/.idea

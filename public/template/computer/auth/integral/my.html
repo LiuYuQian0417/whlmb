@@ -1,0 +1,342 @@
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyIntegration.css" />
+
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+<style type="text/css">
+    .red-packet-con {
+        display: none;
+    }
+
+    .un-used {
+        display: block;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+
+    <div class="index-right">
+        <div class="my-integration">
+            <h5 class="title">
+                <a class="primary-color border-color" href="{:url('/pc2.0/integral/my')}">
+                    我的积分
+                </a>
+                <a class="" href="{:url('/pc2.0/integral/detail')}">
+                    积分明细
+                </a>
+                <a class="" href="{:url('/pc2.0/integral/conversion_record')}">
+                    兑换记录
+                </a>
+                <div class="title-right">
+                    <a href="javascript:main.jump({'url':'/pc2.0/integral/index'})">兑换商城，给你不一样的优惠惊喜</a>
+                    <img src="__RES__/imgs/my/right.png" alt="">
+                </div>
+            </h5>
+            <router-view/>
+        </div>
+
+        <div class="my-integration">
+            <div class="integration-box">
+                <div class="integration ">
+                    <div class="tit">
+                        我的积分
+                    </div>
+                    <div class="usable-integration">
+                        <p>当前可用积分 <span>{$member_info.pay_points}</span><img src="__RES__/imgs/my/integration/integration.png" alt=""></p>
+                        <div class="link-group">
+                            <!--<a class="primary-color border-color" href="javascript:;" onclick="main.jump({'url':'/pc2.0/lottery_activity/activity_goods_list'})">赚积分</a>-->
+                            <a class="primary-color border-color" href="{:url('/pc2.0/integral/index')}">花积分</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="integration-statistics ">
+                    <div class="tit">
+                        积分统计
+                    </div>
+                    <div class="detail-group">
+                        <div>
+                            <p class="items">购物返积分</p>
+                            <p>+{$result.shopping_integral}</p>
+                        </div>
+                        <div>
+                            <p class="items">评价晒单返分</p>
+                            <p>+{$result.evaluate_integral}</p>
+                        </div>
+                        <div>
+                            <p class="items">其他返分</p>
+                            <p>+{$result.other_integral}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lately-integration-statistics">
+                <div class="tit">
+                    最近积分明细
+                </div>
+                <div class="list">
+                    <div class="list-tit">
+                        <span>时间</span>
+                        <span>收入/支出</span>
+                        <span>详细说明</span>
+                    </div>
+
+                    <!--每条积分明细-->
+                    {if condition="!is_null($record)"}
+                    <div class="list-detail">
+                        <span>{$record.create_time}</span>
+                        <span>{eq name="$record.type" value="0"}+{else/}-{/eq}{$record.integral}</span>
+                        <span>{$record.describe}</span>
+                    </div>
+                    {/if}
+                    <!--每条结束-->
+                </div>
+                <div class="all-integration">
+                    <a href="{:url('/pc2.0/integral/detail')}">查看全部明细></a>
+                </div>
+            </div>
+
+            <!--赚取积分-->
+            <div class="earn-points">
+                <div class="tit">
+                    赚积分
+                </div>
+                <div class="point-content">
+                    <div class="content c1">
+                        <div class="con-tit">
+                            完善账户
+                        </div>
+                        <p>完善个人信息获得积分奖励</p>
+                        <!--未完善-->
+                        <a href="javascript:main.jump({'url':'/pc2.0/setting/index'})">
+                            去完善>
+                        </a>
+                        <!--已完善-->
+                        <!--<a href="JavaScript:;">
+                        已完善
+                  </a>-->
+                    </div>
+
+                    <div class="content c2">
+                        <div class="con-tit">
+                            消费购物
+                        </div>
+                        <p>购物越多（实际支付）,获得积分越多</p>
+                        <a href="{:url('/pc2.0/index/index')}">
+                            去购物>
+                        </a>
+                    </div>
+
+                    <div class="content c3">
+                        <div class="con-tit">
+                            评价
+                        </div>
+                        <p>发表1次评价<span>+{$task.evaluate.integral}</span>积分（每日 最多<span>{$task.evaluate.integral*$task.evaluate.number}</span>积分）
+                        </p>
+                        <a href="{:url('/pc2.0/order/order_list.html?status=3')}">
+                            去评价>
+                        </a>
+                    </div>
+
+                    <div class="content c4">
+                        <div class="con-tit">
+                            每日签到
+                        </div>
+                        <p>每日签到<span>+{$task.sign.integral}</span>积分</p>
+                        {eq name="$task.sign.state" value="0"}
+                        <a href="javascript:main.jump({'url':'/pc2.0/rank/index'})">
+                            去签到>
+                        </a>
+                        {else/}
+                        <!--已签到-->
+                        <a href="javascript:;" >
+                            已签到
+                        </a>
+                        {/eq}
+                    </div>
+
+                    <div class="content c5">
+                        <div class="con-tit">
+                            分享商品/活动
+                        </div>
+                        <p>将连接分享到其他平台<span>+{$task.share.integral}</span> 积分（每日最高<span>{$task.share.integral*$task.share.number}</span>分）
+                        </p>
+                        <a href="{:url('/pc2.0/index/index')}">
+                            去分享>
+                        </a>
+                    </div>
+
+                    <div class="content c6">
+                        <div class="con-tit">
+                            浏览广告
+                        </div>
+                        <p>查看一条广告<span>+{$task.adv.integral}</span>积分</p>
+                        <a href="{:url('/pc2.0/home/hot_list')}">
+                            去浏览>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--花积分-->
+            <div class="expenditure-points">
+                <div class="tit">花积分</div>
+                <div class="content">
+                    <div class="expenditure">
+                        <div class="play-game">
+                            <p class="expenditure-tit">玩游戏</p>
+                            <p>奖品多多，快来参与</p>
+                            <a href="javascript:;" onclick="main.jump({'url':'/pc2.0/lottery_activity/activity_goods_list'})">去游戏 ></a>
+                        </div>
+                        <div class="getinreturn">
+                            <p class="expenditure-tit">换好劵</p>
+                            <p>更多好物好券，积分兑换更划算</p>
+                            <a href="{:url('/pc2.0/coupon/exchange')}">去换劵 ></a>
+                        </div>
+                    </div>
+
+                    <!--积分兑换和换购-->
+                    <div class="exchange">
+                        <h5 class="title">
+                            <a class="primary-color border-color" href="javascript:;">
+                                积分兑换
+                            </a>
+                            <a class=""  href="javascript:;">
+                                积分换购
+                            </a>
+                            <div class="title-right n1" onclick="main.jump({'url':'/pc2.0/integral/index'})">
+                                <a href="javascript:;">更多</a>
+                                <img src="__RES__/imgs/my/right.png" alt="">
+                            </div>
+                            <div class="title-right n2" style="display: none;" onclick="main.jump({'url':'/pc2.0/integral/index?type=1'})">
+                                <a href="javascript:;">更多</a>
+                                <img src="__RES__/imgs/my/right.png" alt="">
+                            </div>
+                        </h5>
+
+                        <!--兑换列表-->
+                        <div class="swiper">
+                            <!--兑换轮播/-->
+                            <!-- Swiper -->
+                            <div class="swiper-container browse-box swiper-exchange">
+                                <div class="swiper-wrapper">
+                                    {volist name="$goods.exchange" id="value"}
+                                    <div class="swiper-slide">
+                                        <div class="goods-con">
+                                            <a href="javascript:main.jump({'url':'/pc2.0/integral/view?integral_id={$value.integral_id}'})">
+                                                <div class="mark">兑换</div>
+                                                <img src="{$value.file}" />
+                                                <p class="name">{$value.integral_name}</p>
+                                                <p class="value">{$value.integral}积分</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {/volist}
+                                </div>
+                                <!-- Add Arrows -->
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+                        <!--换购列表-->
+                        <div class="swiper" style="display: none;">
+                            <!--换购轮播-->
+                            <!-- Swiper -->
+                            <div class="swiper-container browse-box swiper-redemption">
+                                <div class="swiper-wrapper">
+                                    {volist name="$goods.redemption" id="value1"}
+                                    <div class="swiper-slide">
+                                        <div class="goods-con">
+                                            <a href="javascript:main.jump({'url':'/pc2.0/integral/view?integral_id={$value1.integral_id}'})">
+                                                <!--换购-->
+                                                <div class="mark">换购</div>
+                                                <img data-src="{$value1.file}" src="" />
+                                                <p class="name">{$value1.integral_name}</p>
+                                                <!--换购-->
+                                                <p class="edemption">
+                                                    <span class="pic primary-color ">￥{$value1.price}</span>
+                                                    <span class="integral">+{$value1.integral}积分</span>
+                                                    <span class="economize primary-color border-color">省{$value1.integral*$integral_ratio}元</span>
+                                                </p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {/volist}
+                                </div>
+
+                                <!-- Add Arrows -->
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+            <!--花积分结束-->
+        </div>
+
+    </div>
+</div>
+{/block}
+
+{block name='js'}
+<script src="__RES__/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+    var swiper = new Swiper('.swiper-exchange', {
+        slidesPerView: 5,
+        spaceBetween: 6,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        observer: true,
+        observeParents: true,
+    });
+
+    var swiper1 = new Swiper('.swiper-redemption', {
+        slidesPerView: 5,
+        spaceBetween: 6,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        observer: true,
+        observeParents: true,
+    });
+</script>
+
+<script type="text/javascript">
+    $('.exchange .title>a').click(function() {
+        var num = $(this).index();
+        $(this).addClass('primary-color border-color').siblings('a').removeClass('primary-color border-color')
+        $('.swiper').eq(num).show().siblings('.swiper').hide();
+
+        $('.exchange .title-right').eq(num).show().siblings('.title-right').hide();
+
+        if(num == 1) {
+            $('.swiper-redemption .goods-con img').each(function() {
+                var src = $(this).attr('data-src');
+                $(this).attr('src', src)
+            })
+
+        }
+    })
+</script>
+{/block}

@@ -1,0 +1,22 @@
+{
+  "//": "版本开关    0 多店豪华，1 多店精简，2 单店豪华，3 单店精简",
+  "VersionSwitch": 2,
+  "//": "首页切换  0 多店老版首页，1 多店新版首页, 2 单店水果版首页",
+  "versions": 2,
+  "//": "分销开关    true 打开分销，false 关闭分销",
+  "distributionSwitch": true,
+  "//": "环境 0 线上环境 1 测试环境",
+  "environment": 0,
+  "//": "微信公众号appid",
+  "appid":"wxc18ab2487e9c578b",
+  "//": "高德key",
+  "autonavi_key":"9872058c80189569f7eef0be2bf4d6fb",
+  "//": "客服地址",
+  "ws": "wss://ishop-preview.zihaiwangluo.com/ws",
+  "//": "项目接口域名",
+  "host": "https://ishop-preview.zihaiwangluo.com/",
+  "//": "手机站域名",
+  "http":"https://testapi.zihaiwangluo.com/",
+  "//": "项目登录logo",
+  "loginLogo": "/static/img/newlogo.png"
+}

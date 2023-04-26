@@ -1,0 +1,1 @@
+2018-11-29 13:29:15: strlen() expects parameter 1 to be string, array given2018-11-29 13:32:09: strlen() expects parameter 1 to be string, object given2018-11-29 13:34:48: strlen() expects parameter 1 to be string, object given

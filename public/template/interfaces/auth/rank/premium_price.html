@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-title" content="iShop"/>
+    <meta name="App-Config" content="fullscreen=yes,useHistoryState=yes,transition=yes"/>
+    <!--iphone设备中的safari私有meta标签，它表示：允许全屏模式浏览-->
+    <meta content=yes name=apple-mobile-web-app-capable/>
+    <meta content=yes name=apple-touch-fullscreen/>
+    <!--告诉设备忽略将页面中的数字识别为电话号码-->
+    <meta content="telephone=no,email=no" name=format-detection/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <title>会员专享价</title>
+    <!--bootstrap-->
+    <link rel="stylesheet" type="text/css" href="__RES__/rank/bootstrap.min.css">
+
+    <!--公共样式-->
+    <link rel="stylesheet" type="text/css" href="__RES__/rank/public.css">
+
+
+</head>
+<body style="background: #f6f6f6;overflow-x: hidden">
+<div class="wrap">
+    <!--<header class="">-->
+        <!--<img src="__RES__/rank/back.png" class="back" title="" alt="">-->
+        <!--<div class="title">会员专享价</div>-->
+    <!--</header>-->
+
+    <div class="member_det">
+        <img src="__RES__/rank/pic45.jpg" class="pic">
+        <div class="member_con">
+            <div class="con">
+                <ul>
+                    <li><span>*</span>会员等级越高，优惠越大</li>
+                    <li><span>*</span>商品会员价格按会员等级折扣率计算，如果商家为每个等级指定一个固定价格，会员享受商品会员固定价</li>
+                    <li><span>*</span>设置会员价格的商品均享受优惠</li>
+                </ul>
+            </div>
+            <table border="1">
+                <tr>
+                    <th>会员等级</th>
+                    <th>折扣率</th>
+                </tr>
+
+                {volist name='result' id='item'}
+                <tr>
+                    <td>{$item.rank_name}</td>
+                    <td>{$item.discount}</td>
+                </tr>
+                {/volist}
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

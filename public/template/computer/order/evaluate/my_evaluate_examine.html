@@ -1,0 +1,118 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css"/>
+<link rel="stylesheet" href="__RES__/css/evaluate/EvaluateDetail.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+{/block}
+{block name="content"}
+<div class="index-box">
+    <div class="evaluate-title">
+        <h3>评价详情</h3>
+        <p>
+            写评价，奖励积分哦
+        </p>
+    </div>
+    <div class="evaluate-con">
+        <div class="goods">
+            <img src="{$result.order_goods.file}" alt="">
+            <span class="goods-name">{$result.order_goods.goods_name}</span>
+            <p class="pic">￥{$result.order_goods.original_price}</p>
+            <span class="goods-specification">{$result.attr}</span>
+        </div>
+        <div class="evaluate">
+            <ul>
+                <li><span class="time">{$result.create_time}</span></li>
+                <li>
+                    <div class="con">
+                        <div class="start-box">
+                            {for start="0" end="$result.star_num"}
+                            <img src="__RES__/imgs/start_on.png" alt="">
+                            {/for}
+                            {for start="0" end=":abs($result.star_num-5)"}
+                            <img src="__RES__/imgs/start_off.png" alt="">
+                            {/for}
+                            {switch name="$result.star_num"}
+                            {case value="1"}非常差{/case}
+                            {case value="2"}差{/case}
+                            {case value="3"}一般{/case}
+                            {case value="4"}好{/case}
+                            {case value="5"}非常好{/case}
+                            {/switch}
+                        </div>
+                    </div>
+                </li>
+                <li>
+
+                    <div class="con">
+                        <div class="evaluate-content">
+                            <!--评价的文字-->
+                            <p>{$result.content}</p>
+                            <!--上传图片和视频-->
+                            <div class="upload">
+                                {if $result.video}
+                                <!--图片和视频放置的位置-->
+                                <div class="video-list">
+                                    <div class="img-box">
+                                        <video loop="loop" src="{$result.video}"></video>
+                                        <img class="play" src="__RES__/imgs/play.png" alt="">
+                                    </div>
+                                </div>
+                                {/if}
+                                {volist name='$result.multiple_file' id='multiple_file'}
+                                <div class="img-list">
+                                    <div class="img-box">
+                                        <img src="{$multiple_file}">
+                                    </div>
+                                </div>
+                                {/volist}
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+
+            <div class="big-img-box" style="position: absolute;top: 10px;left: 560px;display: none;">
+                <img width="300" height="300" src="" alt="">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="cover">
+        <video src="" controls id="video-play"></video>
+    </div>
+
+
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+
+
+    $('.upload .img-list .img-box').hover(function () {
+        var src =$(this).find('img').attr('src');
+        $('.big-img-box img').attr('src',src);
+        $('.big-img-box').show()
+    },function () {
+        $('.big-img-box').hide()
+    })
+
+
+    // 播放视频
+    $('.video-list').on('click', '.play', function () {
+        var src = $(this).siblings('video').attr('src')
+        $('.cover #video-play').attr('src', src);
+        $('.cover #video-play')[0].play();
+        $('.cover').show()
+    });
+    // 关闭视频
+    $('.cover').click(function () {
+        $('.cover').hide()
+        $('.cover #video-play')[0].paused();
+
+    });
+</script>
+{/block}

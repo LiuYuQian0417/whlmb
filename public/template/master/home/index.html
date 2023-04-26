@@ -1,0 +1,718 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<link rel="stylesheet" href="__RES__/css/common/home.css">
+<style>
+    .goodsDataList .list {
+        width: 50.55% !important;
+    }
+    #tooltip{
+        font-size: 14px;
+        padding: 10px;
+    }
+    .dataTabList li , .fa-refresh{
+        cursor: pointer;
+    }
+
+    .page-item:not(.active){
+        cursor: pointer;
+    }
+
+    .layui-laydate{
+        margin: 40px 0 !important;
+    }
+
+</style>
+<form class="layui-form">
+    <div class="stageWrap">
+        <div class="homeHead">
+            <img src="{:fileOss(env('logo',''))}" alt="" class="logoIcon"
+                 onerror=this.src="/template/master/resource/image/common/imageError.png">
+            <div class="info">
+                <div class="homeName">{:env('title','')}</div>
+                <div class="numInfo">{eq name="single_store" value="1"}店铺数：{$item.store}&emsp;&emsp;&emsp;{/eq}用户数：{$item.member}</div>
+            </div>
+            <!--<div class="btn">-->
+                <!--<a href="javascript:void(0);"-->
+                   <!--onClick="main.jumpFour('goods/create?shop={:input(\'get.type\',0)}')">添加商品</a>-->
+            <!--</div>-->
+            <!--<div class="btn">-->
+                <!--<a href="javascript:void(0);" onclick="entrance()">访问平台</a>-->
+            <!--</div>-->
+            <!--<div class="btn">-->
+            <!--<a href="">订单核销</a>-->
+            <!--</div>-->
+            <div class="setBtn">
+                <a href="javascript:void(0);" onClick="main.jumpFour('config/index')">{eq name="single_store" value="1"}平台{/eq}设置</a>
+            </div>
+        </div>
+        <div class="dataTab master">
+            <div class="dataTabList">
+                <ul>
+                {eq name="single_store" value="1"}
+                    <li class="active">平台数据</li>
+                    <li>自营数据</li>
+                {/eq}
+                </ul>
+                <div class="ope">
+                    <div class="time">更新时间:{$time}</div>
+                    <i class="fa fa-refresh" aria-hidden="true" onclick="location.reload();"></i>
+                    <!--<a href="javascript:void(0);" class="more" onclick="contact()">更多数据></a>-->
+                </div>
+            </div>
+            <div class="dataTabCon">
+                <div>
+                    <ul class="dataList">
+                        {eq name="single_store" value="1"}
+                        <li class="state">
+                            <img src="__RES__/image/common/homeIcon1.png" alt="" class="icon">
+                            <div class="group">
+                                <div class="type">
+                                    <div class="text">商品待审核
+                                        <div class="num">{$item.goods_review}</div>
+                                    </div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">店铺待审核
+                                        <div class="num">{$item.store_status}</div>
+                                    </div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">提现待审核
+                                        <div class="num">{$item.store_withdraw}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        {/eq}
+                        <li class="list">
+                            <img src="__RES__/image/common/homeIcon2.png" alt="" class="icon">
+                            <div class="group">
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}支付金额(元) <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                     class="help"
+                                                                     title="0点至当前时间内{eq name="single_store" value="1"}平台{/eq}所有付款订单金额总和(拼团在成团时计入付款金额;货到付款在发货时计入付款金额，不剔除退款金额)">
+                                    </div>
+                                    <div class="number green">{:fmtPrice($item.pay_total)}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}支付订单数 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                   class="help"
+                                                                   title="0点至当前时间内{eq name="single_store" value="1"}平台{/eq}成功付款订单数，订单号唯一。场景1，拼团在成团时计入支付订单数。场景2，货到付款在发货时计入支付订单数">
+                                    </div>
+                                    <div class="number green">{$item.indent_count}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}支付买家数 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                   class="help" title="0点至当前时间内{eq name="single_store" value="1"}平台{/eq}付款成功的用户数，单个用户多次付款只记一次">
+                                    </div>
+                                    <div class="number green">{$item.member_pay_count}</div>
+                                </div>
+                                <!--<div class="type">-->
+                                <!--<div class="text">平台访客数 <img src="__RES__/image/common/homeHelp.png" alt="" class="help" title="0点至当前时间内平台页面被访问的去重人数，单个用户在统计时间范围内访问多次只记一次" ></div>-->
+                                <!--<div class="number green">8800</div>-->
+                                <!--</div>-->
+                                <!--<div class="type">-->
+                                <!--<div class="text">平台浏览量 <img src="__RES__/image/common/homeHelp.png" alt="" class="help" title="0点至当前时间内平台页面被访问次数，单个用户在统计时间内访问多次记多次"></div>-->
+                                <!--<div class="number green">8800</div>-->
+                                <!--</div>-->
+                            </div>
+                        </li>
+                        <li class="list">
+                            <img src="__RES__/image/common/homeIcon3.png" alt="" class="icon">
+                            <div class="group">
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}待发货订单 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                   class="help" title="截止到当前时间内的{eq name="single_store" value="1"}平台{/eq}未发货订单数"></div>
+                                    <div class="number purple">{$item.not_deliver}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}退款维权订单 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                    class="help" title="截止到当前时间内的{eq name="single_store" value="1"}平台{/eq}退款维权订单数"></div>
+                                    <div class="number purple">{$item.is_refund}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list">
+                            <img src="__RES__/image/common/homeIcon4.png" alt="" class="icon">
+                            <div class="group">
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}出售中 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                 class="help" title="截止到当前时间内的{eq name="single_store" value="1"}平台{/eq}出售中的商品数"></div>
+                                    <div class="number yellow">{$item.sales_goods_count}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}库存预警 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                  class="help" title="截止到当前时间内{eq name="single_store" value="1"}平台{/eq}库存预警的商品数"></div>
+                                    <div class="number yellow">{$item.goods_number.goods_warn_number}</div>
+                                </div>
+                                <!--<div class="type">-->
+                                    <!--<div class="text">平台仓库中 <img src="__RES__/image/common/homeHelp.png" alt=""-->
+                                                                 <!--class="help" title="截止到当前时间内的平台仓库中的商品数"></div>-->
+                                    <!--<div class="number yellow">{$item.warehouse_goods_count}</div>-->
+                                <!--</div>-->
+                                <div class="type">
+                                    <div class="text">{eq name="single_store" value="1"}平台{/eq}回收站 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                 class="help" title="截止到当前时间内的{eq name="single_store" value="1"}平台{/eq}回收站的商品数"></div>
+                                    <div class="number yellow">{$item.recycle_goods_count}</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="dataList">
+                        <!--<li class="state">-->
+                        <!--<img src="__RES__/image/common/homeIcon1.png" alt="" class="icon">-->
+                        <!--<div class="group">-->
+                        <!--<div class="type">-->
+                        <!--<div class="text">自营商品待审核 <div class="num">1</div></div>-->
+                        <!--</div>-->
+                        <!--<div class="type">-->
+                        <!--<div class="text">商品待审核 <div class="num">1</div></div>-->
+                        <!--</div>-->
+                        <!--<div class="type">-->
+                        <!--<div class="text">商品待审核 <div class="num">1</div></div>-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <!--</li>-->
+                        <li class="list">
+                            <img src="__RES__/image/common/homeIcon2.png" alt="" class="icon">
+                            <div class="group">
+                                <div class="type">
+                                    <div class="text">自营支付金额(元) <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                     class="help"
+                                                                     title="0点至当前时间内自营所有付款订单金额总和(拼团在成团时计入付款金额;货到付款在发货时计入付款金额，不剔除退款金额)">
+                                    </div>
+                                    <div class="number green">{$item.self_pay_total}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">自营支付订单数 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                   class="help"
+                                                                   title="0点至当前时间内自营成功付款订单数，订单号唯一。场景1，拼团在成团时计入支付订单数。场景2，货到付款在发货时计入支付订单数">
+                                    </div>
+                                    <div class="number green">{$item.self_indent_count}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">自营支付买家数 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                   class="help" title="0点至当前时间内自营付款成功的用户数，单个用户多次付款只记一次">
+                                    </div>
+                                    <div class="number green">{$item.self_member_pay_count}</div>
+                                </div>
+                                <!--<div class="type">-->
+                                <!--<div class="text">店铺访客数 <img src="__RES__/image/common/homeHelp.png" alt="" class="help" title="店铺访客数店铺访客数店铺访客数店铺访客数店铺访客数店铺访客数店铺访客数" ></div>-->
+                                <!--<div class="number green">8800</div>-->
+                                <!--</div>-->
+                                <!--<div class="type">-->
+                                <!--<div class="text">店铺浏览量 <img src="__RES__/image/common/homeHelp.png" alt="" class="help" title="店铺浏览量：统计时间内店铺页面被访问次数，单个用户在统计时间内访问多次记多次"></div>-->
+                                <!--<div class="number green">8800</div>-->
+                                <!--</div>-->
+                            </div>
+                        </li>
+                        <li class="list">
+                            <img src="__RES__/image/common/homeIcon3.png" alt="" class="icon">
+                            <div class="group">
+                                <div class="type">
+                                    <div class="text">自营待发货订单 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                   class="help" title="截止到当前时间内的自营未发货订单数"></div>
+                                    <div class="number purple">{$item.self_not_deliver}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">自营退款维权订单 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                    class="help" title="截止到当前时间内的自营退款维权订单数"></div>
+                                    <div class="number purple">{$item.self_is_refund}</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list">
+                            <img src="__RES__/image/common/homeIcon4.png" alt="" class="icon">
+                            <div class="group">
+                                <div class="type">
+                                    <div class="text">自营出售中 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                 class="help" title="截止到当前时间内的自营出售中的商品数"></div>
+                                    <div class="number yellow">{$item.self_sales_goods_count}</div>
+                                </div>
+                                <div class="type">
+                                    <div class="text">自营库存预警 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                  class="help" title="截止到当前时间内自营库存预警的商品数"></div>
+                                    <div class="number yellow">{$item.self_goods_number.goods_warn_number}</div>
+                                </div>
+                                <!--<div class="type">-->
+                                    <!--<div class="text">自营仓库中 <img src="__RES__/image/common/homeHelp.png" alt=""-->
+                                                                 <!--class="help" title="截止到当前时间内的自营仓库中的商品数"></div>-->
+                                    <!--<div class="number yellow">{$item.self_warehouse_goods_count}</div>-->
+                                <!--</div>-->
+                                <div class="type">
+                                    <div class="text">自营回收站 <img src="__RES__/image/common/homeHelp.png" alt=""
+                                                                 class="help" title="截止到当前时间内的自营回收站的商品数"></div>
+                                    <div class="number yellow">{$item.self_recycle_goods_count}</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+        {eq name="single_store" value="1"}
+        <form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+            <div class="dataTab master">
+                <div class="dataTabList">
+                    <ul>
+                        <li class="active">店铺支付金额排行</li>
+                    </ul>
+                    <div class="ope layui-form">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">时间筛选</label>
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" name="date" id="date"
+                                       value="{:input('get.date','')}" placeholder="日期范围查询" readonly style="padding: 0 20px">
+                            </div>
+                            <a class="layui-btn" href="javascript:void(0);" onclick="storePay()">查询</a>
+                            <!--<button class="layui-btn" lay-submit="">搜索</button>-->
+                        </div>
+                    </div>
+                </div>
+                <table class="dataTable layui-table" id="storePayTable">
+                    <thead>
+                    <tr>
+                        <th>排名</th>
+                        <th style="text-align: left!important;">店铺</th>
+                        <th>
+                            <div class="text">店铺支付金额<img src="__RES__/image/common/homeHelp.png" alt="" class="help"
+                                                         title="统计时间内店铺所有付款订单金额总和(拼团在成团时计入付款金额;货到付款在发货时计入付款金额，不剔除退款金额)">
+                            </div>
+                        </th>
+                        <!--<th><div class="text">店铺访客数<img src="__RES__/image/common/homeHelp.png" alt="" class="help" title="店铺访客数店铺访客数店铺访客数店铺访客数店铺访客数"></div></th>-->
+                        <!--<th><div class="text">店铺浏览量<img src="__RES__/image/common/homeHelp.png" alt="" class="help" title="店铺浏览量店铺浏览量店铺浏览量店铺浏览量店铺浏览量"></div></th>-->
+
+                    </tr>
+                    </thead>
+                    <tbody id="storePay">
+                    <!--<tr>-->
+                        <!--<td>1</td>-->
+                        <!--<td>-->
+                            <!--<div class="store">-->
+                                <!--<div class="storeIcon">-->
+                                    <!--<img src="{:fileOss(env('logo',''))}" alt=""-->
+                                         <!--onerror=this.src="/template/master/resource/image/common/imageError.png">-->
+                                    <!--<div class="active">本店</div>-->
+                                <!--</div>-->
+                                <!--<div class="storeName">{:env('title','')}</div>-->
+                            <!--</div>-->
+                        <!--</td>-->
+                        <!--<td>{$item.pay.salesPrice}</td>-->
+                        <!--&lt;!&ndash;<td>19878</td>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<td>19878</td>&ndash;&gt;-->
+                    <!--</tr>-->
+
+                    </tbody>
+                </table>
+            </div>
+        </form>
+        {/eq}
+        <div class="dataTab master">
+            <div class="dataTabList">
+                <ul>
+                    <li class="active">商品榜单</li>
+                </ul>
+                <div class="ope layui-form">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">时间筛选</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="date1" name="date1"
+                                   value="{:input('get.date1','')}" placeholder="日期范围查询" readonly style="padding: 0 20px">
+                        </div>
+                        <a class="layui-btn" href="javascript:void(0);" onclick="goodsSelect()">查询</a>
+                        <!--<button class="layui-btn" lay-submit="">搜索</button>-->
+                    </div>
+                </div>
+            </div>
+            <div class="goodsDataList">
+                <div class="list" style="display: none;">
+                    <div class="totalTitle">商品访客数 <img src="__RES__/image/common/homeHelp.png" alt="" class="help"
+                                                       title="商品访客数商品访客数商品访客数商品访客数商品访客数"></div>
+                    <table class="goodsDataTable layui-table">
+                        <thead>
+                        <tr>
+                            <th style="width: 30px;">排名</th>
+                            <th style="text-align: left!important;">商品名称</th>
+                            <th style="width: 80px;">商品访客数</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <div class="goodsInfo">
+                                    <img src="__RES__/image/common/imageError.png" alt="" class="goodsPic">
+                                    <div class="det">
+                                        <div class="goodsName">自制2018秋冬港味宽松中长款纯棉字母圆领ins同款短袖白色T恤女</div>
+                                        <div class="time">发布时间：2018-02-03 18:00:00</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>19878</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>
+                                <div class="goodsInfo">
+                                    <img src="__RES__/image/common/imageError.png" alt="" class="goodsPic">
+                                    <div class="det">
+                                        <div class="goodsName">自制2018秋冬港味宽松中长款纯棉字母圆领ins同款短袖白色T恤女</div>
+                                        <div class="time">发布时间：2018-02-03 18:00:00</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>19878</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>
+                                <div class="goodsInfo">
+                                    <img src="__RES__/image/common/imageError.png" alt="" class="goodsPic">
+                                    <div class="det">
+                                        <div class="goodsName">自制2018秋冬港味宽松中长款纯棉字母圆领ins同款短袖白色T恤女</div>
+                                        <div class="time">发布时间：2018-02-03 18:00:00</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>19878</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>
+                                <div class="goodsInfo">
+                                    <img src="__RES__/image/common/imageError.png" alt="" class="goodsPic">
+                                    <div class="det">
+                                        <div class="goodsName">自制2018秋冬港味宽松中长款纯棉字母圆领ins同款短袖白色T恤女</div>
+                                        <div class="time">发布时间：2018-02-03 18:00:00</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>19878</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>
+                                <div class="goodsInfo">
+                                    <img src="__RES__/image/common/imageError.png" alt="" class="goodsPic">
+                                    <div class="det">
+                                        <div class="goodsName">自制2018秋冬港味宽松中长款纯棉字母圆领ins同款短袖白色T恤女</div>
+                                        <div class="time">发布时间：2018-02-03 18:00:00</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>19878</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="list">
+                    <div class="totalTitle">商品支付金额 <img src="__RES__/image/common/homeHelp.png" alt="" class="help"
+                                                        title="统计时间内的商品所有付款订单金额总和(拼团在成团时计入付款金额;货到付款在发货时计入付款金额，不剔除退款金额)">
+                    </div>
+                    <table class="goodsDataTable layui-table" id="goodsPayTable">
+                        <thead>
+                        <tr>
+                            <th style="width: 30px;">排名</th>
+                            <th style="text-align: left!important;">商品名称</th>
+                            <th style="width: 80px;">商品支付金额</th>
+                        </tr>
+                        </thead>
+                        <tbody id="goodsPay">
+
+                        </tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="list">
+                    <div class="totalTitle">商品销量 <img src="__RES__/image/common/homeHelp.png" alt="" class="help"
+                                                       title="统计时间内商品成功下单的数量（不包含已取消订单）"></div>
+                    <table class="goodsDataTable layui-table" id="goodsCountTable">
+                        <thead>
+                        <tr>
+                            <th style="width: 30px;">排名</th>
+                            <th style="text-align: left!important;">商品名称</th>
+                            <th style="width: 80px;">商品销量</th>
+                        </tr>
+                        </thead>
+                        <tbody id="goodsCount">
+
+                        </tbody>
+                        <tfoot>
+
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
+        <!--<div class="contact" onclick="contact()">如需更全面的数据统计，请联系 <span>0451-58977072</span></div>-->
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/jQuery.toolTip.js"></script>
+<script src="__RES__/js/pages.js"></script>
+<script>
+    $('.help').toolTip({fade: true});
+    $(function () {
+        // 数据切换 平台/自营
+        $(".master .dataTabList li").click(function () {
+            var index = $(this).index();
+            $(this).addClass("active").siblings().removeClass("active")
+            $(".dataTabCon>div").eq(index).show().siblings().hide()
+        })
+        storePay();
+        goodsPay();
+        goodsCount();
+    })
+    main.form();
+
+    function goodsSelect() {
+        goodsPay();
+        goodsCount();
+    }
+    function storePay(pages) {
+
+        var date = $('#date').val();
+
+        $('tr[data_type="storePay"] ').remove();
+        $('#storePay tr').remove();
+
+        main.ajax({
+            type: 'post',
+            data: {date: date, page: pages === undefined ? 1 : pages}, url: '/home/storePay', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                } else {
+                    $('#storePayTable').children('tfoot').remove()
+
+                    res.page.current_page = parseInt(res.page.current_page)
+                    res.page.last_page = parseInt(res.page.last_page)
+
+                    if (res.page.last_page !== 0) {
+                        $('#storePayTable').append('<tfoot><tr><td colspan="100"><span style="float:right;"><ul class="pagination"></ul></span></td></tr></tfoot>')
+                        $('#storePayTable').find('ul.pagination').pagination({
+                            currentPage:res.page.current_page,
+                            prevText: '«',
+                            nextText: '»',
+                            pages: res.page.last_page, //总页数
+                            edges: 2,
+                            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+                            displayedPages: 9, //显示几个
+                            onPageClick: function(pageNumber, event) {
+                                storePay(pageNumber)
+                            },
+                            onInit: function(getid) {
+                                //刷新时或初始化调用
+                                // alert(getid);
+                            }
+                        });
+                    }
+                    $('#storePay').append(res.data);
+                }
+            }
+        });
+    }
+
+    function goodsPay(pages) {
+        var date = $('#date1').val();
+        $('tr[data_type="goodsPay"] ').remove();
+        $('#goodsPay tr').remove();
+
+        main.ajax({
+            type: 'post',
+            async:true,
+            data: {date: date, page: pages === undefined ? 1 : pages}, url: '/home/goodsPay', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                } else {
+                    $('#goodsPayTable').children('tfoot').remove()
+
+                    res.page.current_page = parseInt(res.page.current_page)
+                    res.page.last_page = parseInt(res.page.last_page)
+
+                    if (res.page.last_page !== 0) {
+                        $('#goodsPayTable').append('<tfoot><tr><td colspan="100"><span style="float:right;"><ul class="pagination"></ul></span></td></tr></tfoot>')
+                        $('#goodsPayTable').find('ul.pagination').pagination({
+                            currentPage:res.page.current_page,
+                            prevText: '«',
+                            nextText: '»',
+                            pages: res.page.last_page, //总页数
+                            edges: 2,
+                            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+                            displayedPages: 9, //显示几个
+                            onPageClick: function(pageNumber, event) {
+                                goodsPay(pageNumber)
+                            },
+                            onInit: function(getid) {
+                                //刷新时或初始化调用
+                                // alert(getid);
+                            }
+                        });
+                    }
+                    $('#goodsPay').append(res.data);
+                }
+            }
+        });
+    }
+
+    function goodsCount(pages) {
+        var date = $('#date1').val();
+        $('tr[data_type="goodsCount"] ').remove();
+        $('#goodsCount tr').remove();
+        main.ajax({
+            type: 'post',
+            async:true,
+            data: {date: date, page: pages === undefined ? 1 : pages}, url: '/home/goodsCountPay', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                } else {
+                    $('#goodsCountTable').children('tfoot').remove()
+
+                    res.page.current_page = parseInt(res.page.current_page)
+                    res.page.last_page = parseInt(res.page.last_page)
+
+                    if (res.page.last_page !== 0) {
+                        $('#goodsCountTable').append('<tfoot><tr><td colspan="100"><span style="float:right;"><ul class="pagination"></ul></span></td></tr></tfoot>')
+                        $('#goodsCountTable').find('ul.pagination').pagination({
+                            currentPage:res.page.current_page,
+                            prevText: '«',
+                            nextText: '»',
+                            pages: res.page.last_page, //总页数
+                            edges: 2,
+                            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+                            displayedPages: 9, //显示几个
+                            onPageClick: function(pageNumber, event) {
+                                goodsCount(pageNumber)
+                            },
+                            onInit: function(getid) {
+                                //刷新时或初始化调用
+                                // alert(getid);
+                            }
+                        });
+                    }
+                    $('#goodsCount').append(res.data);
+                }
+            }
+        })
+    }
+
+    main.laydate([{
+        elem: "#date",
+        type: "date",
+        range: true,
+        max: 0
+    }]);
+    main.laydate([{
+        elem: "#date1",
+        type: "date",
+        range: true,
+        max: 0
+    }]);
+
+    function contact() {
+        layer.open({
+            type: 1,
+            title: '更多数据',
+            shadeClose: true,
+            area: ['440px', '220px'],
+            skin: 'layui-layer-rim',
+            content: '<div class="moreData"><div>如需更全面的数据统计，请联系<span>0451-58977072</span></div></div>'
+        });
+    }
+
+    function entrance() {
+        layer.open({
+            type: 1,
+            title: '访问平台',
+            shadeClose: true,
+            area: ['440px', '320px'],
+            skin: 'layui-layer-rim',
+            content: '<img style="width: 150px;height: 150px;margin-top: 50px;margin-left: 50px;" src="{$applet_code_file}">' +
+                '<img style="width: 150px;height: 150px;margin-top: 50px;margin-left: 50px;" src="{$official_accounts}">' +
+                '<span></span>'
+        });
+    }
+</script>
+{/block}
+
+<!--<style>-->
+<!--.layui-tab-title .layui-this{-->
+<!--background-color:#fff!important;-->
+<!--}-->
+<!--.show{-->
+<!--margin-top:1%;padding: 20px; background-color: #F2F2F2;-->
+<!--}-->
+<!--.font-style{-->
+<!--color: #f23030;font-weight: bold;font-size: 20px;-->
+<!--}-->
+<!--.collect_display td{border: hidden!important;}-->
+<!--</style>-->
+<!--&lt;!&ndash;金额数据begin&ndash;&gt;-->
+<!--<div class="layui-table goods-list" style="width: 100%">-->
+<!--<table class="ecsc-default-table ecsc-table-seller mt20 layui-table">-->
+<!--<tbody>-->
+<!--<tr>-->
+<!--<td>-->
+<!--<p style="line-height: 30px"></p>-->
+<!--<p><span class="font-style"></span>元</p>-->
+<!--</td>-->
+<!--</tr>-->
+<!--</tbody>-->
+<!--</table>-->
+<!--</div>-->
+<!--&lt;!&ndash;金额数据end&ndash;&gt;-->
+
+
+<!--<form class="layui-form" id="searchForm">-->
+<!---->
+<!--&lt;!&ndash;<div class="common-head">&ndash;&gt;-->
+<!--&lt;!&ndash;<div style="height: 30px;">&ndash;&gt;-->
+
+<!--&lt;!&ndash;<div style="float: left;line-height: 30px;"></div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<div class="inquire_search" >&ndash;&gt;-->
+
+<!--&lt;!&ndash;<div class="inquire">&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="layui-form-item order_item">&ndash;&gt;-->
+<!--&lt;!&ndash;<label class="layui-form-label">时间筛选：</label>&ndash;&gt;-->
+<!--&lt;!&ndash;<div class="layui-input-block">&ndash;&gt;-->
+<!--&lt;!&ndash;<select name="time_type" lay-filter="time">&ndash;&gt;-->
+<!--&lt;!&ndash;<option value="0" {eq name=":input('time_type','0')" value='0' } selected {/eq}>天</option>&ndash;&gt;-->
+<!--&lt;!&ndash;<option value="2" {eq name=":input('time_type','0')" value='2' } selected {/eq}>周</option>&ndash;&gt;-->
+<!--&lt;!&ndash;<option value="3" {eq name=":input('time_type','0')" value='3' } selected {/eq}>月</option>&ndash;&gt;-->
+<!--&lt;!&ndash;</select>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<div class="layui-input-inline">&ndash;&gt;-->
+<!--&lt;!&ndash;<input type="text" name="end_date" id="end_date" lay-verify="datetime" placeholder="至今" value="{:input('end_date','')}" readonly autocomplete="off" class="layui-input">&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;<input type="submit" class="btn search_btn" name="secrch_btn" value="搜索">&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+<!--</form>-->

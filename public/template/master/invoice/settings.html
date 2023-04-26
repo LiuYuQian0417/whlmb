@@ -1,0 +1,99 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<style>
+    .picShow > .pic {
+        display: none
+    }
+
+    .picShow > .pic:first-child {
+        display: block
+    }
+
+    .picShow > .pic a {
+        position: relative;
+        width: 150px;
+    }
+
+    .picShow > .pic img {
+        width: 150px;
+        display: block;
+    }
+
+    #tooltip {
+        position: absolute;
+        width: 300px;
+        border: 1px solid #f4f4f4;
+        background: #fff;
+        color: #fff;
+        display: none
+    }
+
+    #tooltip img {
+        width: 100%
+    }
+
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>1、开通后，用户可在下单时选择此发票类型；</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!----------------------------------------------------开关设置------------------------------------------------------>
+    <div class="contentShell">
+        <div class="layui-form-item" style="display: inline-block;">
+            <label class="layui-form-label" style="width: 270px;">支持开具增值税专用发票：</label>
+            <div class="layui-input-inline">
+                <input type="checkbox" lay-skin="switch"
+                       lay-filter="changeSwitch"
+                       lay-text="是|否"
+                       value="is_added-value_tax"
+                       {eq name=":env('is_added-value_tax',0)" value="1" }checked{/eq}
+                >
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+
+<script>
+    main.form([
+        {
+            selector: 'switch(changeSwitch)',
+            callback: function (data) {
+                main.ajax({
+                    data: {
+                        switchType: data.value,
+                        checked: data.elem.checked ? 1 : 0
+                    },
+                    url: '/invoice/settings'
+                })
+            }
+        }
+    ]);
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

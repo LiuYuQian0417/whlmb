@@ -1,0 +1,70 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>阿里大于短信只支持控制台设置模板。<li>
+            <li>设置完之后将设置信息添加到平台记录供系统使用即可。<li>
+            <li>标注*的为必填项。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="contentShell">
+    <form class="layui-form"  enctype="multipart/form-data">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>模板内容</label>
+            <div class="layui-input-block">
+                <textarea name="content"
+                          placeholder="例：验证码为${code}，您正在注册成为XX会员，请于10分钟内完成验证，若非本人操作，请忽略本短信，感谢支持。"
+                          class="layui-textarea"
+                          style="resize:none;width:100%;height: 200px;"
+                          datatype="*"
+                          maxlength="200"
+                          nullmsg="请填写模板内容">{$data.content?:''}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">短信模板ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="temp_id" value="{$data.temp_id?:''}"
+                       datatype="*"
+                       nullmsg="短信模板ID不能为空"
+                       maxlength="20"
+                       placeholder="请输入阿里大于短信模板ID" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>使用场景</label>
+            <div class="layui-input-block">
+                <select name="scene" title>
+                    {volist name='$type' id='v'}
+                    <option value="{$key}" {present name="$data"}{$data.scene==$key?'selected':''}{/present}>{$v}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <input type="hidden" name="sms_id" value="{:input('id',0)}" />
+        <input type="hidden" name="type" value="1" />
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a href="javascript:void(0);" class="layui-btn" id="submit">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

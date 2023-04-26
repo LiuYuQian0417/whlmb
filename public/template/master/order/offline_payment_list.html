@@ -1,0 +1,153 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style type="">
+    .layui-laydate{
+        margin-top: 35px;
+    }
+</style>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="post">
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css"/>
+
+    <div class="f_right">
+        <a class="layui-btn layui-btn-sm layui-btn-normal down_btn" href="javascript:;" onclick="exportList()"><i class="layui-icon layui-icon-download-circle"></i> 下载订单</a>
+    </div>
+    <!--起止时间开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">起止时间：</label>
+        <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <input type="text" name="start_date" id="start_date" lay-verify="datetime" placeholder="不限" value="{:input('start_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="end_date" id="end_date" lay-verify="datetime" placeholder="至今" value="{:input('end_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+            <button class="layui-btn" lay-submit="">查询</button>
+        </div>
+    </div>
+    <!--起止时间结束-->
+
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th width="12%">订单号</th>
+                <th width="10%">支付方式</th>
+                <th width="10%">买家</th>
+                <th width="10%">下单时间</th>
+                <th width="10%">总金额</th>
+                <th width="10%">实收款</th>
+                <!--<th width="10%">使用店铺优惠券金额</th>-->
+                <!--<th width="10%">使用商家红包金额</th>-->
+                <th width="10%">订单状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>{$item.order_attach_number|default=''}</td>
+                <td>线下</td>
+                <td>{$item.member.nickname|default=''}</td>
+                <td>{$item.create_time|default=''}</td>
+                <td>{$item.order_goods.0.original_price}</td>
+                <td>{$item.subtotal_price|default=0}</td>
+                <!--<td>{$item.subtotal_coupon_price|default=0}</td>-->
+                <!--<td>{$item.subtotal_share_platform_packet_price|default=0}</td>-->
+                <td>已完成</td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{
+        selector: 'checkbox(allChk)', callback: function (data, formObj) {
+            if (data.elem.checked)
+                $(data.elem).nextAll().prop('checked', false);
+            formObj.render();
+        }
+    }, {
+        selector: 'checkbox(check)', callback: function (data, formObj) {
+            if (data.elem.checked)
+                $(data.elem).siblings('.chkAll').prop('checked', false);
+            formObj.render();
+        }
+    }]);
+
+    main.valid();
+
+    // 关闭订单
+    function closeOrder(order_attach_id,member_id) {
+        parent.layer.msg('确定关闭该订单吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {order_attach_id:order_attach_id,member_id: member_id}, url: '/order/closeOrder', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.href = "/order/index";
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+</script>
+<script>
+    main.laydate([{
+        elem: '#start_date',
+        type: 'datetime'
+    },{
+        elem: '#end_date',
+        type: 'datetime'
+    }]);
+</script>
+{/block}

@@ -1,0 +1,260 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/shophome/shophome.css">
+
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+<script src="__RES__/js/swiper.min.js"></script>
+<style>
+    body{
+        background: #fff !important;
+    }
+    .more{
+        display: block;
+        width: 265px;
+        height: 68px;
+        border-radius: 34px;
+        border: 1px solid #D0D0D0;
+        margin: 0px auto;
+        color: #767676;
+        text-align: center;
+        line-height: 68px;
+    }
+    .more img{
+        position: relative;
+        top: 4px;
+    }
+    .swiper-pagination-bullet-active{
+        background: #EA5413 !important;
+    }
+</style>
+{/block}
+
+
+{block name="content"}
+
+{include file="public/store_right" /}
+
+<div class="shop-classification-top">
+    <div class="shop-detail">
+        <div class="shop-box-tit-center">
+            <div class="title-right">
+                <a class="shop-name" href="javascript:;">{$result.store_name}
+                    <span class="pf primary-color">{$result.store_percent.self_score}</span>
+                    <img src="__RES__/imgs/goodsdetail/zz.png" alt="">
+                    {if condition="config('user.one_more') eq 1"}
+                    <span class="mark primary-color border-color">{if $result.shop == 0}自营{else}{if $result.store_auth.type==1}个人{else/}企业{/if}{/if}</span>
+                    {/if}
+                </a>
+                <a href="javascript:main.jump({'url':'/pc2.0/store/view?store_id={$result.store_id}'});">
+                    <img src="__RES__/imgs/my/shop.png" alt="">
+                    <span>店铺详情</span>
+                </a>
+                {if INI_CONFIG['IS_CUSTOMER'] ==1}
+                <a href="javascript:;" onclick="jump_service({store_id:'{$result.store_id}',diversion_id:'1002'})">
+                    <img src="__RES__/imgs/goodsdetail/shopinfo.png" alt="">
+                    联系客服
+                </a>
+                {/if}
+                {notempty name='$result.state'}
+                <a href="javascript:;" onclick="goods_collect_store(this,{'store_id':'{$result.store_id}','type':'2'})">
+                    <img src="__RES__/imgs/start_on.png" alt="">
+                    <span>取消关注</span>
+                </a>
+                {else/}
+                <a href="javascript:;" onclick="goods_collect_store(this,{'store_id':'{$result.store_id}','type':'1'})">
+                    <img src="__RES__/imgs/start_off.png" alt="">
+                    <span>关注店铺</span>
+                </a>
+                {/notempty}
+            </div>
+        </div>
+    </div>
+    <!--d大图-->
+    <a class="top-img" href="javascript:;">
+        <img src="{$result.pc_head_back_image}" alt="">
+    </a>
+
+</div>
+<!--菜单-->
+<div class="menu ">
+    <div class="menu-center">
+        <a href="{:url('/pc2.0/store/index')}?store_id={$result.store_id}">首页</a>
+        <div href="javascript:;" class="all">全部商品分类
+            <img src="__RES__/imgs/shophome/hx.png" alt="">
+            <div class="menu-silder">
+                <ul>
+                    {volist name="$result.classify" id="item"}
+                    <li>
+                        <a class="menu-list" href="{:url('/pc2.0/store/goods_list')}?store_id={$result.store_id}&classify_id={$item.store_goods_classify_id}">{$item.title}</a>
+                        <div class="menu-view">
+                            <div class="menu-list">
+                                <div class="menu-item">
+                                    <div class="cate">
+                                        {volist name="$item.subset" id="item1"}
+                                        <span onclick="main.jump({'url':'/pc2.0/store/goods_list?store_id={$result.store_id}&classify_id={$item.store_goods_classify_id}'})">{$item1.title}</span>
+                                        {/volist}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+        {volist name="$result.top_classify" id="item3" length="8"}
+        <a href="{:url('/pc2.0/store/goods_list')}?store_id={$result.store_id}&classify_id={$item3.store_goods_classify_id}">{$item3.title}</a>
+        {/volist}
+
+        <div class="search-box">
+            <input type="text"  name="keyword1" maxlength="60"  value="{:input('keyword1')}"  data_type="keyword1">
+            <a href="JavaScript:;" id="store_select" class="primary-background-color">
+                <img src="__RES__/imgs/shophome/search-img.png" alt="">
+            </a>
+            <input type="hidden" id="store_id" name="store_id" value="{$result.store_id}">
+        </div>
+    </div>
+</div>
+
+
+
+<!--banner图-->
+<div class="banner">
+    <!-- Swiper -->
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+
+            {volist name="$result.banner" id="ad_time"}
+            <div class="swiper-slide">
+                <a href="JavaScript:jump_goods('{$ad_time.goods_id}')">
+                    <img width="1182" height="516" src="{$ad_time.pc_recomme_file}" alt="">
+                </a>
+            </div>
+            {/volist}
+
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+
+</div>
+
+<div class="coupon-box">
+    {volist name="$result.coupon" id="con"}
+    <div class="coupon-list" data_coupon_id={$con.coupon_id} data_store_id="{:input('store_id')}">
+        <a href="javascript:;">
+            <img src="__RES__/imgs/shophome/coupon-bg.png" alt="">
+            <div class="coupon-left primary-color">
+                <span>￥</span>{$con.actual_price}
+            </div>
+            <div class="coupon-right">
+                <p>立即领取</p>
+                <p class="mj primary-color">满{$con.full_subtraction_price}可用</p>
+            </div>
+        </a>
+    </div>
+    {/volist}
+</div>
+
+<!--热卖尖货-->
+
+<div class="shop-box">
+        <div class="tit">
+            热卖尖货
+            <p>Hot selling</p>
+        </div>
+    <div class="new-goods-list">
+        {volist name="$result.particularly_recommend" id="item"}
+        <div class="goods">
+            <a href="javascript:jump_goods('{$item.goods_id}')">
+                <img width="570" height="570" src="{$item.file}" alt="">
+                <span class="pic">￥{$item.goods_price}</span>
+            </a>
+        </div>
+        {/volist}
+    </div>
+</div>
+
+<!--热门分类-->
+{volist name="$result.recommend" id="item3"}
+{notempty name="$item3.goods"}
+<div class="hot">
+    <div class="tit">
+       {$item3.title}
+        <!--<p>classification</p>-->
+    </div>
+    <div class="selling">
+        <div class="selling-list">
+            <ul>
+                {volist name="$item3.goods" id="goods1"}
+                <li>
+                    <a href="javascript:jump_goods('{$goods1.goods_id}')">
+                        <img src="{$goods1.file}" alt="">
+                    </a>
+                    <p>
+                        <span>￥{$goods1.goods_price}</span>
+                    </p>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+    <a class="more" href="javascript:main.jump({'url':'/pc2.0/store/goods_list?store_id={$result.store_id}&classify_id={$item3.store_goods_classify_id}'})">
+        查看更多 <img src="__RES__/imgs/shophome/you.png" alt="">
+    </a>
+</div>
+{/notempty}
+{/volist}
+
+
+{/block}
+{block name="js"}
+
+
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        autoplay:true,
+        loop:true
+    });
+</script>
+<script>
+
+    //分类栏上搜索
+    $('#store_select').click(function () {
+        var keyword1 = $(this).prev('input[name="keyword1"]').val();
+        var store_id = $('#store_id').val();
+        main.jump({'url':'/pc2.0/store/goods_list?store_id='+store_id+'&keyword1='+keyword1});
+
+    })
+
+
+    $('.coupon-box .coupon-list').click(function () {
+        var coupon_id = $(this).attr('data_coupon_id');
+        var store_id = $(this).attr('data_store_id');
+        main.ajax({
+            'url': '{:url(\'pc2.0/member_coupon/get\')}',
+            'data': {'coupon_id': coupon_id, 'store_id': store_id},
+            callback: function (t) {
+                console.log(t.code);
+                if (t.code == 0) {
+                    layer.msg(t.message);
+                } else if (t.code != -200 || t.code != -201) {
+                    layer.msg(t.message, {time: 500}, function () {
+                        // location.reload();
+                    });
+                }
+            }
+        })
+
+    })
+
+
+
+
+</script>
+{/block}

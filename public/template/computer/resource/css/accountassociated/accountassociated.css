@@ -1,0 +1,126 @@
+.setting-right{
+    float:right;
+    width: 1010px;
+    height: 550px;
+    background: #fff;
+}
+.setting-right-top{
+    background: #f9f9f9;
+    font-size:  16px;
+    color: #4b4b4b ;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 0 0 20px;
+}
+.wechat-account{
+    width: 442px;
+    height: 88px;
+    border:1px solid #eee;
+    line-height: 88px;
+    margin: 0 20px 0 0;
+    float: left;
+}
+.wechat-account-left{
+    line-height: 88px;
+    float: left;
+}
+.wechat-account-left span{
+    line-height: 88px;
+    display: block;
+    float: left;
+    padding: 16px;
+}
+.wechat-account-right{
+    float: right;
+    margin: 0 10px 0 0;
+    cursor: pointer;
+}
+.wechat-account-content{
+    padding: 30px 0 0 50px;
+}
+.wechat-account-prompt{
+    color: #999999;
+    font-size: 14px;
+    line-height: 56px;
+}
+.clear{
+    clear: both;
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+.associated-content-top{
+    font-weight: bolder;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+    padding: 20px 0 0 0;
+    line-height: 40px;
+}
+.associated-content-title{
+    text-align: center;
+    font-size: 16px;
+    color: #999999;
+    line-height: 35px;
+    padding: 0 0 25px  0;
+}
+.associated{
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    left: 0;
+    background: rgba(0,0,0,.5);
+}
+.associated-content{
+    width: 440px;
+    height: 220px;
+    position: absolute;
+    top:50%;
+    margin-top: -110px;
+    left: 50%;
+    margin-left: -220px;
+    background: #fff;
+}
+.associated-content-the-title{
+    height: 40px;
+    line-height: 40px;
+    background:#f3f3f3 ;
+    color: #4e4e4e;
+    padding-left: 10px;
+}
+.associated-content-the-title span{
+    float: right;
+    margin-right: 10px;
+    font-size: 20px;
+    color: #cdcdcd;
+}
+.wechat-account-cancel{
+    display: block;
+    float: left;
+    margin-left: 120px;
+    color: #333;
+    width: 88px;
+    text-align: center;
+    font-size: 14px;
+    height: 34px;
+    line-height: 34px;
+    border:1px solid #ddd;
+    border-radius: 3px;
+}
+.wechat-account-remove{
+    display: block;
+    float: left;
+    margin-left: 20px;
+    color: #fff;
+    width: 88px;
+    text-align: center;
+    font-size: 14px;
+    height: 34px;
+    line-height: 34px;
+    border:1px solid #ddd;
+    border-radius: 3px;
+}

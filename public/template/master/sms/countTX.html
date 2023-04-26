@@ -1,0 +1,80 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>短信各场景发送量平台统计。
+            <li>
+            <li><a href="https://console.cloud.tencent.com/sms/smsportal/1400100907/0/10" target="_blank"><i
+                    class="fa fa-send-o"></i> 腾讯云短信控制台统计分析</a>
+            <li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+        {foreach $type as $k => $v}
+        <li class="{$k==1?'layui-this':''}" id="{$k}">{$v}</li>
+        {/foreach}
+    </ul>
+    <div class="layui-tab-content"></div>
+</div>
+{foreach $type as $k => $v}
+<div class="show {$k}" {$k==1?'':'hidden'}>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card" style="padding: 0 20px;">
+                <div class="layui-card-header">{$v}</div>
+                <div class="layui-card-body">
+                    <div id="s_{$k}" class="chartShow" style="height: 500px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/foreach}
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/js/common/echarts.min.js" type="text/javascript"></script>
+<script src="__RES__/js/charts/chartCommon.js" type="text/javascript"></script>
+<script>
+    function getData(id) {
+        main.ajax({
+            data: {'type': id}, callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message, {time: 2000});
+                    return false;
+                }
+                chart.show('s_' + id, 'smsCount', res.data);
+            }
+        });
+    }
+    getData(1);
+    $(document).on('click', '.layui-tab-title li', function () {
+        $('.show').hide();
+        var id = $(this).attr('id');
+        $('.' + id).show();
+        getData(id);
+    });
+</script>
+{/block}
+{block name='highSearch'}{/block}

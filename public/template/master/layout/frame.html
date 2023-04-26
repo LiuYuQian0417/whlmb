@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="referrer" content="never">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+    {block name='mainCss'}
+    <!--公共必须CSS-->
+    <link href="__RES__/font/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="__PUBLIC_RES__/upload/cropper.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="__PUBLIC_RES__/upload/dialog.css" rel="stylesheet" type="text/css" media="all"/>
+    <link href="__PUBLIC_RES__/multiUpload/dialog.css" rel="stylesheet" type="text/css" media="all"/>
+    <!--<link href="__RES__/css/common/bootstrap.min.css"  rel="stylesheet" type="text/css" />-->
+    {/block}
+<!--    <style>-->
+<!--        *{-->
+<!--            cursor: url("/public_resource/image/pointer.png"),default !important;-->
+<!--        }-->
+<!--    </style>-->
+</head>
+<body class="childrenBody ">
+{block name='body'}
+<!--主体内容-->
+{block name='breadcrumb'}
+<!--面包屑导航-->
+<div style="position: fixed;top:0;left:15px;background: #fff;z-index: 99999;right: 15px;">
+    <fieldset class="layui-elem-field layui-field-title" style="margin: 20px 0 0;">
+        <legend>
+        <span class="layui-breadcrumb" style="visibility: visible">
+
+            {gt name=":count($breadcrumbArr)" value="3"}
+<!--            <a href="{:url_logs_up('master_logs')}"><i class="fa fa-reply fa-lg"></i></a>-->
+
+                <a href="javascript:main.jumpFour('{:url_logs_up('master_logs')}')"><i
+                        class="fa fa-reply fa-lg"></i></a>
+            {/gt}
+            {foreach name='$breadcrumbArr' item='v'}
+                <a><cite>{$v}</cite></a>
+            {/foreach}
+        </span>
+        </legend>
+    </fieldset>
+</div>
+<!--面包屑导航end-->
+{/block}
+<!--图片上传 start-->
+{block name='imgUpload'}
+<div class="imageUploadDialog" id="imageUploadDialog">
+    <!--图片处理区-->
+    <div class="handleArea">
+        <img id="imageHandle" alt="imageHandle">
+    </div>
+    <!--图片操作区-->
+    <div class="operationArea">
+        <p class="title">预览</p>
+        <div id="imageUploadPreview" class="imageUploadPreview"></div>
+        <div class="button-group">
+            <button id="imageRotateLeft" class="layui-btn layui-icon layui-icon-refresh-1" style="transform: rotateY(180deg)"></button>
+            <button id="imageRotateRight" class="layui-btn layui-icon layui-icon-refresh-1"></button>
+        </div>
+        <div class="button-group">
+            <button class="layui-btn" type="button" id="submitImage">裁剪</button>
+        </div>
+    </div>
+</div>
+<!--图片预览-->
+<div id="imageView" class="imageView">
+    <img>
+</div>
+{/block}
+<!--图片上传 end-->
+
+<!--多图上传 start-->
+{block name='multiImgUpload'}
+<div class="imageUploadDialog" id="multiImgUploadDialog">
+    <!--图片处理区-->
+    <div class="handleArea">
+        <img id="multiImgHandle" alt="imageHandle">
+    </div>
+    <!--图片操作区-->
+    <div class="operationArea">
+        <p class="title">预览</p>
+        <div id="multiImgUploadPreview" class="imageUploadPreview"></div>
+        <div class="button-group">
+            <button id="multiImgRotateLeft" class="layui-btn layui-icon layui-icon-refresh-1" style="transform: rotateY(180deg)"></button>
+            <button id="multiImgRotateRight" class="layui-btn layui-icon layui-icon-refresh-1"></button>
+        </div>
+        <div class="button-group">
+            <button class="layui-btn" type="button" id="multiImgSubmit">裁剪</button>
+        </div>
+    </div>
+</div>
+<!--图片预览-->
+<div id="multiImgView" class="imageView">
+    <img>
+</div>
+{/block}
+<!--多图上传 end-->
+{/block}
+
+{block name='js'}
+<!--外部引用JS-->
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/js/common/jquery.cookie.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/js/common/jquery.from.js"></script>
+<script src="__RES__/js/common/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<script src="__PUBLIC_RES__/upload/cropper.js"></script>
+<script src="__PUBLIC_RES__/upload/main.js"></script>
+<script src="__PUBLIC_RES__/multiUpload/main.js"></script>
+<!--end-->
+{/block}
+<!--侧边栏开始-->
+{block name='sidebar'}
+<link href="__RES__/css/common/nav.css" rel="stylesheet" type="text/css" media="all"/>
+<div class="J-global-toolbar">
+    <div class="toolbar-wrap J-wrap">
+        <div class="toolbar">
+            <div class="toolbar-panels J-panel">
+                <!--高级搜索-->
+                <div style="visibility: hidden;" class="J-content toolbar-panel tbar-panel-cart toolbar-animate-out">
+                    <h3 class="tbar-panel-header J-panel-header">
+                        <span class="title"><em class="title">高级搜索</em></span>
+                    </h3>
+                    <form class="layui-form" enctype="multipart/form-data">
+                        <div class="tbar-panel-main">
+                            <div class="tbar-panel-content J-panel-content">
+                                <div id="J-cart-render">
+                                    <div class="tbar-cart-list">
+                                        <div class="tbar-cart-item">
+                                            <div class="jtc-item-promo">
+                                                <div class="promo-text">模糊搜索关键字</div>
+                                            </div>
+                                            <div class="jtc-item-goods">
+                                                <input type="text" name="username" placeholder="请输入搜索关键字"
+                                                       autocomplete="off" class="layui-input SearchInp">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tbar-panel-footer J-panel-footer">
+                            <div class="tbar-checkout">
+                                <button class="layui-btn layui-btn-primary layui-btn-sm">提交</button>
+                                <button class="layui-btn layui-btn-primary layui-btn-sm">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!--高级搜索结束-->
+                <!--消息开始-->
+                <div style="visibility: hidden;" data-name="follow" class="J-content toolbar-panel tbar-panel-follow">
+                    <h3 class="tbar-panel-header J-panel-header">
+                        <a href="#" target="_blank" class="title"><em class="title">消息中心</em> </a>
+                    </h3>
+                    <div class="tbar-panel-main">
+                        <div class="tbar-panel-content J-panel-content">
+                            <div class="tbar-tipbox2">
+                                <div class="tip-inner"><i class="i-loading"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tbar-panel-footer J-panel-footer"></div>
+                </div>
+                <!--消息结束-->
+                <div style="visibility: hidden;" class="J-content toolbar-panel tbar-panel-history toolbar-animate-in">
+                    <h3 class="tbar-panel-header J-panel-header">
+                        <a href="javascript:void(0);" target="_blank" class="title"><em class="title">我的足迹</em> </a>
+                    </h3>
+                    <div class="tbar-panel-main">
+                        <div class="tbar-panel-content J-panel-content">
+                            <div class="jt-history-wrap">
+
+                                <a href="#" class="history-bottom-more" target="_blank">查看更多足迹商品 &gt;&gt;</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tbar-panel-footer J-panel-footer"></div>
+                </div>
+            </div>
+            <div class="toolbar-header"></div>
+            <div class="toolbar-tabs J-tab">
+                {block name='highSearch'}
+                <div class="toolbar-tab tbar-tab-cart">
+                    <i class="tab-ico"></i>
+                    <em class="tab-text ">高级搜索</em>
+                </div>
+                {/block}
+                <div class=" toolbar-tab tbar-tab-follow">
+                    <i class="tab-ico"></i>
+                    <em class="tab-text">消息中心</em>
+                    <span class="tab-sub J-count">1</span>
+                </div>
+                <div class=" toolbar-tab tbar-tab-history ">
+                    <i class="tab-ico"></i>
+                    <em class="tab-text">我的足迹</em>
+                    <span class="tab-sub J-count hide">0</span>
+                </div>
+            </div>
+            <div class="toolbar-footer">
+                <div class="toolbar-tab tbar-tab-top"><a href="javascript:void(0);"> <i class="tab-ico "></i> <em
+                        class="footer-tab-text">顶部</em> </a></div>
+                <div class=" toolbar-tab tbar-tab-feedback"><a href="javascript:void(0);" target="_blank"> <i
+                        class="tab-ico"></i> <em class="footer-tab-text ">反馈</em> </a></div>
+            </div>
+            <div class="toolbar-mini"></div>
+        </div>
+        <div id="J-toolbar-load-hook"></div>
+    </div>
+</div>
+<script type="text/javascript" src='__RES__/js/common/nav.js'></script>
+{/block}
+<!--侧边栏结束-->
+{block name='form'}
+<!--<script src="__RES__/js/common/jquery.from.js"></script>-->
+<!--<script src="__RES__/js/common/Validform_v5.3.2_ncr_min.js"></script>-->
+{/block}
+{block name='script'}
+<!--内联JS-->
+<script>
+    //操作提示
+    $(document).on('click', '#explanationZoom', function () {
+        var flag = $(this).hasClass('shopUp'), that = $(this);
+        that.prop('title', flag ? '收起提示' : '提示相关设置操作时应注意的要点');
+        that.parents('.explanation').animate({
+            width: flag ? (parseInt($(this).parents(".content").width()) - 28) : '125'
+        }, 300, function () {
+            var ul = $(this).find('ul');
+            flag ? ul.show() : ul.hide();
+            that.toggleClass('shopUp', !flag).parent('.ex_tit').css('margin-bottom', flag ? 10 : 0);
+        });
+    });
+    $('.toolbar-wrap').css('height', window.innerHeight + 'px');
+    $(window).on('scroll', function () {
+        $('.toolbar-wrap').css('top', $(document).scrollTop())
+    });
+    //导航菜单切换
+    $(document).ready(function () {
+        try {
+            var self_url = document.location.toString();
+            var arrUrl = self_url.split("//");
+            var start = arrUrl[1].indexOf("/");
+            var _relUrl = relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+            if (_relUrl.indexOf("?") != -1) {
+                relUrl = _relUrl.split("?")[0];
+            }
+            var url = relUrl.substring(1);
+            var Y_data_param = parent.window.Y_data_param[url];
+            var param = Y_data_param.topK + '|' + Y_data_param.leftK + '|' + _relUrl.substring(1);
+            window.parent.CMFCMenuBar(param);
+        }catch (e) {
+
+        }
+    });
+</script>
+{/block}
+</body>
+</html>

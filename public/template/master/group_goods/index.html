@@ -1,0 +1,176 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('group_activity/index')">拼团活动</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('group_goods/index')">拼团商品</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('group_classify/index')">商品分类</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、显示平台所有开团信息，可针对开团信息查看详情；</span></li>
+            <li><span>2、进行中的拼团活动不可以删除，设置开团商品需要谨慎；</span></li>
+            <li><span>3、同一商品只能参与一次拼团，同一个商品不可能有两种以上拼团活动；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+    <form class="layui-form">
+        <div class="common-head">
+            <div class="fl">
+                <a href="javascript:void(0);" class="left" onClick="main.jumpFour('group_goods/create')">
+                    <div class="fbutton">
+                        <div class="add" title="添加商品"><span><i class="fa fa-plus"></i> 添加拼团商品</span></div>
+                    </div>
+                </a>
+                <div class="refresh">
+                    <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i
+                            class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                    <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+                </div>
+                <div class="inquire_search" >
+                    <div class="imitate_select">
+                        <select name="group_classify_id" class="cite ps-container">
+                            <option value="-1">请选择商品分类</option>
+
+                            {volist name='classify_list' id='classify_list'}
+                            <option
+                                    {eq name=":input('group_classify_id','-1')" value="$classify_list.group_classify_id" }selected{/eq}
+                            {eq name="item.parent_id|default=''" value="$classify_list.group_classify_id" }selected{/eq}
+                            value="{$classify_list.group_classify_id}"
+                            >{for start="1" end="$classify_list.level" }　{/for}{$classify_list.title}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="imitate_select" {eq name=":input('type', 0)" value="0"} hidden {/eq}>
+                        <select name="status" class="cite ps-container">
+                            <option value="-1">审核状态</option>
+                            <option value="2" {eq name=":input('status')" value="2" }selected{/eq}>待审核</option>
+                            <option value="1" {eq name=":input('status')" value="1" }selected{/eq}>审核已通过</option>
+                            <option value="0" {eq name=":input('status')" value="0" }selected{/eq}>审核未通过</option>
+                        </select>
+                    </div>
+                    <div class="inquire">
+                        <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入拼团商品名称"
+                               value="{:input('get.keyword')}"
+                               autocomplete="off">
+                        <!--<input type="submit" class="btn" name="secrch_btn" value="">-->
+                    </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+                </div>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+    </form>
+    <!--列表开始-->
+    <div class="layui-form">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>
+                <th>编号</th>
+                <th>名称</th>
+                {eq name="single_store" value="1"}<th>店铺</th>{/eq}
+                <th>拼购价</th>
+                <th>原价</th>
+                <th>库存</th>
+                <th>几人团</th>
+                <th>购买人次</th>
+                <th>参与活动时间</th>
+                <th>活动状态</th>
+                <th>审核状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {foreach name='data' item='v'}
+            <tr>
+                <td><input type="checkbox" value="{$v.group_goods_id}" {if condition="$v.ActivityText eq '进行中'"} disabled {else/}class="chk" lay-filter="chk"{/if} title="" lay-skin="primary"/>
+                </td>
+                <td>{$v.group_goods_id}</td>
+                <td>{$v.goods_name?:'未设置'}</td>
+                {eq name="single_store" value="1"}<td>{$v.store_name}</td>{/eq}
+                <td>{$v.group_price}</td>
+                <td>{$v.shop_price}</td>
+                <td>{$v.goods_number}</td>
+                <td>{$v.group_num}人团</td>
+                <td>{$v.CountText}</td>
+                <td>{$v.up_shelf_time}-{$v.down_shelf_time}</td>
+                <td>{$v.ActivityText}</td>
+                <td>{$v.StatusText}</td>
+                <td>
+                    {if condition="$v.status eq 1 and $v.ActivityText eq '进行中'"}
+                    <a class="btn_edit" onclick="main.jumpFour('group_goods/view?id={$v.group_goods_id}')"><i class="fa fa-eye"></i>查看</a>
+                    {elseif condition="$v.status eq 2"}
+                    <a class="btn_edit" onclick="main.jumpFour('group_goods/edit?id={$v.group_goods_id}')"><i class="fa fa-edit"></i>审核</a>
+                    <a class="btn_trash" onclick="main.destroy('/group_goods/destroy','{$v.group_goods_id}')"><i
+                            class="fa fa-trash-o"></i>删除</a>
+                    {else/}
+                    <a class="btn_edit" onclick="main.jumpFour('group_goods/edit?id={$v.group_goods_id}')"><i class="fa fa-edit"></i>编辑</a>
+                    <a class="btn_trash" onclick="main.destroy('/group_goods/destroy','{$v.group_goods_id}')"><i
+                            class="fa fa-trash-o"></i>删除</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <div class="left left_all">
+                        <div class="allCheck">
+                            <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                        </div>
+                        <a class="btn_trash" onclick="main.destroy('/group_goods/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                    </div>
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    //重定向本身
+    function reloadSelf(condition) {
+        var param = '', key = Object.keys(condition);
+
+        if (key.length > 0) {
+            for (var x in condition) {
+                param += '&' + x + '=' + condition[x];
+            }
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+</script>
+{/block}

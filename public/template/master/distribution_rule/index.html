@@ -1,0 +1,207 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/map.css" rel="stylesheet" type="text/css"/>
+<style>
+    .picShow > .pic {
+        display: none
+    }
+
+    .picShow > .pic:first-child {
+        display: block
+    }
+
+    .picShow > .pic a {
+        position: relative;
+        width: 150px;
+    }
+
+    .picShow > .pic img {
+        width: 150px;
+        display: block;
+    }
+
+    #tooltip {
+        position: absolute;
+        width: 300px;
+        border: 1px solid #f4f4f4;
+        background: #fff;
+        color: #fff;
+        display: none
+    }
+
+    #tooltip img {
+        width: 100%
+    }
+
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+            <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>1、设置分销商规则后，如果开启“注册后用户自动成为分销商”开关后，购买指定商品与累计消费选项将无法设置，如果关闭全部标签，会员需要通过前台申请，审核通过后才能成为分销商；</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--操作提示end-->
+    <div class="tabs_info" id="tab" style="margin-top: 15px;">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销商规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/ratio')">分佣规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/explainSet')">说明设置</a></li>
+        </ul>
+    </div>
+    <!--店铺基本信息-->
+    <div class="contentShell">
+
+        <label class="layui-form-label stepTips bank_type"><i class="fa fa-dot-circle-o"></i> 无需下单</label>
+        <!--手动申请成为分销商-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">手动申请成为分销商：</label>
+            <div class="layui-input-block">
+                <input title type="checkbox" data-value="distribution" class="distribution" id="distribution_manual" lay-filter="changeStatus"
+                       {notempty name=":env('distribution_manual')" }checked{/notempty} value="1"
+                data-id="distribution_manual" lay-skin="switch" lay-text="开|关">
+                <br>
+                <b>会员手动申请后，需要在分销商审核中通过审核，才可成为分销商  -  <a href="javascript:void(0);" onclick="distributor()" style="color: #0c82c6">分销商申请设置</a></b>
+            </div>
+        </div>
+
+        <!--注册后用户自动成为分销商-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">注册后用户自动成为分销商：</label>
+            <div class="layui-input-block">
+                <input title type="checkbox" data-value="distribution" class="distribution" id="distribution_register" lay-filter="changeStatus"
+                       {notempty name=":env('distribution_register')" }checked{/notempty} value="1"
+                data-id="distribution_register" lay-skin="switch" lay-text="开|关">
+                <br>
+                <b>开启开关后，注册成为会员后，自动升级为分销商，如果关闭，会员需要满足成为分销商条件或者在商城代言专区申请才可成为分销商</b>
+            </div>
+        </div>
+
+        <label class="layui-form-label stepTips bank_type"><i class="fa fa-dot-circle-o"></i> 需要下单</label>
+        <!--购买指定商品即可成为分销商-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">购买指定商品成为分销商：</label>
+            <div class="layui-input-block">
+                <input title type="checkbox" data-value="distribution2" class="distribution2" id="distribution_buy" lay-filter="changeStatus"
+                       {notempty name=":env('distribution_buy')" }checked{/notempty} value="1"
+                data-id="distribution_buy" lay-skin="switch" lay-text="开|关">
+            </div>
+            <b style="margin-left: 20%">商品设定在商品管理中可批量设置  -  <a href="javascript:void(0);" onclick="main.jumpFour('goods/index')" style="color: #0c82c6">进入商品管理</a></b>
+        </div>
+
+        <!--累计消费-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">累计消费成为分销商：</label>
+            <div class="layui-input-block">
+                <input type="text" name="distribution_accumulative_price"
+                       id="distribution_accumulative_price0"
+                       oninput="main.triggerText('0','distribution_accumulative_price','/distribution_rule/editVal')"
+                       style="width: 100px;float: left;margin-right: 2%"
+                       value="{:env('distribution_accumulative_price',0)}" class="layui-input">
+                <input title type="checkbox" data-value="distribution2" class="distribution2" id="distribution_accumulative"
+                       lay-filter="changeStatus" {notempty name=":env('distribution_accumulative')" }checked{/notempty}
+                value="1" data-id="distribution_accumulative" lay-skin="switch" lay-text="开|关">
+            </div>
+            <b style="margin-left: 20%">平台累计消费达到要求后，即可成为分销商</b>
+        </div>
+
+        <label class="layui-form-label stepTips bank_type"><i class="fa fa-dot-circle-o"></i> 分销商规则</label>
+        <!--购买指定商品即可成为分销商-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">分销商自购是否分佣：</label>
+            <div class="layui-input-block">
+                <input title type="checkbox" lay-filter="changeStatus" {notempty name=":env('distribution_commission')"}checked{/notempty} value="1" data-id="distribution_commission" lay-skin="switch" lay-text="开|关">
+            </div>
+            <b style="margin-left: 20%">分销商自己购买是否享受一级分佣</b>
+        </div>
+    </div>
+
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{
+        selector: 'switch(changeStatus)',
+        callback: function (data) {
+
+            if(data.elem.getAttribute('data-id') != 'distribution_commission'){
+
+                $(".distribution").next().prop("class", "layui-unselect layui-form-switch").find("em").text("关");
+
+                if(data.elem.getAttribute('data-value') == 'distribution'){
+                    $(".distribution2").next().prop("class", "layui-unselect layui-form-switch").find("em").text("关");
+                }else{
+                    $(".distribution").next().prop("class", "layui-unselect layui-form-switch").find("em").text("关");
+                }
+
+                if(data.elem.checked == true){
+                    $("#" + data.elem.id).next().prop("class", "layui-unselect layui-form-switch layui-form-onswitch").find("em").text("开");
+                }else{
+                    $("#" + data.elem.id).next().prop("class", "layui-unselect layui-form-switch").find("em").text("关");
+                }
+
+            }
+
+
+            main.ajax({
+                data: {parameter: data.elem.getAttribute('data-id'), data: data.elem.checked ? 1 : 0},
+                url: '/distribution_rule/editVal'
+            });
+
+            setTimeout(function () {
+                location.reload();
+            }, 500);
+
+        }
+    }]);
+    main.valid('.layui-form');
+
+    // 分销商申请设置 - Joy
+    function distributor() {
+        layer.open({
+            type: 2,
+            title: '分销商申请设置',
+            shadeClose: true,
+            shade: 0.2,
+            area: ['50%', '600px'],
+            content: ['/distribution_rule/distributor.html', 'no']
+        });
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

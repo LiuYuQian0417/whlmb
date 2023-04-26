@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/registered.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/color.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css"/>
+    <script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/Validform_v5.3.2_ncr_min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/jquery.from.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/layui/layui.js"></script>
+    <script src="__RES__/layui/lay/modules/layer.js"></script>
+    <script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="registered">
+    <div class="top">
+        <div class="top-center">
+            <a href="javascript:;">
+                <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            </a>
+            <span>欢迎注册</span>
+
+            <div class="top-right">
+                已有账号？
+                <a class="primary-color" href="{:url('pc2.0/login/index')}">
+                    请登录>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="registered-box">
+        <div class="registered-box-center">
+            <div class="progress">
+                <!--第一步-->
+                <div class="step active">
+                    <div class="progress-box">
+                  <span class="first primary-background-color border-color">
+                      <i>1</i>
+                  </span>
+                        <p class="primary-color">
+                            快速注册
+                        </p>
+                    </div>
+                </div>
+                <!--第二步-->
+                <div class="step">
+                    <div class="bor">
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class="triangle">
+                    <i class="color"></i>
+                    <i class="withe"></i>
+              </span>
+                    </div>
+                    <div class="progress-box">
+                  <span class="first">
+                    2
+                  </span>
+                        <p>
+                            设置密码
+                        </p>
+                    </div>
+                </div>
+
+                <!--第三步-->
+                <div class="step">
+                    <div class="bor">
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class=""></span>
+                        <span class="triangle">
+                    <i class="color"></i>
+                    <i class="withe"></i>
+              </span>
+                    </div>
+                    <div class="progress-box">
+                  <span class="first">
+                    3
+                  </span>
+                        <p>
+                            注册成功
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <form action="{:url('pc2.0/sms/checkCodeInvalid')}" id="register" method="post">
+
+
+                <!--第一步输入框-->
+                <div class="input-group">
+                    <!--手机号-->
+                    <div class="input-box">
+                        <div class="area-code">
+                            <a href="javascript:;">
+                                大陆 0086
+                            </a>
+                        </div>
+                        <input type="tel" name="phone" datatype="m" nullmsg="请填写手机号" errormsg="请填写手机号" maxlength="11">
+                    </div>
+                    <!--验证码-->
+                    <div class="input-box">
+                        <input type="tel" name="code" datatype="/^\d{6}$/"  nullmsg="请填写验证码" errormsg="请填写正确验证码"   maxlength="6">
+                        <div class="get-code">
+                            <a href="javascript:check_num();" id="yzm">
+                                获取验证码
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!--第一步输入框结束-->
+
+                <input type="text" hidden="hidden" datatype="*" name="type" value="1"/>
+                <input type="submit" class="btn primary-background-color" value="下一步"/>
+
+                <div class="bottom">
+                    <div class="agreement">
+                        <input type="checkbox" hidden datatype="*" nullmsg="请同意用户协议"  name="agreement" id="check" value="1"/>
+                        <label for="check">
+                            <span class="bor"></span>
+                            <img src="__RES__/imgs/my/sc.png" alt="">
+                            同意
+                        </label>
+                        <a href="javascript:agreement(17,'用户协议');" class="primary-color">
+                            用户协议
+                        </a>
+                    </div>
+
+                    <!--<div class="service">-->
+                        <!--<img src="__RES__/imgs/registerd/service.png" alt="">-->
+                        <!--遇到问题？您可以 <a href="javascript:;" class="primary-color">联系客服</a>-->
+                    <!--</div>-->
+                </div>
+
+                <!--注册成功-->
+
+
+            </form>
+        </div>
+    </div>
+
+
+</div>
+<!--<div class="bottom-formation" style="background: #fff;">-->
+    <!--<div class="bottom-formation-center">-->
+        <!--<p>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+            <!--<span>|</span>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+            <!--<span>|</span>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+            <!--<span>|</span>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+        <!--</p>-->
+        <!--<p>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+            <!--<span>|</span>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+            <!--<span>|</span>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+            <!--<span>|</span>-->
+            <!--技术支持： <a class='primary-color-hover' href="">哈尔滨龙采科技集团</a>-->
+        <!--</p>-->
+    <!--</div>-->
+<!--</div>-->
+<script type="text/javascript">
+    $('.agreement label').click(function () {
+        if ($(this).hasClass('checked')) {
+            $(this).removeClass('checked')
+        } else {
+            $(this).addClass('checked')
+        }
+    })
+
+
+
+    //发送验证码
+    function check_num() {
+        var tel = $("[name='phone']").val();
+        if (tel == '') {
+            layer.msg('请输入手机号！');
+            return;
+        }
+        if (!(/^1(3|4|5|6|7|8|9)\d{9}$/.test(tel))) {
+            layer.msg('手机号格式不正确！');
+            return;
+        }
+        $.ajax({
+            url: "{:url('pc2.0/sms/send')}",
+            dataType: 'json',
+            type: 'post',
+            data: {'phone': tel, 'type': 1},
+            success: function (t) {
+                if (t.code != 0) {
+                    layer.msg(t.message);
+                } else {
+                    count_down();
+                }
+            }
+        })
+    }
+
+    //验证码倒计时
+    function count_down() {
+        var num = 60;
+        var verif = $('#yzm');
+        var timer = setInterval(function () {
+            verif.text(num + '秒');
+            if (num <= 60 && num >= 1) {
+                verif.addClass('.disable');
+                verif.removeAttr('href');
+            } else {
+                verif.text('重新获取验证码');
+                window.clearInterval(timer);
+                verif.attr("href", 'javascript:check_num();');
+            }
+            num--;
+        }, 1000);
+    }
+
+    main.valid({'select':'#register','call_back':function () {
+        var tel = $("[name='phone']").val();
+        var code = $("[name='code']").val();
+        window.sessionStorage.setItem('register_one_phone', tel);
+        window.sessionStorage.setItem('register_one_code'.tel, code);
+    }});
+</script>
+
+</body>
+</html>

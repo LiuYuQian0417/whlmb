@@ -1,0 +1,373 @@
+{extend name='public/my_header' /}
+{block name='content_css'}
+<!--猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<style>
+    .layui-layer-btn .layui-layer-btn0{
+        background:#EA5413!important;
+        border-color:#EA5413!important;
+
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="index-box">
+	<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+	<!--我的页面左侧公共部分结束-->
+	<!-- 我的右侧 -->
+	<div class="index-right">
+		<div>
+			<div class="my-order">
+				<div class="my-order-top">
+					<div class="my-order-top-con">
+						<div class="my-avatar">
+							<div class="avatar">
+								<img src="{$member_info.avatar|default='__RES__/imgs/user_default.png'}" onerror="">
+								<div class="level">
+                                    {$result.rank_name}
+								</div>
+							</div>
+							<div style="overflow: hidden;margin-top: 25px">
+								<p class="name" style="display: inline-block; width: 100px; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;margin-top: 0px;font-size: 16px;" >
+									{$member_info.nickname}
+								</p>
+								{notempty name='result.distribution'}
+								<span style="padding: 0px 5px;background:rgb(187,187,187);color: #fff;font-size: 12px;border-radius: 3px;height: 20px;line-height: 20px;display: inline-block;position: relative;top: -4px;">
+                                            v{$result.distribution.level_pos}{$result.distribution.level_title}
+                                        </span>
+                                {/notempty}
+                            </div>
+                            {eq name="result.distribution_status" value="1"}
+                            <div class="my-avatar-bottom">
+                                <div class="my-avatar-bottom-left">
+                                    {empty name='result.distribution'}
+                                    <p >成为代言人</p>
+                                    <p>无需成本坐等收钱</p>
+                                    {else/}
+                                    <p >进入代言专区</p>
+                                    <p>代言专区商品更优惠</p>
+                                    {/empty}
+                                </div>
+                                <a style="width: auto;padding: 0px 8px;cursor:pointer;">
+                                    {empty name='result.distribution'}<span  onclick="tobe_distributor_rule()">成为代言></span>
+                                    {else/}<span onclick="main.jump({'url':'/pc2.0/distribution_level/my_level'})">代言中心></span>{/empty}
+                                </a>
+                            </div>
+                            {else/}
+                            <div class="my-avatar-bottom">
+                                <div class="my-avatar-bottom-left">
+                                    <p>会员升级更优惠</p>
+                                    <p>提升成长值升级会员</p>
+                                </div>
+                                <a href="JavaScript:;" style="width: auto;padding: 0px 8px;cursor:pointer;">
+                                    {empty name='result.distribution'}<span onclick="main.jump({'url':'/pc2.0/my/task'})">成长值</span>>{else/}{/empty}
+                                </a>
+                            </div>
+                            {/eq}
+                        </div>
+                        <div class="my-wallet">
+                            <div class="title">
+                                <span>我的钱包</span>
+                                <a href="{:url('/pc2.0/recharge/balance_record')}">更多 <img src="__RES__/imgs/my/next.png" alt=""></a>
+                            </div>
+
+                            <div class="wallet-list">
+                                {if $function_status.is_balance==1}
+                                <div class="list">
+                                    <h3>{$member_info.usable_money}</h3>
+                                    <p>账户余额</p>
+                                    {if $function_status.is_recharge==1}
+                                    <a href="{:url('/pc2.0/recharge/index')}">
+                                        充值
+                                    </a>
+                                    {/if}
+                                </div>
+                                {/if}
+                                {if $function_status.is_coupon==1}
+                                <div class="list">
+                                    <h3>{$result.coupon}</h3>
+                                    <p>优惠券</p>
+                                    <a href="{:url('/pc2.0/coupon/get')}">
+                                        领取优惠券
+                                    </a>
+                                </div>
+                                {/if}
+                                {if $function_status.is_red_packet==1}
+                                <div class="list">
+                                    <h3>{$result.red_packet}</h3>
+                                    <p>红包</p>
+                                    <!--<a href="">-->
+                                        <!--领取红包-->
+                                    <!--</a>-->
+                                </div>
+                                {/if}
+                                <div class="list">
+                                    <h3>{$member_info.pay_points}</h3>
+                                    <p>积分</p>
+                                    <a href="{:url('/pc2.0/integral/index')}">
+                                        兑换商品
+                                    </a>
+                                </div>
+                                <div class="list">
+                                    <h3>{$result.card}</h3>
+                                    <p>银行卡</p>
+                                    <a href="{:url('/pc2.0/member_card/index')}">
+                                        银行卡
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 我的订单中部 -->
+                <div class="my-order-center-section">
+                    <div class="center-section-left">
+                        <div class="title">
+                            <span>我的订单</span>
+                        </div>
+                        <div class="mune-list">
+                            <div class="list">
+                                <a href="javascript:main.jump({'url':'/pc2.0/order/order_list.html?status=0'})">
+                                    <img src="__RES__/imgs/my/dfk.png" alt="">
+                                    <p>待付款</p>
+                                </a>
+                            </div>
+
+                            <div class="list">
+                                <a href="javascript:main.jump({'url':'/pc2.0/order/order_list.html?status=2'})">
+                                    <img src="__RES__/imgs/my/dsh.png" alt="">
+                                    <p>待收货</p>
+                                </a>
+                            </div>
+
+                            <!--<div class="list">-->
+                                <!--<a href="javascript:main.jump({'url':'/pc2.0/order/order_list.html?status=2'})">-->
+                                    <!--<img src="__RES__/imgs/my/dzt.png" alt="">-->
+                                    <!--<p>待自提</p>-->
+                                <!--</a>-->
+                            <!--</div>-->
+
+                            <div class="list">
+                                <a href="javascript:main.jump({'url':'/pc2.0/order/order_list.html?status=3'})">
+                                    <img src="__RES__/imgs/my/dpj.png" alt="">
+                                    <p>待评价</p>
+                                </a>
+                            </div>
+
+                            <div class="list">
+                                <a href="javascript:main.jump({'url':'/pc2.0/order/orderaftersalelist.html'})">
+                                    <img src="__RES__/imgs/my/dhh.png" alt="">
+                                    <p>退货/换货</p>
+                                </a>
+                            </div>
+
+                            <div class="list">
+                                <a href="javascript:main.jump({'url':'/pc2.0/order/order_list.html'})">
+                                    <img src="__RES__/imgs/my/more.png" alt="">
+                                    <p>全部订单</p>
+                                </a>
+                            </div>
+                        </div>
+                        <!--订单为空时-->
+                        {empty name="result.my_order"}
+                        <div class="order-empty" >
+                            <img src="__RES__/imgs/orderemty.png" alt="">
+                            <p>暂无订单</p>
+                            <span>“快点忙里偷闲下一单吧”</span>
+                        </div>
+                        {else/}
+                        <div class="order">
+                            {volist name="result.my_order" id="my_order_data"}
+                            <div class="order-list">
+                                <div class="order-img">
+                                    <img onclick="jump_goods('{$my_order_data.order_goods.0.goods_id}')" src="{$my_order_data.order_goods.0.file}">
+                                    <div class="order-status">
+                                        {switch $my_order_data.status}
+                                        {case  0}<p class="status">待付款</p>{/case}
+                                        {case  1}<p class="status">待配送</p>{/case}
+                                        {case  2}<p class="status">配送中</p>{/case}
+                                        {case  3}<p class="status">已完成</p>{/case}
+                                        {case  4}<p class="status">已关闭</p>{/case}
+                                        {case  5}<p class="status">退款中</p>{/case}
+                                        {case  6}<p class="status">已关闭</p>{/case}
+                                        {default /}状态异常
+                                        {/switch}
+                                        <p class="price primary-color">￥{$my_order_data.order_goods.0.single_price}</p>
+                                    </div>
+                                </div>
+                                <div class="options">
+                                    <a href="/pc2.0/order/order_details.html?order_attach_id={$my_order_data.order_attach_id}">查看详情</a>
+                                    <!--配送中  已完成  已关闭  时显示-->
+                                    {eq name="$my_order_data.distribution_type" value="3"}
+                                    {in name="$my_order_data.status" value="2,3,4"}
+                                    <div style="display: inline-block">
+                                        <span>|</span>
+                                        <a href="javascript:main.express_view({'express_value':'{$my_order_data.express_value}','express_number':'{$my_order_data.express_number}','order_id':'{$my_order_data.order_attach_id}','type':'order'});">
+                                            物流跟踪
+                                        </a>
+                                    </div>
+                                    {/in}
+                                    {/eq}
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                        {/empty}
+                    </div>
+                    <div class="center-section-right">
+                        <div class="center-section-right-top">
+                            <div class="title">
+                                <span>我的关注</span>
+                            </div>
+                            <div class="my-attention-list">
+                                <a href="{:url('pc2.0/goods/collect_goods_list')}">
+                                    <p class="num">{$result.collect_goods}</p>
+                                    <p>商品收藏</p>
+                                </a>
+                                {if $function_status.one_or_more===true}
+                                <a href="{:url('pc2.0/store/collect_store_list')}">
+                                    <p class="num">{$result.collect_store}</p>
+                                    <p>店铺关注</p>
+                                </a>
+                                {/if}
+                                <a href="{:url('pc2.0/home/article_list')}">
+                                    <p class="num">{$result.collect_article}</p>
+                                    <p>内容收藏</p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="center-section-right-bottom">
+                            <div class="title">
+                                <span>浏览记录</span>
+                                <a href="javascript:;" onclick="main.jump({'url':'/pc2.0/record_goods/index'})">更多 <img src="__RES__/imgs/my/next.png" alt=""></a>
+                            </div>
+                            {empty name="result.record_goods"}
+                            <!--浏览记录为空时-->
+                            <div class="browsing-emtry" v-if="info.record_goods.length==0">
+                                <img src="__RES__/imgs/my/zwlljl.png" alt="">
+                                <p>暂无浏览</p>
+                            </div>
+                            {else/}
+                            <div class="swiper" style="padding: 0px 15px;">
+                                <!-- Swiper -->
+                                <div class="swiper-container browse-box">
+                                    <div class="swiper-wrapper">
+                                        {volist name='result.record_goods' id='record_goods_data'}
+                                        <div class="swiper-slide">
+                                            <a href="javascript:jump_goods('{$record_goods_data.goods_id}')">
+                                                <img src="{$record_goods_data.file}" />
+                                            </a>
+                                        </div>
+                                        {/volist}
+                                    </div>
+                                    <!-- Add Pagination -->
+                                    <div class="swiper-pagination"></div>
+                                </div>
+                            </div>
+                            {/empty}
+                        </div>
+                    </div>
+                </div>
+                <!-- 猜你喜欢 -->
+                <div class="guess">
+                    <!-- 猜你喜欢 -->
+                    <div class="guess-like">
+                        <div class="title">
+                            <span>猜你喜欢</span>
+                            <div onclick="main.new_like({'select':'.guess-like-list'});">换一换 <img src="__RES__/imgs/hyh.png" alt=""></div>
+                        </div>
+                        <div class="guess-like-list">
+                            {volist name='recommend_list' id='recommend_list_data'}
+                            <div class="list" style="width: 25%">
+                                <a href="javascript:jump_goods('{$recommend_list_data.goods_id}')">
+                                    <img src="{$recommend_list_data.file}" alt="">
+                                    <p class="name">{$recommend_list_data.goods_name}</p>
+                                    <div class="money">
+                                        <div class="pic primary-color">
+                                            ￥
+                                            {switch $recommend_list_data.is_group.$recommend_list_data.is_bargain.$recommend_list_data.is_limit}
+                                            {case 100}
+                                            {$recommend_list_data.group_price}
+                                            {/case}
+                                            {case 010}
+                                            {$recommend_list_data.cut_price}
+                                            {/case}
+                                            {case 001}
+                                            {$recommend_list_data.time_limit_price}
+                                            {/case}
+                                            {default /}
+                                            {$recommend_list_data.shop_price}
+                                            {/switch}
+                                        </div>
+                                        <div class="volume">
+                                            销量 <span class="primary-color">{$recommend_list_data.sales_volume}</span>
+                                        </div>
+                                    </div>
+                                    <div class="discounts">
+                                        {if condition="config('user.one_more') eq 1"}
+                                            <span style="margin-right: 2px;" class="mark primary-color border-color">
+                                                {switch $recommend_list_data.shop}
+                                                {case 0}自营{/case}
+                                                {case 1}个人{/case}
+                                                {case 2}公司{/case}
+                                                {/switch}
+                                              </span>
+                                        {/if}
+                                        {eq name="$recommend_list_data.is_group" value='1'}
+                                        {$recommend_list_data.group_price}
+                                            <span class="group-buying primary-background-color">{$recommend_list_data.group_num}人拼</span>
+                                        {/eq}
+                                        {eq name="$recommend_list_data.is_bargain" value='1'}
+                                        <span class="group-buying primary-background-color">砍价</span>
+                                        {/eq}
+                                    </div>
+                                </a>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<script src="__RES__/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 4,
+        spaceBetween: 8,
+        autoplay: {
+            delay: 3000,
+            stopOnLastSlide: false,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    });
+    //猜你喜欢切换
+    $('#new_like').on('click',function(){
+        main.new_like({'select':'.guess-like-list'});
+    });
+
+    function tobe_distributor_rule(){
+        if(parseInt('{$distribution_status|default="2"}') === 2){
+            //规则页面
+            main.jump({'url':'/pc2.0/distribution_become/tobe_distributor_rule'})
+        }else{
+            layer.msg("申请成为代言人?",{time:2000,btn:['确定','取消'],yes:function () {
+                    layer.msg('申请成功',{time:500},function () {
+                        main.jump({'url':'/pc2.0/distribution_goods/goods_list'})
+                    });
+                },btn2: function () {
+                    layer.msg('已取消');
+                }});
+        }
+    }
+</script>
+{/block}

@@ -1,0 +1,114 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请认真填写链接名称、链接地址等信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <!--链接名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 链接名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendship_title" maxlength="20" autocomplete="off" placeholder="请输入链接名称"
+                       datatype="*"
+                       value="{$item.friendship_title|default=''}"
+                       nullmsg="请输入链接名称" errormsg="请输入链接名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--链接地址-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 链接地址：</label>
+            <div class="layui-input-block">
+                <input type="text" name="friendship_url" maxlength="20" autocomplete="off" placeholder="请输入链接地址"
+                       datatype="*"
+                       value="{$item.friendship_url|default=''}"
+                       nullmsg="请输入链接地址" errormsg="请输入链接地址"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--链接LOGO-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>链接LOGO</label>
+            <div class="layui-input-inline">
+                <div>
+                    <div class="layui-upload-drag" id="goods_file">
+                        {empty name="$item.file"}
+                        <i class="layui-icon">&#xe681;</i>
+                        <p>点击上传，或将文件拖拽到此处</p>
+                        <input type="text" name="file" value="" title style="opacity: 0;"
+                               datatype="*" nullmsg="请上传缩略图" errormsg="请上传缩略图" />
+                        {else/}
+                        <img src="{$item.file|default=''}" onerror=this.src="/template/master/resource/image/common/imageError.png" title="" class="uploadImg" alt=""/>
+                        <input type="text" name="file" value="" title style="display: none;"
+                               datatype="*" nullmsg="请上传缩略图" errormsg="请上传缩略图" />
+                        {/empty}
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                建议尺寸，800 X 800
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.friendship_link_id"}
+                <input type="hidden" name="friendship_link_id" value="{$item.friendship_link_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.upload([
+        {
+            elem: '#goods_file',
+            size: 2 * 1024,
+            data: {name: 'friendship_file', dir: 'friendship_file', auth: '', style: 1, crypt: 1},
+            field: 'friendship_file',
+            done: function (res) {
+                if (res.code !== 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                        '<input type="text" name="file" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+                $(this.elem).css('padding','1px').html(html);
+                layer.closeAll('loading');
+            }
+        }
+    ])
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,416 @@
+{extend name="public/index_header"}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<link rel="stylesheet" href="__RES__/css/storeclassification/storeclassification.css">
+<link rel="stylesheet" href="__RES__/css/public/GuessLike.css">
+<link rel="stylesheet" href="__RES__/css/NewZone/newzone.css">
+
+{/block}
+
+{block name="content"}
+<style>
+    body{
+        background: #fff;
+    }
+    .guess {
+        width: 1200px;
+        margin: 0px auto;
+        margin-bottom: 20px;
+    }
+    .guess-like{
+        background: #fff !important;
+    }
+    .guess  .title{
+        background: #f7f7f7;
+    }
+    .store-classification-business-name .gz{
+        margin-left: 10px;
+        position: relative;
+        top: -1px;
+    }
+    .public-header .header-center .img-color{
+        top: -2px;
+    }
+    .store-classification-focus img{
+        margin-right: 5px;
+        position: relative;
+        top: -2px;
+    }
+</style>
+
+<!--店铺分类开始-->
+<div class="store-classification">
+    找到相关店铺<span class="primary-color data_total">0</span>家
+</div>
+<div class="store-classification-nav">
+ <div class="store-classification-nav-left">
+     <a href="javascript:;" data_parameter="create_time"  class="store-classification-nav-left-a selected  primary-color border-color">综合排序</a>
+     <a href="javascript:;" data_parameter="sales_volume" class="store-classification-nav-left-a">销量最高</a>
+     <a href="javascript:;" data_parameter="distance"   class="store-classification-nav-left-a">距离最近</a>
+ </div>
+    <div class="store-classification-nav-right">
+        <div class="turn-page">
+            <span class="turn-page-left prev"><</span>
+            <span class="primary-color currentPage">1</span>/<i class="total">1</i>
+            <span class="turn-page-right next">></span>
+        </div>
+        <div class="store-classification-choose">店铺分类
+          <div class="store-classification-drop-down category">
+              {volist name="$classify" id="cate"}
+              <!--<a href="{:url('/pc2.0/store/search_list')}?lng={:input('lng')}&lat={:input('lat')}&category={$cate.store_classify_id}" data_category_id="{$cate.store_classify_id}">{$cate.title}</a>-->
+              <a href="javascript:;" data_category_id="{$cate.store_classify_id}">{$cate.title}</a>
+              {/volist}
+          </div>
+        </div>
+        <div class="store-classification-choose">特色服务
+            <div class="store-classification-drop-down feature">
+                <a data_type="is_city" href="javascript:;">同城配送</a>
+                <a data_type="is_shop" href="javascript:;">门店自提</a>
+            </div>
+        </div>
+        <!--<div class="store-classification-choose">好评率-->
+            <!--<div class="store-classification-drop-down">-->
+                <!--<a href="javascript:;">90%</a>-->
+                <!--<a href="javascript:;">80%</a>-->
+            <!--</div>-->
+        <!--</div>-->
+    </div>
+</div>
+<div class="multi-select">
+    <form class="layui-form" action="">
+        <div class="layui-form-item" pane="">
+            <div class="layui-input-block">
+                <input data_type="shop|0" type="checkbox"  lay-skin="primary" title="自营" >
+                <!--<input data_type="city|3" type="checkbox"  lay-skin="primary" title="同城配送" >-->
+                <!--<input data_type="shop|0" type="checkbox" lay-skin="primary" title="门店自提">-->
+                <!--<input data_type="shop|1" type="checkbox"  lay-skin="primary" title="个人店铺">-->
+                <!--<input data_type="shop|2" type="checkbox" lay-skin="primary" title="企业店铺">-->
+                <!--<input data_type="goods_number|0" type="checkbox" lay-skin="primary" title="仅看有货">-->
+            </div>
+        </div>
+    </form>
+</div>
+<div class="store-classification-list">
+</div>
+<div id="page-container" class="pageContainer"><ul class="pagination"></ul></div>
+<!-- 猜你喜欢 -->
+<div class="guess">
+    <!-- 猜你喜欢 -->
+    <div class="guess-like">
+        <div class="title">
+            <span>猜你喜欢</span>
+            <div onclick="main.new_like({'select':'.guess-like-list'});">换一换 <img src="__RES__/imgs/hyh.png" alt=""></div>
+        </div>
+        <div class="guess-like-list">
+            {volist name='recommend_list' id='recommend_list_data'}
+            <div class="list" style="width: 25%">
+                <a href="javascript:jump_goods('{$recommend_list_data.goods_id}')">
+                    <img src="{$recommend_list_data.file}" alt="">
+                    <p class="name">{$recommend_list_data.goods_name}</p>
+                    <div class="money">
+                        <div class="pic primary-color">
+                            ￥
+                            {switch $recommend_list_data.is_group.$recommend_list_data.is_bargain.$recommend_list_data.is_limit}
+                            {case 100}
+                            {$recommend_list_data.group_price}
+                            {/case}
+                            {case 010}
+                            {$recommend_list_data.cut_price}
+                            {/case}
+                            {case 001}
+                            {$recommend_list_data.time_limit_price}
+                            {/case}
+                            {default /}
+                            {$recommend_list_data.shop_price}
+                            {/switch}
+                        </div>
+                        <div class="volume">
+                            销量 <span class="primary-color">{$recommend_list_data.sales_volume}</span>
+                        </div>
+                    </div>
+                    <div class="discounts">
+                        {if condition="config('user.one_more') eq 1"}
+												<span style="margin-right: 2px;" class="mark primary-color border-color">
+                            {if $recommend_list_data.shop == 0}自营{else}{if $recommend_list_data.store_auth_type==1}个人{else/}企业{/if}{/if}
+								                  </span>
+                        {/if}
+                        {eq name="$recommend_list_data.is_group" value='1'}
+                        {$recommend_list_data.group_price}
+                        <span class="group-buying primary-background-color">{$recommend_list_data.group_num}人拼</span>
+                        {/eq}
+                        {eq name="$recommend_list_data.is_bargain" value='1'}
+                        <span class="group-buying primary-background-color">砍价</span>
+                        {/eq}
+                    </div>
+                </a>
+            </div>
+            {/volist}
+        </div>
+    </div>
+</div>
+
+{/block}
+{block name="js"}
+<!--新人专区结束-->
+<script type="text/javascript">
+
+    var pageInited = false
+    var data = {
+        'lng': localStorage.lng,
+        'lat': localStorage.lat,
+        // 'lng': 126.64336,
+        // 'lat': 45.77664,
+        'keyword':'{:input("keyword")}',
+    };
+
+    $(function () {
+        nearby_list();
+    })
+    //综合切换
+    $(".store-classification-nav-left-a").click(function () {
+        $(this).addClass("selected primary-color border-color").siblings().removeClass("selected primary-color border-color")
+        condition();
+        nearby_list();
+    })
+    //店铺分类
+    $('.category a').click(function () {
+        $(this).addClass('select_check').siblings().removeClass('select_check');
+        condition();
+        nearby_list();
+    })
+    //特色服务
+    $('.feature a').click(function () {
+        $(this).addClass('select_check').siblings().removeClass('select_check');
+        condition();
+        nearby_list();
+    })
+    //自营
+    $('.layui-input-block').on('click','.layui-form-checkbox',function () {
+        condition();
+        nearby_list();
+    })
+    //处理条件
+    function condition(){
+        var distance,sales_volume,shop,is_city,is_shop ='';
+        var parameter = $('.store-classification-nav-left .selected').attr('data_parameter');
+        if (parameter === 'distance') distance = 1; //距离
+        if (parameter === 'sales_volume') sales_volume = 1; //销量
+        if ($('.layui-input-block input').next('.layui-form-checkbox').hasClass('layui-form-checked'))  shop = 0; //自营
+        var page = $('.currentPage').text() //页数
+        var category = $('.category  .select_check').attr('data_category_id'); //分类 //分类
+        var type = $('.feature .select_check').attr('data_type');
+        if (type === 'is_shop')  is_shop = 1; //门店
+        if (type === 'is_city') is_city = 1; //同城
+        data = {
+            'keyword':data.keyword,
+            'lat': data.lat,
+            'lng': data.lng,
+            'sales_volume':sales_volume,
+            'distance':distance,
+            'category': category,
+            'is_city':is_city,
+            'is_shop':is_shop,
+            'shop':shop,
+            'page':page,
+        };
+        console.log(data);
+        pageInited = false
+    }
+    //上一页
+    $('.prev').click(function () {
+        var local_page = $('.currentPage').text();
+        if (local_page == 1){
+            layer.msg('当前是第一页',{time:500});
+        }else{
+            $('.currentPage').text(parseInt($('.currentPage').text()) - 1);
+            condition()
+            nearby_list(data.page);
+        }
+    })
+    //下一页
+    $('.next').click(function () {
+        console.log('下一页');
+        var total = $('.total').text();
+        var local_page = $('.currentPage').text();
+        if(local_page == total){
+            layer.msg('当前是最后一页',{time:500});
+        }else{
+            $('.currentPage').text(parseInt($('.currentPage').text()) +1);
+            condition()
+            nearby_list(data.page);
+        }
+    })
+    //分页
+    function init_pages(currentPage,lastPage) {
+        // 初始化分页
+        $('#page-container').find('ul.pagination').pagination({
+            currentPage: currentPage,
+            prevText: '«',
+            nextText: '»',
+            pages: lastPage, //总页数
+            edges: 2,
+            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+            displayedPages: 9, //显示几个
+            onPageClick: function(pageNumber, event) {
+                nearby_list(pageNumber)
+            }
+        });
+    }
+    //ajax提交
+    function nearby_list(pages){
+        data.page  = pages === undefined ? 1 : pages
+        main.ajax({
+            url:'{:url(\'pc2.0/store/search_list\')}',
+            data:data,
+            callback:function (res) {
+               if(res.code == 0){
+                   $('.data_total').text(res.store_list.total);
+                   if(res.store_list.total == 0){
+                       $('.currentPage').text('0');
+                   }else{
+                       $('.currentPage').text(res.store_list.current_page);
+                   }
+                   $('.total').text(res.store_list.last_page);
+                   if (!pageInited){
+                       if(parseInt(res.store_list.last_page) >1){
+                           init_pages(parseInt(res.store_list.current_page),parseInt(res.store_list.last_page))
+                           pageInited = true
+                       }
+                       else{
+                           $('#page-container').find('ul.pagination').html('')
+                       }
+                   }
+
+                   var html = '';
+                   $.each(res.store_list.data, function (k, v) {
+
+                       var div='';
+                       $.each(v.shop_goods,function (k1,v1) {
+                           div +=' <div class="store-classification-content-right-list">' +
+                               '<a href="javascript:jump_goods('+v1.goods_id+')"> ' +
+                               '<img src="'+v1.file+'" width="140" height="140">' +
+                               '<p class="primary-color">￥'+v1.shop_price+'</p>' +
+                               '</a>' +
+                               '</div>'
+                       })
+
+                       var shop = v.shop === 0 ?'自营':(v.store_auth_type===1?'个人':'企业');
+
+                       var sc='';
+                       if (v.collect_store_id > 1){
+                           sc = '<img src="__RES__/imgs/nearbybusinesses/yiguanzhu.png" width="14" height="12">';
+                       }else {
+                           sc ='<img src="__RES__/imgs/nearbybusinesses/guanzhu.png" width="14" height="12">'
+                       }
+
+
+                       html+=' <div class="store-classification-content"> ' +
+                           '<div class="store-classification-content-left"> ' +
+                           '<div class="store-classification-content-img"> ' +
+                           '<img src="'+v.logo+'" width="70" height="70" onclick="jump_store({\'store_id\':\''+v.store_id+'\'})"> ' +
+                           '</div> ' +
+                           '<div class="store-classification-content-title"> ' +
+                           '<p class="store-classification-business-name">' +
+                           v.store_name + ("{:INI_CONFIG['IS_CUSTOMER']}" ==='1'?'<span class="gz" onclick="jump_service({store_id:'+ v.store_id +',diversion_id:1002})"><img src="__RES__/imgs/storeclassification/lianxi.png" width="14" height="14"></span>':'') +
+                           '</p> ' +
+                           '<p class="store-classification-focus gz" data_store_id="'+v.store_id+'" data_collect_store_id="'+v.collect_store_id+'" data_collect="'+v.collect+'"> ' + sc +
+                           '<span>'+v.collect+'</span> ' +
+                           '</p> ' +
+                           '<a href="javascript:;" class="store-classification-proprietary primary-color border-color">'+shop+'</a> ' +
+                           '</div> ' +
+                           '<div class="clear"></div> ' +
+                           '<div class="store-classification-score"> ' +
+                           '<img src="__RES__/imgs/storeclassification/dianpupingfen.png" width="14" height="13"> ' +
+                           '<div class="store-score"> ' +
+                           '<p class="store-score-name">店铺评分</p> ' +
+                           '<p class="store-score-evaluation">' +
+                           '店铺评价  <span class="store-score-evaluation-span primary-color">'+v.store_percent.self_score+'</span><span><img src="__RES__/imgs/storeclassification/shang.png" width="14" height="18"> </span> ' +
+                           '</p> ' +
+                           '</div> ' +
+                           '</div> ' +
+                           '</div> ' +
+                           '<div class="store-classification-content-right">' +div+
+                           '<div class="clear"></div> ' +
+                           '<div class="distance"> ' +
+                           '<span><img src="__RES__/imgs/storeclassification/dingwei.png" width="14" height="18"></span>' +
+                           '距离 '+v.distance+'KM ' +
+                           '<a href="javascript:jump_store({\'store_id\':\''+v.store_id+'\'})" class="primary-color into-shop">进店></a> ' +
+                           '</div> ' +
+                           '</div> ' +
+                           '</div>'
+                   })
+
+                   $('.store-classification-list').html(html)
+               }else{
+                   layer.msg(res.message,{time:500})
+               }
+
+            }})
+    }
+    //关注
+    $('.store-classification-list').on('click','.store-classification-focus', function () {
+
+        var store_id = $(this).attr('data_store_id');
+        var collect_store_id = $(this).attr('data_collect_store_id');
+        var data_collect = $(this).attr('data_collect');
+        var that = $(this)
+
+        if ($(this).find('img').attr('src') == '__RES__/imgs/nearbybusinesses/guanzhu.png') {
+            main.ajax({
+                'url': '{:url(\'pc2.0/store/collect_store\')}',
+                'data': {'store_id': store_id},
+                callback: function (t) {
+                    if (t.code === 0){
+                        that.find('img').attr('src', '__RES__/imgs/nearbybusinesses/yiguanzhu.png');
+                        that.attr('data_collect_store_id', t.collect_store_id)
+                        that.attr('data_collect', parseInt(data_collect) + 1);
+                        that.find('span').text(parseInt(data_collect) + 1)
+                    }else{
+                        layer.msg(t.message)
+                    }
+
+                }
+            })
+        } else {
+            main.ajax({
+                'url': '{:url(\'pc2.0/store/collect_store_delete\')}',
+                'data': {'collect_store_id': collect_store_id, 'store_id': store_id},
+                callback: function (t) {
+                    if(t.code === 0){
+
+                        that.find('img').attr('src', '__RES__/imgs/nearbybusinesses/guanzhu.png');
+                        that.attr('data_collect', parseInt(data_collect) - 1)
+                        that.find('span').text( parseInt(data_collect) - 1)
+                    }else{
+                        layer.msg(t.message)
+                    }
+                }
+            })
+
+        }
+
+
+    });
+    //店铺分类  特色展示数据
+    $(".store-classification-choose").hover(function () {
+        $(this).find(".store-classification-drop-down").css("display", "block");
+    }, function () {
+        $(this).find(".store-classification-drop-down").css("display", "none");
+    });
+    //店铺展示评价
+    $(".store-classification-list ").on('mouseenter','.store-classification-score',function () {
+        $(this).find(".store-score").css("display", "block");
+    })
+    $(".store-classification-list ").on('mouseleave','.store-classification-score',function () {
+        $(this).find(".store-score").css("display", "none");
+    })
+
+  //复选框的样式
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+    });
+</script>
+{/block}

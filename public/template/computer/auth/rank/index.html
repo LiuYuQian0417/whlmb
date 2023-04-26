@@ -1,0 +1,209 @@
+{extend name="public/common"}
+
+{block name="content_css"}
+<!--会员卡css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicHeader.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/color.css"/>
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<!--公共搜索css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/indexHeader.css"/>
+<!--会员卡css-->
+<link rel="stylesheet" href="__RES__/css/membershipcard/membershipcard.css">
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+<style>
+    .member-number{
+        width: 100%;
+    }
+    .member-number-border{
+        width: 100%;
+    }
+    .member-number-border-deach{
+        width: 100%;
+    }
+    .swiper-container{
+        padding-left: 68px;
+        padding-right: 60px;
+        padding-top:50px ;
+        height: 190px;
+        box-sizing: border-box;
+    }
+    .swiper-button-next{
+        background-image: url("__RES__/imgs/hyl.png");
+        background-size:23px 26px;
+        width: 50px;
+        height: 190px;
+        top: 0px;
+        right: 0px;
+        background-color: #fff;
+        margin-top: 0px;
+        border-radius: 10px;
+    }
+    .swiper-button-prev{
+        background-image: url("__RES__/imgs/hyr.png");
+        background-size:23px 26px;
+        width: 50px;
+        height: 190px;
+        top: 0px;
+        left: 0px;
+        background-color: #fff;
+        margin-top: 0px;
+        border-radius: 10px;
+    }
+    .member-exclusive-break{
+        width: 955px;
+        height: 190px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 5px #E9CF9C;
+    }
+</style>
+{/block}
+
+
+{block name="content"}
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="spokesperson-center" >
+            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <p>会员</p>
+        </div>
+        <div class="my-grade">
+            <a href="{:url('/pc2.0/rank/index')}" class="primary-color border-color-bottom">会员</a>
+            <a href="{:url('/pc2.0/my/task')}">会员成长值</a>
+        </div>
+    </div>
+</div>
+
+<!--会员卡开始-->
+<div class="membershipcard-content">
+    <div class="membership-card-content">
+        <div class="membership-card-content-top">
+            <div class="membership-card-content-top-left">
+                <div class="h100"></div>
+                <div class="card-content-top-portrait">
+                    <img src="{$member_info.avatar}" class="card-content-top-img" width="76"
+                         height="76">
+                </div>
+                <div class="card-content-top-level">
+                    <p class="card-content-top-level-name">{$member_info.nickname}</p>
+                    <div class="top-level-progress">
+                        <div class="card-content-top-level-progress"></div>
+                        <span class="card-content-top-level-progress-span">{$result.now.mark} {$result.now.rank_name}</span>
+                        <!--//判断有没有下两级-->
+                        {empty name="$result['rank_list'][$result['next_index']+2]"}
+                        <!--判断有没有下一级-->
+                        {notempty name="$result['rank_list'][$result['next_index']+1]"}
+                        <span class="card-content-top-level-progress-span2">{$result['rank_list'][$result.next_index+1]['mark']}</span>
+                        {/notempty}
+                        {else/}
+                        <span class="card-content-top-level-progress-span1">{$result['rank_list'][$result.next_index+1]['mark']}</span>
+                        <span class="card-content-top-level-progress-span2">{$result['rank_list'][$result.next_index+2]['mark']}</span>
+                        {/empty}
+                    </div>
+                </div>
+                <div class="clear"></div>
+                {eq name='$function_status.is_coupon' value='1'}
+                <a href="javascript:;" style="color: #2e3244">
+                <div class="sign-in" {eq name='result.sign_state' value='0'}onclick="main.ajax({'url':'/pc2.0/integral/sign'})"{/eq}>
+                    <div class="sign-in-img">
+                        <img src="__RES__/imgs/membershipcard/qiandao.png" width="73" height="74">
+                    </div>
+                    <div class="continuous-sign">
+                        <span>
+                            {eq name='result.sign_state' value='0'}
+                            签到
+                            {else/}
+                            已签到
+                            {/eq}
+                        </span>
+                        <p>连续签到7天，奖励更多</p>
+                        <p>已连续签到{$result.continuous_days|default=0}天</p>
+                    </div>
+                </div>
+            </a>
+            {/eq}
+                <div class="clear"></div>
+            </div>
+            <div class="membership-card-content-top-right">
+                <p class="my-growth">我的成长值</p>
+                <p class="growth">{$result.growth_value}<a href="javascript:main.jump({'url':'/pc2.0/my/task'})" class="ascend">去提升</a></p>
+                <p class="growth-line-chart"><img src="__RES__/imgs/membershipcard/chengzhangzhi.png" width="360"
+                                                  height="152"><span class="growth-chart-value">{$result.growth_value}</span></p>
+                <p class="distance-growth">距离下一等级还需<span>{$result.next_number}</span>成长值</p>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="description-growth">
+            <div class="description-growth-top">
+                会员与成长值规则说明
+            </div>
+            <div class="level-introduction">
+                {volist name="result.rank_list" id='item_rank_list'}
+                <div class="membership-system">
+                    <div class="membership-grade">
+                        <img src="{$item_rank_list.file2}">
+                        {$item_rank_list.rank_name}
+                    </div>
+                    <div class="member-content">
+                        <div class="member-content-img gradebackground-color-two">
+                            <img src="__RES__/imgs/membershipcard/v2biaoti.png" width="17" height="15">
+                        </div>
+                        <span>成长值{$item_rank_list.min_points}-{$result.rank_list[$key+1]['min_points']|default='∞'}</span>
+                    </div>
+                </div>
+                {/volist}
+                <div class="clear"></div>
+            </div>
+            {notempty name='result.rank_list'}
+            <div class="member-exclusive">
+                <p class="member-exclusive-top">会员专享价</p>
+                <p class="member-exclusive-content">* {$result.rank_list.0.rank_name}及以上会员可享受商品专享特价，以更优惠的价格购买商品</p>
+                <p class="member-exclusive-content">* 会员等级越高，优惠越大</p>
+                <p class="member-exclusive-content">* 商品会员价格按会员等级折扣率计算</p>
+                <p class="member-exclusive-content">* 设置会员价格的商品均享受优惠</p>
+                <div class="member-exclusive-break">
+                    <!-- Swiper -->
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            {volist name='$result.rank_list' id='rank_list'}
+                            <div class="swiper-slide">
+                                <div class="member-number">
+                                    <div class="member-number-img  border-color">
+                                        <img src="__RES__/imgs/membershipcard/tonghuiyuan.png" width="19" height="18">
+                                    </div>
+                                    <p class="membership-grade-level">{$rank_list.rank_name}</p>
+                                    <p class="membership-grade-discount primary-color">{$rank_list.discount/10}折</p>
+                                    {lt name='$key' value=':count($result.rank_list)-1'}<div class="{elt name='$rank_list.member_rank_id' value='$result.now.member_rank_id'}member-number-border{else/}member-number-border-deach {/elt} border-color"></div>{/lt}
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                        <!-- Add Arrows -->
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+            {/notempty}
+        </div>
+    </div>
+</div>
+<!--会员卡结束-->
+{/block}
+
+{block name="js"}
+<script src="__RES__/js/swiper.min.js"></script>
+<script type="text/javascript">
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 3.2,
+        spaceBetween: 0,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+</script>
+{/block}

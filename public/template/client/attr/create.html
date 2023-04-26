@@ -1,0 +1,150 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请按提示文案填写信息，以免出错。</span></li>
+            <li><span>标识“*”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+            <div class="ecsc-form-goods">
+                <form action="" method="post" name="theForm" id="goods_type_form" class="layui-form">
+                    <div class="wrapper-list border1">
+                        <dl>
+                            <dt><span class="require-field">*</span>&nbsp;所属商品类型：</dt>
+                            <dd>
+                                <input type="text"  value="{$attrTypeData.type_name}" size="40" class="text" readonly/>
+                                 <input type="hidden" value="{$attrTypeData.attr_type_id}" name="attr_type_id">
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+
+                        <dl>
+                            <dt><span class="require-field">*</span>&nbsp;属性名称：</dt>
+                            <dd>
+                                <input type="text" name="attr_name" value="{$item.attr_name|default=''}" size="40" class="text"
+                                       placeholder="请输属性名称"
+                                       datatype="*"
+                                       nullmsg="请输属性名称" errormsg="请输属性名称"/>
+
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt><span class="require-field">*</span>&nbsp;该属性值的录入方式：</dt>
+                            <dd>
+                                <input type="radio" name="attr_input_type" value="1" title="从下面的列表中选择（一行代表一个可选值）" lay-filter="type"
+                                       {eq name="item.attr_input_type|default='系统定义'" value="系统定义" }checked{/eq}
+                                >
+                                <input type="radio" name="attr_input_type" value="0" title="手工录入" lay-filter="type"
+                                       {eq name="item.attr_input_type|default=''" value="手工录入"}checked{/eq}
+                                >
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+
+                        <dl id="input-area" class="{eq name="item.attr_input_type|default=''" value="手工录入"}hide{/eq}">
+                            <dt><span class="require-field">*</span>&nbsp;可选值列表：</dt>
+                            <dd>
+                                <textarea name="attr_value" style="resize:none;width: 320px;" class="layui-textarea" cols="30" placeholder="按Enter键分隔每个可选值"  rows="8"  spellcheck="false" {eq name="item.attr_input_type|default=''" value="手工录入" }disabled="disabled"{/eq}>{$item.attr_value|default=''}</textarea>
+
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+
+                        <dl>
+                            <dt><span class="require-field">*</span>&nbsp;排序：</dt>
+                            <dd>
+                                <input type="text" name="sort" value="{$item.sort|default='100'}" maxlength="5" autocomplete="off" placeholder="排序"
+                                       class="layui-input" style="width: 320px;height: 30px;line-height: 30px;">
+                                <div class="form_prompt"></div>
+                            </dd>
+                        </dl>
+
+                        <dl>
+                            <dt>是否显示：</dt>
+                            <dd>
+                                <div class="checkbox_items">
+                                    <div class="checkbox_item">
+                                        <input type="radio" class="ui-radio" name="status" value="1" title="显示"
+                                               {eq name="item.status|default='1'" value="1" }checked{/eq}
+                                        >
+
+                                    </div>
+                                    <div class="checkbox_item">
+                                        <input type="radio" class="ui-radio" name="status" value="0" title="不显示"
+                                               {eq name="item.status|default=''" value="0" }checked{/eq}
+                                        >
+
+                                    </div>
+                                </div>
+                            </dd>
+                        </dl>
+
+                        <dl class="button_info">
+                            <dt>&nbsp;</dt>
+                            <dd>
+                                {present name="$item.attr_type_id"}
+                                <input type="hidden" name="attr_id" value="{$item.attr_id}">
+                                {/present}
+                                <input type="submit" value=" 确定 " class="sc-btn sc-blueBg-btn btn35" id="submitBtn" />
+                                <input type="reset" value=" 重置 " class="sc-btn btn35 sc-blue-btn" />
+                            </dd>
+                        </dl>
+                    </div>
+                </form>
+            </div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript">
+    main.form([
+        {
+            selector:'radio(type)',
+            callback:function(data){
+
+                var textarea = $('#input-area')
+
+
+                console.log($(data.elem).val())
+                switch ($(data.elem).val()) {
+                    case '0': // 手工录入
+                    case 0:
+                        textarea.hide().find('textarea').prop('disabled',true);
+                        break;
+                    case '1': // 选择
+                    case 1:
+                        textarea.show().find('textarea').prop('disabled',false);
+                        break;
+                }
+            }
+        }
+    ]);
+    main.valid('.layui-form');
+
+    function ccc(){
+        var status =  $('input[name="attr_input_type"]:checked ').val();
+        if(status==0){
+            $('textarea').attr("disabled",true);
+        }else{
+            $('textarea').removeAttr("disabled",true);
+        }
+    }
+</script>
+{/block}
+

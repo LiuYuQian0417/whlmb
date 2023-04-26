@@ -1,0 +1,99 @@
+*{
+    margin: 0px ;
+    padding: 0px;
+}
+a{
+    text-decoration: none;
+}
+li{
+    list-style: none;
+}
+body{
+    background: #FFFFFF !important;
+}
+.order-top{
+    width: 1200px;
+    margin: 0px auto;
+    overflow: hidden;
+    margin-top: 10px;
+}
+.order-top .order-num{
+    font-size: 14px;
+    color: #333333;
+    float: left;
+}
+.order-top .payment-amount{
+    float: right;
+    font-size: 14px;
+    color: #333333;
+}
+.pattern-payment{
+    width: 1200px;
+    height: 300px;
+    box-shadow: 0px 0px 10px #F6F6F6;
+    margin: 0px auto;
+    margin-top: 40px;
+    padding: 0px 60px;
+    box-sizing: border-box;
+}
+.pattern-payment .tit{
+    color: #666666;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+
+.pattern-payment .type-list label{
+    display: inline-block;
+    width: 175px;
+    height: 60px;
+    border: 1px solid #C6C6C6;
+    border-radius: 3px;
+    text-align: center;
+    line-height: 60px;
+    margin-right: 30px;
+    cursor: pointer;
+    position: relative;
+}
+.pattern-payment .type-list label img{
+    position: relative;
+    top: 5px;
+    margin-right: 10px;
+}
+.triangle {
+    display: none;
+    position: absolute;
+    height: 0px;
+    width: 0px;
+    right: 0px;
+    bottom: 0px;
+    border-left: 7px solid transparent !important;
+    border-top: 7px solid transparent !important;
+    border-bottom: 7px solid;
+    border-right: 7px solid;
+}
+.pattern-payment .type-list label .triangle img{
+    position: absolute;
+    top: -1px ;
+    right: -16px;
+
+}
+.pattern-payment .type-list  .active {
+    border: 2px solid #fff;
+}
+.pattern-payment .type-list  .active .triangle{
+    display: block;
+}
+
+.pattern-payment .submit{
+    width: 220px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    font-size: 18px;
+    color: #fff;
+    border: none;
+    margin-top: 50px;
+    cursor: pointer;
+    border-radius: 3px;
+}

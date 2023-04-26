@@ -1,0 +1,85 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{block name='body'}
+{__block__}
+<!--表单-->
+<form class="layui-form" action="" method="post">
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+            <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>1、此部分内容用作移动端修改代言说明用；</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--操作提示end-->
+    <div class="tabs_info" id="tab" style="margin-top: 15px;">
+        <ul>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销商规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/ratio')">分佣规则</a></li>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/explainSet')">说明设置</a></li>
+        </ul>
+    </div>
+    <!--分销说明设置-->
+    <div class="contentShell">
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">收益说明</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入收益说明,回车换行为一句" name="income_explain"
+                          class="layui-textarea" style="resize: none;width: 100%;height: 150px;">{$data['income_explain']}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">关于收益</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入关于收益,回车换行为一句" name="about_income"
+                          class="layui-textarea" style="resize: none;width: 100%;height: 150px;">{$data['about_income']}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">名词解释</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入名词解释,回车换行为一句" name="noun_explain"
+                          class="layui-textarea" style="resize: none;width: 100%;height: 150px;">{$data['noun_explain']}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">收益策略</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入收益策略,回车换行为一句" name="income_strategy"
+                          class="layui-textarea" style="resize: none;width: 100%;height: 150px;">{$data['income_strategy']}</textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

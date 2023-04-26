@@ -1,0 +1,160 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="/template/client/resource/layui/css/modules/layer/default/layer.css?v=3.1.1">
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .offlineCon{padding-top: 20px;display: flex;align-items: center;justify-content: center}
+    .offlineCon input{height: 28px!important;line-height: 28px!important;font-size: 12px;}
+    .textCon{margin:0 6%;display: flex;align-items: flex-start;padding-bottom: 20px;}
+    .textCon .item .pic{background: rgba(244,244,244,0.7);width: 200px;margin: 0 auto}
+    .textCon .item input{width: 240px;text-align: center;}
+    .textCon .item .tips{font-size: 14px;line-height: 20px;padding: 20px 0;text-align: center}
+    .textCon .next{width: 200px;height: 200px;display: flex;align-items: center;justify-content: center;}
+    .offlineCon dd{line-height: 30px;font-size: 14px;}
+    .offlineCon .ecsc-form-goods{flex: 1;}
+    .ecsc-form-goods dt{width: 20%;margin-right: 5%}
+</style>
+<form class="layui-form" action="" method="post">
+    <div class="offlineCon">
+        <div class="textCon">
+            <div class="item">
+                <div class="pic">
+                    <img src="__RES__/images/code.png" alt="">
+                </div>
+                <div class="tips">使用扫码枪扫码客户付款码</div>
+                <input id="code"  type="text" class="layui-input" placeholder="手动输入付款码,后按下回车">
+            </div>
+        </div>
+        <div class="ecsc-form-goods" id="info" style="display: none">
+            <dl>
+                <dt>会员账号：</dt>
+                <dd id="phone">13306789765</dd>
+            </dl>
+            <dl>
+                <dt>会员等级：</dt>
+                <dd id="level"></dd>
+            </dl>
+            <!--<dl>-->
+                <!--<dt>会员折扣：</dt>-->
+                <!--<dd id="member_discount"></dd>-->
+            <!--</dl>-->
+            <dl>
+                <dt>会员余额：</dt>
+                <dd id="usable_money"></dd>
+            </dl>
+            <dl>
+                <dt>订单总额：</dt>
+                <dd>
+                    <input type="text" id="price" onkeyup="calculate_price(this)" class="layui-input layui-input-inline" placeholder="请输入订单金额" style="width: 120px;margin-right: 10px">元
+                </dd>
+            </dl>
+            <dl>
+                <dt>本次优惠：</dt>
+                <dd>¥<span id="discounts">0.00</span>（店铺优惠券<span id="coupon">0.00</span>，红包<span id="packet">0.00</span>）</dd>
+            </dl>
+            <dl>
+                <dt>应收金额：</dt>
+                <dd>¥<span id="pay_price">0</span></dd>
+            </dl>
+            <dl>
+                <dt>&nbsp;</dt>
+                <dd><input type="button" value="付款" onclick="pay()" class="sc-btn sc-blueBg-btn btn30" style="width: 100px"><input type="button" value="取消" onclick="call_off()" class="sc-btn btn35 sc-blue-btn" style="width: 100px"></dd>
+            </dl>
+        </div>
+
+
+    </div>
+</form>
+{/block}
+{block name='js'}
+<script src="__RES__/js/jquery-1.9.1.min.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/js/main.js"></script>
+<script>
+    $('#code').focus();
+    $('#code').blur(function(){
+        $('#code').focus();
+    });
+    var member_id=0;
+    $('#code').keyup(function(e){
+        if(e.key=='Enter'){
+            var payment_code=$(this).val();
+           $.post("{:url('')}",{payment_code:payment_code},function(res){
+               if(res.code==200){
+                   $("#code").off("blur");
+                   $("#code").blur();
+                   $("#code").attr('disabled','disabled');
+                   $('#phone').text(res.phone);
+                   $('#level').text(res.rank_name);
+                   $('#usable_money').text(res.usable_money);
+                   // $('#member_discount').text(res.discount+'折');
+                   $('#info').css('display','inline');
+                   $("#price").focus();
+                   member_id=res.member_id;
+               }else{
+                   $('#info').css('display','none');
+                   $('#code').val('');
+                   $('#code').focus();
+                   member_id = 0;
+                   layer.msg(res.message);
+               }
+           });
+        }
+    });
+    var coupon=0;
+    var member_coupon_id=0;
+    var packet=0;
+    var member_packet_id=0;
+    var pay_price=0;
+    var original_price=0;
+    var discount=1;
+    function calculate_price(e){
+        var price=$(e).val();
+        $.post("{:url('get_offline_payment_info')}",{member_id:member_id,price:price},function(res){
+            if(res.code=='-100'){
+                layer.msg(res.message);
+                return;
+            }
+            $('#coupon').text(res.coupon);
+            $('#packet').text(res.packet);
+            $('#discounts').text(res.discounts);
+            // $('#discount_price').text(res.discount_price);
+            $('#pay_price').text(res.pay_price);
+            original_price = price;
+            coupon = res.coupon;
+            member_coupon_id = res.member_coupon_id;
+            packet = res.packet;
+            member_packet_id = res.member_packet_id;
+            pay_price = res.pay_price;
+            discount=res.discount;
+        });
+    }
+    var paying = false
+    function pay(){
+        if (paying)
+        {
+            return
+        }
+        paying = true
+        var data={coupon:coupon,member_coupon_id:member_coupon_id,packet:packet,member_packet_id:member_packet_id,pay_price:pay_price,original_price:original_price,member_id:member_id,discount:discount};
+        $.post("{:url('offline_payment_pay')}",data,function(res){
+            if(res.code==200){
+                layer.msg('支付成功',{time:2000,end:function(){
+                    window.location.reload();
+                }});
+            }else{
+                paying = false
+                layer.msg(res.message);
+            }
+        })
+        console.log(data);
+    }
+    function call_off() {
+        window.location.reload();
+    }
+</script>
+{/block}

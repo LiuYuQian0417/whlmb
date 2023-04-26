@@ -1,0 +1,157 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+
+<style>
+    .layui-form {
+
+    }
+
+    .layui-form .layui-form-item {
+        height: 30px;
+        line-height: 30px;
+        margin-bottom: 10px;
+    }
+
+    .layui-form .layui-input {
+        width: 194px;
+        height: 30px;
+    }
+
+    .layui-form .layui-form-label {
+        font-size: 13px;
+        width: 92px;
+        margin: 0;
+        height: 30px;
+        line-height: 30px;
+        text-align: left;
+        font-weight: normal;
+        color: #4b4b4b;
+    }
+
+    .layui-form .layui-input-block {
+        float: left;
+        margin-left: 0;
+        height: 30px;
+        line-height: 30px;
+        min-height: 30px;
+    }
+
+    .layui-form .layui-form-radio div {
+        margin-left: 17px;
+    }
+
+    .layui-form-switch {
+        height: 24px;
+    }
+
+    .layui-form-onswitch {
+        border-color: #FF5722;
+        background-color: #FF5722;
+    }
+    a.btn_edit:hover{
+        color: #fff;
+    }
+
+
+    a.btn_edit{
+        color: #fff;
+        background: #1e9fff;
+    }
+
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+
+<div class="main-content" id="mainContent">
+    <form method="post" class="layui-form" action="">
+        <!--操作提示begin-->
+        <div class="content">
+            <div class="explanation" id="explanation">
+                <div class="ex_tit">
+                    <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                </div>
+                <ul>
+                    <li><span>可设置商品相关标签，可以将此标签配置到商品中，方便商城会员查询商品。</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标签分类</label>
+            <div class="layui-input-block">
+                <select name="classify">
+                    <option value="0">全部</option>
+                    {volist name="tag_classify_data" id="vo"}
+                    <option
+                            value="{$vo.tag_classify_id}"
+                            {eq name="filter_where.tag_classify_id|default=0" value="$vo.tag_classify_id" }selected="selected" {/eq}
+                    >{$vo.name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="search-info">
+            <div class="search-form">
+                <label class="layui-form-label">标签名称</label>
+                <div class="search-key">
+                    <input type="text" name="keyword" size="30" class="text text_2" placeholder="标签名称"/>
+                    <!--<input type="submit" value=" 搜索 " class="submit"/>-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+
+        <div class="list-div" id="listDiv">
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th >编号</th>
+                    <th >标签名称</th>
+                    <th >标签分类名称</th>
+                    <th >服务内容</th>
+                    <th >操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr><td class="no-records" colspan="5">没有找到任何记录</td></tr>
+                {/empty}
+                {volist name='data' id='item'}
+                <tr>
+                    <td>{$item.tag_id}</td>
+                    <td >{$item.name}</td>
+                    <td >{$item.tag_classify_name}</td>
+                    <td >{$item.content|mb_substr=0,50}</td>
+                    <td > <a class="btn_edit" onclick="main.jumpFour('client/tag/create?tag_id={$item.tag_id}')"><i class="fa fa-edit"></i>查看</a></td>
+                </tr>
+                {/volist}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="5">
+                        {:$data->render()}
+                    </td>
+
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+</div>
+
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+</script>
+{/block}
+

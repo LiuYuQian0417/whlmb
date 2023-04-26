@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-title" content="iShop"/>
+    <meta name="App-Config" content="fullscreen=yes,useHistoryState=yes,transition=yes"/>
+    <!--iphone设备中的safari私有meta标签，它表示：允许全屏模式浏览-->
+    <meta content=yes name=apple-mobile-web-app-capable/>
+    <meta content=yes name=apple-touch-fullscreen/>
+    <!--告诉设备忽略将页面中的数字识别为电话号码-->
+    <meta content="telephone=no,email=no" name=format-detection/>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <title>会员卡</title>
+    <!--bootstrap-->
+    <link rel="stylesheet" type="text/css" href="__RES__/my/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="__RES__/my/common.css">
+    <script src="__RES__/my/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+    <style>
+        body {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            max-width: 720px;
+            overflow-x: hidden;
+            overflow-y: hidden
+        }
+
+        .wrap {
+            background: url('__RES__/my/bg.jpg') no-repeat;
+            background-size: 100% 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            max-width: 720px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header class="vip_head z_4">
+        <!--<img src="__RES__/my/back.png" class="back" title="" alt="" onclick="window.history.go(-1)">-->
+        <div class="title"></div>
+        <!--<div class="small">帮助</div>-->
+    </header>
+    <div class="vip_card member_card">
+        <div class="title">会员卡</div>
+        <div class="card_con">
+            <div class="card_info">
+                <img src="__RES__/my/card.png" class="card">
+                <div class="info">
+                    <div>{$member_info.nickname}</div>
+                    <div>{$member_info.now.mark}{$member_info.now.rank_name}</div>
+                </div>
+            </div>
+            <img src="{:request()->domain()}/v2.0/code/bar_code?parameter={$member_info.card_number}" class="bar_code">
+            <div class="card_num">卡号：{$member_info.card_number}</div>
+        </div>
+        <div class="member_benefits" style="justify-content: space-around;">
+            <div>
+                <img src="__RES__/my/icon.png">会员专享价
+            </div>
+            <div>
+                <img src="__RES__/my/icon.png">累计积分
+            </div>
+            {if condition="$set['IS_COUPON']"}
+            <div>
+                <img src="__RES__/my/icon.png">使用优惠券
+            </div>
+            {/if}
+        </div>
+    </div>
+    <div class="pay_card">
+        <div class="vip_card">
+<!--            <div class="title">付款码</div>-->
+<!--            <div class="card_con">-->
+<!--                <div style="height: 110px;">-->
+<!--                    <img src="" class="bar_code" style="height: 59px;margin: 0 auto;padding: 25px 0 0 0;" id="bar_number">-->
+<!--                </div>-->
+<!--                <div class="card_num">-->
+<!--                    <div class="first"><div class="toggle">点击可查看付款码数字</div></div>-->
+<!--                    <div class="none first"><div class="toggle" id="toggle"></div></div>-->
+<!--                </div>-->
+<!--                <img src="" class="QR_code" style="width: 130px;" id="QR_code">-->
+<!--            </div>-->
+            <div class="member_benefits hide_num">
+                账户余额&emsp;&emsp;<span class="num" id="balance_num">{$member_info.usable_money}</span>元
+                <div class="iconPar"><img src="__RES__/my/hide1.png" class=""></div>
+            </div>
+        </div>
+        <div class="set_pass" style="display: none;" onclick="my()">
+            <div>设置支付密码，保护交易安全<img src="__RES__/my/more.png"></div>
+        </div>
+    </div>
+    <div class="card_board"></div>
+</div>
+<script>
+    function my() {
+        var ua = window.navigator.userAgent.toLowerCase();
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+            wx.miniProgram.navigateTo({
+                url: '/my/password/password'
+            });
+            return true;
+        } else {
+            return false;
+        }
+    }
+    if ('{:input("index",0)}' == 1) {
+        $(".member_card").addClass("card_scale");
+        $(".pay_card").addClass("card_fix");
+        $(".card_board").fadeIn();
+    }
+    $("body").on("touchstart", function (e) {
+        e.preventDefault();
+        startX = e.originalEvent.changedTouches[0].pageX,
+            startY = e.originalEvent.changedTouches[0].pageY;
+    });
+    $("body").on("touchmove", function (e) {
+        e.preventDefault();
+        moveEndX = e.originalEvent.changedTouches[0].pageX,
+            moveEndY = e.originalEvent.changedTouches[0].pageY,
+            X = moveEndX - startX,
+            Y = moveEndY - startY;
+
+        if (Math.abs(X) > Math.abs(Y) && X > 0) {
+            // console.log("左");
+        }
+        else if (Math.abs(X) > Math.abs(Y) && X < 0) {
+            // console.log("右");
+        }
+        else if (Math.abs(Y) > Math.abs(X) && Y > 0) {
+            // console.log("下");
+            $(".member_card").removeClass("card_scale");
+            $(".pay_card").removeClass("card_fix");
+            $(".card_board").fadeOut();
+        }
+        else if (Math.abs(Y) > Math.abs(X) && Y < 0) {
+            // console.log("上");
+            $(".member_card").addClass("card_scale");
+            $(".pay_card").addClass("card_fix");
+            $(".card_board").fadeIn();
+        }
+        else {
+            // alert("just touch");
+        }
+    });
+
+    $(function () {
+
+        setInterval(refresh, 1000);
+
+        function refresh() {
+            $.ajax({
+                url: '/v2.0/my/index_number',//你对数据库的操作路径
+                data: {parameter: '{:input("parameter")}'},
+                type: 'post',//提交方式
+                success: function (data) {
+                    if (!data.code) {
+                        $('#bar_number').attr('src','{:request()->domain()}/v2.0/code/bar_code?parameter='+data.number);
+                        $('#QR_code').attr('src','{:request()->domain()}/v2.0/code/qr_code?parameter='+data.number);
+                        $('#toggle').text(data.number);
+                        if ($('#balance_num').text() != '****'){
+                            $('#balance_num').text(data.usable_money);
+                        }
+                    }
+                }
+            })
+
+        }
+
+        // 点击付款码
+        $(".pay_card").click(function () {
+            $(".member_card").addClass("card_scale");
+            $(".pay_card").addClass("card_fix");
+            $(".card_board").fadeIn()
+        });
+
+        // 查看账户余额
+        document.getElementById('balance_num').innerHTML = (document.getElementById('balance_num').innerHTML == '****' ? '{$member_info.usable_money}' : '****')
+        $(".pay_card .member_benefits").click(function () {
+            $(this).toggleClass("hide_num");
+
+            document.getElementById('balance_num').innerHTML = (document.getElementById('balance_num').innerHTML == '****' ? '{$member_info.usable_money}' : '****')
+
+            if ($(this).hasClass("hide_num")) {
+                $(this).find(".iconPar").find("img").removeClass("iconColor").removeAttr("style");
+                $(".member_benefits .iconPar img").attr("src", "__RES__/my/hide1.png")
+            }
+            else {
+                $(this).find(".iconPar").find("img").addClass("iconColor");
+                $(".member_benefits .iconPar img").attr("src", "__RES__/my/show1.png")
+            }
+        })
+
+        $(".toggle").click(function () {
+            $(this).parents(".first").hide().siblings().show();
+        })
+
+    })
+
+</script>
+</body>
+</html>

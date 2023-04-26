@@ -1,0 +1,181 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+<!--<div class="layui-tab layui-tab-brief">-->
+<!--    <ul class="layui-tab-title">-->
+<!--        <li class="{:input('get.type',0)?:'layui-this'}">-->
+<!--            <a href="javascript:reloadSelf({type:0});">-->
+<!--                平台-->
+<!--                {if condition="input('get.type',0) neq 0"}-->
+<!--                <span class="layui-badge layui-bg-blue">{$count.Self?:0}</span>-->
+<!--                {/if}-->
+<!--            </a>-->
+<!--        </li>-->
+        <!--<li class="{:input('get.type',0)?'layui-this':''}">-->
+            <!--<a href="javascript:reloadSelf({type:1});">-->
+                <!--店铺-->
+                <!--{if condition="input('get.type',0) neq 1"}-->
+                <!--<span class="layui-badge layui-bg-blue">{$count.Other?:0}</span>-->
+                <!--{/if}-->
+            <!--</a>-->
+        <!--</li>-->
+<!--    </ul>-->
+<!--</div>-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>展示了商城品牌的相关信息。</span></li>
+            <li><span>可以通过品牌关键字搜索相关品牌信息。</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('brand/create')">
+                <div class="fbutton">
+                    <div class="add" title="添加商品"><span><i class="fa fa-plus"></i> 添加品牌</span></div>
+                </div>
+            </a>
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i
+                        class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                {if condition="input('get.type',0) eq 0"}
+                <div class="imitate_select">
+                    <select name="goods_classify_id" class="cite ps-container">
+                        <option value="0">请选择品牌分类</option>
+                        {volist name="classifies" id="classify"}$classify.brand_classify_id
+                        <option value="{$classify.brand_classify_id}"
+                                {eq name=":input('goods_classify_id')" value="$classify.brand_classify_id"}selected{/eq}>
+                        {$classify.brand_classify_name}</option>
+                        {/volist}
+                    </select>
+                </div>
+                {/if}
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入关键字"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>
+            <th>编号</th>
+            <th>品牌名称</th>
+            <th>品牌logo</th>
+            {if condition="input('get.type',0) eq 0"}<th>品牌英文名称</th>{/if}
+            <th>品牌首字母</th>
+            {if condition="input('get.type',0) eq 0"}
+            <th>排序</th>
+            <th>是否推荐</th>
+            {/if}
+
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach name='data' item='item'}
+        <tr>
+            <td><input type="checkbox" value="{$item.brand_id}" class="chk" lay-filter="chk" title="" lay-skin="primary"/>
+            </td>
+            <td>{$item.brand_id}</td>
+            <td>{$item.brand_name?:'未设置'}</td>
+            <td>
+                <img src="{$item.brand_logo}" alt="{$item.BrandLogo}" title="{$item.brand_logo}" class="thumb-img"
+                     style="max-width: 60px;" onerror="this.src='/template/master/resource/image/common/imageError.png'" />
+            </td>
+            <td>{$item.brand_letter}</td>
+            {if condition="input('get.type',0) eq 0"}
+            <td>{$item.brand_first_char}</td>
+            <td>
+                <input type="text" id="sort{$item.brand_id}" value="{$item.sort}" class="text_center" oninput="main.triggerText('{$item.brand_id}','sort','/brand/text_update')">
+            </td>
+            <td>
+                <input type="checkbox" name="is_recommend" lay-skin="switch"
+                       lay-filter="is_recommend"
+                       lay-text="开|关"
+                       value="{$item.brand_id}"
+                       {eq name="item.is_recommend" value="1" }checked{/eq}>
+            </td>
+            {/if}
+            <td>
+
+                <a class="btn_edit" onclick="main.jumpFour('brand/edit?id={$item.brand_id}')"><i class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" onclick="main.destroy('/brand/destroy','{$item.brand_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                        <span>
+                            <a class="btn_trash" onclick="main.destroy('/brand/destroy')"><i class="fa fa-trash-o"></i>多选删除</a>
+                        </span>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.form([{selector:'switch(is_recommend)',callback:function (data) {
+            console.log(data);
+            main.ajax({type:'post',url:'/brand/auditing',data:{'id': data.value}});
+        }}]);
+    //重定向本身
+    function reloadSelf(condition) {
+        var param = '', key = Object.keys(condition);
+
+        if (key.length > 0) {
+            for (var x in condition) {
+                param += '&' + x + '=' + condition[x];
+            }
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+</script>
+{/block}

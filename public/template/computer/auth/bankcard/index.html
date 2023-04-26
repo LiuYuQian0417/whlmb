@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ondragstart='return false'>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!--公共头部css-->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicHeader.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/color.css" />
+    <!--忘记密码 css-->
+    <link rel="stylesheet" href="__RES__/css/forgetPwd/forgetPwd.css">
+
+    <script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/Validform_v5.3.2_ncr_min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/jquery.from.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/layui/layui.js"></script>
+    <script src="__RES__/layui/lay/modules/layer.js"></script>
+    <script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/swiper.min.js"></script>
+    <link rel="stylesheet" href="__RES__/css/swiper.min.css">
+
+</head>
+<body>
+
+
+<!--头部搜索-->
+<div class="head-container" >
+    <div class="head-container-center" >
+        <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+        <span>忘记密码</span>
+    </div>
+</div>
+<!--头部搜索结束-->
+
+<div class="flow-container">
+      <div>
+
+      </div>
+</div>
+
+<!--&lt;!&ndash;底部&ndash;&gt;-->
+<!--<div class="wechat-pay-bottom">-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持 | 哈尔滨龙采科技集团</p>-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持</p>-->
+    <!--<p>版权所有：黑龙江龙采科技</p>-->
+<!--</div>-->
+
+
+
+<script type="text/javascript">
+    $(function () {
+        var forget_one_phone =  window.sessionStorage.getItem('forget_one_phone');
+        var forget_one_code =  window.sessionStorage.getItem('forget_one_code');
+
+        $("[name='phone']").val(forget_one_phone);
+        $("[name='code']").val(forget_one_code);
+    })
+    main.valid({'select':'#forget','return_url':ObjectOrJson({'use_url':'forget/three','return_url':'{:url("/pc2.0/login/index")}'})});
+</script>
+
+</body>
+</html>

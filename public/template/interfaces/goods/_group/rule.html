@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-title" content="iShop"/>
+        <meta name="App-Config" content="fullscreen=yes,useHistoryState=yes,transition=yes" />
+        <!--iphone设备中的safari私有meta标签，它表示：允许全屏模式浏览-->
+        <meta content=yes name=apple-mobile-web-app-capable />
+        <meta content=yes name=apple-touch-fullscreen />
+        <!--告诉设备忽略将页面中的数字识别为电话号码-->
+        <meta content="telephone=no,email=no" name=format-detection />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+        <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+        <title>拼购规则</title>
+        <!--bootstrap-->
+        <link rel="stylesheet" type="text/css" href="__RES__/group/bootstrap.min.css">
+
+        <!--公共样式-->
+        <link rel="stylesheet" type="text/css" href="__RES__/group/common.css">
+        <script src="__RES__/group/jquery-2.1.4.min.js"></script>
+</head>
+<body>
+<div class="colorActive hide"></div>
+<div class="wrap">
+    <header class="head_line">
+        <img src="__RES__/group/back.png" class="back" title="" alt="" onclick="window.history.go(-1)">
+        <div class="title">拼购</div>
+    </header>
+    {:htmlspecialchars_decode($content)}
+</div>
+
+</body>
+</html>

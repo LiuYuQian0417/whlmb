@@ -1,0 +1,54 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>默认新建的权限组是全部权限，如需更改权限，创建完成后，在权限组列表更改。<li>
+            <li>默认新建的权限组状态是开启的，状态更改在列表页操作。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="contentShell">
+    <form class="layui-form"  enctype="multipart/form-data">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="10" value="{$data.title?:''}" datatype="*" nullmsg="请输入权限组标题" errormsg="请输入权限组标题" placeholder="请输入权限组标题,不超过10字符" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">*</em>简要描述</label>
+            <div class="layui-input-block">
+                <textarea name="describe" datatype="*" nullmsg="请输入权限组的简要描述" errormsg="请输入权限组的简要描述" maxlength="300" placeholder="请输入权限组的简要描述,300字符以内" autocomplete="off" class="layui-textarea resize_textArea">{$data.describe?:''}</textarea>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <input type="hidden" name="auth_group_id" value="{:input('id',0)}" />
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a href="javascript:void(0);" class="layui-btn" id="submit">立即提交</a>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

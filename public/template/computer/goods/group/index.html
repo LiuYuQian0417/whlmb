@@ -1,0 +1,204 @@
+{extend  name="public/index_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+<link rel="stylesheet" href="__RES__/css/Spellgroup/Spellgroup.css">
+{/block}
+
+
+{block name="content"}
+<style>
+    .head-container .logo span{
+        font-size: 14px;
+        position: relative;
+        top: -9px;
+        margin-left: 5px;
+    }
+    .silder-menu .silder .swiper-slide{
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .silder-menu .silder .swiper-slide a{
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .banner{
+     min-height: 405px;
+    }
+</style>
+<div class="menu border-color" style="background: #fff;">
+    <div class="menu-center">
+        <div class="menu-top">
+            <a {empty name=":input('group_classify_id')"} class="primary-background-color active" {/empty} href="{:url('/pc2.0/group/index')}">
+                精选
+            </a>
+            {volist name="class" id="item" length="11"}
+            <a {if condition="$last_id eq $item.group_classify_id"} class="primary-background-color active" {/if}{if condition="input('group_classify_id') eq $item.group_classify_id"/} class="primary-background-color active" {/if} class="primary-color-hover" href="{:url('/pc2.0/group/index')}?group_classify_id={$item.group_classify_id}">
+                {$item.title}
+            </a>
+            {/volist}
+            {gt name=":count($class)" value="11"}
+            <a href="{:url('/pc2.0/group/index')}" class="all-menu">
+                全部分类
+                <img src="__RES__/imgs/shophome/hx.png" alt="">
+            </a>
+            {/gt}
+        </div>
+
+        <div class="all-box ov">
+            <!--active-->
+            {volist name="class" id="item2" offset="11"}
+            <a {if condition="$last_id eq $item.group_classify_id"} class="primary-background-color active" {/if}{if condition="input('group_classify_id') eq $item.group_classify_id"/} href="{:url('/pc2.0/group/index')}?group_classify_id={$item.group_classify_id}" class="primary-color-hover ">
+                {$item.title}
+            </a>
+            {/volist}
+
+        </div>
+    </div>
+</div>
+{if condition="!empty($two_class) && !$two_class->isEmpty()"}
+<div class="silder-menu">
+    <!-- Swiper -->
+    <div class="swiper-container silder">
+        <div class="swiper-wrapper">
+            {volist name="$two_class" id="item1"}
+            <div class="swiper-slide">
+                <a {eq name=":input('group_classify_id')" value="$item1.group_classify_id" } class="border-color primary-color" {/eq}  href="{:url('/pc2.0/group/index')}?group_classify_id={$item1.group_classify_id}" >
+                    {$item1.title}
+                </a>
+            </div>
+            {/volist}
+        </div>
+    </div>
+</div>
+{/if}
+<div class="banner">
+    <!-- Swiper -->
+    <div class="swiper-container banner-swiper">
+        <div class="swiper-wrapper">
+            {volist name="$adv_info" id="ad"}
+            <div class="swiper-slide">
+                <a href="javascript:main.adv_jump('{$ad.type}','{$ad.content}')">
+                    <img src="{$ad.file}" alt="">
+                </a>
+            </div>
+            {/volist}
+        </div>
+        <div class="swiper-button-prev"><span></span></div><!--左箭头-->
+        <div class="swiper-button-next"><span></span></div><!--右箭头-->
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+
+<div class="group-list">
+    <ul>
+        {volist name="$result" id="item"}
+        <li>
+            <a href="javascript:jump_goods('{$item.goods_id}')">
+                <div class="goods-img">
+                    <img src="{$item.goods.file}" alt="">
+                </div>
+                <p class="goods-name">
+                   {$item.goods.goods_name}
+                </p>
+                <div class="bot">
+                    <div class="left">
+                        <div class="pic primary-color">
+                            ￥<span>{$item.goods.group_price}</span>
+                        </div>
+                        <div class="bot-left">
+                            <span class="number primary-background-color">{$item.group_num}人拼</span>
+                            <span>￥{$item.goods.shop_price}</span>
+                        </div>
+
+                    </div>
+                    <div class="btn primary-background-color" >
+                        立即拼团
+                    </div>
+                </div>
+            </a>
+        </li>
+        {/volist}
+
+    </ul>
+</div>
+<!--分页-->
+<div class="pageContainer">{$result|raw}</div>
+
+{/block}
+
+{block name="js"}
+<script src="__RES__/js/swiper.min.js"></script>
+<script>
+    var swiper = new Swiper('.silder', {
+        slidesPerView: 'auto',
+        spaceBetween: 30,
+    });
+
+    var swiper = new Swiper('.banner-swiper', {
+        initialSlide :0,//默认第1个
+        effect: 'coverflow',
+        slidesPerView: 'auto',
+        centeredSlides: true,
+        loop:true,
+        spaceBetween: -800,
+        autoplay: {
+            delay: 3000,
+            stopOnLastSlide: false,
+            disableOnInteraction: false,
+        },
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows : false,
+
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        type:'custom',
+        pagination: {
+            el: '.swiper-pagination',
+        },
+    });
+</script>
+
+<script>
+    var bl = 0;
+    $('.all-box a').each(function () {
+        if($(this).hasClass('active')){
+            bl=1;
+            var h = $('.all-box a').length;
+            h = parseInt(h/13)+1;
+            h=h*40;
+            $('.all-box').stop().animate({'height':h+'px'},300);
+            return false;
+        }else{
+            bl=0;
+        }
+    });
+
+    $('.all-menu').mouseenter(function () {
+        $('.all-box').slideDown();
+        var h = $('.all-box a').length;
+        h = parseInt(h/13)+1;
+        h=h*40;
+        $('.all-box').stop().animate({'height':h+'px'},300);
+    });
+    $('.menu-center').mouseleave(function () {
+        if(bl==0){
+            $('.all-box').stop().animate({'height':0+'px'},300);
+        }
+    })
+
+
+</script>
+{/block}

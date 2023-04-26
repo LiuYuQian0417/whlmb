@@ -1,0 +1,165 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+<style>
+    .calculate span {
+        margin-right: 20px;
+    }
+    .layui-laydate{
+        margin: 40px 0 !important;
+    }
+</style>
+{__block__}
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/store')">结算</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、平台与商家对账，根据店铺查询结算汇总数据与结算记录；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tab" style="margin-top: 15px;">
+    <ul>
+        <li class="curr" {eq name="single_store" value="0"} hidden {/eq}><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/store')">结算对账</a></li>
+        <li {eq name="single_store" value="0"} class="curr" {/eq}><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/distribution')">分销商对账</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/order')">订单对账</a></li>
+    </ul>
+</div>
+<div class="goods-list" style="width: 100%">
+    <table class="ecsc-default-table ecsc-table-seller mt20"  style="width: 100%;color: #333;margin: 10px 0;">
+        <tbody>
+        <tr>
+            <td style="border:1px solid #e6e6e6;padding: 9px 15px;">
+                <p style="line-height: 30px">待支出</p>
+                <p>&yen;<span class="font-style">{:number_format(($count.total_bro-$count.close_pro),2,'.','')}</span></p>
+            </td>
+            <td style="border:1px solid #e6e6e6;padding: 9px 15px;">
+                <p style="line-height: 30px">已支出</p>
+                <p>&yen;<span class="font-style">{$count.close_pro?:0.00}</span></p>
+            </td>
+            <td style="border:1px solid #e6e6e6;padding: 9px 15px;">
+                <p style="line-height: 30px">待结算</p>
+                <p>&yen;<span class="font-style">{$count.wait_pay?:0.00}</span></p>
+            </td>
+            <td style="border:1px solid #e6e6e6;padding: 9px 15px;">
+                <p style="line-height: 30px">提现审核中</p>
+                <p>&yen;<span class="font-style">{$count.withdraw?:0.00}</span></p>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <!--关键词结束-->
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">目前共有 {:$data->total()} 名记录&nbsp;&nbsp;每页<font> {:$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select" style="width: 180px;">
+                    <input title="结算日期" name="date" type="text" class="layui-input"
+                           value="{:input('get.date','')}"
+                           id="date" readonly placeholder="按结算日期范围查询">
+                </div>
+                <div class="imitate_select">
+                    <select name="shop" title="请选择店铺类型">
+                        <option value="">选择店铺类型</option>
+                        <option value="0" {eq name=":input('shop','')" value='0' } selected {/eq}>自营</option>
+                        <option value="1" {eq name=":input('shop','')" value='1' } selected {/eq}>公司</option>
+                        <option value="2" {eq name=":input('shop','')" value='2' } selected {/eq}>个人</option>
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus"
+                           placeholder="请输入店铺名称" value="{:input('get.keyword','')}" autocomplete="off">
+                </div>
+                <input type="submit" class="btn search_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th>商家</th>
+                <th>总佣金</th>
+                <th>待支出佣金</th>
+                <th>已支出佣金</th>
+                <th>待结算</th>
+                <th>订单笔数</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {foreach $data as $item}
+            <tr>
+                <td>{$item.store_name}</td>
+                <td>{$item.total_bro}</td>
+                <td>{:number_format(($item.total_bro - $item.close_pro),2,'.','')}</td>
+                <td>{$item.close_pro}</td>
+                <td>{$item.wait_pay}</td>
+                <td>{$item.order_num}</td>
+                <td>
+                    <a class="btn_edit" href="javascript:void(0);"
+                       onclick="main.jumpFour('distribution_book/statement?store_id={$item.store_id}&type=3')"><i class="fa fa-history"></i>对账单</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+            {notempty name='data'}
+            {if condition="$data->lastPage() > 1"}
+            <tfoot>
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            </tfoot>
+            {/if}
+            {/notempty}
+        </table>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('.layui-form');
+    main.laydate([{
+        elem: '#date',
+        type: 'date',
+        range: true,
+        max:0
+    }]);
+</script>
+{/block}

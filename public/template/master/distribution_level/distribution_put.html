@@ -1,0 +1,240 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css"  rel="stylesheet" type="text/css" />
+<style>
+    .uploadImg{width: 300px;height: auto}
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>升降级设置，每个月只能修改一次。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+                <li><span>设置分销商等级后，分销商就可晋级，得到该级别对应的最高比例分佣，如果不设置分销商等级，也没设置单品分佣规则，则按照默认分佣规则进行佣金结算，单品分佣规则优先级仍是最高。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写等级基本信息</label>
+        <hr class="layui-bg-gray">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 等级名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="level_title" maxlength="20" autocomplete="off" placeholder="请输入等级名称"
+                       value="{$find.level_title|default=''}"
+                       datatype="*"
+                       nullmsg="请输入等级名称" errormsg="请输入等级名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 等级级别</label>
+            <div class="layui-input-inline">
+                <input type="number" name="level_weight" autocomplete="off" placeholder="请输入等级级别"
+                       value="{$find.level_weight|default=''}"
+                       {$find ? ($find.level_weight ? 'datatype="num2"' : 'readonly datatype="*"') : 'datatype="num2"'}
+                       nullmsg="请输入等级级别,非0正整数" errormsg="等级级别,请输入非0正整数值"
+                       class="layui-input">
+            </div>
+            <div class="layui-form-mid layui-word-aux">数值越大，级别越高，必须是整数，<a href="javascript:layer.open({type: 1,shade: 0.01,title: false,content:$('#tips')});">查看当前已设置等级</a></div>
+            <div id="tips" hidden style="text-align: center;padding: 15px;">
+                {empty name="$weight"}
+                <div>当前没有设置分销商等级</div>
+                {else/}
+                <table>
+                    {foreach $weight as $_weight}
+                    <tr>
+                        <td style="padding: 3px 5px;">{$_weight['level_title']}</td>
+                        <td style="padding: 3px 5px;">等级级别{$_weight['level_weight']}</td>
+                    </tr>
+                    {/foreach}
+                </table>
+                {/empty}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">等级标志</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev">
+                        <img id="imgShow" style="width: 120px;" src="{$find.mark_alias|default=''}" onerror="this.src='__RES__/image/common/imageError.png'"  alt="等级标志"/>
+                    </div>
+                    <div class="uploader white">
+                        <input type="text" title class="filename" id="localPath" value="{$find.mark_alias|default=''}" readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img" name="image" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 分佣比例%</label>
+            <div class="layui-inline">
+                <div class="layui-form-mid">一级</div>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="one_ratio" placeholder="%" autocomplete="off"
+                           datatype="num" value="{$find.one_ratio?:''}"
+                           nullmsg="请输入一级分销比例" errormsg="请输入正确的一级分销比例,最多保留两位小数"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-mid">二级</div>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="two_ratio" placeholder="%" autocomplete="off"
+                           datatype="num" value="{$find.two_ratio?:''}"
+                           nullmsg="请输入二级分销比例" errormsg="请输入正确的二级分销比例,最多保留两位小数"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-mid">三级</div>
+                <div class="layui-input-inline" style="width: 60px;">
+                    <input type="number" name="three_ratio" placeholder="%" autocomplete="off"
+                           datatype="num" value="{$find.three_ratio?:''}"
+                           nullmsg="请输入三级分销比例" errormsg="请输入正确的三级分销比例,最多保留两位小数"
+                           class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">所有级别比例总和不能超过100%，每个结算周期只能修改一次分佣比例</div>
+            </div>
+        </div>
+        <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写自动升级策略</label>
+        <hr class="layui-bg-gray">
+        <div class="layui-form-mid layui-word-aux"> <i class="layui-icon">&#xe702;</i> 若不使用某规则条件,请对应留空即可</div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">佣金总金额</label>
+                <div class="layui-input-inline" style="width: 250px;">
+                    <input type="number" title="佣金总金额" name="upgrade_total_brokerage" step="0.01"
+                           datatype="num" nullmsg="请输入佣金总金额,默认为0"  errormsg="请输入正确的佣金总金额" ignore="ignore" value="{$find?($find.upgrade_total_brokerage != 0?$find.upgrade_total_brokerage:''):''}"
+                           placeholder="请输入佣金总金额,默认为0" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">订单笔数</label>
+                <div class="layui-input-inline" style="width: 250px;">
+                    <input type="number" title="订单笔数" name="upgrade_total_order_num"  step="1"
+                           datatype="n" nullmsg="请输入订单笔数,默认为0" errormsg="请输入正确的订单笔数" ignore="ignore" value="{$find.upgrade_total_order_num?:''}"
+                           placeholder="请输入整数订单笔数,默认为0" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">订单总金额</label>
+                <div class="layui-input-inline" style="width: 250px;">
+                    <input type="number" title="订单总金额" name="upgrade_total_order_sum" step="0.01"
+                           datatype="num" nullmsg="请输入订单总金额,默认为0" errormsg="请输入正确的订单总金额" ignore="ignore" value="{$find?($find.upgrade_total_order_sum != 0?$find.upgrade_total_order_sum:''):''}"
+                           placeholder="请输入订单总金额,默认为0" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">直属下级分销商数量</label>
+                <div class="layui-input-inline" style="width: 250px;">
+                    <input type="number" title="直属下级分销商数量" name="upgrade_direct_next_num" step="1"
+                           datatype="n" nullmsg="请输入直属下级分销数量,默认为0" errormsg="请输入正确的直属下级分销商数量" ignore="ignore" value="{$find.upgrade_direct_next_num?:''}"
+                           placeholder="请输入整数直属下级分销数量,默认为0" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">下级分销商数量</label>
+                <div class="layui-input-inline" style="width: 250px;">
+                    <input type="number" title="下级分销商数量" name="upgrade_next_num"  step="1"
+                           datatype="n" nullmsg="请输入下级分销商数量,不需要设置0值" errormsg="请输入正确的下级分销商数量" ignore="ignore" value="{$find.upgrade_next_num?:''}"
+                           placeholder="请输入整数下级分销数量,默认为0" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">升级策略条件关系</label>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="radio" name="upgrade_relation" value="1" title="与"  {$find?($find.upgrade_relation == 1?'checked':''):''} {$find?'':'checked'}>
+                    <input type="radio" name="upgrade_relation" value="2" title="或"  {$find?($find.upgrade_relation == 2?'checked':''):''}>
+                </div>
+            </div>
+        </div>
+        <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写自动降级策略</label>
+        {if condition="!$find || $find.level_weight"}
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 根据佣金金额</label>
+            <div class="layui-inline">
+                <div class="layui-form-mid">规定时间(天)</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="number" name="downgrade_brokerage_cycle"  step="1"
+                           datatype="n" value="{$find?($find.downgrade_brokerage_cycle != 0?$find.downgrade_brokerage_cycle:''):''}"
+                           nullmsg="请输入佣金金额的规定天数" errormsg="请输入整数佣金金额的规定天数"
+                           placeholder="请输入规定天数,整数" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">指定金额(元)</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="number" name="downgrade_brokerage_sum" step="0.01"
+                           datatype="num1" value="{$find.downgrade_brokerage_sum?:''}"
+                           nullmsg="请输入佣金金额的指定金额" errormsg="请正确输入佣金金额的指定金额"
+                           placeholder="请输入指定金额" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">例：20天内佣金金额不足2000元，则自动降级</div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 根据订单金额</label>
+            <div class="layui-inline">
+                <div class="layui-form-mid">规定时间(天)</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="number" name="downgrade_order_cycle" step="1"
+                           datatype="n" value="{$find?($find.downgrade_order_cycle != 0?$find.downgrade_order_cycle:''):''}"
+                           nullmsg="请输入订单金额的规定时间" errormsg="请输入整数订单金额的规定时间"
+                           placeholder="请输入规定天数,整数" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid">指定金额(元)</div>
+                <div class="layui-input-inline" style="width: 150px;">
+                    <input type="number" name="downgrade_order_sum" step="0.01"
+                           datatype="num1" value="{$find.downgrade_order_sum?:''}"
+                           nullmsg="请输入订单金额的指定金额" errormsg="请正确输入订单金额的指定金额"
+                           placeholder="请输入指定金额" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">例：20天内订单消费金额不足2000元，则自动降级</div>
+            </div>
+        </div>
+        {else/}
+            <div class="layui-form-item">
+                <div class="layui-form-mid layui-word-aux"> <i class="layui-icon">&#xe702;</i> 最低默认等级,无需设置降级策略</div>
+            </div>
+        {/if}
+        {if condition="$find"}
+        <input type="hidden" title value="{$find.distribution_level_id}" name="distribution_level_id" />
+        {/if}
+        <hr class="layui-bg-gray">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    new uploadPreview({UpBtn: "up_img", DivShow: "imgPrev", ImgShow: "imgShow",localPath:'localPath'});
+    main.form();
+    $.Datatype.num = /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/;
+    $.Datatype.num1 = /(^[1-9](\d+)?(\.\d{1,2})?$)|(^\d\.\d{1,2}$)/;
+    $.Datatype.num2 = /(^[1-9](\d+)?$)/;
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

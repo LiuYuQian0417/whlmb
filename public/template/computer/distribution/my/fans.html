@@ -1,0 +1,166 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyFans.css" />
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css">
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left"/}
+    <!--我的页面左侧公共部分结束-->
+    <div class="index-right">
+        <!-- 我的右侧 -->
+        <div class="fans">
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="{:url('/pc2.0/distribution_my/fans')}" class="primary-color border-color" >
+                        粉丝
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="details">
+                <div class="fans-box">
+                    <div class="title">
+                        <div class="tit-left">
+                            <a  href="{:url('/pc2.0/distribution_my/fans')}?type=0" class=" primary-color-hover {eq name=':input("type",0)' value='0'}primary-color{/eq}">
+                                全部粉丝
+                            </a>
+                            <span>|</span>
+                            <a href="{:url('/pc2.0/distribution_my/fans')}?type=1" class=" primary-color-hover {eq name=':input("type",0)' value='1'}primary-color{/eq}" >
+                                直属粉丝
+                            </a>
+                            <span>|</span>
+                            <a href="{:url('/pc2.0/distribution_my/fans')}?type=2" class=" primary-color-hover {eq name=':input("type",0)' value='2'}primary-color{/eq}">
+                                推荐粉丝
+                            </a>
+                        </div>
+                        <div class="tit-right primary-color">
+                            {$data->total()}位
+                        </div>
+                    </div>
+
+                    <div class="fan-content">
+                        <div class="fans-top">
+                            <div>
+                                粉丝名称
+                            </div>
+                            <div class="screening" data-order="1"
+                                 data-sort="{if input('order',0) == 1}
+                                 {if in_array(input('sort',0),[0,2])}1{else/}2{/if}
+                                 {else/}0{/if}"
+                            >
+                                <a href="javascript:;" >
+                                    订单数量
+                                    <!--border-color-bottom-->
+                                    <i class="top {if input('order',0) == 1 and in_array(input('sort',0),[0,1])} border-color-bottom {/if}" ></i>
+                                    <!--border-color-top-->
+                                    <i class="bottom {if input('order',0) == 1 and input('sort',0) == 2} border-color-top {/if}" ></i>
+                                </a>
+                            </div>
+                            <div class="screening" data-order="2"
+                                 data-sort="{if input('order',0) == 2}
+                                 {if in_array(input('sort',0),[0,2])}1{else/}2{/if}
+                                 {else/}0{/if}"
+                            >
+                                <a href="javascript:;" >
+                                    累计收益
+                                    <!--border-color-bottom-->
+                                    <i class="top {if input('order',0) == 2 and in_array(input('sort',0),[0,1])} border-color-bottom {/if}"></i>
+                                    <!--border-color-top-->
+                                    <i class="bottom {if input('order',0) == 2 and input('sort',0) == 2} border-color-top {/if}"></i>
+                                </a>
+                            </div>
+                            <div class="screening" data-order="3"
+                                 data-sort="{if input('order',0) == 3}
+                                 {if in_array(input('sort',0),[0,2])}1{else/}2{/if}
+                                 {else/}0{/if}"
+                            >
+                                <a href="javascript:;" >
+                                    推荐日期
+                                    <!--border-color-bottom-->
+                                    <!--border-color-top-->
+                                    <i class="top {if input('order',0) == 3 and in_array(input('sort',0),[0,1])} border-color-bottom {/if}" ></i>
+                                    <i class="bottom {if input('order',0) == 3 and input('sort',0) == 2} border-color-top {/if}"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="fans-list">
+                            {empty name="$data"}
+                            <div class="indent-box indent-box-emty">
+                                <img src="__RES__/imgs/orderemty.png" alt="">
+                                <p>暂无数据</p>
+                                <!--<span>“暂无订单，忙里偷闲下一单吧”</span>-->
+                            </div>
+                            {/empty}
+                            {volist name="$data" id="item"}
+                            <div class="list">
+                                <div class="name" style="cursor:pointer;" onclick="main.jump({'url':'/pc2.0/distribution_my/fans_earnings_details?distribution_id={$item.distribution_id}'})">
+                                    <img src="{$item.avatar}" alt="">
+                                    <span>{$item.nickname}</span>
+                                </div>
+                                <div class="number">
+                                    已购买{$item.order_num}单
+                                </div>
+                                <div class="earnings primary-color">
+                                    ￥{$item.total_brokerage}
+                                </div>
+                                <div class="date">
+                                   {$item.recommend_time}
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+                <!--分页-->
+                <div class="pageContainer" style="width: auto">{$data|raw}</div>
+            </div>
+        </div>
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $('.fans-box .tit-left a').click(function () {
+        $(this).addClass('primary-color').siblings('a').removeClass('primary-color')
+    })
+
+    $('.fans-top .screening').each(function () {
+        $(this)[0].num=0;
+    });
+     $('.fans-top .screening').click(function () {
+         var sort=$(this).data('sort');
+         if(sort==0){
+             sort=1;
+         }
+        main.jump({
+            'url':'/pc2.0/distribution_my/fans?type={:input("type",0)}&order='+$(this).data('order')+'&sort='+sort,
+                }
+        );
+         // var This = $(this)[0];
+         // if(This.num==0){
+         //     // top bottom
+         //     <!--border-color-bottom-->
+         //     <!--border-color-top-->
+         //     $(this).find('a .top').addClass('border-color-bottom');
+         //     $(this).find('a .bottom').removeClass('border-color-top');
+         //     This.num=1;
+         // }else{
+         //     $(this).find('a .top').removeClass('border-color-bottom');
+         //     $(this).find('a .bottom').addClass('border-color-top');
+         //     This.num=0;
+         // }
+     })
+
+</script>
+{/block}

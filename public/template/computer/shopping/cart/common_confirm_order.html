@@ -1,0 +1,1859 @@
+{extend name="public/common"}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/public/GuessLike.css">
+<!--公共搜索css-->
+<link rel="stylesheet" href="__RES__/css/public/indexHeader.css">
+<!--地域选择样式-->
+<link rel="stylesheet" href="__RES__/css/my/MyAddress.css">
+<link rel="stylesheet" href="__RES__/css/my//MySetting.css">
+<!--代言人等级升降css-->
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<link rel="stylesheet" href="__RES__/css/confirmorder/confirmorder.css">
+
+<style>
+    .distribution-way span:first-child {
+        background: #EA5413;
+        border-color: #EA5413;
+        color: #fff;
+    }
+
+    body {
+        background: #FFF !important;
+    }
+
+    .corver {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        z-index: 99;
+    }
+
+    .corver .bg {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        top: 0px;
+        left: 0px;
+        z-index: 9;
+    }
+
+    .corver .my-address {
+        width: 1030px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #eee;
+        z-index: 99;
+    }
+
+    .corver .my-address .detailed-box-top .address-text a {
+        color: #333;
+    }
+
+    .corver .my-address .address-box {
+        padding: 0px 10px;
+    }
+
+    .corver .my-address .address-box .address-big {
+        height: 510px;
+        overflow: auto;
+    }
+
+    .corver .my-address .setting-default-address label .xdz {
+        display: none;
+    }
+
+    .head-container {
+        height: 100px;
+        line-height: 100px;
+        padding-bottom: 0px;
+    }
+
+    .head-container .logo img {
+        position: relative;
+        top: -4px;
+        margin-right: 20px;
+        margin-top: 0px;
+    }
+
+    .head-container .logo span {
+        font-size: 14px;
+        position: relative;
+        top: 8px;
+    }
+
+    .preferential-list{
+        overflow: hidden;
+    }
+    .preferential-list .preferential-list-content{
+        width: 104%;
+        overflow: auto;
+    }
+</style>
+{//modification  事件处理标识   不可删除}
+{//不要格式化当前页面  一定不要格式化}
+<!--default_express_type  默认配送方式-->
+<!--公共JQ库-->
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/js/jquery.nicescroll.min.js"></script>
+{/block}
+{block name="content"}
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="logo">
+            <img src="__RES__/imgs/logo-color.png"  onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <span>确认订单</span>
+        </div>
+        <div class="order-process">
+            <ul>
+                <li><span>1</span>
+                    <p>确认订单</p></li>
+                <li class="order-process-gray"><span>2</span>
+                    <p>付款</p></li>
+                <li class="order-process-gray"><span>3</span>
+                    <p>支付成功</p></li>
+            </ul>
+            <div class="barline">
+                <div w="25" style="width: 25%;" class="charts"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--确认订单开始-->
+<div class="confirm-order">
+    <form action="/pc2.0/order/confirm" id="submit_from">
+        <input type="hidden" id="param_data" value="{$param_data}">
+        <input type="hidden" name="member_address_id" id="member_address_id"
+               value="{$address.0.member_address_id|default=''}" nullmsg="收货地址不能为空">
+        <input type="hidden" name="member_packet_id" id="member_packet_id"
+               value="{$packet.0.member_packet_id|default=''}">
+        <input type="hidden" name="member_platform_coupon_id" id="member_platform_coupon_id" value="{$platform_coupon}">
+        <div class="Check-order">
+            填写并核对订单详情
+        </div>
+        <div class="consignee">
+            <p>收货人信息 <a href="javascript:" class="new-consignee-address" {lt name=":count($address)" value="20"} style="display: block;" {else/} style="display: none;" {/lt} onclick="site(this,'1')">新增收货地址</a> </p>
+            <ul class="consignee-list" style="height: 29px;" >
+                {volist name='address' id='address_data'}
+                <li class="consignee-list-li" id="address_{$address_data.member_address_id}" {eq name='$key' value='0'}checked="checked" {/eq} data-address_id="{$address_data.member_address_id}">
+                <a href="javascript:;" modification="address" data-address_id="{$address_data.member_address_id}"
+                   class="consignee-name {eq name='$key' value='0'}consignee-name-border  border-color{/eq}">{$address_data.name}
+                    <div class="triangle border-color"></div>
+                    <img src="__RES__/imgs/confirmorder/duigou.png" class="hook">
+                </a>
+                <span class="consignee-name-people" name>{$address_data.name}</span>
+                <!--黑龙江 哈尔滨市 道外区 城区 南平街278号 2单元 401-->
+                <span address>{$address_data.province} {$address_data.city} {$address_data.area} {$address_data.street}</span>
+                <span phone>{$address_data.phone}</span>
+                <!--*这是默认选中行的地址/*这是默认选中行的地址的样式（style="display: inline-block"）*/-->
+                <a href="javascript:;" class="default-address"
+                   style="display: {eq name='address_data.is_default' value='1'}inline-block{else/}none{/eq}">默认地址</a>
+                <div class="set-to-default" style="display: none;">
+                    <!--*这是默认选中行的地址/*这是默认选中行的地址的样式（style="display: none）*/-->
+                    <a href="javascript:;" class="set-to-address"
+                       style="display: {eq name='address_data.is_default' value='0'}inline-block{else/}none{/eq}">设为默认地址</a>
+                    <a href="javascript:;" class="editor-address"
+                       data-address_id="{$address_data.member_address_id}" onclick="site(this,'2')">编辑</a>
+                    <a href="javascript:;" class="address-data"
+                       onclick="address_destroy(this,'{$address_data.member_address_id}')"> 删除</a>
+                </div>
+                </li>
+                {/volist}
+            </ul>
+            <a href="javascript:;" class="consignee-more border-color">更多收货地址</a>
+        </div>
+        <div class="goods-services">
+            <p class="goods-services-title">商品及服务信息</p>
+        </div>
+        {volist name='result' id='store_data'}
+        <div class="commodity-content" data-store_id="{$store_data.store_id}">
+            <input type="hidden" name="store_set[{$store_data.store_id}][member_shop_coupon_id]"
+                   id="member_shop_coupon_id_{$store_data.store_id}" value="">
+            <div class="commodity-content-left">
+                <p class="commodity-content-left-title">支付方式</p>
+                <div class="tab-title-two1">
+                    <p class="distribution-way" id="distribution_way_{$store_data.store_id}">
+                        <span class="selected border-color primary-background-color" modification="pay_type"
+                              data-type="1">在线支付</span>
+                        {if $store_data.goods_distribution.is_pay_delivery == 1}<span modification="pay_type" data-type="2" style="display: {if $store_data.freight.city_freight_sup == 1 }block{else/}none{/if};">货到付款</span>{/if}
+                    <div class="clear"></div>
+                    </p>
+                    <input type="hidden" name="store_set[{$store_data.store_id}][pay_type]"
+                           id="pay_type_{$store_data.store_id}" value="1">
+                </div>
+                <p class="commodity-content-left-title">配送方式</p>
+                <!--配送方式-->
+                <input type="hidden" name="store_set[{$store_data.store_id}][distribution_type]"
+                       id="distribution_type_{$store_data.store_id}" value="" datatype="*" nullmsg="请选择配送方式">
+                <!--配送为自提时,店铺自提id,-->
+                <input type="hidden" name="store_set[{$store_data.store_id}][take_id]"
+                       id="take_id_{$store_data.store_id}" value="">
+                <div class="tab-title-two" id="tab_title_two_{$store_data.store_id}">
+                    <!--class="selected border-color primary-background-color" 选中样式-->
+                    <p class="distribution-way express">
+                        {eq name='$store_data.freight.city_freight_sup' value='1'}
+                        <span modification="distribution_type" data-type="1" data-default="{$store_data.freight.default_express_type == 2 ? 1: 0}"
+                              data-freight_price="{$store_data.freight.city_freight_price|default='0'}">同城速递</span>
+                        {/eq}
+                        {if $store_data.freight.take_freight_sup==1 and !empty($store_data.freight.take_freight_list)}
+                        <span modification="distribution_type" data-type="2" data-default="{$store_data.freight.default_express_type == 3 ? 1: 0}" data-freight_price="0">预约自提</span>
+                        {/if}
+                        {eq name='$store_data.freight.express_freight_sup' value='1'}
+                        <span modification="distribution_type" data-type="3" data-default="{$store_data.freight.default_express_type == 1 ? 1: 0}"
+                              data-freight_price="{$store_data.freight.express_freight_price|default='0'}">快递邮寄</span>
+                        {/eq}
+                    <div class="clear"></div>
+                    </p>
+                </div>
+                <div class="tab-content-two" id="tab_content_two_{$store_data.store_id}">
+                    {eq name='$store_data.freight.city_freight_sup' value='1'}
+                    <!--同城速递-->
+                    <div class="tab-content-div tab-content-title" data-type="1">
+                        <li>
+                            <!--<p>配送时间：09-06 最快30分钟<a href="javascript:;" class="modify-time">修改时间</a></p>-->
+                            <p>速递费：¥<span
+                                    class="primary-color">{$store_data.freight.city_freight_price|default=0}</span>
+                            </p>
+                        </li>
+                    </div>
+                    {/eq}
+                    {if $store_data.freight.take_freight_sup==1 and !empty($store_data.freight.take_freight_list)}
+                    <!--预约自提-->
+                    <div class="hide tab-content-div tab-content-title" data-type="2">
+                        <li class="pick_up">
+                            <p class="since-lift">{$store_data.freight.take_freight_list.0.take_name}</p>
+                            <p class="since-address">{$store_data.freight.take_freight_list.0.province}
+                                {$store_data.freight.take_freight_list.0.city}
+                                {$store_data.freight.take_freight_list.0.area}</p>
+                            <p class="since-content">
+                                <span class="phone">{$store_data.freight.take_freight_list.0.contacts_phone}</span>
+                                <!--<span><img src="__RES__/imgs/confirmorder/time.png" width="" height="14"> </span>-->
+                                <!--<span class="time">{$store_data.freight.take_freight_list.0.start_hours} {$store_data.freight.take_freight_list.0.end_hours}</span>-->
+                            </p>
+                            <p class="since-immediately">
+                                <a href="javascript:;" class="since-immediately-modify">修改</a>
+                            </p>
+                            <div class="the-information-content-bg" style="z-index: 999;">
+                                <div class="the-modified">
+                                    <div class="the-modified-top">修改自提信息
+                                        <span class="the-information-content-bg-close">×</span>
+                                    </div>
+                                    <div class="the-modified-content">
+                                        <div class="address-con">
+                                            <div class="address-list">
+                                                <ul class="goods_take_their_{$store_data.store_id}">
+                                                    {volist name='$store_data.freight.take_freight_list'
+                                                    id='take_freight_list'}
+                                                    <li>
+                                                        <label>
+                                                            <div class="circle {eq name='$key' value='0'}border-color active{/eq}"
+                                                                 checked="checked" modification="pick_up"
+                                                                 data-take_id="{$take_freight_list.take_id}"
+                                                                 data-take_name="{$take_freight_list.take_name}"
+                                                                 data-address="{$take_freight_list.province}{$take_freight_list.city}{$take_freight_list.area}"
+                                                                 data-contacts_phone="{$take_freight_list.contacts_phone}"
+                                                                 data-time="{$take_freight_list.start_hours}-{$take_freight_list.end_hours}">
+                                                                <span class="primary-background-color"></span>
+                                                            </div>
+                                                            <input hidden type="radio">
+                                                            <p>
+                                                                <span class="shop-name">{$take_freight_list.take_name}</span>
+                                                                <span class="time">
+                                                            <img src="__RES__/imgs/my/time.png" alt="">
+                                                            {$take_freight_list.start_hours}-{$take_freight_list.end_hours}
+                                                        </span>
+                                                                <span class=" distance">
+                                                            <!--<img src="__RES__/imgs/wz.png" alt="">-->
+                                                                    <!--600m-->
+                                                        </span>
+                                                            </p>
+                                                            <p class="address">
+                                                                {$take_freight_list.province}{$take_freight_list.city}{$take_freight_list.area}</p>
+                                                        </label>
+                                                    </li>
+                                                    {/volist}
+                                                </ul>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                    {/if}
+                    {eq name='$store_data.freight.express_freight_sup' value='1'}
+                    <!--快递邮寄-->
+                    <div class="hide tab-content-div tab-content-title" data-type="3">
+                        <li>运费：{$store_data.freight.express_freight_price}元</li>
+                    </div>
+                    {/eq}
+                </div>
+
+            </div>
+            <div class="commodity-content-right">
+                <p class="commodity-content-right-title">商家：{$store_data.store_name}</p>
+                <div class="commodity-content-right-classification">
+                    {volist name='store_data.list' id='goods_list'}
+                    <div class="commodity-product">
+                        <img src="{$goods_list.file}" width="80" height="80"
+                             onclick="jump_goods('{$goods_list.goods_id}')">
+                        <p>{$goods_list.goods_name}</p>
+                        <span>{$goods_list.attr|default='无属性'}</span>
+                    </div>
+                    <div class="commodity-product-price">
+                        <p>￥{$goods_list.price}</p>
+                        <span>{$goods_list.goods_weight*$goods_list.number}Kg</span>
+                    </div>
+                    <div class="commodity-product-price-number">
+                        x{$goods_list.number}
+                        <!--<form>-->
+                        <!--<input type=button value="-" class="number-price-left"-->
+                        <!--onClick="javascript:if(this.form.amount.value>1) this.form.amount.value&#45;&#45;;">-->
+                        <!--<input type=text name=amount value="{$goods_list.number}" class="number-price">-->
+                        <!--<input type=button value="+" class="number-price-right"-->
+                        <!--onClick="javascript:this.form.amount.value++;">-->
+                        <!--</form>-->
+                    </div>
+                    <div class="clear" style="margin: 10px 0px;"></div>
+                    {/volist}
+                    <div class="leave-message">
+                        <span>留言：</span><textarea maxlength="200" name="store_set[{$store_data.store_id}][message]"></textarea>
+                    </div>
+                    <div class="shops-invoice">
+                        <div class="invoice-top">
+                            <div class="invoice-tit">发票信息</div>
+                            <div class="invoice-mark">
+                                <b></b>
+                                <img src="__RES__/imgs/confirmorder/deng.png" alt="">
+                                <span>
+                                    开企业抬头发票须填写纳税人识别号，以免影响报销
+                                </span>
+                            </div>
+                        </div>
+                        <div class="invoice-bottom">
+                            <span class="invoice-type">普通发票</span>
+                            {eq name='$goods_list.is_added_value_tax' value='1'}
+                            <span class="person ">增值税专用发票</span>
+                            {/eq}
+                            <!--<span>商品明细</span>-->
+                            <a href="javascript:;" class="invoice-modify">修改</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="invoice-modify-box">
+                <div class="invoice-modify-content" data-store_id="{$store_data.store_id}">
+                    <div class="invoice-modify-contenttop">
+                        <span>修改发票信息</span><a href="javascript:;" class="invoice-modify-close">×</a>
+                    </div>
+                    <div class="invoice-choose">
+                        <div class="invoice-choose-title">
+                            <span class="primary-color">*</span>发票类型：
+                        </div>
+                        <!--发票类型 默认普通发票-->
+                        <input type="hidden" id="store_set_{$store_data.store_id}_invoice_set_invoice_type" name="store_set[{$store_data.store_id}][invoice_set][invoice_type]" value="0">
+                        <div class="invoice-choose-list" id="invoice_{$store_data.store_id}_invoice_type">
+                            <label class="border-color primary-color">
+                                普通发票
+                            </label>
+                            {eq name='$goods_list.is_added_value_tax' value='1'}
+                            <label class=" ">
+                                增值税专用发票
+                            </label>
+                            {/eq}
+                            <div class="clear"></div>
+                        </div>
+                        <!--发票抬头 默认个人-->
+                        <input type="hidden" class="border-color primary-color" id="store_set_{$store_data.store_id}_invoice_set_invoice_rise" name="store_set[{$store_data.store_id}][invoice_set][rise]" value="1">
+                        <div class="individualbusiness-content" id="invoice_{$store_data.store_id}_rise">
+                            <div class="looked-up-left">
+                                <span class="primary-color">*</span>发票抬头 ：
+                            </div>
+                            <div class="looked-up-right individualbusiness">
+                                <label class="border-color primary-color">
+                                    个人或事业单位
+                                </label>
+                                <label class=" ">
+                                    企业单位
+                                </label>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="clear"></div>
+
+                        <!--普通个人发票-->
+                        <ul class="invoice-choose-content individual-invoice" style="display: block">
+                            <li class="looked-up">
+                                <div class="looked-up-left">
+                                    <span class="primary-color ">*</span>发票抬头 ：
+                                </div>
+                                <div class="looked-up-right">
+                                    <input type="text" maxlength="100"  class="invoice-input" data-name="store_set[{$store_data.store_id}][invoice_set][rise_name]"
+                                           id="invoice_{$store_data.store_id}_rise_name" placeholder="请填写发票抬头">
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                        </ul>
+                        <!--普通公司发票-->
+                        <ul class="invoice-choose-content company-invoice">
+                            <li class="looked-up">
+                                <div class="looked-up-left">
+                                    <span class="primary-color ">*</span>企业名称 ：
+                                </div>
+                                <div class="looked-up-right">
+                                    <input type="text" maxlength="100"  class="invoice-input" data-name="store_set[{$store_data.store_id}][invoice_set][rise_name]" placeholder="请填写企业名称">
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                            <li class="looked-up">
+                                <div class="looked-up-left">
+                                    <span class="primary-color ">*</span>识别号 ：
+                                </div>
+                                <div class="looked-up-right">
+                                    <input type="text" maxlength="100"  class="invoice-input" data-name="store_set[{$store_data.store_id}][invoice_set][taxer_number]" placeholder="请填写纳税人识别号">
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                        </ul>
+                        <!--增值税专用发票-->
+                        <ul class="invoice-choose-content vat-special-invoice">
+                            <li class="looked-up">
+                                    <div class="looked-up-left">
+                                        <span class="primary-color ">*</span>企业名称 ：
+                                    </div>
+                                    <div class="looked-up-right">
+                                        <input type="text" maxlength="100" class="invoice-input"  data-name="store_set[{$store_data.store_id}][invoice_set][rise_name]"
+                                               placeholder="请填写企业名称">
+                                    </div>
+                                    <div class="clear"></div>
+                                </li>
+                            <li class="looked-up">
+                                    <div class="looked-up-left">
+                                        <span class="primary-color ">*</span>识别号 ：
+                                    </div>
+                                    <div class="looked-up-right">
+                                        <input type="text" maxlength="100" class="invoice-input"  data-name="store_set[{$store_data.store_id}][invoice_set][taxer_number]"
+                                               placeholder="请填写纳税人识别号">
+                                    </div>
+                                    <div class="clear"></div>
+                                </li>
+                            <li class="looked-up">
+                                    <div class="looked-up-left">
+                                        <span class="primary-color ">*</span>注册地址 ：
+                                    </div>
+                                    <div class="looked-up-right">
+                                        <input type="text" maxlength="200"  class="invoice-input" data-name="store_set[{$store_data.store_id}][invoice_set][address]"
+                                               id="invoice_{$store_data.store_id}_invoice_address"
+                                               placeholder="请填写注册地址">
+                                    </div>
+                                    <div class="clear"></div>
+                                </li>
+                            <li class="looked-up">
+                                    <div class="looked-up-left">
+                                        <span class="primary-color ">*</span>注册电话 ：
+                                    </div>
+                                    <div class="looked-up-right">
+                                        <input type="text" maxlength="15"  class="invoice-input" data-name="store_set[{$store_data.store_id}][invoice_set][phone]"
+                                               id="invoice_{$store_data.store_id}_invoice_phone"
+                                               placeholder="请填写注册电话">
+                                    </div>
+                                    <div class="clear"></div>
+                                </li>
+                            <li class="looked-up">
+                                    <div class="looked-up-left">
+                                        <span class="primary-color ">*</span>开户行 ：
+                                    </div>
+                                    <div class="looked-up-right">
+                                        <input type="text"  maxlength="100" class="invoice-input" id="invoice_{$store_data.store_id}_bank"
+                                               data-name="store_set[{$store_data.store_id}][invoice_set][bank]" placeholder="请填写开户行">
+                                    </div>
+                                    <div class="clear"></div>
+                                </li>
+                            <li class="looked-up">
+                                    <div class="looked-up-left">
+                                        <span class="primary-color ">*</span>银行账号 ：
+                                    </div>
+                                    <div class="looked-up-right">
+                                        <input type="text" maxlength="100" class="invoice-input" id="invoice_{$store_data.store_id}_account"
+                                               data-name="store_set[{$store_data.store_id}][invoice_set][account]" placeholder="请填写银行账户">
+                                    </div>
+                                    <div class="clear"></div>
+                                </li>
+                            <li class="li-tit">
+                                收货人信息
+                            </li>
+
+                            <li class="looked-up">
+                                <div class="looked-up-left">
+                                    <span class="primary-color ">*</span>
+                                    收货人姓名  ：
+                                </div>
+                                <div class="looked-up-right">
+                                    <input type="text" maxlength="100" class="invoice-input" id="invoice_{$store_data.store_id}_consignee_name"
+                                           data-name="store_set[{$store_data.store_id}][invoice_set][consignee_name]" placeholder="请填写收货人姓名">
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                            <li class="looked-up">
+                                <div class="looked-up-left">
+                                    <span class="primary-color ">*</span>收货人联系方式 ：
+                                </div>
+                                <div class="looked-up-right">
+                                    <input type="text" maxlength="15" class="invoice-input" id="invoice_{$store_data.store_id}_consignee_phone"
+                                           data-name="store_set[{$store_data.store_id}][invoice_set][consignee_phone]" placeholder="请填写收货人联系方式">
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                            <li class="looked-up">
+                                <div class="looked-up-left">
+                                    <span class="primary-color ">*</span>所在地区 ：
+                                </div>
+                                <div  class="looked-up-right">
+                                    <div class="select-address1">
+                                        <div class="common-address-input" style="display: none" >
+                                            <input type="hidden" class="invoice-input" id="invoice_{$store_data.store_id}_address_province" data-name="store_set[{$store_data.store_id}][invoice_set][address_province]" value="{$address.0.province|default=''}" placeholder="请填写所在地区省">
+                                            <input type="hidden" class="invoice-input" id="invoice_{$store_data.store_id}_address_city" data-name="store_set[{$store_data.store_id}][invoice_set][address_city]" value="{$address.0.city|default=''}" placeholder="请填写所在地区市">
+                                            <input type="hidden" class="invoice-input" id="invoice_{$store_data.store_id}_address_area" data-name="store_set[{$store_data.store_id}][invoice_set][address_area]" value="{$address.0.area|default=''}" placeholder="请填写所在地区区">
+                                            <input type="hidden" class="invoice-input" id="invoice_{$store_data.store_id}_address_street" data-name="store_set[{$store_data.store_id}][invoice_set][address_street]" value="{$address.0.street|default=''}">
+                                        </div>
+                                        <div class="address-detailed-box1" style="height: 32px;width: 234px" data-top="-26">
+                                            <span>
+                                                {notempty name='$address.0'}
+                                                <i>{$address.0.province|default=''}/</i><i>{$address.0.city|default=''}/</i><i>{$address.0.area|default=''}/</i><i>{$address.0.street|default=''}</i>
+                                                {else/}
+                                                --请选择--
+                                                {/notempty}
+                                            </span>
+                                            <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                            <li class="looked-up">
+                                <div class="looked-up-left">
+                                    <span class="primary-color ">*</span>详细地址：
+                                </div>
+                                <div class="looked-up-right">
+                                    <input type="text" maxlength="200" class="invoice-input" id="invoice_{$store_data.store_id}_address_details"
+                                           data-name="store_set[{$store_data.store_id}][invoice_set][address_details]" value="{$address.0.address|default=''}" placeholder="请填写详细地址">
+                                </div>
+                                <div class="clear"></div>
+                            </li>
+                        </ul>
+                    </div>
+                    <ul class="invoice-choose" style="display: block">
+                        <li class="looked-up">
+                            <div class="looked-up-left">
+                                <span class="primary-color "></span>发票内容 ：
+                            </div>
+                            <div class="looked-up-right commoditytype" id="invoice_{$store_data.store_id}_detail_type">
+                                <label class="border-color primary-color">
+                                    商品明细
+                                    <input type="radio" name="store_set[{$store_data.store_id}][invoice_set][detail_type]" value="0" checked>
+                                </label>
+                                <label class="">
+                                    不开发票
+                                    <input type="radio" name="store_set[{$store_data.store_id}][invoice_set][detail_type]" value="no">
+                                </label>
+                            </div>
+                            <div class="clear"></div>
+                        </li>
+                        <li class="looked-up">
+                            <div class="looked-up-left">&nbsp;</div>
+                            <p class="invoice-prompt">发票内容将显示商品所属类别与价格信息</p>
+                            <div class="clear"></div>
+                        </li>
+                        <li class="looked-up">
+                            <a href="javascript:;"
+                               class="invoice-determine primary-background-color border-color invoice_submit">提交</a> <a
+                                href="javascript:;" class="invoice-cancel invoice-modify-close">取消</a>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {/volist}
+        {if condition="$coupon or $packet"}
+        <div class="preferential">
+            <p class="preferential-title">使用优惠</p>
+            <div class="preferential-nav">
+                {notempty name='$coupon'}
+                <p class="preferential-selected primary-color">优惠券</p>
+                {/notempty}
+                {notempty name='$packet'}
+                <p {empty name='$coupon' }class="preferential-selected primary-color" {/empty}>红包</p>
+                {/notempty}
+            </div>
+            <div class="preferential-list">
+                {notempty name='$coupon'}
+                <div class="preferential-list-content " style="display: block">
+                    {volist name='coupon' id='coupon_data'}
+                    <!--state    store 店铺  platform 平台-->
+                    <div modification="coupon" class="preferential-content preferential-select border-color"
+                         data-actual_price="{$coupon_data.actual_price}" data-state="{$coupon_data.state}"
+                         data-member_coupon_id="{$coupon_data.member_coupon_id}"
+                         data-store_id="{$coupon_data.store_id|default=$coupon_data.classify_str}">
+                        <p class="preferential-amount"><span>{$coupon_data.actual_price}</span>元</p>
+                        <p class="preferential-time">
+                            {:date('Y-m-d',strtotime($coupon_data.start_time))}-{:date('Y-m-d',strtotime($coupon_data.end_time))}</p>
+                        <p class="preferential-amount-product">{$coupon_data.title}</p>
+                        <div class="triangle border-color"></div>
+                        <img src="__RES__/imgs/confirmorder/duigou.png" class="preferential-hook">
+                    </div>
+                    {/volist}
+                    <div class="clear"></div>
+                </div>
+                {/notempty}
+                {notempty name='$packet'}
+                <div class="preferential-list-content" {empty name='$coupon' }style="display: block" {/empty}>
+                {volist name='packet' id='packet_data'}
+                <div modification="packet"
+                     class="preferential-content {eq name='$key' value='0'}preferential-select border-color{/eq} "
+                     data-actual_price="{$packet_data.actual_price}"
+                     data-member_packet_id="{$packet_data.member_packet_id}">
+                    <p class="preferential-amount"><span>{$packet_data.actual_price}</span>元</p>
+                    <p class="preferential-time">
+                        {:date('Y-m-d',strtotime($packet_data.start_time))}-{:date('Y-m-d',strtotime($packet_data.end_time))}</p>
+                    <p class="preferential-amount-product">{$packet_data.title}</p>
+                    <div class="triangle border-color"></div>
+                    <img src="__RES__/imgs/confirmorder/duigou.png" class="preferential-hook">
+                </div>
+                {/volist}
+            </div>
+            {/notempty}
+        </div>
+        <div class="preferential-prompt">优惠组合推荐 金额抵用<span class="primary-color">￥</span><span class="primary-color"
+                                                                                              goods_discounts>{$coupon_price+$packet_price}</span>元；使用优惠券<span id="coupon_count">{:count($coupon)}</span>张，红包<span id="packet_count">{:count($packet)}张</span></div>
+        {/if}
+        <div class="calculate-price">
+            <div class="calculate-price-list">
+                <div class="calculate-price-list-content">
+                    <P class="calculate-price-item" id="sum_total_price" data-sum_total_price="{$sum_total_price-$vip_discount_price}">
+                        ¥{:fmtPrice($sum_total_price)}</P>
+                    <P class="calculate-price-name">{$sum_total_number}件商品，商品总额：</P>
+                </div>
+                {notin name='$order_type' value='2,3,4'}
+                <div class="calculate-price-list-content">
+                    <P class="calculate-price-item"> -¥<span goods_discounts="goods_discounts" id="sum_goods_discounts"
+                                                             data-coupon="{$coupon_price}" data-packet="{$packet_price}">{:fmtPrice($coupon_price+$packet_price)}</span>
+                    </P>
+                    <P class="calculate-price-name"> 商品优惠：</P>
+                </div>
+                <div class="calculate-price-list-content">
+                    <P class="calculate-price-item"> -¥<span >{:fmtPrice($vip_discount_price)}</span>
+                    </P>
+                    <P class="calculate-price-name"> 折&nbsp&nbsp扣&nbsp&nbsp价：</P>
+                </div>
+                {/notin}
+                <div class="calculate-price-list-content">
+                    <P class="calculate-price-item"> ¥<span id="close_freight_price" >0.00</span></P>
+                    <P class="calculate-price-name">运&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp费：</P>
+                </div>
+            </div>
+        </div>
+        <div class="total-price">
+            <div class="total-price-amount">
+                <p>应付总额：<span class="primary-color"
+                              id="should_pay_price">￥{:fmtPrice($sum_total_price-$vip_discount_price-($coupon_price+$packet_price)<=0?'0.10':$sum_total_price-$vip_discount_price-($coupon_price+$packet_price))}</span></p>
+                <p id="address_send">寄送至： {notempty name='$address.0'}{$address.0.province} {$address.0.city} {$address.0.area}
+                    {$address.0.street} 收货人：{$address.0.name} {$address.0.phone}{/notempty}</p>
+            </div>
+        </div>
+        <div class="sure-order" style="overflow: hidden">
+            <input type="hidden" id="info_data" name="info_data" value="{$info_data}">
+            <button class="primary-background-color" id="from_submint">提交订单</button>
+        </div>
+    </form>
+</div>
+</div>
+<!--确认订单结束-->
+{include file="public/store_right" /}
+
+<!--添加地址-->
+<div class="my-address">
+    <div class="mask" style="display: none;">
+        <div style="position: relative;z-index: 100000000;background-color: #000;width: 40%">
+            <form id="create_address">
+                <div class="address-con">
+                    <div class="tit" style="background: #fff;">
+                        <span>添加地址</span>
+                        <div class="right" onclick="$('.mask').hide();">
+                            <img src="__RES__/imgs/my/close.png" alt="">
+                        </div>
+                    </div>
+                    <div class="address-left" style="float: left">
+                        <div class="list">
+                            <p class="list-tit">
+                                <span class="primary-color">*</span>收货人：
+                            </p>
+                            <input type="text" maxlength="30" class="sty" id="address_name" datatype="*" nullmsg="请填写收货人"
+                                   errormsg="请填写收货人"
+                                   name="name">
+                        </div>
+                        <div class="list">
+                            <p class="list-tit">
+                                <span class="primary-color">*</span>手机号码：
+                            </p>
+                            <input type="text" maxlength="15" class="sty" id="address_phone" datatype="m" nullmsg="请填写手机号码"
+                                   errormsg="请填写正确手机号码" name="phone">
+                        </div>
+                        <div class="list">
+                            <p class="list-tit">
+                                <span class="primary-color">*</span>所在地区：
+                            </p>
+                            <div class="select-address">
+                                <div class="address-detailed-box" style="height: 32px;width: 234px">
+                                    <span>--请选择--</span>
+                                    <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                </div>
+                                <div class="detailed-box" style="display: none;">
+                                    <div class="detailed-box-top">
+                                        <div class="address-text active">
+                                            <a href="javascript:;">--请选择--</a>
+                                            <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                        </div>
+                                        <div class="address-text" style="display:none;">
+                                            <a href="javascript:;">--请选择--</a>
+                                            <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                        </div>
+                                        <div class="address-text" style="display:none;">
+                                            <a href="javascript:;">--请选择--</a>
+                                            <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                        </div>
+                                        <div class="address-text" style="display:none;">
+                                            <a href="javascript:;">--请选择--</a>
+                                            <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                        </div>
+                                        <img class="close" src="__RES__/imgs/my/address-close.png" alt="">
+                                    </div>
+                                    <div class="address-detailed" id="province">
+                                        <!--省份列表-->
+                                        {volist name="province" id="val"}
+                                        <a class="provincial" data_id="{$val.area_id}">{$val.area_name}</a>
+                                        {/volist}
+                                    </div>
+                                    <div class="address-detailed" id="city" style="display: none">
+                                        <!--市-->
+                                    </div>
+                                    <div class="address-detailed" id="area" style="display: none">
+                                        <!--区-->
+                                    </div>
+                                    <div class="address-detailed" id="street" style="display: none">
+                                        <!--街道-->
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" name="province" datatype="*" nullmsg="请选择所在地区省"
+                                   id="address_province" value="">
+                            <input type="hidden" name="city" datatype="*" nullmsg="请选择所在地区市"
+                                   id="address_city" value="">
+                            <input type="hidden" name="area" datatype="*" nullmsg="请选择所在地区区"
+                                   id="address_area" value="">
+                            <input type="hidden" name="street" datatype="*" nullmsg="请选择所在地区街道"
+                                   id="address_street" value="">
+                            <input type="hidden" name="lat" id="address_lat" datatype="*" nullmsg="定位失败,请手动输入收货地址" value="">
+                            <input type="hidden" name="lng" id="address_lng" datatype="*" nullmsg="定位失败,请手动输入收货地址" value="">
+                            <input type="hidden" name="member_address_id" id="address_member_address_id"
+                                   value="">
+                        </div>
+                        <div class="list">
+                            <p class="list-tit">
+                                <span class="primary-color">*</span>收货地址：
+                            </p>
+                            <input type="text" maxlength="100" name="location_address" style="width: 100%"
+                                   oninput="address_share($(this).val())"
+                                   id="address_location_address"
+                                   autocomplete="OFF"
+                                   datatype="*" nullmsg="请填写收货地址"
+                                   errormsg="请填写收货地址" class="sty">
+                            <div class="location-address" hidden>
+                                <a href="javascript:;" class="location-address-list">
+                                    请填写收货地址
+                                </a>
+                            </div>
+                        </div>
+                        <div class="list">
+                            <p class="list-tit">
+                                <span class="primary-color">*</span>详细地址：
+                            </p>
+                            <input type="text" maxlength="100" name="address" id="address_address" datatype="*"
+                                   nullmsg="请填写详细地址"
+                                   errormsg="请填写详细地址" class="sty">
+                        </div>
+                        <input name="is_default"  type="hidden" value="0">
+                        <div class="setting-default-address">
+                            <label>
+                                <input name="is_default" id="address_is_default" type="checkbox" value="1">
+                                <span>设为默认收货地址</span>
+                            </label>
+                        </div>
+                        <input type="submit" class="submit primary-background-color" value="保存" id="address_submit">
+                    </div>
+                    <div class="adress-right" id="address_container"
+                         style="float: right;width: 529px;height: 483px">
+                        <div class="show-address">
+                            <p></p>
+                            <a class="primary-background-color" href="javascript:set_dragend();">确认</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--<img src=""  id="img" alt="">-->
+<script type="text/javascript">
+    /*置顶*/
+    $('.to-top').click(function () {
+        $("html,body").animate({scrollTop: 0}, 300);
+    })
+</script>
+{/block}
+
+{block name="js"}
+<!--引入UI组件库 （1.0版本） -->
+<script src="//webapi.amap.com/ui/1.0/main.js"></script>
+<script type="text/javascript">
+    //检测用户刷新页面操作
+    document.onkeydown = function(e){
+        var keycode = e.keyCode || e.which;
+        if(keycode == 116 || (keycode == 82 && e.ctrlKey)){
+            e.returnValue = false;
+            window.location.reload();
+        }
+    };
+    //表单提交
+    main.valid({
+        'select': '#submit_from',
+        'btn_submit': '#from_submint',
+        'call_back':function(){
+            //设置如果发票信息没有填全则默认不开发票
+            $.each($('.invoice-modify-content'),function(){
+                var store_id=$(this).data('store_id');
+                if($('#invoice_'+store_id+'_detail_type').find('input:checked').val() !== 'no'){
+                    //发票类型
+                    var invoice_type=$('#store_set_'+ store_id +'_invoice_set_invoice_type').val().toString();
+                    //发票抬头
+                    var rise=$('#store_set_'+ store_id +'_invoice_set_invoice_rise').val().toString();
+                    //当前发票内容选择容器
+                    var this_invoice_modify_content=$('div.invoice-modify-content[data-store_id=' + store_id + ']');
+                    var checket_map={
+                        //普通,个人
+                        '01':this_invoice_modify_content.find('ul.individual-invoice').find('input[placeholder]'),
+                        //普通,企业
+                        '02':this_invoice_modify_content.find('ul.company-invoice').find('input[placeholder]'),
+                        //增值,企业
+                        '12':this_invoice_modify_content.find('ul.vat-special-invoice').find('input[placeholder]'),
+                    };
+                    //发票填写信息验证    所有输入的发票input内容name名字放在对应标签上的data-name属性上面
+                    $.each(checket_map[invoice_type+rise],function(k,v){
+                        //如果验证为空则设置对应不开发票并清楚对应input name
+                        if($(v).val() === ''){
+                            $('#invoice_' + store_id + '_detail_type').find('input').eq(1).click();
+                            //删除发票所有输入的name
+                            $.each(Object.keys(checket_map),function(k,v){
+                                $.each(checket_map[v],function(kk,vv){
+                                    var _self_this= vv.constructor === Object ? vv : $(vv);
+                                    //移除当前对象name属性
+                                    _self_this.removeAttr('name');
+                                });
+                            });
+                            return false;
+                        }
+                    });
+                }
+            });
+            return true;
+        },
+        'success': function (res) {
+            if (res.code === 0) {
+                if (res.result.total_price.toString() === '0') {
+                    //跳转订单成功页面
+                    main.jump({'url':'/pc2.0/order/pay_success?order_id'});
+                } else {
+                    main.jump({'url':'/pc2.0/order/pay_type?order_data='+res.result.order_data});
+                    //跳转订单支付页面
+                }
+            } else {
+                layer.msg(res.message);
+            }
+        }
+    });
+    //绑定页面数据处理事件
+    var sum_freight_price = {};//初始化选择运费金额总值
+    $('body').on('click', 'span[modification],div[modification],a[modification]', function () {
+        //address 收货地址 pay_type 支付方式 distribution_type 配送方式  pick_up  自提   coupon   优惠券 packet  红包
+        var modification = $(this).attr('modification');
+        var store_id = $(this).closest('.commodity-content').data('store_id');
+        var that = $(this);
+        switch (modification) {
+            //收货地址
+            case 'address':
+                //切换地址更新支付方式和配送方式
+                if ($('#member_address_id').val().toString() !== that.data('address_id').toString()) {
+                    $('#member_address_id').val(that.data('address_id'));
+                    main.ajax({
+                        'url': '/pc2.0/cart/get_freight_data',
+                        'data': {'address_id': that.data('address_id'), 'param': $('#param_data').val()},
+                        'callback': function (res) {
+                            if (res.code == 0) {
+                                var distribution_type = {
+                                    'city_freight_sup': {
+                                        'type': 1,
+                                        'text': '同城速递',
+                                        'freight_price_info': 'city_freight_price'
+                                    },
+                                    'take_freight_sup': {'type': 2, 'text': '预约自提', 'freight_price_info': 'null_info'},
+                                    'express_freight_sup': {
+                                        'type': 3,
+                                        'text': '快递邮寄',
+                                        'freight_price_info': 'express_freight_price'
+                                    }
+                                };
+                                $.each(res.data, function (data_k, data_v) {
+                                    var tab_title_two_html = '<p class="distribution-way express">';
+                                    var tab_content_two_html = '';
+                                    //对应配送方式展示页面赋值
+                                    //同城速递选项卡内容
+                                    distribution_type.city_freight_sup.show_text = '<li><p>速递费：¥<span class="primary-color">' + data_v.freight.city_freight_price + '</span></p></li>';
+                                    //预约自提(自提点)
+                                    var take_freight_list = data_v.freight.take_freight_list;
+                                    var take_freight_list_text = '<div class="the-information-content-bg" style="display: block;">\n' +
+                                        '                                <div class="the-modified">\n' +
+                                        '                                    <div class="the-modified-top">修改自提信息\n' +
+                                        '                                        <span class="the-information-content-bg-close">×</span>\n' +
+                                        '                                    </div>\n' +
+                                        '                                    <div class="the-modified-content">\n' +
+                                        '                                        <div class="address-con">\n' +
+                                        '                                            <div class="address-list">\n' +
+                                        '                                                <ul>';
+                                    //自提点列表
+                                    $.each(take_freight_list, function (freight_list_k, freight_list_v) {
+                                        take_freight_list_text += '<li>\n' +
+                                            '                                                        <label>\n' +
+                                            '                                                            <div class="circle border-color active" checked="checked" modification="pick_up" data-take_id="' + freight_list_v.take_id + '" data-take_name="' + freight_list_v.take_name + '" data-address="' + freight_list_v.province + '&nbsp' + freight_list_v.city + '&nbsp' + freight_list_v.area + '" data-contacts_phone="' + freight_list_v.contacts_phone + '" data-time="' + freight_list_v.start_hours + '-' + freight_list_v.end_hours + '">\n' +
+                                            '                                                                <span class="primary-background-color"></span>\n' +
+                                            '                                                            </div>\n' +
+                                            '                                                            <input hidden="" type="radio">\n' +
+                                            '                                                            <p>\n' +
+                                            '                                                                <span class="shop-name">' + freight_list_v.take_name + '</span>\n' +
+                                            '                                                                <span class="time">\n' +
+                                            '                                                            <img src="/template/computer/resource/imgs/my/time.png" alt="">\n' + freight_list_v.start_hours + '-' + freight_list_v.end_hours +
+                                            '                                                                </span><span class=" distance">\n' +
+                                            '                                                            <!--<img src="/template/computer/resource/imgs/wz.png" alt="">-->\n' +
+                                            '                                                            <!--600m-->\n' +
+                                            '                                                        </span>\n' +
+                                            '                                                            </p>\n' +
+                                            '                                                            <p class="address">' + freight_list_v.province + '&nbsp' + freight_list_v.city + '&nbsp' + freight_list_v.area + '</p>\n' +
+                                            '                                                        </label>\n' +
+                                            '                                                    </li>';
+                                    });
+                                    take_freight_list_text += '</ul></div></div></div></div></div>';
+                                    //预约自提选项卡内容
+                                    distribution_type.take_freight_sup.show_text = take_freight_list.length > 0 ? '<li class="pick_up"><p class="since-lift">' + take_freight_list[0]['take_name'] + '</p>\n' +
+                                        '                            <p class="since-address">' + take_freight_list[0]['province'] + '&nbsp' + take_freight_list[0]['city'] + '&nbsp' + take_freight_list[0]['area'] + '</p>\n' +
+                                        '                            <p class="since-content">\n' +
+                                        '                                <span class="phone">' + take_freight_list[0]['contacts_phone'] + '</span>\n' +
+                                        '                                <span><img src="/template/computer/resource/imgs/confirmorder/time.png" width="" height="14"> </span>\n' +
+                                        '                                <span class="time">' + take_freight_list[0]['start_hours'] + '&nbsp' + take_freight_list[0]['end_hours'] + '</span>\n' +
+                                        '                            </p>\n' +
+                                        '                            <p class="since-immediately">\n' +
+                                        '                                <a href="javascript:;" class="since-immediately-modify">修改</a>\n' +
+                                        '                            </p><div class="the-information-content-bg" style="z-index: 999">' + take_freight_list_text + '</div></li>' : '';
+                                    //快递邮寄选项卡内容
+                                    distribution_type.express_freight_sup.show_text = '<li data-express_freight_price="' + data_v.freight.express_freight_price + '">运费：' + data_v.freight.express_freight_price + '元</li>';
+                                    //处理配送方式
+                                    var distribution_counter = 0;
+                                    $.each(distribution_type, function (distribution_type_k, distribution_type_v) {
+                                        if (data_v['freight'][distribution_type_k] === 1) {
+                                            tab_title_two_html += '<span modification="distribution_type" data-type="' + distribution_type_v.type + '" data-freight_price="' + ((distribution_type_v.freight_price_info in data_v.freight) ? data_v.freight[distribution_type_v.freight_price_info] : 0) + '">' + distribution_type_v.text + '</span>';
+                                            tab_content_two_html += '<div class="' + (distribution_counter === 0 ? '' : 'hide') + 'tab-content-div tab-content-title" style="display: ' + (distribution_counter === 0 ? 'block' : 'none') + '">' + distribution_type_v.show_text + '</div>';
+                                            ++distribution_counter;
+                                        }
+                                    });
+                                    tab_title_two_html += '</p><div class="clear">';
+                                    if($('#distribution_way_'+data_v.store_id).children('span').length>1){
+                                        if(data_v.freight.city_freight_sup.toString()==='1'){
+                                            $('#distribution_way_'+data_v.store_id).children('span').eq(1).show();
+                                        }else{
+                                            $('#distribution_way_'+data_v.store_id).children('span').eq(1).hide();
+                                        }
+                                    };
+                                    $('#tab_title_two_' + data_v.store_id).html(tab_title_two_html);
+                                    $('#tab_content_two_' + data_v.store_id).html(tab_content_two_html);
+                                });
+                                that.parent('.consignee-list-li').attr('checked', 'checked').siblings().removeAttr('checked');
+                                that.parent('.consignee-list-li').find(".consignee-name").addClass("border-color consignee-name-border").parents().siblings().find(".consignee-name").removeClass("border-color consignee-name-border");
+                                //寄送至内容修改
+                                var address_send_text = that.siblings('span[address]').text() + ' 收货人：' + that.siblings('span[name]').text() + ' ' + that.siblings('span[phone]').text();
+                                console.log(address_send_text);
+                                $('#address_send').text('寄送至： ' + address_send_text);
+                                //页面方式触发点击
+                                onload_click();
+                            } else {
+                                layer.msg(res.message);
+                            };
+                        }
+                    });
+                }
+                break;
+            //支付方式
+            case 'pay_type':
+                var pay_type = that.data('type').toString();
+                var distribution_object = that.closest('div.tab-title-two1').siblings('div.tab-title-two').children('p.distribution-way');
+                switch (pay_type) {
+                    //
+                    case '1':
+                        //同城配送方式以外的配送方式切换可选择
+                        distribution_object.children('span[data-type!=1]').css('background', '#fff');
+                        break;
+                    case '2':
+                        //如果当前配送方式是自提 或是 快递邮寄
+                        if ($('#distribution_type_' + store_id).val().toString() === '2' || $('#distribution_type_' + store_id).val().toString() === '3') {
+                            return;
+                        } else {
+                            //同城配送方式以外的配送方式切换不可选择
+                            distribution_object.children('span[data-type!=1]').css({
+                                'background': '#e9e9e9',
+                                'border': '1px solid #e9e9e9',
+                                'color': '#000'
+                            });
+                            //配送方式选择为同城速递
+                            distribution_object.children('span[data-type=1]').click();
+                        }
+                        break;
+                }
+                //更换支付方式
+                $('#pay_type_' + store_id).val(pay_type);
+                //切换样式
+                that.parent().children('span').eq(0).css({
+                    'background': '#FFF',
+                    'color': '#000',
+                    'border-color': '#e9e9e9'
+                });
+                that.addClass("selected primary-background-color border-color").siblings().removeClass();
+                break;
+            //配送方式
+            case 'distribution_type':
+                var default_express = $('span[data-default=1]');
+                if (default_express.length > 0){
+                    that = default_express;
+                    that.removeAttr('data-default');
+                }
+                var distribution_type = that.data('type').toString();
+                var pay_object = that.closest('div.tab-title-two').siblings('div.tab-title-two1').children('p.distribution-way');
+                //配送方式 1同城速递 2预约自提 3快递邮寄
+                switch (distribution_type) {
+                    case '1':
+                        //选择运费总值对象赋值
+                        sum_freight_price['freight_' + store_id] = that.data('freight_price');
+                        pay_object.children('span[data-type=2]').css('background', '#fff');
+                        break;
+                    case '2':
+                        //如果支付方式是货到付款  不可选择自提
+                        if ($('#pay_type_' + store_id).val().toString() === '2') {
+                            return;
+                        } else {
+                            pay_object.children('span[data-type=2]').css({
+                                'background': '#e9e9e9',
+                                'border': '1px solid #e9e9e9',
+                                'color': '#000'
+                            });
+                            pay_object.children('span[data-type!=2]').click();
+                        }
+                        //判断自提点是否选择第一个   不是的话不触发点击
+                        if ($('.goods_take_their_' + store_id + ' li').length > 0 && $('.goods_take_their_' + store_id + ' li').eq(0).find('div[checked]').length > 0) {
+                            //第一个自提点触发点击
+                            $('.goods_take_their_' + store_id + ' li').eq(0).children('label').children('div').click();
+                        }
+                        //更换支付方式为在线支付
+                        $('#pay_type_' + store_id).val(1);
+                        //选择运费总值对象赋值
+                        sum_freight_price['freight_' + store_id] = 0;
+                        break;
+                    case '3':
+                        //如果支付方式是货到付款  不可选择快递邮寄
+                        if ($('#pay_type_' + store_id).val().toString() === '2') {
+                            return;
+                        } else {
+                            pay_object.children('span[data-type=2]').css({
+                                'background': '#e9e9e9',
+                                'border': '1px solid #e9e9e9',
+                                'color': '#000'
+                            });
+                            pay_object.children('span[data-type!=2]').click();
+                        }
+                        //选择运费总值对象赋值
+                        sum_freight_price['freight_' + store_id] = that.data('freight_price');
+                        break;
+                }
+                //运费合计
+                var sum_close_freight_price = 0;
+                $.each(Object.keys(sum_freight_price), function (k, v) {
+                    sum_close_freight_price += parseFloat(sum_freight_price[v]);
+                });
+                $('#close_freight_price').text(sum_close_freight_price.toFixed(2));
+                //配送方式
+                $('#distribution_type_' + store_id).val(distribution_type);
+                //第一个样式取消默认选中
+                that.parent().children('span').eq(0).css({
+                    'background': '#FFF',
+                    'color': '#000',
+                    'border-color': '#e9e9e9'
+                });
+                //切换样式
+                that.addClass("selected primary-background-color border-color").siblings().removeClass();
+                //对应配送方式下选项卡切换
+                var n = that.index();
+                // that.closest('.tab-title-two').siblings('.tab-content-two').children().hide().eq($('.tab-title-two span').index(this)).show();
+                that.closest('.tab-title-two').siblings('.tab-content-two').children().eq(n).show().siblings().hide();
+                break;
+            //自提点
+            case 'pick_up':
+                that.closest('li.pick_up').children('.since-lift').text(that.data('take_name'));
+                that.closest('li.pick_up').children('.since-address').text(that.data('address'));
+                that.closest('li.pick_up').children('.since-content .phone').text(that.data('contacts_phone'));
+                that.closest('li.pick_up').children('.since-address .time').text(that.data('time'));
+                $('#take_id_' + store_id).val(that.data('take_id'));
+                //自提点切换
+                that.parent('label').find('.circle').addClass('border-color active').find('span').addClass('primary-background-color');
+                that.parent('label').find('.circle').attr('checked', 'checked');
+                that.parent('label').parent().siblings('li').find('.circle').removeAttr('checked');
+                that.parent('label').parent().siblings('li').find('.circle').removeClass('border-color active').find('span').removeClass('primary-background-color');
+                break;
+            //优惠券
+            case 'coupon':
+                var coupon_type = that.data('state');
+                var store_id=$(this).data('store_id');
+                var member_coupon_id = that.data('member_coupon_id');
+                //判断当前点击是否是自己
+                if (that.hasClass('preferential-select border-color')) {
+                    //已使用优惠券金额累计减
+                    var actual_price = parseFloat($('span[goods_discounts=goods_discounts]').data('coupon')) - parseFloat(that.data('actual_price'));
+                    $('span[goods_discounts=goods_discounts]').data('coupon', actual_price > 0 ? actual_price.toFixed(2) : 0);
+                    //已使用数量累减
+                    $('#coupon_count').text(parseInt($('#coupon_count').text()) - 1);
+                    //清除自己选择样式
+                    that.removeClass("preferential-select border-color");
+                    switch (coupon_type) {
+                        //店铺
+                        case 'store':
+                            //店铺优惠券
+                            $('#member_shop_coupon_id_' + store_id).val('');
+                            break;
+                        //平台
+                        case 'platform':
+                            var platform_coupon_id = $('#member_platform_coupon_id').val().split(',');
+                            var platform_coupon_index = platform_coupon_id.indexOf(member_coupon_id.toString());
+                            if (platform_coupon_index != -1) {
+                                platform_coupon_id.splice(platform_coupon_index, 1);
+                            }
+                            $('#member_platform_coupon_id').val(platform_coupon_id.join(','));
+                            break;
+                    }
+                } else {
+                    //已使用优惠券金额累计加
+                    var actual_price = parseFloat($('span[goods_discounts=goods_discounts]').data('coupon')) + parseFloat(that.data('actual_price'));
+                    $('span[goods_discounts=goods_discounts]').data('coupon', actual_price.toFixed(2));
+                    //已使用数量累加
+                    $('#coupon_count').text(parseInt($('#coupon_count').text()) + 1);
+                    //添加自己选择样式
+                    that.addClass("preferential-select border-color");
+                    switch (coupon_type) {
+                        //店铺
+                        case 'store':
+                            //店铺优惠券
+                            $('#member_shop_coupon_id_' + store_id).val(member_coupon_id);
+                            break;
+                        //平台
+                        case 'platform':
+                            var platform_coupon_id = $('#member_platform_coupon_id').val().split(',');
+                            platform_coupon_id.push(member_coupon_id.toString());
+                            $('#member_platform_coupon_id').val(platform_coupon_id.join(','));
+                            break;
+                    }
+                }
+                ;
+                //优惠金额
+                var goods_discounts = parseFloat($('span[goods_discounts=goods_discounts]').data('coupon')) + parseFloat($('span[goods_discounts=goods_discounts]').data('packet'));
+                $('span[goods_discounts]').text(goods_discounts.toFixed(2));
+                break;
+            //红包
+            case 'packet':
+                var actual_price = 0;
+                var member_packet_id = '';
+                //判断当前点击是否是自己
+                if (that.hasClass('preferential-select border-color')) {
+                    //已使用数量累减
+                    $('#packet_count').text(parseInt($('#packet_count').text()) - 1);
+                    that.removeClass("preferential-select border-color");
+                } else {
+                    //已使用数量累加
+                    $('#packet_count').text(parseInt($('#packet_count').text()) + 1);
+                    actual_price = that.data('actual_price');
+                    member_packet_id = that.data('member_packet_id')
+                    that.addClass("preferential-select border-color").siblings().removeClass("preferential-select border-color");
+                }
+                //红包优惠金额赋值
+                $('span[goods_discounts=goods_discounts]').data('packet', actual_price);
+                //使用红包数据赋值
+                $('#member_packet_id').val(member_packet_id);
+                //优惠金额
+                var goods_discounts = parseFloat(actual_price) + parseFloat($('span[goods_discounts=goods_discounts]').data('coupon'));
+                $('span[goods_discounts]').text(goods_discounts.toFixed(2));
+                break;
+        }
+        //计算应付金额(商品总额(已减去折扣)-商品优惠+运费)  最低金额0.10
+        var sum_goods_discounts=parseFloat($('#sum_goods_discounts').text());//商品优惠价格
+        var close_freight_price=parseFloat($('#close_freight_price').text());//商品运费价格
+        var should_pay_price=(parseFloat($('#sum_total_price').data('sum_total_price')) - (sum_goods_discounts?sum_goods_discounts:0) + (close_freight_price?close_freight_price:0)).toFixed(2);
+        $('#should_pay_price').text('￥'+(should_pay_price>0?should_pay_price:'0.10'));
+    });
+
+    //红包切换
+    $(document).ready(function () {
+        $('.preferential-nav p').click(function () {
+            $(this).addClass("preferential-selected").siblings().removeClass();
+            var n = $(this).index();
+            $(".preferential-list > .preferential-list-content").hide();
+            $(".preferential-list > .preferential-list-content").eq(n).show();
+            $(".preferential-list > .preferential-list-content").hide().eq($('.preferential-nav p').index(this)).show();
+        });
+    });
+
+    //设置操作首次默认点击
+    function  onload_click() {
+        //配送方式
+        $('.tab-title-two p.distribution-way').each(function (k, v) {
+            $(v).children('span').eq(0).click();
+        });
+        //支付方式
+        $('.tab-title-two1 p.distribution-way').each(function (k, v) {
+            $(v).children('span').eq(0).click();
+        });
+    }
+    //优惠券使用初始化赋值
+    function use_coupon_id(){
+        $.each($('div[modification=coupon]'),function(){
+            var that=$(this);
+            var coupon_type = that.data('state');
+            var store_id=that.data('store_id');
+            var member_coupon_id = that.data('member_coupon_id');
+            switch (coupon_type) {
+                //店铺
+                case 'store':
+                    //店铺优惠券
+                    $('#member_shop_coupon_id_' + store_id).val(member_coupon_id);
+                    break;
+                //平台
+                case 'platform':
+                    var platform_coupon_id = $('#member_platform_coupon_id').val().split(',');
+                    platform_coupon_id.push(member_coupon_id.toString());
+                    $('#member_platform_coupon_id').val(platform_coupon_id.join(','));
+                    break;
+            }
+        });
+    }
+    use_coupon_id();
+    onload_click();
+    //自提弹出
+    $('body').on('click', '.since-immediately-modify', function () {
+        $(this).parent('.since-immediately').siblings(".the-information-content-bg").css("display", "block");
+    });
+    $('body').on('click', '.the-information-content-bg-close', function () {
+        $(".the-information-content-bg").css("display", "none");
+    });
+
+    //进度条
+    function animate() {
+        $(".charts").each(function (i, item) {
+            var a = parseInt($(item).attr("w"));
+            $(item).animate({
+                width: a + "%"
+            }, 1000);
+        });
+    };
+    animate();
+
+    /******************************************************************发票处理开始****************************************************/
+    //发票内容切换
+    $('.commoditytype input').on('click',function(){
+        $(this).parents('label').addClass('border-color primary-color').siblings().removeClass('border-color primary-color');
+    });
+    //发票显示
+    $('.invoice-modify').on('click', function () {
+        $(this).parents('.commodity-content').find('.invoice-modify-box').show()
+    });
+    //发票关闭
+    $('.invoice-modify-close').on('click', function () {
+        $('.invoice-modify-box').hide();
+    });
+    //发票类型切换
+    $('.invoice-choose-list label').on('click', function () {
+
+        $(this).addClass('border-color primary-color').siblings('label').removeClass('border-color primary-color');
+        var invoice_parent_element = $(this).closest('.invoice-modify-content');
+        //获得当前店铺id
+        var store_id=invoice_parent_element.data('store_id');
+
+        //获得当前所选发票类型  0 普通 1 个人
+        var invoice_type=$(this).index().toString();
+
+        //设置对应所选发票类型
+        $('#store_set_'+ store_id +'_invoice_set_invoice_type').val(invoice_type);
+
+        //发票类型对应发票抬头选择器
+        var invoice_rise_map={
+            '0':[0,1],
+            '1':[1],
+        };
+        //默认隐藏全部发票抬头
+        invoice_parent_element.find('.individualbusiness label').hide();
+        //切换发票抬头
+        $.each(invoice_rise_map[invoice_type],function(k,v){
+           if(k == 0){
+               invoice_parent_element.find('.individualbusiness label').eq(v).click();
+           }
+           invoice_parent_element.find('.individualbusiness label').eq(v).show();
+        });
+    });
+    //发票抬头切换
+    $('.individualbusiness label').on('click', function () {
+        $(this).addClass('border-color primary-color').siblings('label').removeClass('border-color primary-color');
+
+        //获得当前店铺id
+        var store_id=$(this).closest('.invoice-modify-content').data('store_id');
+
+        //获得当前所选发票类型
+        var invoice_type=$('#store_set_'+ store_id +'_invoice_set_invoice_type').val().toString();
+
+        //获得当前所选发票抬头 0 个人或事业 1 企业单位
+        var rise=$(this).index().toString();//$('#invoice_'+store_id+'_rise').find('input:checked').val().toString();
+
+        //设置当前所选发票抬头
+        $('#store_set_'+ store_id +'_invoice_set_invoice_rise').val(parseInt(rise)+1);
+
+        var invaice_class_check={
+            //普通,个人
+            '00':$(this).closest('.invoice-modify-content').find('ul.individual-invoice'),
+            //普通,企业
+            '01':$(this).closest('.invoice-modify-content').find('ul.company-invoice'),
+            //增值,企业
+            '11':$(this).closest('.invoice-modify-content').find('ul.vat-special-invoice'),
+        };
+        //当前类型对应输入内容显示  其他隐藏
+        invaice_class_check[invoice_type+rise].show().siblings('.invoice-choose-content').hide();
+    });
+    //发票信息确认
+    $('.invoice_submit').on('click', function () {
+        var store_id=$(this).closest('.invoice-modify-content').data('store_id');
+        var is_ok=true;
+        if($('#invoice_'+store_id+'_detail_type').find('input:checked').val() !== 'no'){
+            //发票类型
+            var invoice_type=$('#store_set_'+ store_id +'_invoice_set_invoice_type').val().toString();
+            //发票抬头
+            var rise=$('#store_set_'+ store_id +'_invoice_set_invoice_rise').val().toString();
+            //当前发票内容选择容器
+            var this_invoice_modify_content=$('div.invoice-modify-content[data-store_id=' + store_id + ']');
+            var checket_map={
+                //普通,个人
+                '01':this_invoice_modify_content.find('ul.individual-invoice').find('input[placeholder]'),
+                //普通,企业
+                '02':this_invoice_modify_content.find('ul.company-invoice').find('input[placeholder]'),
+                //增值,企业
+                '12':this_invoice_modify_content.find('ul.vat-special-invoice').find('input[placeholder]'),
+            };
+            //删除发票所有输入的name
+            $.each(Object.keys(checket_map),function(k,v){
+                $.each(checket_map[v],function(kk,vv){
+                    var _self_this= vv.constructor === Object ? vv : $(vv);
+                    //移除当前对象name属性
+                    _self_this.removeAttr('name');
+                });
+            });
+            //发票填写信息验证    所有输入的发票input内容name名字放在对应标签上的data-name属性上面
+            $.each(checket_map[invoice_type+rise],function(k,v){
+                var _self_this= v.constructor === Object ? v : $(v);
+                if(_self_this.val() === ''){
+                    is_ok=false;
+                    _self_this.focus();
+                    layer.msg(_self_this.attr('placeholder'));
+                    return false;
+                }
+                //通过验证则添加name属性
+                _self_this.attr('name',_self_this.data('name'));
+            });
+            if(is_ok){
+                $('.invoice-modify-box').hide();
+            }
+        }else{
+            $('.invoice-modify-box').hide();
+        }
+    });
+    /******************************************************************发票处理结束****************************************************/
+
+
+
+    /***********************************************************地址操作开始***********************************************/
+    /******************************地图***********************************/
+    var address_map = new AMap.Map('address_container', {
+        resizeEnable: true,
+        zoom: 20,
+    });
+    // 实例化Autocomplete   搜索提示
+    var autoOptions = {
+        city: '全国'
+    };
+    //加载地理编码插件
+    var geocoder = {};
+    AMap.plugin('AMap.Geocoder', function() {
+        geocoder = new AMap.Geocoder({
+            // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+            city: '全国',
+            batch:false,//是否批量查询batch=true为批量查询,batch=false为单点查询batch=false时即使传入多个点也只返回第一个点结果
+        })
+
+        // 使用geocoder做地理/逆地理编码
+    });
+    var autoComplete = new AMap.Autocomplete(autoOptions);
+
+    //地址搜索展示
+    function address_share(keywords) {
+        if (keywords) {
+            autoComplete.search(keywords, function (status, result) {
+                if (result.info) {
+                    var seek_html = '';
+                    $.each(result.tips, function (k, v) {
+                        if (typeof v.location !== 'undefined') {
+                            var address = '';
+                            if (v.district) {
+                                address += v.district + ' ';
+                            }
+                            if (v.address) {
+                                address += v.address + ' ';
+                            }
+                            if (v.name) {
+                                address += v.name + ' ';
+                            }
+                            seek_html += '<a href="javascript:;" class="location-address-list" data-lat="' + v.location.lat + '" data-lng="' + v.location.lng + '" onclick="address_share_set(this)">' + address + '</a>';
+                        }
+                    });
+                    $('.location-address').show().html(seek_html);
+                }
+            })
+        }
+    }
+
+    //地址搜索设置
+    function address_share_set(e) {
+        var lng = $(e).data('lng');
+        var lat = $(e).data('lat');
+        $('#address_lng').val(lng);
+        $('#address_lat').val(lat);
+        address_map.setZoomAndCenter(20, [lng, lat]);
+        $('#address_location_address').val($(e).text());
+        $('.location-address').hide().html();
+    }
+
+    //地图拖拽
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',//设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
+            map: address_map//依赖地图对象
+        });
+        positionPicker.on('success', function (positionResult) {
+            $('.show-address p').text(positionResult.address);
+            $('.show-address p').data('lat', positionResult.position.lat);
+            $('.show-address p').data('lng', positionResult.position.lng);
+        });
+        positionPicker.start();
+    });
+
+    //拖拽选址确认
+    function set_dragend() {
+        $('#address_location_address').val($('.show-address p').text());
+        $('#address_lat').val($('.show-address p').data('lat'));
+        $('#address_lng').val($('.show-address p').data('lng'));
+    }
+    //定位
+    function address_position() {
+        address_map.plugin('AMap.Geolocation', function (PositionPicker) {
+            geolocation = new AMap.Geolocation({
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                buttonPosition: 'RB',    //定位按钮停靠位置，默认：'LB'，左下角
+                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            });
+            address_map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+            // 解析定位结果
+            function onComplete(data) {
+            }
+
+            //解析定位错误信息
+            function onError() {
+                layer.msg('定位失败,请手动输入收货地址');
+            }
+        });
+    }
+
+    /******************************地图***********************************/
+    var addres_data_map = ['name', 'phone', 'province', 'city', 'area', 'street', 'address', 'location_address', 'lat', 'lng', 'member_address_id'];
+
+    /**
+     * 地址操作
+     * @param obj
+     * @param type  1新增  2编辑
+     */
+    function site(obj, type) {
+        //清空数据
+        $('.address-left input[type!=submit][type!=checkbox]').val('');
+        $('#address_is_default').removeAttr('checked');
+        $('.detailed-box-top div').eq(0).addClass('active').siblings('div').hide();
+        $('.address-detailed').show().nextAll('.address-detailed').hide().text('');
+        $('.detailed-box').hide();
+        $('.address-detailed-box').removeClass('border-bottom');
+        //清空数据
+        switch (type) {
+            case '1':
+                $('.address-detailed-box span').html('--请选择--');
+                $('#create_address').attr('action', "{:url('/pc2.0/address/create')}");
+                $('.mask').show();
+                //定位
+                address_position();
+                break;
+            case '2':
+                $('#create_address').attr('action', "{:url('/pc2.0/address/update')}");
+                main.ajax({
+                    'url': "{:url('/pc2.0/address/find')}",
+                    data: {member_address_id: $(obj).data('address_id')},
+                    callback: function (res) {
+                        if (res.code === 0) {
+                            if (res.result.lng || res.result.lat) {
+                                //设置地图中心点
+                                address_map.setZoomAndCenter(20, [res.result.lng, res.result.lat]);
+                            } else {
+                                //从新定位
+                                address_position();
+                            }
+                            //赋值
+                            $.each(addres_data_map, function (k, v) {
+                                $('#address_' + v).val(res.result[v]);
+                            });
+                            $('.address-detailed-box span').html('<i>/' + res.result.province + '</i><i>/' + res.result.city + '</i><i>/' + res.result.area + '</i><i>/' + res.result.street);
+                            //最后一个地址添加选中样式
+                            $('.detailed-box-top .address-text').addClass('finish').show().removeClass('active').eq(3).addClass('active');
+                            var address_id_map = ['province', 'city', 'area', 'street'];
+                            $.each(address_id_map, function (k, v) {
+                                var address_html = '';
+                                if(v == 'street'){
+                                    address_html += '<a class="' + v + '" data_id="000">暂不选择</a>'
+                                }
+                                $.each(res.result[v + '_array'], function (kk, vv) {
+                                    var pitch_on = '';
+                                    //判断当前地址是否是选中
+                                    if (vv.area_name.toString() === res.result[v].toString()) {
+                                        pitch_on = 'primary-background-color checked';
+                                    }
+                                    //拼接对应地址html
+                                    address_html += '<a class=" '+ v + ' ' + pitch_on + '" data_id="' + vv.area_id + '">' + vv.area_name + '</a>';
+                                });
+                                //地址栏显示隐藏
+                                $('.address-detailed').eq(3).show().siblings('.address-detailed').hide();
+                                $('.detailed-box-top .address-text').eq(k).children('a').text(res.result[v]);
+                                $('#' + v).html(address_html);
+                            });
+                            //判断是否是默认地址
+                            if (res.result.is_default === 1) {
+                                $('#address_is_default').attr('checked', 'checked');
+                            }
+                            $('.mask').show();
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    }
+                });
+        }
+    }
+
+    //地址栏切换
+    $('.detailed-box-top .address-text').click(function () {
+        var num = $(this).index();
+        $('.address-detailed').eq(num).show().siblings('.address-detailed').hide();
+        if (num === 0 || $(this).prev().hasClass('finish')) {
+            $(this).addClass('active').siblings('.address-text').removeClass('active')
+        }
+    });
+    //地址选择信息显示隐藏
+    $('.detailed-box .close').click(function () {
+        $('.detailed-box').hide();
+        $('.address-detailed-box').removeClass('border-bottom')
+    });
+    $('.address-detailed-box').click(function () {
+        $('.detailed-box').show()
+        $(this).addClass('border-bottom')
+    });
+    /**
+     * 详细地址选择
+     */
+    $('.address-detailed').on('click', 'a', function () {
+        var clear_site = ['province', 'city', 'area', 'street'];
+        $(this).addClass('primary-background-color checked').siblings('a').removeClass('primary-background-color checked');
+        var txt = $(this).text();
+        $('.address-detailed-box span').append();
+        if ($('.address-detailed-box span').html() == '--请选择--') {
+            $('.address-detailed-box span').html('');
+        }
+        var parent_id = $(this).attr('data_id');
+        //设置当前选择省市区数据
+        $('#address_' + $(this).parent('div').attr('id')).val($(this).text());
+        var index, district;
+        //判断是点击省市区不同操作
+        switch ($(this).parent('div').attr('id')) {
+            case 'province':
+                index = 0;
+                district = 'city';
+                $('.address-detailed').eq(1).show().siblings('.address-detailed').hide()
+                break;
+            case 'city':
+                index = 1;
+                district = 'area';
+                $('.address-detailed').eq(2).show().siblings('.address-detailed').hide()
+                break;
+            case 'area':
+                index = 2;
+                district = 'street';
+                $('.address-detailed').eq(3).show().siblings('.address-detailed').hide()
+                break;
+            case 'street':
+                index = 3;
+                district = undefined;
+                break;
+            default :
+                return;
+        }
+        $.each(clear_site, function (k, v) {
+            if (k > index) {
+                $('#address_' + v).val('');
+            }
+        });
+        $('.detailed-box-top .address-text').eq(index).find('a').html(txt);
+        $('.detailed-box-top .address-text').eq(index).addClass('finish');
+        $('.detailed-box-top .address-text').eq(index).next('div').show().addClass('active').siblings().removeClass('active');
+        $('.detailed-box-top .address-text').eq(index).next('div').html('<a href="javascript:;">--请选择--</a><img src="__RES__/imgs/my/datebottom.png" alt="">').nextAll('.address-text').hide();
+        if ($('.address-detailed-box span i').eq(index).length != 0) {
+            $('.address-detailed-box span i').eq(index).html('/' + txt).nextAll().remove();
+        } else {
+            $('.address-detailed-box span').append("<i>/" + txt + "</i>")
+        }
+        //城市联动
+        if (district) {
+            main.ajax({
+                'url': '/pc2.0/address/linkage', data: {'parent_id': parent_id}, callback: function (t) {
+                    if (t.code !== 0) {
+                        layer.msg(t.message);
+                    } else {
+                        var str = '';
+                        if(district === 'street'){
+                            str += '<a class="' + district + '" data_id="000">暂不选择</a>';
+                        }
+                        for (var i = 0; i < t.result.length; i++) {
+                            str += '<a class="' + district + '" data_id="' + t.result[i]['area_id'] + '">' + t.result[i]['area_name'] + '</a>';
+                        }
+                        $('#' + district).html(str);
+                    }
+                }
+            })
+        } else {
+            //如果是最后一级则去请求地图获取经纬度  设置在对应城市查询
+            var address_str = '';
+            $.each(clear_site,function(k,v){
+                address_str += $('#address_' + v).val();
+            });
+            geocoder.getLocation(address_str, function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                    //设置地图中心点
+                    address_map.setZoomAndCenter(20, [result['geocodes'][0]['location']['lng'], result['geocodes'][0]['location']['lat']]);
+                    // result中对应详细地理坐标信息
+                }
+            });
+            $('.detailed-box').hide();
+            $('.address-detailed-box').removeClass('border-bottom')
+        }
+    });
+
+    //收货地址数量
+    var consignee_list_li_count=0;
+    //检测地址列表内容有修改时处理事件
+    $('.consignee-list').on('DOMSubtreeModified',function(e){
+        e.returnValue = false;
+        //判断收货地址数量是否有改变
+        var address_count = $('.consignee-list li').length;
+        if(consignee_list_li_count != address_count){
+            //如果地址栏内没有收货地址则刷新当前页
+            if($('li.consignee-list-li ').length <= 0){
+                window.location.reload();
+                return;
+            }
+            //判断如果地址栏内没有收货地址被选择则默认第一个被选中
+            if($('.consignee-list li[checked]').length == 0){
+                $('.consignee-list li').find('a').eq(0).click();
+            }
+            //处理收货地址栏展示
+            var liheight = $(".consignee-list li").length;
+            if ($(".consignee-list").height() > 29) {
+                $(".consignee-list").height(liheight * 40);
+            }
+            consignee_list_li_count = address_count;
+        }
+    });
+    //地址修改表单提交
+    main.valid({
+        'select': '#create_address', 'btn_submit': '#address_submit', 'success': function (res) {
+            if (res.code === 0) {
+                switch (res.type) {
+                    case 'create':
+                        var address_html = '<li class="consignee-list-li" id="address_' + res.data.address_id + '">\n' +
+                            '                    <a href="javascript:;" modification="address" data-address_id="' + res.data.address_id + '" class="consignee-name ">' + res.data.name + '<div class="triangle border-color"></div>\n' +
+                            '                        <img src="/template/computer/resource/imgs/confirmorder/duigou.png" class="hook">\n' +
+                            '                    </a>\n' +
+                            '                    <span class="consignee-name-people" name>' + res.data.name + '</span>\n' +
+                            '                    <span address>' + res.data.address + '</span>\n' +
+                            '                    <span phone>' + res.data.phone + '</span>\n' +
+                            '                    <!--*这是默认选中行的地址/*这是默认选中行的地址的样式（style="display: inline-block"）*/-->\n' +
+                            '                    <a href="javascript:;" class="default-address" style="display: ' + (res.data.is_default == 1 ? 'inline-block' : 'none') + '">默认地址</a>\n' +
+                            '                    <div class="set-to-default" style="display: none;">\n' +
+                            '                        <!--*这是默认选中行的地址/*这是默认选中行的地址的样式（style="display: none）*/-->\n' +
+                            '                        <a href="javascript:;" class="set-to-address" style="display: ' + (res.data.is_default == 1 ? 'none' : 'inline-block' ) + '">设为默认地址</a>\n' +
+                            '                        <a href="javascript:;" class="editor-address" data-address_id="' + res.data.address_id + '" onclick="site(this,\'2\')">编辑</a>\n' +
+                            '                        <a href="javascript:;" class="address-data" onclick="address_destroy(this,\'' + res.data.address_id + '\')"> 删除</a>\n' +
+                            '                    </div>\n' +
+                            '                </li>';
+                        $('.consignee-list').append(address_html);
+
+                        var num = $('.consignee-list li').length;
+                        if (num == 20){
+                            $('.new-consignee-address').hide()
+                        }else{
+                            $('.new-consignee-address').show()
+                        }
+                        break;
+                    case 'update':
+                        var address_html = '<a href="javascript:;" modification="address" data-address_id="' + res.data.address_id + '" class="consignee-name ">' + res.data.name + '<div class="triangle border-color"></div>\n' +
+                            '                        <img src="/template/computer/resource/imgs/confirmorder/duigou.png" class="hook">\n' +
+                            '                    </a>\n' +
+                            '                    <span class="consignee-name-people" name>' + res.data.name + '</span>\n' +
+                            '                    <span address>' + res.data.address + '</span>\n' +
+                            '                    <span phone>' + res.data.phone + '</span>\n' +
+                            '                    <!--*这是默认选中行的地址/*这是默认选中行的地址的样式（style="display: inline-block"）*/-->\n' +
+                            '                    <a href="javascript:;" class="default-address" style="display: ' + (res.data.is_default === 0 ? 'none' : 'inline-block') + '">默认地址</a>\n' +
+                            '                    <div class="set-to-default" style="display: none;">\n' +
+                            '                        <!--*这是默认选中行的地址/*这是默认选中行的地址的样式（style="display: none）*/-->\n' +
+                            '                        <a href="javascript:;" class="set-to-address" style="display: ' + (res.data.is_default === 0 ? 'inline-block' : 'none') + '">设为默认地址</a>\n' +
+                            '                        <a href="javascript:;" class="editor-address" data-address_id="' + res.data.address_id + '" onclick="site(this,\'2\')">编辑</a>\n' +
+                            '                        <a href="javascript:;" class="address-data" onclick="address_destroy(this,\'' + res.data.address_id + '\')"> 删除</a>\n' +
+                            '                    </div>';
+                        $('#address_' + res.data.address_id).html(address_html);
+                        $('#address_' + res.data.address_id).click();
+                        break;
+                }
+                //判断当前地址是否是默认地址
+                if(res.data.is_default.toString() === '1'){
+                    $('#address_' + res.data.address_id).siblings().find('.default-address').hide()
+                    $('#address_' + res.data.address_id).siblings().find('.set-to-address').show()
+                }
+                $('.mask').hide();
+            }
+        }
+    });
+    //删除收货地址
+    function address_destroy(e, member_address_id) {
+        main.ajax({
+            'url': '/pc2.0/address/destroy',
+            'confirm_text': '确认删除么',
+            data: {'member_address_id': member_address_id},
+            'callback': function (res) {
+                if (res.code == 0) {
+                    //判断当前删除的地址是否选中
+                    if($(e).closest('.consignee-list-li').attr('checked')==='checked'){
+                        $(e).closest('.consignee-list').children('li').eq(0).children('a').eq(0).click()
+                    }
+                    $(e).closest('.consignee-list-li').remove();
+                    var num = $('.consignee-list li').length;
+                    if (num <= 19){
+                        $('.new-consignee-address').show();
+                    }else{
+                        $('.new-consignee-address').hide();
+                    }
+                    layer.msg('删除成功');
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        })
+    }
+
+    //收货地址隐藏
+    $(".consignee-more").click(function () {
+        var liheight = $(".consignee-list li").length;
+        if ($(".consignee-list").height() <= 29) {
+            $(".consignee-list").height(liheight * 40);
+            $(".consignee-more").text('收起收货地址');
+        } else {
+            //判断当前选中地址是否是第一个
+            if ($(this).prevAll('ul.consignee-list').children('li[checked]').index() !== 0) {
+                $(this).prevAll('ul.consignee-list').prepend('<li class="consignee-list-li">' + $(this).prevAll('ul.consignee-list').children('li[checked]').html() + '</li>');
+                $(this).prevAll('ul.consignee-list').children('li[checked]').remove();
+            };
+            $(".consignee-list").height(29);
+            $(".consignee-more").text('更多收货地址');
+        }
+    });
+    //设为地址显示
+    $('body').on('mouseenter', '.consignee-list-li', function () {
+        $(this).find(".set-to-default").css("display", "block");
+    });
+    $('body').on('mouseleave', '.consignee-list-li', function () {
+        $(this).find(".set-to-default").css("display", "none")
+    });
+    //设为默认地址
+    $('body').on('click', '.set-to-address', function () {
+        var that=$(this);
+        main.ajax({
+            'url':'/pc2.0/address/default_address',
+            'data':{'member_address_id':$(this).closest('.consignee-list-li').data('address_id')},
+            'callback':function(res){
+                if(res.code===0){
+                    if ($(".default-address").css("display", "none")) {
+                        that.parents(".set-to-default").siblings(".default-address").css("display", "inline-block").parents(".consignee-list-li").siblings().find(".default-address").css("display", "none");
+                        that.css("display", "none").parents(".consignee-list-li").siblings().find(".set-to-address").css("display", "inline-block");
+                    } else {
+                        that.css("display", "none")
+                    }
+                    layer.msg(res.message);
+                }else{
+                    layer.msg(res.message);
+                }
+            }
+        });
+    });
+    /***********************************************************地址操作结束***********************************************/
+    //省市区四级联动地址初始赋值
+    common_address_select({select:'.address-detailed-box1'});
+</script>
+{/block}

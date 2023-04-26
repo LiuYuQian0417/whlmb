@@ -1,0 +1,217 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .goods-desc .name{
+        height: auto!important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" class="layui-form" method="post">
+    <div class="main-content" id="mainContent">
+        <div class="tabmenu">
+            <ul class="tab">
+                <li class="active"><a href="javascript:;" onclick="reloadSelf({type:0})">销售概况</a></li>
+            </ul>
+        </div>
+        <div class="btn-info">
+            <a class="sc-btn sc-blue-btn" href="#download"><i class="icon-download-alt"></i>下载订单</a>
+        </div>
+        <div class="order_stats">
+            <div class="order_stats_search clearfix">
+                <form action="javascript:searchGeneral()" name="searchForm">
+                    <div class="screeItme">
+                        <strong class="fl lh mr10">选择日期：</strong>
+                        <div class="text_time select_time" id="text_time1">
+                            <input name="date_start_time" type="text" id="start_time" value="2018-08-01 00:00:00" class="text" />
+                        </div>
+                        <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                        <div class="text_time" id="text_time2">
+                            <input name="date_end_time" type="text" id="end_time" value="2018-08-31 23:59:59" class="text" />
+                        </div>
+                    </div>
+                    <div class="screeItme mt10">
+                        <strong class="fl lh mr10">时间类型：</strong>
+                        <div  class="imitate_select select_w145">
+                            <div class="cite">请选择</div>
+                            <ul>
+                                <li><a href="javascript:;" data-value="0" class="ftx-01">按发货时间</a></li>
+                                <li><a href="javascript:;" data-value="1" class="ftx-01">按下单时间</a></li>
+                            </ul>
+                            <input name="time_type" type="hidden" value="1" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="screeItme mt10">
+                        <div class="bf100 fl order_status">
+                            <strong class="fl lh mr10">订单状态：</strong>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="order_status[]" type="checkbox" value="0" class="ui-checkbox" id="order_0"  autocomplete="off" />
+                                <label class="ui-label" for="order_0">未确认</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="order_status[]" type="checkbox" value="1" class="ui-checkbox" id="order_1"  autocomplete="off" />
+                                <label class="ui-label" for="order_1">已确认</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="order_status[]" type="checkbox" value="2" class="ui-checkbox" id="order_2"  autocomplete="off" />
+                                <label class="ui-label" for="order_2"><font color="red"> 取消</font></label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="order_status[]" type="checkbox" value="3" class="ui-checkbox" id="order_3"  autocomplete="off" />
+                                <label class="ui-label" for="order_3"><font color="red">无效</font></label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="order_status[]" type="checkbox" value="4" class="ui-checkbox" id="order_4"  autocomplete="off" />
+                                <label class="ui-label" for="order_4"><font color="red">退货</font></label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="order_status[]" type="checkbox" value="5" class="ui-checkbox" id="order_5"  autocomplete="off" />
+                                <label class="ui-label" for="order_5">已分单</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="order_status[]" type="checkbox" value="6" class="ui-checkbox" id="order_6"  autocomplete="off" />
+                                <label class="ui-label" for="order_6">部分分单</label>
+                            </div>
+                        </div>
+                        <div class="bf100 fl mt5 shipping_status">
+                            <strong class="fl lh mr10">发货状态：</strong>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="shipping_status[]" type="checkbox" value="0" class="ui-checkbox" id="shipping_0"  autocomplete="off" />
+                                <label class="ui-label" for="shipping_0">未发货</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="shipping_status[]" type="checkbox" value="3" class="ui-checkbox" id="shipping_3"  autocomplete="off" />
+                                <label class="ui-label" for="shipping_3">配货中</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="shipping_status[]" type="checkbox" value="1" class="ui-checkbox" id="shipping_1"  autocomplete="off" />
+                                <label class="ui-label" for="shipping_1">已发货</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="shipping_status[]" type="checkbox" value="2" class="ui-checkbox" id="shipping_2"  autocomplete="off" />
+                                <label class="ui-label" for="shipping_2">收货确认</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="shipping_status[]" type="checkbox" value="4" class="ui-checkbox" id="shipping_4"  autocomplete="off" />
+                                <label class="ui-label" for="shipping_4">已发货(部分商品)</label>
+                            </div>
+                            <div class="checkbox_item fl lh mr10">
+                                <input name="shipping_status[]" type="checkbox" value="5" class="ui-checkbox" id="shipping_5"  autocomplete="off" />
+                                <label class="ui-label" for="shipping_5">发货中</label>
+                            </div>
+                        </div>
+                        <div class="bf100 fl mt5">
+                            <strong class="fl lh mr10">分类名称：</strong>
+                            <input name="cat_name" value="" type="text" class="text text_2 mr10"  autocomplete="off" />
+                            <input type="submit" name="query_by_date" value="查询" class="sc-btn sc-blueBg-btn btn30" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!--列表-->
+            <form method="POST" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                    <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                        <tr>
+                            <th width="40%">商品名称</th>
+                            <th width="10%">货号</th>
+                            <th width="10%">分类</th>
+                            <th width="10%"><a href="javascript:listTable.sort('goods_number');">数量</a></th>
+                            <th width="10%">单价</th>
+                            <th width="10%">总金额</th>
+                            <th width="10%">下单日期</th>
+                        </tr>
+                        <tr><td class="no-records" colspan="7">没有找到任何记录</td></tr>
+                        <tfoot>
+                        <tr>
+                            <td colspan="7"><!----></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    // 筛选选中效果
+
+    // 多选状态
+    function clearCheck(num) {
+        if (num == 1) {
+            $(".origin_type").removeAttr("checked");
+        } else if (num == 2) {
+            $('#a_2').removeAttr("checked");
+        } else if (num == 3) {
+            $(".order_type").removeAttr("checked");
+        } else if (num == 4) {
+            $('#b_2').removeAttr("checked");
+        } else if (num == 5) {
+            $(".distribution_type").removeAttr("checked");
+        } else if (num == 6) {
+            $("#shipping_2").removeAttr("checked");
+        } else if (num == 7) {
+            $(".status").removeAttr("checked");
+        } else if (num == 8) {
+            $("#status_0").removeAttr("checked");
+        } else if (num == 9) {
+            $(".pay_channel").removeAttr("checked");
+        } else if (num == 10) {
+            $("#status_10").removeAttr("checked");
+        }
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+</script>
+<script type="text/javascript">
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId':'start_time',//时间写入对象的id
+        'triggerId':['start_time'],//触发事件的对象id
+        'alignId':'text_time1',//日历对齐对象
+        'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    },opts2 = {
+        'targetId':'end_time',
+        'triggerId':['end_time'],
+        'alignId':'text_time2',
+        'format':'-'
+    }
+
+    xvDate(opts1);
+    xvDate(opts2);
+    //日期选择插件调用end sunle
+</script>
+{/block}

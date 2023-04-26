@@ -1,0 +1,43 @@
+.serviceCreate{
+    width:60%;
+    margin: 20px auto 0;
+    float: none;
+}
+.serviceCreate dt{
+    float: left;
+    display: block;
+    margin: 9px 15px;
+    width: 170px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+}
+.serviceCreate dd{
+    margin-left: 0;
+    min-height: 36px;
+    padding-top: 5px;
+}
+.serviceCreate .wrapper-list>dl{
+    border-bottom: none;
+    padding: 15px 0 0;
+}
+
+.serviceCreate .wrapper-list>dl:hover{
+    background: none;
+}
+.text{
+    border-radius: 0;
+}
+.layui-upload-drag .layui-icon{
+    color: #1890ff;
+}
+body{
+    font-size: 13px;
+}
+.layui-anim.layui-anim-upbit dd{
+    width: auto;
+    float: none;
+}
+.text:focus {
+    border: 1px solid #1890ff;
+}

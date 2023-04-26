@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">-->
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- Apple devices fullScreen -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    {block name='title'}<title>商家管理后台</title>{/block}
+    {block name='mainCss'}
+    <!--字体符号图标    -->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css">
+    <!--网站图标-->
+    <link rel="shortcut icon" href="/template/master/resource/image/common/favicon_48.ico" />
+    <link rel="bookmark" href="/template/master/resource/image/common/favicon_64.ico" type="image/x-icon" />
+    <!--通用CSS-->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/general.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/style.css">
+    {/block}
+    <script src="__RES__/js/jquery-1.9.1.min.js"></script>
+    <script src="__RES__/js/masterCp.js"></script>
+    <!-- 融云 -->
+    <script src="//cdn.ronghub.com/RongIMLib-2.2.8.min.js"></script>
+    <script src="//cdn.ronghub.com/RongEmoji-2.2.6.min.js"></script>
+    <script src="/static/web_sdk/im/libs/utils.js"></script>
+    <script src="/static/web_sdk/im/libs/qiniu-upload.js"></script>
+    <script src="/static/web_sdk/im/template.js"></script>
+    <script src="/static/web_sdk/im/emoji.js"></script>
+    <script src="/static/web_sdk/im/im.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/web_sdk/im/im.css">
+</head>
+<body>
+{block name='body'}
+<!--网站头部导航-->
+<div class="ecsc-head-layout">
+    <div class="admin-logo" data-param="1">
+            <a href="javascript:void(0);">
+                <div class="t">
+                    <h1>商家管理后台</h1>
+                </div>
+                <div class="en"><img src="__RES__/images/en.png"></div>
+            </a>
+        </div>
+    <div class="ecsc-nav">
+            <!--头部X轴导航数据-->
+            <ul class="ecsc-nav-ul">
+                {$X_nav|raw}
+            </ul>
+            <!--头部X轴导航数据-->
+        </div>
+    <div class="ecsc-admin">
+            <div class="avatar">
+                <img src="{:session('client_storeLogo')}" onerror=this.src="/template/master/resource/image/common/imageError.png">
+            </div>
+            <dl>
+                <dt>
+                    <span>{:session('client_storeName')}</span>
+                </dt>
+                <dd>
+<!--                    <span><i class="sc_icon sc_icon_seller"></i><a class="navbar-brand"-->
+<!--                                                                   href="javascript:layer.msg('敬请期待');" target="_blank">店铺</a></span>-->
+                    <span><i class="sc_icon sc_icon_set"></i><a class="navbar-brand navbar-right"
+                                                                href="javascript:main.clearCacheTest();">清缓存</a></span>
+                    <span><i class="sc_icon sc_icon_out"></i><a class="navbar-brand navbar-right"
+                                                                href="javascript:main.loginOut();">退出</a></span>
+                </dd>
+            </dl>
+        </div>
+</div>
+<!--网站头部导航-->
+<div class="ecsc-layout">
+    <div class="site wrapper">
+        <!--网站左侧导航-->
+        <div class="ecsc-layout-left">
+            <div class="sidebar" id="sidebar">
+
+                <div class="column-menu">
+                    {$Y_nav|raw}
+                </div>
+
+            </div>
+        </div>
+        <!--网站左侧导航-->
+
+        <!--网站右侧主体-->
+        <div class="ecsc-layout-right">
+
+                <iframe src="" id="client_workspace" name="client_workspace" style="overflow: visible;" frameborder="0"
+                        width="100%" height="100%" scrolling="yes" onload="window.parent"></iframe>
+        </div>
+        <!--网站右侧主体-->
+        <!-- 融云 -->
+        {eq name='$Think.config.user.rong_cloud_switch' value='1'}
+        <audio id="snd" src="" autoplay></audio>
+        <div id="rcs-app"></div>
+        <script>
+            var url = '{$Request.domain}';
+            (function(){
+                var appKey = "{:config('rongyun.app_key')}";
+                var token = "{:session('client_rong_token')}";
+
+                RCS.init({
+                    appKey: appKey,
+                    token: token,
+                    target: document.getElementById('rcs-app'),
+                    showConversitionList: true,
+                    templates: {
+                        button: ['<div class="rongcloud-consult rongcloud-im-consult">',
+                            '   <button onclick="RCS.showCommon()"><span class="rongcloud-im-icon">进入 客服</span></button>',
+                            '</div>',
+                            '<div class="customer-service" style="display: none;"></div>'].join(''),
+                    },
+                });
+            })()
+        </script>
+        {/eq}
+    </div>
+</div>
+<input id="__store_id__" value="{$Think.session.client_store_id}">
+<input id="__session_id__" value="{:session_id()}">
+
+{/block}
+<!--公共JQ-->
+{block name='script'}
+<script>
+    try{
+        //记录跳转和选项卡切换信息
+    window.Y_data_param={$Y_data_param|raw};
+    }catch (e) {
+
+    }
+</script>
+<script src="__RES__/js/jquery.cookie.js"></script>
+<script src="__RES__/js/jsencrypt.min.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/js/main.js"></script>
+<script src="__RES__/js/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/jquery.from.js"></script>
+<script src="__RES__/js/jquery.purebox.js"></script>
+<script src="__PUBLIC_RES__/notify/reconnecting-websocket.min.js"></script>
+<script src="__PUBLIC_RES__/notify/notification.js"></script>
+{/block}
+</body>
+
+</html>

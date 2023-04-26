@@ -1,0 +1,142 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+<style>
+    .calculate span {
+        margin-right: 20px;
+    }
+</style>
+{__block__}
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+        <li class="curr"><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、平台或商家根据分销商进行对账，可查看分销商佣金总金额及佣金明细；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tab" style="margin-top: 15px;">
+    <ul>
+        <li {eq name="single_store" value="0"} hidden {/eq}><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/store')">结算对账</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/distribution')">分销商对账</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_book/order')">订单对账</a></li>
+    </ul>
+</div>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <!--关键词结束-->
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">
+                    目前共有 {:$data->total()} 名分销商&nbsp;&nbsp;每页显示<font> {:$data->listRows()} </font>条&nbsp;&nbsp;
+                    <font>已结算总金额：{$only.close} 元</font> <font>待结算总金额：{:number_format(($only.total-$only.close),2,'.','')} 元</font>
+                </div>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select" style="width: 180px;">
+                    <input title="结算日期" name="date" type="text" class="layui-input"
+                           value="{:input('get.date','')}"
+                           id="date" readonly placeholder="按成为分销商日期范围查询">
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus"
+                           placeholder="请输入分销商昵称/手机号" value="{:input('get.keyword','')}" autocomplete="off">
+                </div>
+                <input type="submit" class="btn search_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th>分销商</th>
+                <th>电话</th>
+                <th>分销商等级</th>
+                <th>佣金总金额</th>
+                <th>已结算</th>
+                <th>待结算</th>
+                <th>直属粉丝</th>
+                <th>推荐粉丝</th>
+                <th>佣金明细</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {foreach $data as $item}
+            <tr>
+                <td>
+                    <a rel="{$item.avatar}" class="preview">
+                        <img src="{$item.avatar?:'?'}" class="avatar" alt="头像" onerror="this.src='__RES__/image/common/imageError.png'" />
+                    </a>
+                    {$item.nickname}
+                </td>
+                <td>{$item.phone}</td>
+                <td>{$item.level_title}</td>
+                <td>{$item.total_brokerage}</td>
+                <td>{$item.total_close_brokerage}</td>
+                <td>{:number_format(($item.total_brokerage - $item.total_close_brokerage),2,'.','')}</td>
+                <td>{$distribution_hierarchy > 1 ? ($item.referrer_num?:0) : 0}</td>
+                <td>{$distribution_hierarchy == 3 ? ($item.relation_num?:0) : 0}</td>
+                <td>
+                    <a class="btn_edit" href="javascript:void(0);"
+                       onclick="main.jumpFour('distribution_book/distribution_details?distribution_id={$item.distribution_id}&type=1')"><i class="fa fa-info"></i>详情</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+            {notempty name='data'}
+            {if condition="$data->lastPage() > 1"}
+            <tfoot>
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            </tfoot>
+            {/if}
+            {/notempty}
+        </table>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('.layui-form');
+    main.laydate([{
+        elem: '#date',
+        type: 'date',
+        range: true,
+        max:0
+    }]);
+</script>
+{/block}

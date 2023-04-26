@@ -1,0 +1,309 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<script src="__RES__/js/jquery-1.10.2.min.js"></script>
+<style>
+    .goods-desc .name{
+        height: auto!important;
+    }
+    .order_stats{
+        overflow: visible !important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+
+        <div class="btn-info">
+            <a class="sc-btn sc-blue-btn" href="#download" onclick="exportList()"><i class="icon-download-alt"></i>下载订单</a>
+        </div>
+        <div class="order_stats">
+            <!--<div class="order_stats_top">-->
+                <!--<div class="order_stats_items">-->
+                    <!--<div class="order_stats_item order_stats_item2">-->
+                        <!--<i class="icon"><img src="__RES__/images/icon2.png"/></i>-->
+                        <!--<div class="desc">-->
+                            <!--<span class="tit">进账金额</span>-->
+                            <!--<span class="value"><em>¥</em>{$price.income}</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="order_stats_item order_stats_item4">-->
+                        <!--<i class="icon"><img src="__RES__/images/icon4.png"/></i>-->
+                        <!--<div class="desc">-->
+                            <!--<span class="tit">出账金额</span>-->
+                            <!--<span class="value"><em>¥</em>{$price.expend}</span>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <div class="order_stats_search clearfix">
+                <div class="screeItme">
+                    <strong class="fl lh mr10">变动时间：</strong>
+                    <div class="text_time select_time" id="text_time1">
+                        <input name="start_date" type="text" id="send_start_date" value="{:input('start_date','')}" placeholder="变动起始时间" readonly class="text" />
+                    </div>
+                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                    <div class="text_time" id="text_time2">
+                        <input name="end_date" type="text" id="send_end_date" value="{:input('end_date','')}" placeholder="变动结束时间" readonly class="text" />
+                    </div>
+                </div>
+                <div class="screeItme mt10">
+                    <strong class="fl lh mr10">支付方式：</strong>
+                    <div  class="imitate_select select_w145">
+                        <div class="cite">请选择</div>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="ftx-01">全部</a></li>
+                            <li><a href="javascript:;" data-value="1" class="ftx-01">微信</a></li>
+                            <li><a href="javascript:;" data-value="2" class="ftx-01">支付宝</a></li>
+                            {if $Think.INI_CONFIG['IS_BALANCE']}<li><a href="javascript:;" data-value="3" class="ftx-01">余额</a></li>{/if}
+                            {if $Think.INI_CONFIG['IS_PAY_DELIVERY']}<li><a href="javascript:;" data-value="6" class="ftx-01">货到付款</a></li>{/if}
+                        </ul>
+                        <input name="pay_channel" type="hidden" value="{:input('pay_channel','0')}" id="order_referer_val">
+                    </div>
+                    <strong class="fl lh mr10">状 态：</strong>
+                    <div  class="imitate_select select_w145">
+                        <div class="cite">请选择</div>
+                        <ul>
+                            <li><a href="javascript:;" data-value="-1" class="ftx-01">全部</a></li>
+                            <li><a href="javascript:;" data-value="0" class="ftx-01">进行中</a></li>
+                            <li><a href="javascript:;" data-value="1" class="ftx-01">交易成功</a></li>
+                            <li><a href="javascript:;" data-value="3" class="ftx-01">退款成功</a></li>
+                        </ul>
+                        <input name="order_referer" type="hidden" value="{:input('order_referer','-1')}">
+                    </div>
+                </div>
+                <div class="screeItme mt10">
+                    <div class="bf100 fl mt5">
+                        <strong class="fl lh mr10">金额区间：</strong>
+                        <input name="min" value="{:input('min','')}" type="number" placeholder="金额起始" class="text text_2 mr10"  autocomplete="off" />
+                        <span class="bolang">&nbsp;&nbsp;至&nbsp;&nbsp;</span>
+                        <input name="max" value="{:input('max','')}" type="number" placeholder="金额结束" class="text text_2 mr10"  autocomplete="off" />
+                    </div>
+                </div>
+                <div class="screeItme mt10">
+                    <strong class="fl lh mr10">类 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型：</strong>
+                    <div  class="imitate_select select_w145">
+                        <div class="cite">请选择</div>
+                        <ul>
+                            <li><a href="javascript:;" data-value="-1" class="ftx-01">全部</a></li>
+                            <li><a href="javascript:;" data-value="2" class="ftx-01">交易订单</a></li>
+                            <li><a href="javascript:;" data-value="3" class="ftx-01">退款订单</a></li>
+                            <!--<li><a href="javascript:;" data-value="0" class="ftx-01">充值</a></li>-->
+                            <li><a href="javascript:;" data-value="1.2" class="ftx-01">提现</a></li>
+                        </ul>
+                        <input name="status" type="hidden" value="{:input('status','-1')}">
+                    </div>
+                <div class="screeItme mt10">
+                    <div class="bf100 fl mt5">
+                        <strong class="fl lh mr10">关 键 词 ：</strong>
+                        <input name="keyword" value="{:input('keyword','')}" type="text" placeholder="订单号" class="text text_2 mr10"  autocomplete="off" />
+                        <input type="submit" name="" value="查询" class="sc-btn sc-blueBg-btn btn30" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--列表-->
+        <div class="list-div" id="listDiv">
+            <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                <tr>
+                    <th width="10%">账户变动时间</th>
+                    <th width="10%">类型</th>
+                    <th width="10%">名称/备注</th>
+                    <th width="10%">收入/支出</th>
+                    <th width="10%">状态</th>
+                </tr>
+                {empty name='data'}
+                <tr>
+                    <td class="no-records" colspan="10">没有找到任何记录</td>
+                </tr>
+                {/empty}
+                {volist name="data" id="item"}
+                <tr>
+                    <td>
+                        {$item.create_time}
+                    </td>
+                    <td>
+                        {switch name="item.status"}
+                        {case value="0"}充值{/case}
+                        {case value="1.2"}提现{/case}
+                        {case value="2"}交易订单{/case}
+                        {case value="3"}退款订单{/case}
+                        {case value="4"}充值赠送{/case}
+                        {default /}出错啦
+                        {/switch}
+                    </td>
+                    <td>
+                        {switch name="item.status"}
+                            {case value="0"}
+                                店铺充值<br>
+
+                            {/case}
+                            {case value="1.2"}
+                                店铺提现<br>
+                                提现编号：{$item.withdraw_number}<br>
+                                提现时间：{$item.create_time}<br>
+                                提现金额：{$item.price}<br>
+                            {/case}
+                            {case value="2"}
+                            店铺售卖商品收益<br>
+                            订单编号：{$item.order_attach_number}<br>
+                            下单时间：{$item.create_time}<br>
+                            订单金额：{$item.subtotal_price}<br>
+                            支付方式：{switch name="$item.pay_channel"}
+                                {case value="1"}微信{/case}
+                                {case value="2"}支付宝{/case}
+                                {case value="3"}余额{/case}
+                                {case value="4"}银行卡{/case}
+                                {case value="5"}线下{/case}
+                                {case value="6"}货到付款{/case}
+                                {/switch}<br>
+                            {/case}
+                            {case value="3"}
+                                {if condition="$item.orderGoodsRefund.type eq 1"}
+                                店铺未发货申请的订单退款<br>
+                                {else/}
+                                店铺完成发货后申请的订单退款<br>
+                                {/if}
+                                订单编号：{$item.orderGoodsRefund.order_attach_number}<br>
+                                下单时间：{$item.orderGoodsRefund.create_time}<br>
+                                订单金额：{$item.orderGoodsRefund.single_price}元<br>
+                                支付方式：{switch name="$item.orderGoodsRefund.pay_channel"}
+                                            {case value="1"}微信{/case}
+                                            {case value="2"}支付宝{/case}
+                                            {case value="3"}余额{/case}
+                                            {case value="4"}银行卡{/case}
+                                            {case value="5"}线下{/case}
+                                            {case value="6"}货到付款{/case}
+                                        {/switch}<br>
+                            {/case}
+                            {case value="4"}
+                            会员充值赠送<br>
+                            会员账号：{$item.phone}<br>
+                            赠送金额：{$item.price}<br>
+                            {/case}
+                            {default /}出错啦
+                        {/switch}
+                    </td>
+                    <td>
+                        {switch name="item.status"}
+                        {case value="0"}+{$item.price}{/case}
+                        {case value="2"}+{$item.subtotal_price}{/case}
+                        {case value="1.2"}-{$item.price}{/case}
+                        {case value="3"}-{$item.orderGoodsRefund.refund_amount}{/case}
+                        {case value="4"}-{$item.price}{/case}
+                        {default /}出错啦
+                        {/switch}
+                    </td>
+                    <td>
+                        {switch name="item.status"}
+                        {case value="0"}充值成功{/case}
+                        {case value="1.2"}提现成功{/case}
+                        {case value="2"}
+                            {if condition="$item.is_checking eq 1"}
+                                交易成功
+                            {else/}
+                                进行中
+                            {/if}
+                        {/case}
+                        {case value="3"}退款成功{/case}
+                        {case value="4"}赠送成功{/case}
+                        {default /}出错啦
+                        {/switch}
+                    </td>
+                </tr>
+                {/volist}
+                {notempty name="render"}
+                <tfoot>
+                <tr>
+                    <td >
+                        {:$data->render()}
+                    </td>
+                </tr>
+                </tfoot>
+                {/notempty}
+            </table>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    // 筛选选中效果
+
+    // 多选状态
+    function clearCheck(num) {
+        if (num == 1) {
+            $(".origin_type").removeAttr("checked");
+        } else if (num == 2) {
+            $('#a_2').removeAttr("checked");
+        } else if (num == 3) {
+            $(".order_type").removeAttr("checked");
+        } else if (num == 4) {
+            $('#b_2').removeAttr("checked");
+        } else if (num == 5) {
+            $(".distribution_type").removeAttr("checked");
+        } else if (num == 6) {
+            $("#shipping_2").removeAttr("checked");
+        } else if (num == 7) {
+            $(".status").removeAttr("checked");
+        } else if (num == 8) {
+            $("#status_0").removeAttr("checked");
+        } else if (num == 9) {
+            $(".pay_channel").removeAttr("checked");
+        } else if (num == 10) {
+            $("#status_10").removeAttr("checked");
+        }
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+
+</script>
+<script type="text/javascript">
+
+    // 日期插件
+    main.laydate([{
+        elem: '#send_start_date'
+        , type: 'date'
+    }, {
+        elem: '#send_end_date'
+        , type: 'date'
+    }
+    ])
+</script>
+{/block}

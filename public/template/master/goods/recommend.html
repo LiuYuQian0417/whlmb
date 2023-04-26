@@ -1,0 +1,215 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/color_picker/spectrum.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .remarks {
+        display: block;
+        width: 445px;
+        margin: 5px 0;
+        color: #767676;
+    }
+    .layui-btn-new {
+        display: inline-block;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 12px;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        background-color: #cc3300;
+    }
+    .layui-btn-new:hover img{
+        display: block !important;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>1、通过此模块设置商品相关推荐；<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="contentShell">
+    <!--表单开始-->
+    <form class="layui-form" action="" method="post" enctype="multipart/form-data">
+        {if !$Think.INI_CONFIG['SINGLE_STORE']}
+        <div>
+            <!--banner图推荐-->
+            <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> banner图推荐</label>
+            <hr class="layui-bg-gray">
+            <div class="layui-form-item">
+                <!--Banner推荐图片-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Banner推荐图片</label>
+                    <div class="layui-input-block">
+                        <div
+                                class="imageUpload"
+                                default="{$item.recomme_file|default=''}"
+                                width="375"
+                                height="208"
+                                file-mime="image/gif,image/jpeg,image/png" 文件类型
+                                name="recomme_file"
+                                dir="goods/file"
+                                value="{$item.recomme_file_data|default=''}"
+                        ></div>
+                        <div style="overflow: hidden">
+                            <span class="remarks" style="float: left">商品banner图推荐，不上传此图进行推荐会影响前台展示效果，建议尺寸375*208</span>
+                        </div>
+                    </div>
+                </div>
+
+                {if config("user.")["pc"]["is_include"]}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">PC-Banner推荐图片</label>
+                    <div class="layui-input-block">
+                        <div
+                                class="imageUpload"
+                                default="{$item.pc_recomme_file|default=''}"
+                                width="1182"
+                                height="516"
+                                file-mime="image/gif,image/jpeg,image/png" 文件类型
+                                name="pc_recomme_file"
+                                dir="goods/file"
+                                value="{$item.pc_recomme_file_data|default=''}"
+                        ></div>
+                        <div style="overflow: hidden">
+                            <span class="remarks" style="float: left">商品banner图推荐，不上传此图进行推荐会影响前台展示效果，建议尺寸1182*516</span>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+                <!--店铺轮播推荐-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">店铺轮播推荐</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="store_banner" value="0" title="否" {eq name="item.store_banner|default=0" value="0" }checked{/eq}>
+                        <input type="radio" name="store_banner" value="1" title="是" {eq name="item.store_banner|default=0" value="1" }checked{/eq}>
+                        <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                            <img src="__RES__/image/hover/u13016.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -160px;left: 280px;z-index: 999;display: none;">
+                        </div>
+                    </div>
+                </div>
+                <!--店铺特推开关-->
+                <div class="layui-form-item">
+                    <label class="layui-form-label">店铺特别推荐</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="store_particularly_recommend" value="0" title="否" {eq name="item.store_particularly_recommend|default=0" value="0" }checked{/eq}>
+                        <input type="radio" name="store_particularly_recommend" value="1" title="是" {eq name="item.store_particularly_recommend|default=0" value="1" }checked{/eq}>
+                        <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                            <img src="__RES__/image/hover/u13016.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -160px;left: 280px;z-index: 999;display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div {neq name="$item.shop|default=''" value="0"} hidden {/neq}>
+            <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 展示图推荐</label>
+            <hr class="layui-bg-gray">
+        </div>
+        <div class="layui-form-item">
+            <!--商品展示图-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品展示图</label>
+                <div class="layui-input-block">
+                    <div
+                            class="imageUpload"
+                            default="{$item.file|default=''}"
+                            width="375"
+                            height="208"
+                            file-mime="image/gif,image/jpeg,image/png" 文件类型
+                            dir="goods/file"
+                            disabled="disabled"
+                    ></div>
+                    <div style="overflow: hidden">
+                        <span class="remarks" style="float: left">商品展示图推荐，系统默认读取展示图进行推荐</span>
+                    </div>
+                </div>
+            </div>
+
+            {if !$Think.INI_CONFIG['SINGLE_STORE']}
+            <!--店铺普推开关-->
+            <div class="layui-form-item" {neq name="$item.shop|default=''" value="0"} hidden {/neq}>
+                <label class="layui-form-label">店铺普通推荐</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="store_recommend" value="0" title="否" {eq name="item.store_recommend|default=0" value="0" }checked{/eq}>
+                    <input type="radio" name="store_recommend" value="1" title="是" {eq name="item.store_recommend|default=0" value="1" }checked{/eq}>
+                    <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                        <img src="__RES__/image/hover/u13031.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -460px;left: 280px;z-index: 999;display: none;">
+                    </div>
+                </div>
+            </div>
+            {/if}
+            {if $Think.INI_CONFIG['IS_GOODS_RECOMMEND']}
+            <!--人气开关-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">商城首页人气好物推荐</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="is_popularity" value="0" title="否" {eq name="item.is_popularity|default=0" value="0" }checked{/eq}>
+                    <input type="radio" name="is_popularity" value="1" title="是" {eq name="item.is_popularity|default=0" value="1" }checked{/eq}>
+                    <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                        <img src="__RES__/image/hover/u13142.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -460px;left: 280px;z-index: 999;display: none;">
+                    </div>
+                </div>
+            </div>
+            {/if}
+
+            {if !$Think.INI_CONFIG['SINGLE_STORE']}
+            <!--是否特惠-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">商城首页特价优惠推荐</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="is_preference" value="0" title="否" {eq name="item.is_preference|default=0" value="0" }checked{/eq}>
+                    <input type="radio" name="is_preference" value="1" title="是" {eq name="item.is_preference|default=0" value="1" }checked{/eq}>
+                    <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                        <img src="__RES__/image/hover/u13149.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -460px;left: 280px;z-index: 999;display: none;">
+                    </div>
+                </div>
+            </div>
+            {/if}
+            <!--会员价格开关-->
+            <div class="layui-form-item" {neq name="$item.shop|default=''" value="0"} hidden {/neq}>
+                <label class="layui-form-label">是否使用店铺会员折扣</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="is_vip" value="0" title="否" {eq name="item.is_vip|default=0" value="0" }checked{/eq}>
+                    <input type="radio" name="is_vip" value="1" title="是" {eq name="item.is_vip|default=0" value="1" }checked{/eq}>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a type="reset" class="layui-btn layui-btn-primary" href="/goods/index">返回</a>
+                <input type="hidden" name="goods_id" value="{$item.goods_id|default=''}">
+                <button class="layui-btn" type="submit" id="submit">保存</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/color_picker/spectrum.js" type="application/javascript"></script>
+<script src="__RES__/js/color_picker/docs.js" type="application/javascript"></script>
+<!--商品属性js-->
+<script src="__RES__/js/common/goods_attr.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html ondragstart='return false'>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <!--公共头部css-->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicHeader.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/color.css" />
+    <!--忘记密码 css-->
+    <link rel="stylesheet" href="__RES__/css/forgetPwd/forgetPwd.css">
+
+    <script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/Validform_v5.3.2_ncr_min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/jquery.from.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/layui/layui.js"></script>
+    <script src="__RES__/layui/lay/modules/layer.js"></script>
+    <script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/swiper.min.js"></script>
+</head>
+<body>
+
+
+<!--头部搜索-->
+<div class="head-container" >
+    <div class="head-container-center">
+        <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+        <span>忘记密码</span>
+    </div>
+</div>
+<!--头部搜索结束-->
+
+<div class="flow-container">
+    <div class="flow">
+        <div class="flow-item ">
+            <div class="flow-circle primary-background-color border-color  activeClass">1</div>
+            <span class="primary-color">确定账号</span>
+        </div>
+        <div class="arrow">
+            · · · · · · · · · · · · >
+        </div>
+        <div class="flow-item">
+            <div class="flow-circle">2</div>
+            <span>账号验证</span>
+        </div>
+        <div class="arrow">
+            · · · · · · · · · · · · >
+        </div>
+        <div class="flow-item">
+            <div class="flow-circle">3</div>
+            <span>重置密码</span>
+        </div>
+
+    </div>
+    <form action="{:url('pc2.0/forget/check')}"  id="forget" method="post">
+    <input type="text"  class="verify" name="phone" maxlength="11" datatype="m" nullmsg="请填写手机号" oninput="value=value.replace(/[^\d]/g,'')" errormsg="请填写正确的手机号" placeholder="输入手机号">
+
+        <input type="submit" class="next primary-background-color" style="border: none;outline: none;" value="下一步">
+    </form>
+</div>
+
+<!--&lt;!&ndash;底部&ndash;&gt;-->
+<!--<div class="wechat-pay-bottom">-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持 | 哈尔滨龙采科技集团</p>-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持</p>-->
+    <!--<p>版权所有：黑龙江龙采科技</p>-->
+<!--</div>-->
+
+<script type="text/javascript">
+    main.valid({'select':'#forget','call_back':function () {
+            var tel = $("[name='phone']").val();
+            window.sessionStorage.setItem('forget_one_phone', tel);
+        },'return_url':ObjectOrJson({'use_url':'forget/one','return_url':'{:url("/pc2.0/forget/two")}'})});
+
+</script>
+
+</body>
+</html>

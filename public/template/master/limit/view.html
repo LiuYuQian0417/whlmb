@@ -1,0 +1,187 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .contentShell65 {
+        width: 100%;
+    }
+    .goods-img {
+        width: 110px!important;
+    }
+    .common-head .imitate_select {
+        width: 275px;
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、根据抢购商品查看该商品的下单情况；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示over-->
+<!--表单开始-->
+
+<div class="contentShell65">
+    <div class="order_goods-info">
+        <div class="goods-img"><a href="javascript:void(0);" target="_blank"><img
+                src="{$item.Goods.file|default=''}"
+                onerror=this.src="/template/master/resource/image/common/imageError.png"></a></div>
+        <div class="goods-desc">
+            <div class="name title">
+                <font title="">商品名称</font>：
+                <font class="orange">{$item.Goods.goods_name|default=''}</font>
+            </div>
+            <div class="name">
+                <font title="">原价</font>：{$item.Goods.shop_price|default=''}
+                <font class="orange"></font>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="layui-bg-gray">
+<form class="layui-form" action="" method="get">
+    <div class="common-head">
+        <div class="fl">
+            <div class="inquire_search" >
+                <div class="imitate_select">
+                    <input type="text" class="layui-input" name="date" id="date" value="{:input('get.date','')}" placeholder="发起时间查询" style="padding: 0 20px">
+                </div>
+                <div class="imitate_select">
+                    <select name="status" class="cite ps-container">
+                        <option value="-1">活动状态</option>
+                        <option value="1" {eq name=":input('status')" value="1" }selected{/eq}>进行中</option>
+                        <option value="2" {eq name=":input('status')" value="2" }selected{/eq}>成功</option>
+                        <option value="3" {eq name=":input('status')" value="3" }selected{/eq}>失败</option>
+                    </select>
+                </div>
+                <div class="imitate_select">
+                    <select name="distribution_type" class="cite ps-container">
+                        <option value="-1">订单类型</option>
+                        <option value="1" {eq name=":input('distribution_type')" value="1" }selected{/eq}>同城速递</option>
+                        <option value="2" {eq name=":input('distribution_type')" value="2" }selected{/eq}>门店自提</option>
+                        <option value="3" {eq name=":input('distribution_type')" value="3" }selected{/eq}>快递邮寄</option>
+                        <option value="5" {eq name=":input('distribution_type')" value="5" }selected{/eq}>货到付款</option>
+                    </select>
+                </div>
+                <div class="imitate_select">
+                    <select name="order_status" class="cite ps-container">
+                        <option value="-1">订单状态</option>
+                        <option value="-2" {eq name=":input('order_status')" value="-2" }selected{/eq}>未下单</option>
+                        <option value="0" {eq name=":input('order_status')" value="0" }selected{/eq}>等待买家付款</option>
+                        <option value="1" {eq name=":input('order_status')" value="1" }selected{/eq}>待发货/待配送</option>
+                        <option value="2" {eq name=":input('order_status')" value="2" }selected{/eq}>待收货/待自提/配送中</option>
+                        <option value="3" {eq name=":input('order_status')" value="3" }selected{/eq}>已完成</option>
+                        <option value="4" {eq name=":input('order_status')" value="4" }selected{/eq}>已关闭</option>
+                        <option value="5" {eq name=":input('order_status')" value="5" }selected{/eq}>退款中</option>
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="订单编号/昵称/手机号"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                </div>
+                <input type="hidden" name="id" value="{:input('id')}">
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th>下单人</th>
+                <th>订单编号</th>
+                <th>订单金额</th>
+                <th>数量</th>
+                <th>订单状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {volist name='data' id='item'}
+            <tr>
+                <td>
+                    {$item.nickname|default=''}<br>
+                    {$item.phone|default=''}
+                </td>
+                <td>{$item.order_attach_number|default='--'}</td>
+                <td>{$item.subtotal_price|default='--'}</td>
+                <td>{$item.number|default=''}</td>
+                <td>
+                    {switch name="item.status|default=''"}
+                    {case value="0"}待付款{/case}
+                    {case value="1"}待发货/待配送{/case}
+                    {case value="2"}待收货/待自提/配送中{/case}
+                    {case value="3"}已完成{/case}
+                    {case value="4"}已关闭{/case}
+                    {case value="5"}退款中{/case}
+                    {case value="6"}已取消{/case}
+                    {default /}未下单
+                    {/switch}
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+<!--表单结束-->
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    $.Datatype.zZero = /^[0-9]\d*$/;
+    // main.valid('.layui-form');
+    main.laydate([{
+        elem: "#date",
+        type: "date",
+        range: true,
+        max:0
+    }]);
+
+    function cutActivity(obj,id) {
+        var param = 'cut_activity_id='+id;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['50%', '500px'],
+            btn: obj.btn,
+            content: '/cut_activity/editAL?' + param
+        });
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,482 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<style>
+    .text_time .text{width: 300px;background: none!important;}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="main-content" id="mainContent">
+
+
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>温馨提示：提交操作将会重新审核，请慎重提交确定。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="ecsc-form-goods">
+        <form action="" method="post" name="theForm" enctype="multipart/form-data" id="bonus_form" class="layui-form">
+            <div class="wrapper-list border1">
+                <!--优惠券标题-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;优惠券标题：</dt>
+                    <dd>
+                        <input type='text' name='title' maxlength="12" value="{$item.title|default=''}" size='20'
+                               class="text" autocomplete="off"
+                               placeholder="请输入优惠券标题"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--缩略图-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;缩略图（建议尺寸，200 X 200）：</dt>
+                    <dd>
+                        <div class="layui-input-inline">
+                            <div
+                                    class="imageUpload"
+                                    default="{$item.file|default=''}"
+                                    width="200"
+                                    height="200"
+                                    file-mime="image/gif,image/jpeg,image/png"
+                                    name="file"
+                                    dir="client/coupon"
+                                    value="{$item.file_data|default=''}"
+                            >
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>无门槛优惠券：</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input type="radio" name="is_no_threshold" value="1" id="send_type_8"
+                                       checked="true" class="ui-radio"
+                                       {eq name="item.is_no_threshold|default='1'" value="1" }checked{/eq}
+                                />
+                                <label for="send_type_8" class="ui-radio-label">是</label>
+                            </div>
+                            <div class="checkbox_item">
+                                <input type="radio" name="is_no_threshold" value="0" id="send_type_9"
+                                       class="ui-radio"
+                                       {eq name="item.is_no_threshold|default=''" value="0" }checked{/eq}
+                                />
+                                <label for="send_type_9" class="ui-radio-label">否</label>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <!--优惠券满减条件金额-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;优惠券满减金额：</dt>
+                    <dd>
+                        <input name="full_subtraction_price" type="text" id="min_goods_amount"
+                               value="{$item.full_subtraction_price|default=''}"
+                               size="20" class="text"
+                               maxlength="8" autocomplete="off"
+                               placeholder="请输入满减金额"
+                        />
+                        <div class="form_prompt"></div>
+                        <span style="line-height: 40px;color: #c3c3c3;padding-left: 18px">满200元可以使用此优惠券，就在此处填写200，如果无门槛请填写0</span>
+                    </dd>
+
+                </dl>
+                <!--优惠券金额-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;优惠券金额：</dt>
+                    <dd>
+                        <input type="text" name="actual_price" value="{$item.actual_price|default=''}" size="20"
+                               class="text"
+                               placeholder="请输入优惠券金额" autocomplete="off" maxlength="8"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--优惠券总数量-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;优惠券总数量：</dt>
+                    <dd>
+                        <input type="number" name="total_num" value="{$item.total_num|default=''}" size="20"
+                               class="text"
+                               maxlength="5"
+                               autocomplete="off"
+                               placeholder="请输入优惠券总数量，正整数"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>&nbsp;优惠券剩余数量：</dt>
+                    <dd>
+                        <input type="number" name="exchange_num" value="{$item.exchange_num|default=''}" size="20"
+                               class="text"
+                               maxlength="5"
+                               autocomplete="off"
+                               placeholder="{:input('coupon_id','')?'异常输入或大于优惠券总数量则无效':'默认与优惠券总数量一致'}"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--优惠券总数量-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;每人限领数量：</dt>
+                    <dd>
+                        <input type="text" name="limit_num" value="{$item.limit_num|default='1'}" size="20"
+                               class="text"
+                               maxlength="5"
+                               autocomplete="off"
+                               placeholder="请输入每人限领数量，正整数"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--描述-->
+                <dl>
+                    <dt>描述：</dt>
+                    <dd><textarea cols="60" rows="4" placeholder="请输入内容" name="description" maxlength="100"
+                                  class="textarea">{$item.description|default=''}</textarea></dd>
+                </dl>
+                <!--积分兑换-->
+                <dl>
+                    <dt>积分兑换：</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input type="radio" name="is_integral_exchage" value="1" id="send_type_0"
+                                       onClick="showunit(1)" class="ui-radio"
+                                       {eq name="$item.is_integral_exchage|default=''" value="1" }checked{/eq}
+                                />
+                                <label for="send_type_0" class="ui-radio-label">是</label>
+                            </div>
+                            <div class="checkbox_item">
+                                <input type="radio" name="is_integral_exchage" value="0" id="send_type_1"
+                                       onClick="showunit(0)" class="ui-radio"
+                                       {eq name="$item.is_integral_exchage|default='0'" value="0" }checked{/eq}
+                                />
+                                <label for="send_type_1" class="ui-radio-label">否</label>
+                            </div>
+                        </div>
+                        <span style="color: #c3c3c3">选择“是”，此优惠券将出现在换券中心，选择否，此优惠券在领券中心展示</span>
+                    </dd>
+                </dl>
+                <!--所需积分-->
+                <dl class="order_lower" {eq name="$item.is_integral_exchage|default='0'" value="1" }style="display:block;"{/eq} style="display:none;"
+                {neq name="item.is_integral_exchage|default='0'" value="1" }hidden{/neq}>
+                <dt>所需积分：</dt>
+                <dd>
+                    <input name="integral" type="text" id="min_amount" value="{$item.integral|default='0'}" size="20"
+                           class="text"
+                           maxlength="5"
+                           autocomplete="off"
+                           placeholder="请输入积分数，正整数"
+                    />
+                </dd>
+                </dl>
+                <!--启用状态-->
+                <dl>
+                    <dt>启用状态：</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input type="radio" name="status" value="1" id="send_type_4"
+                                       checked="true" class="ui-radio"
+                                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                                />
+                                <label for="send_type_4" class="ui-radio-label">是</label>
+                            </div>
+                            <div class="checkbox_item">
+                                <input type="radio" name="status" value="0" id="send_type_5"
+                                       class="ui-radio"
+                                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                                />
+                                <label for="send_type_5" class="ui-radio-label">否</label>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                <!--使用开始时间-->
+                <dl id="qizhi">
+                    <dt><span class="require-field">*</span>&nbsp;使用开始日期：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time1">
+                            <input name="start_time" type="text" class="text" id="send_start_date" placeholder="请选择使用开始日期"
+                                   size="22" value="{$item.start_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+                <!--使用结束时间-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;使用结束日期：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time2">
+                            <input name="end_time" type="text" class="text" id="send_end_date" placeholder="请选择使用结束日期"
+                                   size="22" value="{$item.end_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+                <!--领取开始时间-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;领取开始日期：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time3">
+                            <input name="receive_start_time" type="text" class="text" id="use_start_date" placeholder="请选择领取开始日期"
+                                   size="22" value="{$item.receive_start_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+                <!--领取结束时间-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;领取结束日期：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time4">
+                            <input name="receive_end_time" type="text" class="text" id="use_end_date" size="22" placeholder="请选择领取结束日期"
+                                   value="{$item.receive_end_time|default=''}" readonly="readonly"/>
+                        </div>
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="submit" value=" 确定 " class="sc-btn sc-blueBg-btn btn35"
+                               id="submitBtn"/>
+                        <input type="reset" value=" 重置 " class="sc-btn btn35 sc-blue-btn"/>
+                        <input type="hidden" name="type" value="0"/>
+                        <input type="hidden" name="member_id" value="{$member_id}"/>
+
+                        {present name="$item.coupon_id"}
+                        <input type="hidden" name="coupon_id" value="{$item.coupon_id}">
+                        {/present}
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript">
+    main.valid('.layui-form');
+
+    // var w = document.getElementsByTagName("img")[0].naturalWidth;
+    // var h = document.getElementsByTagName("img")[0].naturalHeight;
+    // console.log(w);
+
+    main.laydate([{
+        elem: '#send_start_date'
+        , type: 'date'
+    }, {
+        elem: '#send_end_date'
+        , type: 'date'
+    }, {
+        elem: '#use_start_date'
+        , type: 'date'
+    }, {
+        elem: '#use_end_date'
+        , type: 'date'
+    }
+
+    ])
+
+    // var oImg = document.getElementById("oImg"),w,h;
+    //
+    // if (oImg.naturalWidth) {
+    //     // HTML5 browsers
+    //     w = oImg.naturalWidth;
+    //     h = oImg.naturalHeight;
+    //     console.log(w);
+    //     console.log(h);
+    //     if (w > 200 || h > 200) {
+    //         layer.msg('尺寸200*200');
+    //         return false;
+    //     }
+    // } else {
+    //     // IE 6/7/8
+    //     var nImg = new Image();
+    //     nImg.onload = function () {
+    //         w = nImg.width;
+    //         h = nImg.height;
+    //         if (w > 200 || h > 200) {
+    //             layer.msg('尺寸200*200');
+    //             return false;
+    //         }
+    //     }
+    // }
+    // 上传图片
+    main.upload([{
+        elem: '#mobileImg',
+        size: 2 * 1024,
+        data: {name: 'content_img', dir: 'content_img', auth: 'public-read', style: 3, crypt: 0},
+        field: 'content_img',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                '<img src="' + res.data.ossUrl + '" title="' + res.data.name + '">'
+                + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+            layer.closeAll('loading');
+        }
+    }, {
+        elem: '#goods_file',
+        size: 2 * 1024,
+        auto : false,
+        data: {name: 'goods_file', dir: 'goods_file', auth: '', style: 1, crypt: 1},
+        field: 'goods_file',
+        choose: function(obj){  //上传前选择回调方法
+            console.log(obj);
+            var flag = true;
+            obj.preview(function(index, file, result){
+                console.log(file);            //file表示文件信息，result表示文件src地址
+                var img = new Image();
+                img.src = result;
+                img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
+                    if(img.width ==200 && img.height ==200){
+                        obj.upload(index, file); //满足条件调用上传方法
+                    }else{
+                        flag = false;
+                        layer.msg("您上传的小图大小必须是200*200尺寸！");
+                        return false;
+                    }
+                }
+                return flag;
+            });
+        },
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" alt="' + res.data.name + '" class="uploadImg">' +
+                '<input type="text" name="file" value="' + res.data.ossUrl + '" title style="display:none;"/>';
+            $(this.elem).css('padding', '1px').html(html);
+            layer.closeAll('loading');
+        }
+    }, {
+        elem: '#goods_video',
+        size: 10 * 1024,
+        data: {name: 'goods_video', dir: 'video', auth: '', style: 1, crypt: 1},
+        field: 'goods_video',
+        accept: 'video',
+        acceptMime: 'video/*',
+        exts: 'mp4',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<video controls><source src="' + res.data.ossCryptUrl + '" type = “application/ogg” /></video>';
+            $(this.elem).css('padding', '1px').html(html);
+            $('[name="video"]').val(res.data.ossUrl);
+            layer.closeAll('loading');
+        }
+    }, {
+        elem: '#photos_area',
+        size: 2 * 1024,
+        data: {name: 'goods_album', dir: 'album', auth: '', style: 1, crypt: 1},
+        field: 'goods_album',
+        multiple: true,
+        number: 5,
+        auto: false,
+        choose: function (obj) {
+            var length = $('.img-item').length, num = 1;
+            obj.preview(function (index, file, result) {
+                if (length <= 5 && (length + num) <= 5) obj.upload(index, file);
+                num++;
+            });
+        },
+        done: function (res, index, upload) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="img-item">' +
+                '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                '<input type="hidden" name="picArr[]" value="' + res.data.ossUrl + '" />' +
+                '<div class="operate">' +
+                '<i class="toleft">左移</i>' +
+                '<i class="toright">右移</i>' +
+                '<i class="del">删除</i>' +
+                '</div></div>';
+            if ($(this.elem).children('.img-item').length == 0) $(this.elem).empty();
+            $(this.elem).css('padding', 0).append(html);
+            layer.closeAll('loading');
+        }
+    }]);
+</script>
+<script type="text/javascript">
+    // 切换单选
+    function showunit(get_value) {
+        if (get_value == 0) {
+            $('.order_lower').hide();
+        } else {
+            $('.order_lower').show();
+        }
+        return;
+    }
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId': 'send_start_date',//时间写入对象的id
+        'triggerId': ['send_start_date'],//触发事件的对象id
+        'alignId': 'text_time1',//日历对齐对象
+        'hms': 'off',
+        'format': '-', //时间格式 默认'YYYY-MM-DD HH:MM:SS'
+        'hms_display': true
+    }, opts2 = {
+        'targetId': 'send_end_date',
+        'triggerId': ['send_end_date'],
+        'alignId': 'text_time2',
+        'hms': 'off',
+        'format': '-',
+        'hms_display': true
+    }, opts3 = {
+        'targetId': 'use_start_date',
+        'triggerId': ['use_start_date'],
+        'alignId': 'text_time3',
+        'hms': 'off',
+        'format': '-',
+        'hms_display': true
+    }, opts4 = {
+        'targetId': 'use_end_date',
+        'triggerId': ['use_end_date'],
+        'alignId': 'text_time4',
+        'hms': 'off',
+        'format': '-',
+        'hms_display': true
+    };
+    xvDate(opts1);
+    xvDate(opts2);
+    xvDate(opts3);
+    xvDate(opts4);
+    //日期选择插件调用end sunle
+</script>
+{/block}

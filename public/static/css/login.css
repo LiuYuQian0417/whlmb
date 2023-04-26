@@ -1,0 +1,323 @@
+/*登录*/
+.login_wrap {
+  width: 100%;
+  /*height: 100%;*/
+  /*position: absolute;*/
+  /*top: 0;*/
+  /*left: 0;*/
+  /*max-width: 720px;*/
+  /*overflow: auto;*/
+}
+
+.login_con {
+  position: relative;
+  min-height: 100%;
+}
+
+.login_way {
+  width: 100%;
+  padding: 0 7%;
+  margin-top: 8%;
+}
+
+.way_title {
+  position: relative;
+  font-size: 0;
+  text-align: center;
+}
+
+.way_title::after {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: #E9EEF3;
+  content: '';
+  left: 0;
+  top: 50%;
+  margin-top: -0.5px;
+  z-index: 1;
+}
+
+.way_title span {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 0 20px;
+  background: #fff;
+  position: relative;
+  z-index: 2;
+}
+
+.way_list {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 25px 0;
+
+}
+
+.way_list li {
+  width: 50px;
+  height: 50px;
+}
+
+.relate_con {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.relate_con .wechat {
+  width: 50px;
+}
+
+.relate_con .relate {
+  width: 30px;
+  margin: 0 10px;
+}
+
+.relate_con .logo {
+  width: 70px;
+}
+
+.login_main {
+  padding: 0 7%;
+  margin-top: 8%;
+}
+
+.login_tabList {
+  width: 100%;
+  padding: 0 2%;
+  margin: 10px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.login_tabList .list {
+  font-size: 14px;
+  line-height: 30px;
+  color: #020224;
+  position: relative;
+  border-bottom: 2px solid transparent;
+}
+
+.login_sub {
+  width: 100%;
+  display: block;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 12px 0 !important;
+  color: #fff;
+  border-radius: 2px;
+  margin-top: 10%;
+  background: #D8D8D8;
+}
+
+.login_tabCon .con {
+  display: none;
+  padding-top: 3%;
+}
+
+.login_tabCon .con.active {
+  display: block;
+}
+
+.login_tabCon .text {
+  background: #F7F7F7;
+  padding: 12px 50px;
+  margin-top: 20px;
+  position: relative;
+  border-radius: 2px;
+}
+
+.login_tabCon .text .del {
+  right: 15px !important;
+}
+
+.login_tabCon .text .icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  margin-top: -12px;
+  width: 24px;
+  z-index: 2;
+  height: 24px;
+}
+
+.login_tabCon .text .pass_icon {
+  content: '';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  margin-top: -10px;
+  width: 21px;
+}
+
+.login_tabCon .text .pass_icon img {
+  width: 100%;
+  display: block;
+}
+
+.login_tabCon .text .pass_icon .show_icon {
+  display: none;
+}
+
+.login_tabCon .text .pass_icon.show .show_icon {
+  display: block;
+}
+
+.login_tabCon .text .pass_icon.show .hide_icon {
+  display: none;
+}
+
+.login_tabCon .text input {
+  display: block;
+  width: 100%;
+  font-size: 13px;
+  line-height: 24px;
+  padding: 0 5px;
+  color: #333;
+  background: transparent;
+  -webkit-user-select: auto!important;
+  -khtml-user-select: auto!important;
+  -moz-user-select: auto!important;
+  -ms-user-select: auto!important;
+  -o-user-select: auto!important;
+  user-select: auto!important;
+}
+
+.login_tabCon .text input::-webkit-input-placeholder {
+  color: #b3b9c0;
+}
+
+.register_btn, .pass_btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 86%;
+  margin: 10px auto 0;
+}
+
+.register_btn a {
+  color: #3c4043;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.pass_btn a {
+  color: #9ea3a9;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+#get_code {
+  position: absolute;
+  padding: 0 15px;
+  font-size: 12px;
+  line-height: 20px;
+  top: 50%;
+  margin-top: -10px;
+  right: 0;
+  border: none;
+  outline: none;
+  color: #9ea3a9;
+  background: none;
+
+}
+
+#get_code::before {
+  content: '';
+  width: 1px;
+  height: 14px;
+  background: #D3D3D3;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -7px;
+}
+
+.new_board {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  max-width: 720px;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 3;
+  display: none;
+}
+
+/*注册*/
+.colorActive.hide {
+  display: none;
+}
+
+.login_tabCon .area_num {
+  background: #F7F7F7;
+  padding: 12px 10px 12px 16px;
+  margin-top: 20px;
+  position: relative;
+  border-radius: 2px;
+}
+
+.login_tabCon .area_num a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 13px;
+  line-height: 24px;
+  color: #b3b9c0;
+}
+
+.protocol {
+  padding: 0 8px;
+  display: flex;
+  margin-top: 15px;
+  font-size: 13px;
+  line-height: 20px;
+  align-items: center;
+}
+
+.protocol .check {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #B3B9C0;
+  border-radius: 2px;
+  margin-right: 6px;
+}
+
+.protocol .check div {
+  background: url("../img/check.svg");
+  width: 100%;
+  height: 100%;
+  background-size: 100% 100%;
+}
+
+.send_num {
+  text-align: center;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 10px 0;
+}
+
+.pass_tip {
+  font-size: 13px;
+  line-height: 20px;
+  margin-top: 10px;
+  color: #b3b9c0;
+}
+
+.china {
+  font-size: 16px;
+  line-height: 24px;
+  position: absolute;
+  left: 50px;
+  top: 50%;
+  margin-top: -12px;
+  color: #202224;
+}
+

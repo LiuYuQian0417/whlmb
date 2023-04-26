@@ -1,0 +1,76 @@
+{extend name='public/common' /}
+
+{block name="content_css"}
+<!--代言人申请css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/spokesman/applicationforendorsement.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/indexHeader.css" />
+{/block}
+{block name="content"}
+<!--头部搜索-->
+<div class="head-container">
+    <div class="head-container-center">
+    <div class="spokesman-top" >
+        <img src="__RES__/imgs/spokesman/logo-color.png"  onclick="main.jump({'url':'/pc2.0/index/index'})">
+        <div class="spokesman">
+            代言人
+        </div>
+    </div>
+        <ul class="spokesman-process">
+             <li class="  ">成为代言人
+                 <span ></span>
+             </li>
+             <li class="tit-acrive primary-background-color">
+                 <div class="border-color "></div>
+                 申请代言
+                 <span class="border-color-left"></span>
+             </li>
+             <li class="">
+                 <div></div>
+                 申请结果
+                 <span></span>
+             </li>
+        </ul>
+    </div>
+</div>
+<div class="spokesman-content">
+   <div class="spokesman-title">
+     <img src="__RES__/imgs/spokesman/biaoti.jpg" width="1200" height="62"  />
+   </div>
+   <div class="applicationforendorsement-color">
+     <div class="applicationforendorsement-conter">
+       <img src="__RES__/imgs/spokesman/shenqingdaiyan.jpg" width="405" height="285" />
+       <form action="{:url('/pc2.0/distribution_become/apply')}" class="applicationforendorsement-form" id="spokesman">
+         <ul>
+             {volist name="data" id="item"}
+             {eq name="$item.display" value="1"}
+             {eq name="item.name" value="sex"}
+             <li>
+                 <p>性&nbsp;&nbsp;别</p>
+                 <div class="choose">
+                     <label class="radio">男<input type="radio" name="{$item.name}" value="1" checked><i></i></label>
+                     <label class="radio">女<input type="radio" value="2" name="{$item.name}"><i></i></label>
+                 </div>
+                 <div class="clear"></div>
+             </li>
+             {else/}
+                 <li>
+                     <p>{$item.text}</p><input type="text" {eq name="$item.require" value="1" } datatype="*" nullmsg="{$item.text}不能为空" errormsg="填写正确信息"{/eq} name="{$item.name}"/>
+                     <div class="clear"></div>
+                 </li>
+             {/eq}
+             {/eq}
+             {/volist}
+           <li><input type="submit" class="applicationforendorsement-apply" value="申请"></li>
+         </ul>
+       </form>
+     </div>
+   </div>
+</div>
+{/block}
+
+{block name="js"}
+<script>
+    main.valid('#spokesman');
+</script>
+{/block}
+

@@ -1,0 +1,121 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>在新增一级地区点击管理进入下一级地区，可进行删除和编辑。</li>
+                <li>地区用于商城定位，请根据商城实际情况谨慎设置。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+
+<!--导航-->
+<form id="form" action="/area/create" method="post">
+    <div class="common-head">
+        <div class="fl">
+            {notempty name=":input('get.area_id')"}
+            <a onclick="history.go(-1)" class="left">
+                <div class="fbutton">
+                    <div class="add" title="返回上级"><span><i class="fa fa-mail-reply (alias)"></i>返回上级</span></div>
+                </div>
+            </a>
+            {/notempty}
+            <div class="inquire_search" >
+                <div class="inquire">
+                    <input type="text" name="area_name" class="inquire_text nofocus" placeholder="地区名称"
+                           datatype="*"
+                           nullmsg="请输入地区名称" errormsg="请输入地区名称"
+                           value=""
+                           autocomplete="off">
+                    <input type="hidden" name="deep" value="{:input('get.deep') ? input('get.deep') : 1}">
+                    <input type="hidden" name="parent_id" value="{:input('get.area_id')}">
+                </div>
+                <input type="submit" class="layui-btn" style="height: 30px;margin-left: 10px;line-height: 30px;" name="secrch_btn" value="新增地区">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<form class="layui-form" action="">
+<!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th width="800">编辑地区名称</th>
+            <th width="200">地区名称</th>
+            <!--<th width="200">显示状态</th>-->
+            {eq name=':input("get.deep")' value='2'}
+            <th width="200">热门城市状态</th>
+            {/eq}
+            <th width="300">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td>
+                <input type="text" id="area_name{$item.area_id}" value="{$item.area_name}" class="text_center" style="width: 300px;" oninput="main.triggerText('{$item.area_id}','area_name','/area/text_update')">
+            </td>
+            <td>{$item.area_name}</td>
+            <!--<td>-->
+                <!--<input type="checkbox" name="status" lay-skin="switch"-->
+                       <!--lay-filter="status"-->
+                       <!--lay-text="开|关"-->
+                       <!--value="{$item.area_id}" data-end_time="{$item.delete_time}"-->
+                       <!--{empty name="item.delete_time"}checked{/empty}-->
+                <!--&gt;-->
+            <!--</td>-->
+            {eq name=':input("get.deep")' value='2'}
+            <td>
+                <input type="checkbox" name="is_hot" lay-skin="switch"
+                       lay-filter="is_hot"
+                       lay-text="开|关"
+                       value="{$item.area_id}"
+                       {eq name="item.is_hot" value="1" }checked{/eq}
+                >
+            </td>
+            {/eq}
+            <td>
+                <a class="btn_see" href="/area/index?area_id={$item.area_id}&deep={$item.deep + 1}"><i
+                        class="fa fa-eye"></i>管理</a>
+                <!--<a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/area/destroy','{$item.area_id}')"><i-->
+                        <!--class="fa fa-trash-o"></i>删除</a>-->
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{selector:'switch(status)',callback:function (data) {
+            main.ajax({
+                type: 'post', url: '/area/destroy', data: {'id': data.value}
+            });
+    }}]);
+    main.form([{selector:'switch(is_hot)',callback:function (data) {
+            main.ajax({type:'post',url:'/area/hot',data:{'id': data.value}});
+        }}]);
+    main.valid('#form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

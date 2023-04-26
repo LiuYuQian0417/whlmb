@@ -1,0 +1,77 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            <li><span>请按提示信息填写每一个字段。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <!--分类名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 拼团分类名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="6" autocomplete="off" placeholder="请输入分类名称"
+                       datatype="*"
+                       value="{$item.title|default=''}"
+                       nullmsg="请输入分类名称" errormsg="请输入分类名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">上级分类</label>
+                <div class="layui-input-block">
+                    <select name="parent_id" lay-search="">
+                        <option value="0" {eq name="item.parent_id|default=''" value="0" }selected{/eq}>顶级分类</option>
+                        {volist name='classify_list' id='classify_list'}
+                        <option
+                                {eq name=":input('get.classify_id')" value="$classify_list.group_classify_id" }selected{/eq}
+                        {eq name="item.parent_id|default=''" value="$classify_list.group_classify_id" }selected{/eq}
+                        value="{$classify_list.group_classify_id}"
+                        >{$classify_list.title}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.group_classify_id"}
+                <input type="hidden" name="group_classify_id" value="{$item.group_classify_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

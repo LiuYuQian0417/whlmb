@@ -1,0 +1,217 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<link rel="stylesheet" href="__RES__/css/common/home.css">
+<style>
+    body{
+        padding-bottom: 50px !important;
+    }
+    .operation-title {
+        color: #999!important;
+        font-size: 15px!important;
+    }
+    .operation-desc {
+        color: #333333!important;
+        font-size: 19px!important;
+        font-weight: bold;
+    }
+    .operation-wrap > a .operation-bg {
+        text-align: center;
+    }
+    .goodsDataList .list {
+        width: 50.55% !important;
+    }
+    #tooltip{
+        font-size: 14px;
+        padding: 10px;
+    }
+    .dataTabList li , .fa-refresh{
+        cursor: pointer;
+    }
+</style>
+<div>
+    <div>
+        <div>
+            <div class="sub-title">会员总量</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('member/index')">
+                    <img class="operation-img" src="__RES__/image/general/member_general_1.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">会员总量</div>
+                            <div class="operation-desc">{$item}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">会员总量</div>
+            <div class="operation-wrap">
+                {volist name="result" id="member_rank"}
+                <a href="javascript:void(0);" onClick="main.jumpFour('member/index?member_rank_id={$member_rank.member_rank_id}')">
+                    <img class="operation-img" src="{$member_rank.file}"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">{$member_rank.rank_name}</div>
+                            <div class="operation-desc">{$member_rank.member_num}</div>
+                        </div>
+                    </div>
+                </a>
+                {/volist}
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">近30日注册会员走势</div>
+            <div class="rank-container">
+                <div class="container type-a">
+                    <div class="content">
+                        <div class="items-info">
+                            <div class="wrapper-list">
+                                <div id="order_main" style="height:600px;width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    body{
+        background: #f6f6f6;
+    }
+
+    .childrenBody > div:first-child{
+        background: #f6f6f6!important;
+    }
+    .title{
+        font-size: 16px;
+        color: #8d8d8d;
+        margin: 30px auto;
+        text-align: center;
+    }
+
+    .sub-title{
+        font-size: 16px;
+        padding: 20px 0;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap{
+        overflow: hidden;
+    }
+
+    .operation-wrap > a{
+        float: left;
+        width: 22%;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        margin-right:3% ;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 2px 2px 2px #f2f5f6;
+
+        cursor: pointer;
+    }
+
+    .operation-wrap > a:nth-child(n + 5){
+        margin-top: 24px;
+    }
+
+    .operation-wrap > a .operation-img{
+        margin-left: 24px;
+    }
+
+    .operation-wrap > a .operation-bg{
+        margin-left: 30px;
+        width: 160px;
+    }
+
+    .operation-wrap > a .operation-title{
+        font-size: 15px;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap > a .operation-desc{
+        font-size: 14px;
+        color: #8d8d8d;
+        margin-top: 10px;
+    }
+    .operation-wrap > a .operation-bg {
+        text-align: center;
+        margin-left: 0px;
+        width: 100%;
+    }
+    .operation-wrap>a>div{
+        width: 100%;
+    }
+</style>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/jQuery.toolTip.js"></script>
+<script src="__RES__/js/pages.js"></script>
+<script type="text/javascript" src="/template/client/resource/js/echarts-all.js"></script>
+<script>
+    $('.help').toolTip({fade: true});
+    $(function () {
+
+    })
+
+    var colors = ['#ffa283', '#e690d1', '#99c1ff'];
+
+    var myChart = echarts.init(document.getElementById('order_main'));
+
+    var date = JSON.parse('{$date|raw}');
+    var member_count = JSON.parse('{$member_count|raw}');
+
+    $.get('data.json').done(function (data) {
+        myChart.setOption({
+            color: colors,
+
+            // title: {
+            //     text: '近30日订单趋势'
+            // },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['注册数量']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: date
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'注册数量',
+                    type:'line',
+                    data:member_count
+                }
+            ]
+        });
+    });
+</script>
+{/block}

@@ -1,0 +1,438 @@
+.new_pic {
+  display: block;
+  width: 100%;
+  position: relative;
+}
+
+.new_pic img {
+  display: block;
+}
+
+.new_pic .con {
+  margin: -86% auto 0;
+  width: 94%;
+  position: relative;
+  z-index: 5;
+}
+
+.new_pic .con .title {
+. personal_con . con . title padding: 0 5 px 0 4 px;
+  position: relative;
+}
+
+.new_pic .con .title > div {
+  background: #F74A49;
+  color: #e6fbc2;
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+  letter-spacing: 3px;
+}
+
+.new_pic .icon_left {
+  width: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.new_pic .icon_right {
+  width: 5px;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.new_pic .main {
+  background: rgba(253, 210, 211, 0.6);
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+
+.new_pic .list {
+  overflow: auto;
+  width: 100%;
+  height: 215px;
+}
+
+.new_pic .list ul {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.new_pic .list ul li {
+  margin-left: 2%;
+  width: 47%;
+  margin-bottom: 2%;
+}
+
+.new_pic .list ul li > div {
+  display: flex;
+  justify-content: flex-end;
+  background: #fff;
+  padding: 10px 5%;
+  position: relative;
+}
+
+.new_pic .list .use {
+  padding: 2px 0;
+}
+
+.new_pic .list .use .cate {
+  font-size: 14px;
+  line-height: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.new_pic .list .use .full {
+  font-size: 12px;
+  line-height: 18px;
+  color: #202224;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.new_pic .list .number {
+  position: absolute;
+  left: 3%;
+  top: 50%;
+  margin-top: -20px;
+  overflow: hidden;
+}
+
+.new_pic .list .number .symbol {
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.new_pic .list .number .num {
+  font-size: 38px;
+  /*font-family: 'Times New Roman';*/
+  word-spacing: 1px;
+}
+
+.new_pic .con .get {
+  font-size: 14px;
+  line-height: 30px;
+  width: 120px;
+  border-radius: 30px;
+  background: linear-gradient(to right, #F05C2A, #F02A2A);
+  display: block;
+  margin: 10px auto 0;
+  color: #fff;
+}
+
+.new_foot {
+  display: block;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  max-width: 720px;
+}
+
+.close_icon {
+  position: absolute;
+  right: -1px;
+  top: -1px;
+  color: #fff;
+  overflow: hidden;
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+}
+
+.close_icon .icon_bg {
+  width: 70px;
+  height: 70px;
+  background: #f23030;
+  position: absolute;
+  right: -35px;
+  top: -35px;
+  transform: rotate(45deg);
+}
+
+.close_icon .symbol {
+  color: #fff;
+  font-size: 30px;
+  position: absolute;
+  z-index: 10;
+  right: 5px;
+  top: -2px;
+  line-height: 30px;
+}
+
+.act_rule {
+  position: absolute;
+  background: #fff;
+  padding: 0 6% 30px;
+  width: 84%;
+  left: 8%;
+  top: 50%;
+  margin-top: -171px;
+  border-radius: 6px !important;
+  border-top: 1px solid white;
+  border-right: 1px solid white;
+}
+
+.act_rule .title {
+  text-align: center;
+  font-size: 16px;
+  line-height: 30px;
+  padding: 20px 0 10px;
+  font-weight: bold;
+  color: #202224;
+}
+
+.act_rule .con {
+  font-size: 14px;
+  line-height: 22px;
+  text-align: justify;
+  max-height: 252px;
+  min-height: 252px;
+  overflow: auto;
+}
+
+.act_rule .con > div {
+  margin-bottom: 5px;
+}
+
+.act_rule .con::-webkit-scrollbar {
+  display: none;
+  opacity: 0;
+}
+
+.bottom_board {
+  width: 100%;
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1));
+}
+
+/*面对面扫码*/
+.face_invite {
+  position: relative;
+}
+
+.face_invite .pic {
+  display: block;
+  width: 100%;
+  height: 576px;
+}
+
+.face_invite .code {
+  width: 38vw;
+  height: 38vw;
+  position: absolute;
+  left: 31vw;
+  top: 97vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/*邀请好友*/
+.invite_con {
+  width: 100%;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.invite_con .pic {
+  display: block;
+  width: 100%;
+  height: 350px;
+  margin-bottom: 20px;
+}
+
+.invite_con .btn_list {
+  overflow: hidden;
+  padding: 0 2%;
+  margin-top: -6vw;
+  position: relative;
+  z-index: 2;
+}
+
+.invite_con .btn_list li {
+  width: 50%;
+  float: left;
+}
+
+.invite_con .btn_list li a, .invite_con .btn_list li img {
+  display: block;
+}
+
+.invite_num {
+  background: #FEFBF6;
+  border-radius: 6px;
+  width: 94%;
+  margin: 5px auto 0;
+  padding: 5% 4%;
+}
+
+.invite_num ul {
+  background: linear-gradient(30deg, #FFB400, #FF9D02);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.invite_num ul li {
+  width: 50%;
+  text-align: center;
+  position: relative;
+  padding: 18px 0 8px;
+}
+
+.invite_num ul li .tips {
+  color: #ab5e02;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+}
+
+.invite_num ul li .num {
+  font-size: 30px;
+  line-height: 44px;
+  color: #fff;
+  margin-top: 5px;
+}
+
+.invite_num ul li:after {
+  position: absolute;
+  content: '';
+  width: 1px;
+  height: 60%;
+  right: 0;
+  top: 20%;
+  border-right: 1px dashed #E38907;
+}
+
+.invite_history, .invite_rule {
+  background: #FEFBF6;
+  border-radius: 6px;
+  width: 94%;
+  margin: 10px auto 0;
+  padding: 10px 4% 20px;
+}
+
+.invite_title {
+  font-size: 18px;
+  line-height: 50px;
+  color: #ee470d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.invite_title div {
+  padding: 0 15px;
+  background: #FEFBF6;
+  position: relative;
+  z-index: 2;
+}
+
+.invite_title::after {
+  width: 100%;
+  height: 1px;
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  margin-top: -0.5px;
+  background: #FDC9BF;
+}
+
+.invite_history ul {
+  max-height: 195px;
+  overflow: auto;
+}
+
+.invite_history ul li {
+  background: #FFECD9;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 4px;
+}
+
+.invite_history ul li:last-child {
+  margin-bottom: 0;
+}
+
+.invite_history ul li .det .newer_name {
+  font-size: 15px;
+  line-height: 20px;
+  color: #353434;
+  padding-top: 2px;
+  max-width: 150px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.invite_history ul li .det .time {
+  font-size: 13px;
+  line-height: 18px;
+  color: #6e7479;
+  margin-top: 3px;
+}
+
+.invite_history ul li .packet_det {
+  display: flex;
+  align-items: center;
+}
+
+.invite_history ul li .packet_det .packet {
+  position: relative;
+  margin-right: 5px;
+}
+
+.invite_history ul li .packet_det .packet img {
+  display: block;
+  width: 24px;
+}
+
+.invite_history ul li .packet_det .packet .num {
+  font-size: 16px;
+  line-height: 20px;
+  position: absolute;
+  top: 22%;
+  width: 100%;
+  left: 0;
+  color: #ff0000;
+  text-align: center;
+}
+
+.invite_history ul li .packet_det .tips {
+  color: #ee470d;
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.invite_rule .con {
+  font-size: 14px;
+  line-height: 22px;
+  color: #575a5e;
+  text-align: justify;
+}
+
+.invite_rule .con div {
+  margin-bottom: 10px;
+}
+
+.rule_icon {
+  position: absolute;
+  right: 5%;
+  top: 48px;
+  width: 40px;
+  display: block;
+}

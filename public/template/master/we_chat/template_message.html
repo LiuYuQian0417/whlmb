@@ -1,0 +1,451 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .inline-input{
+        display: inline-block;
+        width: calc(100% - 86px)
+    }
+    .inline-button{
+        display: inline-block;
+    }
+</style>
+<form class="layui-form" action="" method="post">
+
+    <!--<div class="tabs_info">-->
+    <!--<ul>-->
+    <!--<li class="curr"><a href="javascript:void(0);">基本配置</a></li>-->
+    <!--</ul>-->
+    <!--</div>-->
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>配置前先需要申请一个微信服务号，并且通过微信认证。（认证服务号需要注意每年微信官方都需要重新认证，如果认证过期，接口功能将无法使用，具体请登录微信公众号平台了解详情）</span>
+                </li>
+                <li><span>网站域名 需要通过ICP备案并正确解析到空间服务器，临时域名与IP地址无法配置。</span></li>
+                <li><span>登录 微信小程序平台 ，获取且依次填写好 模板消息key值。</span></li>
+                <li><span>并保持后台与小程序平台填写的一致。</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <!----------------------------------------------------基本设置------------------------------------------------------>
+    <div class="contentShell">
+        <!----------------------------------------------------入驻------------------------------------------------------>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">入驻申请提交</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_enter_apply"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="入驻申请提交"
+                        value="{$data['micro-template_enter_apply']['value']|default=''}"
+                        class="layui-input inline-input">
+
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_enter_apply']['status']?'checked':''} value="1" data-id="micro-template_enter_apply" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">申请入驻审核结果</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_request_enter_audit_result"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="申请入驻审核结果"
+                        value="{$data['micro-template_request_enter_audit_result']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_request_enter_audit_result']['status']?'checked':''} value="1" data-id="micro-template_request_enter_audit_result" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+        <!----------------------------------------------------店铺------------------------------------------------------>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺状态</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_store_type"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="店铺状态"
+                        value="{$data['micro-template_store_type']['value']|default=''}"
+                        class="layui-input inline-input">
+
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_store_type']['status']?'checked':''} value="1" data-id="micro-template_store_type" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+        <!----------------------------------------------------活动商品通知------------------------------------------------------>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">砍价进度通知</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_cut_progress"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="砍价进度通知"
+                        value="{$data['micro-template_cut_progress']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_cut_progress']['status']?'checked':''} value="1" data-id="micro-template_cut_progress" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">砍价成功通知</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_cut_success"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="砍价成功通知"
+                        value="{$data['micro-template_cut_success']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_cut_success']['status']?'checked':''} value="1" data-id="micro-template_cut_success" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">拼团失败通知</label>
+            <div class="layui-input-block">
+                <input type="text"
+                       name="micro-template_group_failed"
+                       maxlength="100"
+                       autocomplete="off"
+                       placeholder="拼团失败通知"
+                       value="{$data['micro-template_group_failed']['value']|default=''}"
+                       class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_group_failed']['status']?'checked':''} value="1" data-id="micro-template_group_failed" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">拼团成功通知</label>
+            <div class="layui-input-block">
+                <input type="text"
+                       name="micro-template_group_success"
+                       maxlength="100"
+                       autocomplete="off"
+                       placeholder="拼团成功通知"
+                       value="{$data['micro-template_group_success']['value']|default=''}"
+                       class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_group_success']['status']?'checked':''} value="1" data-id="micro-template_group_success" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+        <!----------------------------------------------------会员------------------------------------------------------>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">加入黑名单</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_put_blacklist"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="加入黑名单"
+                        value="{$data['micro-template_put_blacklist']['value']|default=''}"
+                        class="layui-input inline-input">
+
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_put_blacklist']['status']?'checked':''} value="1" data-id="micro-template_put_blacklist" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">移除黑名单</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_remove_blacklist"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="移除黑名单"
+                        value="{$data['micro-template_remove_blacklist']['value']|default=''}"
+                        class="layui-input inline-input">
+
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_remove_blacklist']['status']?'checked':''} value="1" data-id="micro-template_remove_blacklist" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">会员升级</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_member_upgrade"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="会员升级"
+                        value="{$data['micro-template_member_upgrade']['value']|default=''}"
+                        class="layui-input inline-input">
+
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_member_upgrade']['status']?'checked':''} value="1" data-id="micro-template_member_upgrade" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <!----------------------------------------------------订单业务------------------------------------------------------>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">待付款提醒</label>
+            <div class="layui-input-block">
+                <input type="text"
+                       name="micro-template_pending_payment"
+                       maxlength="100"
+                       autocomplete="off"
+                       placeholder="待付款提醒"
+                       value="{$data['micro-template_pending_payment']['value']|default=''}"
+                       class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_pending_payment']['status']?'checked':''} value="1" data-id="micro-template_pending_payment" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付完成</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_pay_done"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="支付完成"
+                        value="{$data['micro-template_pay_done']['value']|default=''}"
+                        class="layui-input inline-input">
+
+                    <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_pay_done']['status']?'checked':''} value="1" data-id="micro-template_pay_done" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">订单发货提醒</label>
+            <div class="layui-input-block">
+                <input type="text"
+                       name="micro-template_order_ship"
+                       maxlength="100"
+                       autocomplete="off"
+                       placeholder="订单发货提醒"
+                       value="{$data['micro-template_order_ship']['value']|default=''}"
+                       class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_order_ship']['status']?'checked':''} value="1" data-id="micro-template_order_ship" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">退款失败通知</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_refund_defeated"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="退款失败通知"
+                        value="{$data['micro-template_refund_defeated']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_refund_defeated']['status']?'checked':''} value="1" data-id="micro-template_refund_defeated" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">退款成功通知</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_refund_success"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="退款成功通知"
+                        value="{$data['micro-template_refund_success']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_refund_success']['status']?'checked':''} value="1" data-id="micro-template_refund_success" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">降价通知</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_price_off"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="降价通知"
+                        value="{$data['micro-template_price_off']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_price_off']['status']?'checked':''} value="1" data-id="micro-template_price_off" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认收货通知</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_confirm_receipt"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="确认收货通知"
+                        value="{$data['micro-template_confirm_receipt']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_confirm_receipt']['status']?'checked':''} value="1" data-id="micro-template_confirm_receipt" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">到店自提提醒</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_take_away"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="到店自提提醒"
+                        value="{$data['micro-template_take_away']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_take_away']['status']?'checked':''} value="1" data-id="micro-template_take_away" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <!----------------------------------------------------分销------------------------------------------------------>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">成功获取下级粉丝</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_subordinate_fans"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="成功获取下级粉丝"
+                        value="{$data['micro-template_subordinate_fans']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_subordinate_fans']['status']?'checked':''} value="1" data-id="micro-template_subordinate_fans" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">分销商晋级</label>
+            <div class="layui-input-block">
+                <input
+                        type="text"
+                        name="micro-template_distributor_promoted"
+                        maxlength="100"
+                        autocomplete="off"
+                        placeholder="分销商晋级"
+                        value="{$data['micro-template_distributor_promoted']['value']|default=''}"
+                        class="layui-input inline-input">
+                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_distributor_promoted']['status']?'checked':''} value="1" data-id="micro-template_distributor_promoted" lay-skin="switch" lay-text="开|关">
+
+            </div>
+        </div>
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">充值成功通知</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text"-->
+<!--                       name="micro-template_recharge-success"-->
+<!--                       maxlength="100"-->
+<!--                       autocomplete="off"-->
+<!--                       placeholder="充值成功通知"-->
+<!--                       value="{$data['micro-template_recharge-success']['value']|default=''}"-->
+<!--                       class="layui-input inline-input">-->
+<!--                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_recharge-success']['status']?'checked':''} value="1" data-id="micro-recharge-success" lay-skin="switch" lay-text="开|关">-->
+
+<!--            </div>-->
+<!--        </div>-->
+
+
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">订单支付成功通知</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text"-->
+<!--                       name="micro-template_order_pay_success"-->
+<!--                       maxlength="100"-->
+<!--                       autocomplete="off"-->
+<!--                       placeholder="订单支付成功通知"-->
+<!--                       value="{$data['micro-template_order_pay_success']['value']|default=''}"-->
+<!--                       class="layui-input inline-input">-->
+<!--                <input title type="checkbox" lay-filter="changeStatus" {$data['micro-template_order_pay_success']['status']?'checked':''} value="1" data-id="micro-template_order_pay_success" lay-skin="switch" lay-text="开|关">-->
+
+<!--            </div>-->
+<!--        </div>-->
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-danger">保存</button>
+            </div>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{
+        selector:'switch(changeStatus)',
+        callback: function (data) {
+            main.ajax({
+                data:{name:data.elem.getAttribute('data-id'),checked:data.elem.checked?1:0},
+                url:'/we_chat/editVal'
+            })
+        }
+    }]);
+    main.valid('.layui-form');
+
+    function randomWord(randomFlag, min, max) {
+        var str = "",
+            range = min,
+            arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+        // 随机产生
+        if (randomFlag) {
+            range = Math.round(Math.random() * (max - min)) + min;
+        }
+        for (var i = 0; i < range; i++) {
+            var pos = Math.round(Math.random() * (arr.length - 1));
+            str += arr[pos];
+        }
+        return str;
+    }
+
+    function buildToken() {
+        $('input[name=wechat_token]').val(randomWord(false,32,32))
+    }
+
+    function buildAesKey() {
+        $('input[name=wechat_encoding_aes_key]').val(randomWord(false,43,43))
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

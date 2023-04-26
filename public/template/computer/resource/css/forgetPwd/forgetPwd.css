@@ -1,0 +1,126 @@
+.head-container-center{
+    display: flex;
+    align-items: center;
+    width: 1200px;
+    margin: 0 auto;
+    padding: 12px 0 41px;
+}
+.head-container-center img{
+    width: 140px;
+    height: 60px;
+}
+.head-container-center span{
+    font-size: 18px;
+    color: #959595;
+    margin-left: 10px;
+    margin-top:20px;
+}
+.head-container{
+    border-bottom: 2px solid #eee;
+}
+.flow-container{
+    width: 398px;
+    margin: 74px auto 0;
+}
+.flow{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.flow-item{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #cfcfcf;
+}
+.flow-item span{
+    color: #a4a4a4;
+    font-size: 14px;
+}
+.flow-circle{
+    width: 23px;
+    height: 23px;
+    text-align: center;
+    line-height: 23px;
+    border-radius: 50%;
+    color: #cfcfcf;
+    border:1px solid #cfcfcf;
+    margin-bottom: 15px;
+}
+.arrow{
+    margin-bottom: 40px;
+    color: #cfcfcf;
+}
+.activeClass{
+    color: #fff!important;
+}
+.verify{
+    width: 100%;
+    height: 50px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    padding-left: 20px;
+    box-sizing: border-box;
+    margin-top: 56px;
+}
+.verify::-webkit-input-placeholder{
+    color:#cfcfcf;
+}
+.next{
+    width: 100%;
+    height: 52px;
+    text-align: center;
+    line-height: 52px;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 54px;
+}
+.wechat-pay-bottom p{
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    color: #666;
+    font-size: 14px;
+}
+.wechat-pay-bottom{
+    padding: 40px 0;
+    margin: 150px auto 0 auto;
+    border-top: 1px solid #e9e5e5;
+}
+.tip{
+    font-size: 14px;
+    color: #cfcfcf;
+    margin-top: 8px;
+}
+.code-tip{
+    margin-top: 55px;
+    text-align: center;
+    font-size: 17px;
+}
+.tel{
+    margin-top: 13px;
+    text-align: center;
+    font-size: 18px;
+}
+.code{
+    display: flex;
+    margin-top: 20px;
+}
+.code .verify{
+    margin: 0;
+    width: 289px;
+    outline: none;
+}
+.send{
+    width: 108px;
+    height: 48px;
+    background-color: #f4f5f6;
+    text-align: center;
+    line-height: 50px;
+    border:1px solid #ddd;
+    border-left:none;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+}

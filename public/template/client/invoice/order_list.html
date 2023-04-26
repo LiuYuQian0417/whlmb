@@ -1,0 +1,289 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .goods-desc .name{height: auto!important;}
+
+    a:last-child{margin-right: 10px;}
+    a.btn_see, a.btn_edit, a.btn_trash{margin-bottom: 5px;}
+    .ecsc-default-table td .goods-desc{width: calc(100% - 80px)}
+    .ecsc-default-table td .goods-img img{
+        border: 1px solid #dcdcdc;
+    }
+    .ecsc-default-table td .goods-img{border: none!important;}
+    .ecsc-default-table td .goods-info{float: none!important;}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="explanation clear mb20" id="explanation">
+    <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>
+    <ul>
+        <li>展示发票虚拟订单列表
+        <li>
+        <li>
+        <li>
+    </ul>
+</div>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+        <div class="order_stats">
+            <div class="order_stats_search">
+                <!--起止时间开始-->
+                <div class="screeItme">
+                    <strong class="fl lh mr10">起止时间：</strong>
+                    <div  class="imitate_select select_w145">
+                        <div class="cite">不限</div>
+                        <ul>
+                            <li><a href="javascript:;" data-value="0" class="ftx-01">下单时间</a></li>
+                            <li><a href="javascript:;" data-value="2" class="ftx-01">支付时间</a></li>
+                            <li><a href="javascript:;" data-value="3" class="ftx-01">发货时间</a></li>
+                            <li><a href="javascript:;" data-value="1" class="ftx-01">成交时间</a></li>
+                        </ul>
+                        <input name="time_type" type="hidden" value="{:input('time_type','0')}" id="order_referer_val">
+                    </div>
+                    <div class="text_time" id="text_time1">
+                        <input name="start_date" type="text" id="start_date" size="15" placeholder="不限" value="{:input('start_date','')}" readonly  class="text" />
+                    </div>
+                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                    <div class="text_time" id="text_time2">
+                        <input name="end_date" type="text" id="end_date" size="15" placeholder="至今" value="{:input('end_date','')}" readonly  class="text" />
+                    </div>
+                </div>
+                <div class="screeItme mt10">
+                    <!--订单来源开始-->
+                    <div class="bf100 fl origin_type">
+                        <strong class="fl lh mr10">订单来源：</strong>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" {empty name="$origin_type"} checked{/empty} onclick="clearCheck('.origin_type')" type="checkbox" class="ui-checkbox origin_type_all" id="a_2" value="0" />
+                            <label class="ui-label" for="a_2">不限</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="2" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_0" value="2" />
+                            <label class="ui-label" for="a_0">小程序</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="4" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_3" value="4" />
+                            <label class="ui-label" for="a_3">手机站</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="1" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_1" value="1" />
+                            <label class="ui-label" for="a_1">APP</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="origin_type[]" type="checkbox" {in name="3" value="$origin_type"} checked{/in} onclick="clearCheck('.origin_type_all')" class="ui-checkbox origin_type" id="a_4" value="3" />
+                            <label class="ui-label" for="a_4">PC</label>
+                        </div>
+                    </div>
+                    <!--订单来源结束-->
+
+                    <!--支付方式开始-->
+                    <div class="bf100 fl">
+                        <strong class="fl lh mr10">支付方式：</strong>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" {if condition="$pay_channel eq '-1' || $pay_channel eq ''"} checked {else/} {/if} type="checkbox" value="-1" id="pay_0" onclick="clearCheck('.pay_channel')" class="ui-checkbox pay_channel_all" />
+                            <label class="ui-label" for="pay_0">不限</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="0"  id="pay_1" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="'0'" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_1">未支付</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="1" id="pay_2" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="1" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_2">微信</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="2" id="pay_3" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="2" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_3">支付宝</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="3" id="pay_4" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="3" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_4">余额</label>
+                        </div>
+                        <div class="checkbox_item fl lh mr10">
+                            <input name="pay_channel[]" type="checkbox" value="4" id="pay_5" class="ui-checkbox pay_channel" onclick="clearCheck('.pay_channel_all')"
+                                   {eq name=":input('pay_type','1')" value="2" } disabled {/eq} {in name="4" value="$pay_channel"} checked{/in}
+                            />
+                            <label class="ui-label" for="pay_5">银行卡</label>
+                        </div>
+                    </div>
+                    <!--支付方式结束-->
+                    <input type="submit"  value="查询" class="sc-btn sc-blueBg-btn btn30" />
+                </div>
+            </div>
+            <!--列表-->
+            <form method="POST" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                    <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                        <tr>
+                            <th width="30%">商品信息</th>
+                            <th width="7%">订单类型</th>
+                            <th width="12%">订单号</th>
+                            <th width="4%">支付方式</th>
+                            <th width="9%">买家</th>
+                            <th width="9%">下单时间</th>
+                            <th width="9%">实收款</th>
+                            <th width="9%">订单状态</th>
+                        </tr>
+                        {empty name='data'}
+                        <tr>
+                            <td class="no-records" colspan="10">没有找到任何记录</td>
+                        </tr>
+                        {/empty}
+                        {volist name="data" id="item"}
+                        <tr>
+                            <td class="tl">
+                                {volist name="$item.order_goods" id="orderGoods"}
+                                <div class="goods-info">
+                                    <div class="goods-img"><a href="javascript:void(0);" target="_blank"><img src="{$orderGoods.file|default=''}" onerror=this.src="/template/master/resource/image/common/imageError.png" onmouseover="toolTip('<img src={$orderGoods.file}>')" onmouseout="toolTip()"></a></div>
+                                    <div class="goods-desc">
+                                        <div class="name">
+                                            <font title="">商品名称</font>：
+                                            <font class="orange">
+                                                {$orderGoods.goods_name|default=''}
+                                                <br>
+                                                <font class="red" style="font-weight: bold;font-size: 14px;margin-left: 20%;">
+                                                    {switch orderGoods.status}
+                                                    {case 4.2}（退款成功）{/case}
+                                                    {case 4.3}（退货成功）{/case}
+                                                    {case 5.1|5.2}（申请退款中）{/case}
+                                                    {case 5.3}（同意退货（等待填写物流））{/case}
+                                                    {case 5.4}（申请退货中）{/case}
+                                                    {case 5.5|5.7}（退款失败）{/case}
+                                                    {case 5.6}（退货失败）{/case}
+                                                    {default /}
+                                                    {/switch}
+                                                </font>
+                                            </font>
+                                        </div>
+                                        <div class="name">
+                                            <font title="">单价</font>：
+                                            <font class="orange">{$orderGoods.single_price|default=''}</font>
+                                        </div>
+                                        <div class="name">
+                                            <font title="">数量</font>：
+                                            <font class="orange">{$orderGoods.quantity|default=''}</font>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/volist}
+                            </td>
+                            <td>发票运费</td>
+                            <td>{$item.order_attach_number|default=''}</td>
+                            <td>
+                                {switch name="item.pay_channel"}
+                                {case value="0"}未支付{/case}
+                                {case value="1"}微信{/case}
+                                {case value="2"}支付宝{/case}
+                                {case value="3"}余额{/case}
+                                {case value="4"}银行卡{/case}
+                                {case value="5"}线下{/case}
+                                {default /}出错啦
+                                {/switch}
+                            </td>
+                            <td>{$item.nickname|default=''}</td>
+                            <td>{$item.create_time|default=''}</td>
+                            <td>{$item.subtotal_price|default=''}</td>
+                            <td>
+                                {switch name="item.status"}
+                                {case value="0"}待付款{/case}
+                                {case value="1"}
+                                {switch name="item.distribution_type"}
+                                {case value="1"}待配送{/case}
+                                {default/}待发货
+                                {/switch}
+                                {/case}
+                                {case value="2"}
+                                {switch name="item.distribution_type"}
+                                {case value="1"}配送中{/case}
+                                {case value="2"}待自提{/case}
+                                {default/}待收货
+                                {/switch}
+                                {/case}
+                                {case value="3"}已完成{/case}
+                                {case value="4"}已关闭{/case}
+                                {case value="5"}退款中{/case}
+                                {case value="6"}已取消{/case}
+                                {default /}出错啦
+                                {/switch}
+                            </td>
+                        </tr>
+                        {/volist}
+                        <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                {:$data->render()}
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/jQuery.print.js"></script>
+<script type="text/javascript">
+    // 关闭订单
+    function closeOrder(order_attach_id,member_id) {
+        layer.msg('确定关闭该订单吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {order_attach_id:order_attach_id,member_id: member_id}, url: '/client/order/closeOrder', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.href = "/client/order/index";
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    function dc(){
+        $("#searchForm").append("<input type='text' id='dc' name='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+    main.laydate([{
+        elem: '#start_date'
+        , type: 'datetime'
+    }, {
+        elem: '#end_date'
+        , type: 'datetime'
+    }
+    ])
+</script>
+{/block}

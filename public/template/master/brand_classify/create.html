@@ -1,0 +1,100 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/formSelects-v4.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请按提示文案填写信息，以免出错。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <!--品牌分类名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 品牌分类名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="brand_classify_name" maxlength="8" autocomplete="off" placeholder="请输入品牌分类名称"
+                       datatype="*"
+                       value="{$item.brand_classify_name|default=''}"
+                       nullmsg="请输入品牌分类名称" errormsg="请输入品牌分类名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        {eq name="single_store" value="1"}
+        <div class="layui-form-item">
+        <label class="layui-form-label">选择关联店铺</label>
+        <div class="layui-input-block">
+            <select name="store_id" xm-select="store_id">
+                <option value="">关联店铺</option>
+                {volist name="storeList" id="vo"}
+                <option value="{$vo.store_id}" {present name="$item.brand_classify_id"}
+                        {in name="$item.brand_classify_id" value="$vo.brand_classify_id"}selected="selected"{/in}{/present}>{$vo.store_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+        {/eq}
+
+
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">品牌分类描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容"  name="description" maxlength="100" class="layui-textarea" >{$item.description|default=''}</textarea>
+            </div>
+        </div>
+
+        <!--显示状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="显示"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="不显示"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.brand_classify_id"}
+                <input type="hidden" name="brand_classify_id" value="{$item.brand_classify_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/common/formSelects-v4.js"></script>
+<script>
+    main.form();
+    main.valid('.layui-form');
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

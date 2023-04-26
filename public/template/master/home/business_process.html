@@ -1,0 +1,118 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<style>
+    .contentShell {
+        width: 60%;
+        height: 485px;
+    }
+.preview{
+    background: #bbb !important;
+    display: none;
+}
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="/config/saveConfig" method="post">
+
+    <div class="tabs_info">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);">会员注册流程</a></li>
+            <li class=""><a href="javascript:void(0);">店铺入驻流程</a></li>
+            <li class=""><a href="javascript:void(0);">购物流程</a></li>
+            <li class=""><a href="javascript:void(0);">订单售后流程</a></li>
+            <li class=""><a href="javascript:void(0);">商家结算流程</a></li>
+            <li class=""><a href="javascript:void(0);">商家提现流程</a></li>
+            <li class=""><a href="javascript:void(0);">分销业务流程</a></li>
+        </ul>
+    </div>
+
+    <!--操作提示begin-->
+    <!--<div class="content">-->
+        <!--<div class="explanation" id="explanation">-->
+            <!--<div class="ex_tit">-->
+                <!--<i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>-->
+            <!--</div>-->
+            <!--<ul>-->
+                <!--<li><span>1、商城相关信息设置，请谨慎填写信息；</span></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!----------------------------------------------------商城设置------------------------------------------------------>
+    <div class="contentShell">
+        <img src="__RES__/image/home/process1.png" alt="">
+    </div>
+
+    <!----------------------------------------------------店铺设置------------------------------------------------------>
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/process2.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/process3.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/process4.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/process5.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/process6.png" alt="">
+    </div>
+
+    <div class="contentShell" style="display:none">
+        <img src="__RES__/image/home/process7.png" alt="">
+    </div>
+
+    <!--<div class="contentShellBtn">-->
+        <!--<div class="layui-form-item">-->
+            <!--<div class="layui-input-block">-->
+                <!--<a class="layui-btn preview">上一步</a>-->
+                <!--<a class="layui-btn next">了解下一步</a>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([
+        {
+            selector: 'switch(changeSwitch)',
+            callback: function (data) {
+                main.ajax({
+                    data: {
+                        switchType: data.value,
+                        checked: data.elem.checked ? 1 : 0
+                    },
+                    url: '/config/function_status'
+                })
+            }
+        }
+    ]);
+    main.valid('.layui-form');
+
+    //内容页切换
+    $('.tabs_info li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    });
+</script>
+{/block}
+{block name='highSearch'}{/block}

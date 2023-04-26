@@ -1,0 +1,626 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="switch_info business_info" style="background:none;">
+    <!--<div class="step">-->
+        <!--<div class="tit">-->
+            <!--<div class="checkbox_items">-->
+                <!--<div class="checkbox_item"><span class="require-field">*</span>请选择商家等级</div>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="qx_items">-->
+            <!--<div class="qx_item">-->
+                <!--<div class="center">-->
+                    <!--<div id="grade_id" class="imitate_select select_w320">-->
+                        <!--<div class="cite">普通商家</div>-->
+                        <!--<ul>-->
+                            <!--<li><a href="javascript:;" data-value="14" class="ftx-01">加盟商家</a></li>-->
+                            <!--<li><a href="javascript:;" data-value="13" class="ftx-01">金牌商家</a></li>-->
+                            <!--<li><a href="javascript:;" data-value="12" class="ftx-01">优质商家</a></li>-->
+                            <!--<li><a href="javascript:;" data-value="10" class="ftx-01">普通商家</a></li>-->
+                        <!--</ul>-->
+                        <!--<input name="grade_id" type="hidden" value="10" id="grade_id_val">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="step">
+        <div class="tit">
+            <div class="checkbox_items">
+                <div class="checkbox_item">初始化平台所有商家管理权限</div>
+            </div>
+        </div>
+        <div class="qx_items">
+            <div class="qx_item">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" value="1" name="initialize_allot" id="initialize_allot" class="ui-checkbox">
+                        <label for="initialize_allot" class="ui-label">执行<font class="red">(慎重操作)</font></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="ajax_allot">
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_1">
+                        <label for="chkGroup_1" class="ui-label blod">商品管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_manage" name="action_code[]" class="ui-checkbox" id="goods_manage_1" date="goods" checked="true" title="">
+                            <label for="goods_manage_1" class="ui-label">商品添加/编辑</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="remove_back" name="action_code[]" class="ui-checkbox" id="remove_back_1" date="goods" checked="true" title="">
+                            <label for="remove_back_1" class="ui-label">商品删除/恢复</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="cat_manage" name="action_code[]" class="ui-checkbox" id="cat_manage_1" date="goods" checked="true" title="">
+                            <label for="cat_manage_1" class="ui-label">分类添加/编辑</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="cat_drop" name="action_code[]" class="ui-checkbox" id="cat_drop_1" date="goods" checked="true" title="cat_manage">
+                            <label for="cat_drop_1" class="ui-label">分类转移/删除</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="attr_manage" name="action_code[]" class="ui-checkbox" id="attr_manage_1" date="goods" checked="true" title="">
+                            <label for="attr_manage_1" class="ui-label">商品属性管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="comment_priv" name="action_code[]" class="ui-checkbox" id="comment_priv_1" date="goods" checked="true" title="">
+                            <label for="comment_priv_1" class="ui-label">用户评论管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_type" name="action_code[]" class="ui-checkbox" id="goods_type_1" date="goods" checked="true" title="">
+                            <label for="goods_type_1" class="ui-label">商品类型</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_auto" name="action_code[]" class="ui-checkbox" id="goods_auto_1" date="goods" checked="true" title="">
+                            <label for="goods_auto_1" class="ui-label">商品自动上下架</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="virualcard" name="action_code[]" class="ui-checkbox" id="virualcard_1" date="goods" checked="true" title="">
+                            <label for="virualcard_1" class="ui-label">虚拟卡管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_export" name="action_code[]" class="ui-checkbox" id="goods_export_1" date="goods" checked="true" title="">
+                            <label for="goods_export_1" class="ui-label">商品批量导出</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_batch" name="action_code[]" class="ui-checkbox" id="goods_batch_1" date="goods" checked="true" title="">
+                            <label for="goods_batch_1" class="ui-label">商品批量上传/修改</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="merchants_brand" name="action_code[]" class="ui-checkbox" id="merchants_brand_1" date="goods" checked="true" title="">
+                            <label for="merchants_brand_1" class="ui-label">商家品牌管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="comment_edit_delete" name="action_code[]" class="ui-checkbox" id="comment_edit_delete_1" date="goods" title="">
+                            <label for="comment_edit_delete_1" class="ui-label">用户评论编辑/删除</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="discuss_circle" name="action_code[]" class="ui-checkbox" id="discuss_circle_1" date="goods" checked="true" title="">
+                            <label for="discuss_circle_1" class="ui-label">网友讨论圈</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="gallery_album" name="action_code[]" class="ui-checkbox" id="gallery_album_1" date="goods" title="">
+                            <label for="gallery_album_1" class="ui-label">图片库管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="commission_setting" name="action_code[]" class="ui-checkbox" id="commission_setting_1" date="goods" title="">
+                            <label for="commission_setting_1" class="ui-label">商品佣金设置</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_4">
+                        <label for="chkGroup_4" class="ui-label blod">权限管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="allot_priv" name="action_code[]" class="ui-checkbox" id="allot_priv_4" date="priv_manage" title="admin_manage">
+                            <label for="allot_priv_4" class="ui-label">分派权限</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="logs_manage" name="action_code[]" class="ui-checkbox" id="logs_manage_4" date="priv_manage" title="">
+                            <label for="logs_manage_4" class="ui-label">管理日志列表</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seller_manage" name="action_code[]" class="ui-checkbox" id="seller_manage_4" date="priv_manage" checked="true" title="">
+                            <label for="seller_manage_4" class="ui-label">商家管理员添加/编辑</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seller_allot" name="action_code[]" class="ui-checkbox" id="seller_allot_4" date="priv_manage" checked="true" title="">
+                            <label for="seller_allot_4" class="ui-label">商家权限分配</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seller_drop" name="action_code[]" class="ui-checkbox" id="seller_drop_4" date="priv_manage" checked="true" title="">
+                            <label for="seller_drop_4" class="ui-label"> 删除商家管理员</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="privilege_seller" name="action_code[]" class="ui-checkbox" id="privilege_seller_4" date="priv_manage" title="">
+                            <label for="privilege_seller_4" class="ui-label">编辑个人资料</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="admin_message" name="action_code[]" class="ui-checkbox" id="admin_message_4" date="priv_manage" title="">
+                            <label for="admin_message_4" class="ui-label">管理员留言</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_5">
+                        <label for="chkGroup_5" class="ui-label blod">系统设置</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="ship_manage" name="action_code[]" class="ui-checkbox" id="ship_manage_5" date="sys_manage" checked="true" title="">
+                            <label for="ship_manage_5" class="ui-label">配送方式管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="shiparea_manage" name="action_code[]" class="ui-checkbox" id="shiparea_manage_5" date="sys_manage" checked="true" title="">
+                            <label for="shiparea_manage_5" class="ui-label">配送区域管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="warehouse_manage" name="action_code[]" class="ui-checkbox" id="warehouse_manage_5" date="sys_manage" checked="true" title="">
+                            <label for="warehouse_manage_5" class="ui-label">仓库管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_print_setting" name="action_code[]" class="ui-checkbox" id="order_print_setting_5" date="sys_manage" title="">
+                            <label for="order_print_setting_5" class="ui-label">打印设置</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_6">
+                        <label for="chkGroup_6" class="ui-label blod">订单管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_os_edit" name="action_code[]" class="ui-checkbox" id="order_os_edit_6" date="order_manage" checked="true" title="">
+                            <label for="order_os_edit_6" class="ui-label">编辑订单状态</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_ps_edit" name="action_code[]" class="ui-checkbox" id="order_ps_edit_6" date="order_manage" checked="true" title="order_os_edit">
+                            <label for="order_ps_edit_6" class="ui-label">编辑付款状态</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_ss_edit" name="action_code[]" class="ui-checkbox" id="order_ss_edit_6" date="order_manage" checked="true" title="order_os_edit">
+                            <label for="order_ss_edit_6" class="ui-label">编辑发货状态</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_edit" name="action_code[]" class="ui-checkbox" id="order_edit_6" date="order_manage" checked="true" title="order_os_edit">
+                            <label for="order_edit_6" class="ui-label">添加编辑订单</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_view" name="action_code[]" class="ui-checkbox" id="order_view_6" date="order_manage" checked="true" title="">
+                            <label for="order_view_6" class="ui-label">查看未完成订单</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_view_finished" name="action_code[]" class="ui-checkbox" id="order_view_finished_6" date="order_manage" checked="true" title="">
+                            <label for="order_view_finished_6" class="ui-label">查看已完成订单</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="repay_manage" name="action_code[]" class="ui-checkbox" id="repay_manage_6" date="order_manage" checked="true" title="">
+                            <label for="repay_manage_6" class="ui-label">退款申请管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="booking" name="action_code[]" class="ui-checkbox" id="booking_6" date="order_manage" checked="true" title="">
+                            <label for="booking_6" class="ui-label">缺货登记管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="sale_order_stats" name="action_code[]" class="ui-checkbox" id="sale_order_stats_6" date="order_manage" checked="true" title="">
+                            <label for="sale_order_stats_6" class="ui-label">订单销售统计</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="delivery_view" name="action_code[]" class="ui-checkbox" id="delivery_view_6" date="order_manage" checked="true" title="">
+                            <label for="delivery_view_6" class="ui-label">查看发货单</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="back_view" name="action_code[]" class="ui-checkbox" id="back_view_6" date="order_manage" title="">
+                            <label for="back_view_6" class="ui-label">查看退货单</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_back_apply" name="action_code[]" class="ui-checkbox" id="order_back_apply_6" date="order_manage" title="">
+                            <label for="order_back_apply_6" class="ui-label">退换货申请列表</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_print" name="action_code[]" class="ui-checkbox" id="order_print_6" date="order_manage" title="">
+                            <label for="order_print_6" class="ui-label">订单打印</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_detection" name="action_code[]" class="ui-checkbox" id="order_detection_6" date="order_manage" title="">
+                            <label for="order_detection_6" class="ui-label">检测已发货订单</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_os_remove" name="action_code[]" class="ui-checkbox" id="order_os_remove_6" date="order_manage" title="">
+                            <label for="order_os_remove_6" class="ui-label">订单删除</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="exchange" name="action_code[]" class="ui-checkbox" id="exchange_6" date="order_manage" title="">
+                            <label for="exchange_6" class="ui-label">积分明细</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="complaint" name="action_code[]" class="ui-checkbox" id="complaint_6" date="order_manage" title="">
+                            <label for="complaint_6" class="ui-label">交易投诉</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="order_delayed" name="action_code[]" class="ui-checkbox" id="order_delayed_6" date="order_manage" title="">
+                            <label for="order_delayed_6" class="ui-label">延迟收货</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_7">
+                        <label for="chkGroup_7" class="ui-label blod">促销管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="topic_manage" name="action_code[]" class="ui-checkbox" id="topic_manage_7" date="promotion" title="">
+                            <label for="topic_manage_7" class="ui-label">专题管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="snatch_manage" name="action_code[]" class="ui-checkbox" id="snatch_manage_7" date="promotion" title="">
+                            <label for="snatch_manage_7" class="ui-label">夺宝奇兵</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="ad_manage" name="action_code[]" class="ui-checkbox" id="ad_manage_7" date="promotion" title="">
+                            <label for="ad_manage_7" class="ui-label">广告管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="gift_manage" name="action_code[]" class="ui-checkbox" id="gift_manage_7" date="promotion" title="">
+                            <label for="gift_manage_7" class="ui-label">赠品管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="bonus_manage" name="action_code[]" class="ui-checkbox" id="bonus_manage_7" date="promotion" title="">
+                            <label for="bonus_manage_7" class="ui-label">红包管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="auction" name="action_code[]" class="ui-checkbox" id="auction_7" date="promotion" title="">
+                            <label for="auction_7" class="ui-label">拍卖活动</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="group_by" name="action_code[]" class="ui-checkbox" id="group_by_7" date="promotion" title="">
+                            <label for="group_by_7" class="ui-label">团购活动</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="favourable" name="action_code[]" class="ui-checkbox" id="favourable_7" date="promotion" title="">
+                            <label for="favourable_7" class="ui-label">优惠活动</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="package_manage" name="action_code[]" class="ui-checkbox" id="package_manage_7" date="promotion" title="">
+                            <label for="package_manage_7" class="ui-label">超值礼包</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="exchange_goods" name="action_code[]" class="ui-checkbox" id="exchange_goods_7" date="promotion" title="">
+                            <label for="exchange_goods_7" class="ui-label">积分商城商品</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="presale" name="action_code[]" class="ui-checkbox" id="presale_7" date="promotion" title="">
+                            <label for="presale_7" class="ui-label">预售活动</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="gift_gard_manage" name="action_code[]" class="ui-checkbox" id="gift_gard_manage_7" date="promotion" title="">
+                            <label for="gift_gard_manage_7" class="ui-label">礼品卡列表</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="take_manage" name="action_code[]" class="ui-checkbox" id="take_manage_7" date="promotion" title="">
+                            <label for="take_manage_7" class="ui-label">礼品卡提货列表</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="coupons_manage" name="action_code[]" class="ui-checkbox" id="coupons_manage_7" date="promotion" title="">
+                            <label for="coupons_manage_7" class="ui-label">优惠券管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="team_manage" name="action_code[]" class="ui-checkbox" id="team_manage_7" date="promotion" title="">
+                            <label for="team_manage_7" class="ui-label">拼团管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seckill_manage" name="action_code[]" class="ui-checkbox" id="seckill_manage_7" date="promotion" title="">
+                            <label for="seckill_manage_7" class="ui-label">秒杀管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="bargain_manage" name="action_code[]" class="ui-checkbox" id="bargain_manage_7" date="promotion" title="">
+                            <label for="bargain_manage_7" class="ui-label">砍价管理</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_136">
+                        <label for="chkGroup_136" class="ui-label blod">商家入驻</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="supplier_apply" name="action_code[]" class="ui-checkbox" id="supplier_apply_136" date="merchants" title="">
+                            <label for="supplier_apply_136" class="ui-label">供应商入驻</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="merchants_commission" name="action_code[]" class="ui-checkbox" id="merchants_commission_136" date="merchants" checked="true" title="">
+                            <label for="merchants_commission_136" class="ui-label">店铺佣金结算</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seller_apply" name="action_code[]" class="ui-checkbox" id="seller_apply_136" date="merchants" title="">
+                            <label for="seller_apply_136" class="ui-label">等级入驻管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seller_account" name="action_code[]" class="ui-checkbox" id="seller_account_136" date="merchants" title="">
+                            <label for="seller_account_136" class="ui-label">商家账户管理</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_224">
+                        <label for="chkGroup_224" class="ui-label blod">店铺设置管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seller_store_informa" name="action_code[]" class="ui-checkbox" id="seller_store_informa_224" date="seller_store_setup" checked="true" title="">
+                            <label for="seller_store_informa_224" class="ui-label">店铺基本信息设置</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="seller_store_other" name="action_code[]" class="ui-checkbox" id="seller_store_other_224" date="seller_store_setup" checked="true" title="">
+                            <label for="seller_store_other_224" class="ui-label">店铺其他设置</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="10_visual_editing" name="action_code[]" class="ui-checkbox" id="10_visual_editing_224" date="seller_store_setup" title="">
+                            <label for="10_visual_editing_224" class="ui-label">店铺可视化装修</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="touch_dashboard" name="action_code[]" class="ui-checkbox" id="touch_dashboard_224" date="seller_store_setup" title="">
+                            <label for="touch_dashboard_224" class="ui-label">可视化装修</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_psi" name="action_code[]" class="ui-checkbox" id="goods_psi_224" date="seller_store_setup" title="">
+                            <label for="goods_psi_224" class="ui-label">进销存管理</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_244">
+                        <label for="chkGroup_244" class="ui-label blod">库存管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="storage_put" name="action_code[]" class="ui-checkbox" id="storage_put_244" date="goods_storage" title="">
+                            <label for="storage_put_244" class="ui-label">库存入库</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="storage_out" name="action_code[]" class="ui-checkbox" id="storage_out_244" date="goods_storage" title="">
+                            <label for="storage_out_244" class="ui-label">库存出库</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_248">
+                        <label for="chkGroup_248" class="ui-label blod">门店管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="offline_store" name="action_code[]" class="ui-checkbox" id="offline_store_248" date="stores" title="">
+                            <label for="offline_store_248" class="ui-label">门店列表</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_262">
+                        <label for="chkGroup_262" class="ui-label blod">微信通管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="wechat_admin" name="action_code[]" class="ui-checkbox" id="wechat_admin_262" date="wechat" title="">
+                            <label for="wechat_admin_262" class="ui-label">公众号设置</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="mass_message" name="action_code[]" class="ui-checkbox" id="mass_message_262" date="wechat" title="">
+                            <label for="mass_message_262" class="ui-label">群发消息</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="auto_reply" name="action_code[]" class="ui-checkbox" id="auto_reply_262" date="wechat" title="">
+                            <label for="auto_reply_262" class="ui-label">自动回复</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="menu" name="action_code[]" class="ui-checkbox" id="menu_262" date="wechat" title="">
+                            <label for="menu_262" class="ui-label">自定义菜单</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="fans" name="action_code[]" class="ui-checkbox" id="fans_262" date="wechat" title="">
+                            <label for="fans_262" class="ui-label">粉丝管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="media" name="action_code[]" class="ui-checkbox" id="media_262" date="wechat" title="">
+                            <label for="media_262" class="ui-label">素材管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="qrcode" name="action_code[]" class="ui-checkbox" id="qrcode_262" date="wechat" title="">
+                            <label for="qrcode_262" class="ui-label">二维码管理</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="extend" name="action_code[]" class="ui-checkbox" id="extend_262" date="wechat" title="">
+                            <label for="extend_262" class="ui-label">功能扩展</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="market" name="action_code[]" class="ui-checkbox" id="market_262" date="wechat" title="">
+                            <label for="market_262" class="ui-label">营销中心</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="step">
+            <div class="tit">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="checkbox" name="chkGroup" value="checkbox" class="ui-checkbox" id="chkGroup_310">
+                        <label for="chkGroup_310" class="ui-label blod">商品库管理</label>
+                    </div>
+                </div>
+            </div>
+            <div class="qx_items">
+                <div class="qx_item">
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_lib_list" name="action_code[]" class="ui-checkbox" id="goods_lib_list_310" date="goods_lib" title="">
+                            <label for="goods_lib_list_310" class="ui-label">商品库商品列表</label>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" value="goods_lib_cat" name="action_code[]" class="ui-checkbox" id="goods_lib_cat_310" date="goods_lib" title="">
+                            <label for="goods_lib_cat_310" class="ui-label">商品库分类列表</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="steplast">
+            <div class="checkbox_items">
+                <div class="checkbox_item">
+                    <input type="checkbox" name="checkall" value="checkbox" class="ui-checkbox" id="checkall">
+                    <label for="checkall" class="ui-label">全选</label>
+                </div>
+            </div>
+            <div class="info_btn">
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <input type="hidden" name="id" value="">
+                <input type="hidden" name="token" value="c49edab224d09de5d24e1bcdf9a18508322868ca44f62506af25f77b45af4e5b">
+                <input type="hidden" name="act" value="update_allot">
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+
+    $("#checkall").click(function(){
+        var checkbox = $(this).parents(".switch_info").find('input:checkbox[type="checkbox"]');
+        if($(this).prop("checked") == true){
+            checkbox.prop("checked",true);
+        }else{
+            checkbox.prop("checked",false);
+        }
+    });
+
+    $("input[name='chkGroup']").click(function(){
+        var checkbox = $(this).parents(".tit").next(".qx_items").find('input:checkbox[type="checkbox"]');
+        if($(this).prop("checked") == true){
+            checkbox.prop("checked",true);
+        }else{
+            checkbox.prop("checked",false);
+        }
+    });
+
+    $("input[name='action_code[]']").click(function(){
+        var qx_items = $(this).parents(".qx_items");
+        var length = qx_items.find("input[name='action_code[]']").length;
+        var length2 =  qx_items.find("input[name='action_code[]']:checked").length;
+        if(length == length2){
+            qx_items.prev().find("input[name='chkGroup']").prop("checked",true);
+        }else{
+            qx_items.prev().find("input[name='chkGroup']").prop("checked",false);
+        }
+    });
+
+    $(".qx_items").each(function(index, element) {
+        var length = $(this).find("input[name='action_code[]']").length;
+        var length2 = $(this).find("input[name='action_code[]']:checked").length;
+
+        if(length == length2){
+            $(this).prev().find("input[name='chkGroup']").prop("checked",true);
+        }else{
+            $(this).prev().find("input[name='chkGroup']").prop("checked",false);
+        }
+    });
+</script>
+{/block}
+{block name='highSearch'}{/block}

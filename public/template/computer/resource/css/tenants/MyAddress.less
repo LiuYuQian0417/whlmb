@@ -1,0 +1,180 @@
+.list{
+  padding-left: 30px;
+  margin-bottom: 10px;
+  position: relative;
+  .list-tit{
+    font-size: 12px;
+    line-height: 32px;
+    color: #999999;
+    span{
+      float: left;
+    }
+  }
+  .sty{
+    width: 234px;
+    height: 32px;
+    border: 1px solid #CCCCCC;
+    box-sizing: border-box;
+    text-indent: 10px;
+  }
+
+  .select-address{
+    position: relative;
+    .address-detailed-box{
+      display: inline-block;
+      min-width:200px;
+      height: 25px;
+      border: 1px solid #CCCCCC;
+      box-sizing: border-box;
+      padding-right: 26px;
+      position: relative;
+      cursor: pointer;
+      font-size: 12px;
+      line-height: 25px;
+      color: #666666;
+      padding-left: 5px;
+      position: relative;
+      z-index: 3;
+      background: #fff;
+      img{
+        position: absolute;
+        right: 8px;
+        top: 7px;
+      }
+    }
+    .border-bottom{
+      border-bottom:none;
+      height: 26px;
+    }
+    .detailed-box{
+      padding: 10px;
+      box-sizing: border-box;
+      width: 446px;
+      border:1px solid #CCCCCC ;
+      position: absolute;
+      left: 0px;
+      top: 25px;
+      font-size: 12px;
+      background: #fff;
+      z-index: 999;
+      .detailed-box-top{
+        height: 24px;
+        position: relative;
+        &:after{
+          content: '';
+          display: block;
+          width: 100%;
+          height: 2px;
+          background: #EA5413;
+          position: absolute;
+          top: 24px;
+        }
+        .close{
+          float: right;
+          position: relative;
+          top: 7px;
+        }
+        .address-text{
+          float: left;
+          height: 24px;
+          max-width: 95px;
+          padding-left: 10px;
+          padding-right: 24px;
+          position: relative;
+          line-height: 24px;
+          border: 1px solid #CCCCCC;
+          border-bottom:none;
+          margin-right: 5px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow:ellipsis ;
+          box-sizing: border-box;
+          position: relative;
+          z-index: 1;
+          background: #fff;
+          cursor: pointer;
+          a{
+            color:#333 ;
+          }
+          img{
+            position: absolute;
+            right: 5px;
+            top: 7px;
+          }
+        }
+        .active{
+          border: 2px solid #EA5413;
+          border-bottom:none;
+          height: 26px;
+
+        }
+
+
+      }
+      .address-detailed{
+        margin-top: 8px;
+        padding: 0px 15px;
+        min-height: 70px;
+        max-height: 150px;
+        overflow: auto;
+        -ms-overflow-style: none;
+        overflow: -moz-scrollbars-none;
+        &::-webkit-scrollbar { width: 0 !important }
+        a{
+          display: inline-block;
+          padding: 5px 8px;
+          color: #333333;
+          margin-right: 10px;
+          margin-top: 10px;
+          cursor: pointer;
+        }
+        .checked{
+          color: #fff;
+        }
+      }
+    }
+  }
+
+  .location-address{
+    min-width: 232px;
+    height: 200px;
+    overflow: auto;
+    background: #fefefe;
+    border: 1px solid #d1d1d1;
+    font-size: 12px;
+    position: absolute;
+    top: 62px;
+    left: 30px;
+    z-index: 9;
+    display: none;
+    .location-address-list{
+      display: block;
+      height: 30px;
+      line-height: 30px;
+      text-indent: 7px;
+      white-space: nowrap;
+      padding-right: 7px;
+      color: #333;
+      &:hover{
+        background: #eee;
+      }
+    }
+    &::-webkit-scrollbar {/*滚动条整体样式*/
+      width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+      height: 1px;
+    }
+    &::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
+      border-radius: 5px;
+      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+      background: #BCBCBC;
+    }
+    &::-webkit-scrollbar-track {/*滚动条里面轨道*/
+      -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+      border-radius: 5px;
+      background: #EBEBEB;
+    }
+  }
+
+
+
+}

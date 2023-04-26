@@ -1,0 +1,356 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<link href="__RES__/css/common/formSelects-v4.css" rel="stylesheet" type="text/css"/>
+<style>
+    .remarks {
+        display: block;
+        width: 445px;
+        margin: 5px 0;
+        color: #767676;
+    }
+    .layui-btn-new {
+        display: inline-block;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 12px;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        background-color: #cc3300;
+    }
+    .layui-btn-new:hover img{
+        display: block !important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form class="layui-form" action="" method="post">
+    <dl class="main-content" id="mainContent">
+
+        <div class="explanation clear" id="explanation">
+            <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、通过此模块设置商品相关推荐；</li>
+            </ul>
+        </div>
+
+        <div class="ecsc-form-goods">
+            <div class="wrapper-list border1">
+                <div>
+                    <!--banner图推荐-->
+                    <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> banner图推荐</label>
+                    <hr class="layui-bg-gray">
+
+                    <!--Banner推荐图片-->
+                    <dl>
+                        <dt >广告图片：</dt>
+                        <dd >
+                            <div
+                                    class="imageUpload"
+                                    default="{$item.recomme_file|default=''}"
+                                    width="375"
+                                    height="208"
+                                    file-mime="image/gif,image/jpeg,image/png" 文件类型
+                                    name="recomme_file"
+                                    dir="goods/file"
+                                    value="{$item.recomme_file_data|default=''}"
+                            ></div>
+                            <div style="overflow: hidden">
+                                <span class="remarks" style="float: left">商品banner图推荐，不上传此图进行推荐会影响前台展示效果，建议尺寸375*208</span>
+                            </div>
+                        </dd>
+                    </dl>
+
+
+                    {if config("user.")["pc"]["is_include"]}
+                    <!--Banner推荐图片-->
+                    <dl>
+                        <dt >pc广告图片：</dt>
+                        <dd >
+                            <div
+                                    class="imageUpload"
+                                    default="{$item.pc_recomme_file|default=''}"
+                                    width="1182"
+                                    height="516"
+                                    file-mime="image/gif,image/jpeg,image/png" 文件类型
+                                    name="pc_recomme_file"
+                                    dir="goods/file"
+                                    value="{$item.pc_recomme_file_data|default=''}"
+                            ></div>
+                            <div style="overflow: hidden">
+                                <span class="remarks" style="float: left">商品banner图推荐，不上传此图进行推荐会影响前台展示效果，建议尺寸1182*516</span>
+                            </div>
+                        </dd>
+                    </dl>
+
+                    {/if}
+                    <!--店铺轮播推荐-->
+                    <dl >
+                        <dt class="layui-form-label">店铺轮播推荐：</dt>
+                        <div class="layui-input-block">
+                            <input type="radio" name="store_banner" value="0" title="否" {eq name="item.store_banner|default=0" value="0" }checked{/eq}>
+                            <input type="radio" name="store_banner" value="1" title="是" {eq name="item.store_banner|default=0" value="1" }checked{/eq}>
+                            <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                                <img src="/template/master/resource/image/hover/u13016.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -160px;left: 300px;z-index: 999;display: none;">
+                            </div>
+                        </div>
+                    </dl>
+                    <!--店铺特推开关-->
+                    <dl>
+                        <dt class="layui-form-label">店铺特别推荐：</dt>
+                        <div class="layui-input-block">
+                            <input type="radio" name="store_particularly_recommend" value="0" title="否" {eq name="item.store_particularly_recommend|default=0" value="0" }checked{/eq}>
+                            <input type="radio" name="store_particularly_recommend" value="1" title="是" {eq name="item.store_particularly_recommend|default=0" value="1" }checked{/eq}>
+                            <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                                <img src="/template/master/resource/image/hover/u13016.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -160px;left: 300px;z-index: 999;display: none;">
+                            </div>
+                        </div>
+                    </dl>
+                </div>
+
+                <div {neq name="$item.shop|default=''" value="0"} hidden {/neq}>
+                    <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 展示图推荐</label>
+                    <hr class="layui-bg-gray">
+                </div>
+
+
+                <!--商品展示图-->
+                <!--<dl>-->
+                    <!--<dt>商品展示图：</dt>-->
+                    <!--<dd>-->
+                        <!--<div-->
+                                <!--class="imageUpload"-->
+                                <!--default="{$item.file|default=''}"-->
+                                <!--width="375"-->
+                                <!--height="208"-->
+                                <!--file-mime="image/gif,image/jpeg,image/png" 文件类型-->
+                                <!--dir="goods/file"-->
+                                <!--disabled="disabled"-->
+                        <!--&gt;</div>-->
+                        <!--<div style="overflow: hidden">-->
+                            <!--<span class="remarks" style="float: left">商品展示图推荐，系统默认读取展示图进行推荐</span>-->
+                        <!--</div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                <!--店铺普推开关-->
+                <dl class="layui-form-item">
+                    <dt class="layui-form-label">店铺普通推荐：</dt>
+                    <div class="layui-input-block">
+                        <input type="radio" name="store_recommend" value="0" title="否" {eq name="item.store_recommend|default=0" value="0" }checked{/eq}>
+                        <input type="radio" name="store_recommend" value="1" title="是" {eq name="item.store_recommend|default=0" value="1" }checked{/eq}>
+                        <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                            <img src="/template/master/resource/image/hover/u13031.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -300px;left: 300px;z-index: 999;display: none;">
+                        </div>
+                    </div>
+                </dl>
+
+                    <!--会员价格开关-->
+                <dl class="layui-form-item">
+                    <dt class="layui-form-label">是否使用店铺会员折扣</dt>
+                    <div class="layui-input-block">
+                        <input type="radio" name="is_vip" value="0" title="否" {eq name="item.is_vip|default=0" value="0" }checked{/eq}>
+                        <input type="radio" name="is_vip" value="1" title="是" {eq name="item.is_vip|default=0" value="1" }checked{/eq}>
+                    </div>
+                </dl>
+
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="hidden" name="goods_id" value="{$item.goods_id|default=''}">
+                        <a type="reset" class="sc-btn btn35 sc-blue-btn"  href="/client/goods/index">返回</a>
+                        <button class="sc-btn sc-blueBg-btn btn35" type="submit" id="submit">提交</button>
+                    </dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/formSelects-v4.js"></script>
+<script type="text/javascript">
+
+    //检查设置库存是否满足已有库存
+    function check_arrt_number(e, number) {
+        var _number = parseInt($(e).val());
+        var attr_number = parseInt(number);
+        if (_number > attr_number) {
+            $(e).val(attr_number);
+            layer.msg('所设置属性库存不足');
+            return;
+        }
+        $(e).val(isNaN(_number)?0:_number);
+    }
+    //检查设置可售数量是否满足已有库存
+    function check_vendibility_number(e) {
+        var number = parseInt($(e).val());
+        var attr_number = parseInt($(e).attr('goods_number'));
+        if (number > attr_number) {
+            $(e).val(attr_number);
+            layer.msg('所设置库存大于总库存');
+            return;
+        }
+        $(e).val(isNaN(number)?0:number);
+    }
+
+    function openGoods(obj, type) {
+        var param = 'cateId='
+            + '&brandId='
+            + '&keyword=' + '&type=' + type;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0,
+            shadeClose: true,
+            area: ['80%', '700px'],
+            btn: obj.btn,
+            content: '/client/goods/searchGoods?' + param
+        });
+    }
+
+    main.form();
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#send_start_date'
+        , type: 'date'
+    }, {
+        elem: '#send_end_date'
+        , type: 'date'
+    }
+    ])
+    $(function () {
+        getProducts('{$item.goods_id?:\'\'}');
+    });
+    var option = {
+        columnDefs: [
+            {orderable: false, targets: [1, -1]}
+        ],
+        //解决从新加载表格内容问题
+        destroy:true,
+        retrieve:true,
+        bLengthChange: false,
+        language: {
+            "url": "__RES__/js/DataTables-1.10.15/media/chinese.json"
+        }
+    };
+
+    // 获取规格
+    function getProducts(id) {
+        if (id === '') return;
+        main.ajax({
+            data: {id: id, type: 3}, url: '/client/goods/getProducts', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                //商品库存
+                $('#single_cut_min').attr('goods_number', res.goods_number);
+                $('#goods_number').val(res.goods_number);
+                if (res.data == ''){
+                    $('.spec_table tbody').parents('.layui-form-item').hide();
+                } else{
+                    $('.spec_table tbody').children().remove();
+                    $('.spec_table').dataTable().fnClearTable();    //清空数据
+                    $('.spec_table').dataTable().fnDestroy();       // 销毁
+                    $('.spec_table tbody').html(res.data).parents('.layui-form-item').show()
+                    $('.spec_table').dataTable(option);
+                }
+            }
+        });
+    }
+
+    // 批量设置
+    function batchSetTxt(jq) {
+        // console.log(jq);
+        var dt = {},
+            txt = jq.prev('.batch_set').val(),
+            limit = jq.prev('.limit_set').val(),
+            index = jq.parents('th').index();
+        // console.log(txt);
+        // console.log(limit);
+        console.log(index);
+        if ($.fn.dataTable.isDataTable('.spec_table')) {
+            dt = $('.spec_table').dataTable().api();
+        } else {
+            dt = $('.spec_table').dataTable(option).api();
+        }
+        jq.parent('.batch-input').hide();
+        switch (index) {
+            case 2:
+                dt.$('.batch-' + index).val(limit);
+                break;
+            case 4:
+                var is_number=false;
+                dt.$('.batch1-' + index).each(function(k,v){
+                    var number=parseInt($(v).attr('number'));
+                    var _txt=txt;
+                    if(_txt>number){
+                        is_number=true;
+                        _txt=number;
+                    }
+                    $(v).val(_txt);
+                });
+                if(is_number) {
+                    layer.msg('部分属性库存不足，已默认填入最大值');
+                }
+                break;
+        }
+    }
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId': 'send_start_date',//时间写入对象的id
+        'triggerId': ['send_start_date'],//触发事件的对象id
+        'alignId': 'text_time1',//日历对齐对象
+        'format': '-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    }, opts2 = {
+        'targetId': 'send_end_date',
+        'triggerId': ['send_end_date'],
+        'alignId': 'text_time2',
+        'format': '-'
+    }, opts3 = {
+        'targetId': 'use_start_date',
+        'triggerId': ['use_start_date'],
+        'alignId': 'text_time3',
+        'format': '-'
+    }, opts4 = {
+        'targetId': 'use_end_date',
+        'triggerId': ['use_end_date'],
+        'alignId': 'text_time4',
+        'format': '-'
+    }
+    xvDate(opts1);
+    xvDate(opts2);
+    xvDate(opts3);
+    xvDate(opts4);
+    //日期选择插件调用end sunle
+</script>
+{/block}

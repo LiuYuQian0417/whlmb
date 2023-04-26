@@ -1,0 +1,432 @@
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<!--取消收藏样式-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/depreciate.css"/>
+
+<link rel="stylesheet" href="__RES__/css/my/ShopsCollection.css" />
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/Start.css"/>
+{/block}
+
+{block name="content"}
+
+
+<div class="index-box">
+	<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+	<!--我的页面左侧公共部分结束-->
+
+
+	<div class="index-right">
+		<!--右侧内容开始-->
+		<div>
+			<form action="" id="form" method="post">
+				<div class="my-attention">
+					<div class="tit">
+						<a href="{:url('pc2.0/goods/collect_goods_list')}" >
+							商品收藏
+						</a>
+						<a href="{:url('/pc2.0/store/collect_store_list')}" class='primary-color border-color'>
+							店铺关注
+						</a>
+						<a href="{:url('/pc2.0/home/article_list')}">
+							内容收藏
+						</a>
+
+						<div class="tit-right">
+
+
+
+							<div class="bulk-operation">
+								<input class="operation-btn"  type="button" value="批量操作" />
+
+								<div class="all-check" style="display: none;">
+									<a href="javascript:;" class="allcheck uncheck" >
+										<img src="__RES__/imgs/my/sc.png" alt="">全选</a>
+									<a href="javascript:;" class="disqualification">
+										<img src="__RES__/imgs/my/qxsc.png" alt=""> 取消收藏
+									</a>
+									<input class="success" type="button"  value="完成">
+								</div>
+							</div>
+
+
+							<div class="search-box" >
+								<input class="txt" type="text" name="keyword" value="{:input('keyword','')}" placeholder="请输入店铺名称">
+								<input class="search-btn" type="button" onclick="search()" value="搜索">
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+				<div class="my-shop-collection">
+					{empty name="result"}
+					<!--关注为空时-->
+					<div class="goods-emtry" v-if="list.length==0">
+						<img src="__RES__/imgs/my/emtry.png" alt="">
+						<p>您还没有关注的店铺</p>
+					</div>
+					{/empty}
+					<div class="shop-collection">
+
+						{volist name="result" id="item"}
+						<!--每个店铺-->
+						<div class="shop-list" >
+							<!--遮罩-->
+							<!--选中效果-->
+							<div class="cover" style="display: none;" >
+								<label style="display: block;">
+									<input type="checkbox" hidden="hidden" name="collect_store_id"  id="collect_store_id" value="{$item.collect_store_id}|{$item.store_id}"/>
+									<!--<input type="checkbox" hidden="hidden" name="collect_store_id" id="collect_store_id" value=""/>-->
+									<div >
+										<img src="__RES__/imgs/my/checked.png" alt="">
+									</div>
+								</label>
+							</div>
+
+							<div class="shop shop-hover">
+								<a href="javascript:;" class="unfollow" >取消关注</a>
+								<div class="logo">
+									<img src="{$item.logo}" alt="">
+								</div>
+								<p class="shop-name">
+									{$item.store_name}
+								</p>
+								<div class="start-box">
+									<!--星级-->
+									<div class="start">
+										<div class="start-group">
+											{switch name="$item.self_score"}
+											{case value="1"}
+											<img  src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											<img src="__RES__/imgs/startstart_off_on.png" alt="">
+											{/case}
+											{case value="2"}
+											<img  src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											{/case}
+											{case value="3"}
+											<img  src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											{/case}
+											{case value="4"}
+											<img  src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_off.png" alt="">
+											{/case}
+											{case value="5"}
+											<img  src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											<img src="__RES__/imgs/start_on.png" alt="">
+											{/case}
+											{/switch}
+										</div>
+										<div class="grade">
+											<span class="primary-color">{$item.self_score}</span>
+											分
+										</div>
+									</div>
+								</div>
+								<div class="fans">
+									<img style="top: 0;" src="__RES__/imgs/nearbybusinesses/yiguanzhu.png" alt="">
+									<span>{$item.collect}粉丝</span>
+								</div>
+
+								<div class="shop-bottom">
+									<a href="javascript:jump_store({'store_id':{$item.store_id}})">
+										<img src="__RES__/imgs/my/shop.png" alt="">
+										进入店铺
+									</a>
+									<!--<a href="">-->
+										<!--<img src="__RES__/imgs/my/kf.png" alt="">-->
+										<!--联系客服-->
+									<!--</a>-->
+								</div>
+							</div>
+
+							<div class="goods-list">
+								{volist name="$item.shop_goods" id="val"}
+								<div class="list" >
+									<a href="javascript:jump_goods('{$val.goods_id}')">
+										<img src="{$val.file}"  alt="">
+										<p class="pic">
+											￥{$val.shop_price}
+										</p>
+									</a>
+								</div>
+								{/volist}
+
+							</div>
+						</div>
+						<!--每个店铺结束-->
+						{/volist}
+
+					</div>
+					<!--分页-->
+					<div class="pageContainer" style="width: auto">
+						{$result|raw}
+
+					</div>
+
+					<!--遮罩层-->
+					<div class="depreciate-cover" style="display: none;">
+						<!--取消收藏-->
+						<div class="shop-box collect-box" style="display: none;">
+							<div class="tit">
+								取消关注
+								<div class="right" >
+									<img src="__RES__/imgs/my/close.png" alt="">
+								</div>
+							</div>
+
+							<div class="eminder">
+								<img src="__RES__/imgs/my/question-mark.png" alt="">
+								取消关注当前店铺，确定吗？
+							</div>
+
+							<div class="btn-group">
+								<a href="javascript:;" class="sure" >
+									确定
+								</a>
+								<a href="javascript:;" class="countermand">
+									取消
+								</a>
+							</div>
+						</div>
+
+						<!--取消关注-->
+						<div class="collect-box all-shop" style="display: none;">
+							<div class="tit">
+								取消关注
+								<div class="right" >
+									<img src="__RES__/imgs/my/close.png" alt="">
+								</div>
+							</div>
+
+							<div class="eminder">
+								<img src="__RES__/imgs/my/question-mark.png" alt="">
+								取消关注，确定吗？
+							</div>
+
+							<div class="btn-group">
+								<a href="javascript:;" class="sure" >
+									确定
+								</a>
+								<a href="javascript:;" class="countermand">
+									取消
+								</a>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</form>
+		</div>
+		<!--右侧内容结束-->
+	</div>
+</div>
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+	function search(){
+		var keyword  = $('input[name="keyword"]').val();
+		main.jump({'url':'/pc2.0/store/collect_store_list?keyword='+keyword})
+
+	}
+
+
+	//			单个店铺的取消收藏
+	$('.unfollow').click(function(){
+		$('.shop-collection .shop-list input').each(function () {
+			$(this).attr("checked", false);
+		})
+		$(this).parents('.shop-list').find("input[name='collect_store_id']").attr("checked", 'checked');
+		$('.shop-box').show();
+		$('.depreciate-cover').show();
+	})
+
+	//			x公共
+	$('.depreciate-cover .right img').click(function(){
+		$('.collect-box').hide();
+		$('.depreciate-cover').hide()
+	})
+
+	//			确定取消收藏
+	$('.depreciate-cover .shop-box .sure').click(function(){
+
+		var str = '';
+		$('.shop-collection .shop-list input[name="collect_store_id"]:checked').each(function () {
+			str =$(this).val();
+		})
+		var arr = str.split('|');
+
+		main.ajax({'url':'{:url(\'pc2.0/store/collect_store_delete\')}','data':{'collect_store_id': arr[0],'store_id':arr[1]},callback:function (t) {
+				if (t.code != 0) {
+					layer.msg(t.message);
+					$('.collect-box').hide();
+					$('.depreciate-cover').hide();
+				} else {
+					$('.collect-box').hide();
+					$('.depreciate-cover').hide();
+					layer.msg(t.message, {time: 500},function () {
+						location.reload();
+					});
+				}
+			}})
+
+	})
+
+	//			取消
+	$('.depreciate-cover .shop-box .countermand').click(function(){
+		$('.collect-box').hide();
+		$('.depreciate-cover').hide();
+
+	})
+
+
+
+	//			操作
+	$('.bulk-operation .operation-btn').click(function(){
+
+		$('.shop-collection .shop-list input').each(function () {
+			$(this).attr("checked", false);
+		})
+
+		$(this).hide().siblings('.all-check').show()
+		$('.cover').show()
+	})
+
+
+
+	//单选
+	$('.cover label div').click(function(e){
+		if($(this).parents('.shop-list').hasClass('active')){
+			$(this).parents('.shop-list').removeClass('active')
+		}else{
+			$(this).parents('.shop-list').addClass('active');
+
+		}
+		var len = $('.shop-list').length;
+		var num =$('.shop-collection .active').length
+		if(num<len){
+			$('.allcheck').removeClass('check').addClass('uncheck')
+		}else{
+			$('.allcheck').removeClass('uncheck').addClass('check')
+		}
+		e.stopPropagation();
+	})
+
+
+	//			全选
+	$('.allcheck').click(function(){
+		if($(this).hasClass('uncheck')){
+			$(this).removeClass('uncheck').addClass('check')
+			$('.shop-list').each(function(){
+				$(this).addClass('active').find('input').attr('checked',true);
+				$(this).addClass('active').find('input').prop('checked',true)
+			})
+		}else{
+			$(this).removeClass('check').addClass('uncheck')
+			$('.shop-list').each(function(){
+				$(this).removeClass('active').find('input').attr('checked',false);
+				$(this).removeClass('active').find('input').prop('checked',false)
+			})
+		}
+
+	})
+
+
+
+	//			显示遮罩
+	$('.disqualification').click(function(){
+
+		var collect_store_id = '';
+		$('.shop-collection .shop-list input[name="collect_store_id"]:checked').each(function () {
+			var arr = $(this).val().split('|');
+			collect_store_id += arr[0]+',';
+		})
+		if(collect_store_id){
+			$('.depreciate-cover').show();
+			$('.all-shop').show();
+		}else{
+			layer.msg('请选择要删除的店铺',{time:800})
+		}
+		console.log(collect_store_id);
+
+
+
+	})
+
+	//			确定取消收藏
+	$('.depreciate-cover .all-shop .sure').click(function(){
+
+		var collect_store_id = '';
+		var store_id = '';
+		$('.shop-collection .shop-list input[name="collect_store_id"]:checked').each(function () {
+			var arr = $(this).val().split('|');
+			collect_store_id += arr[0]+',';
+			store_id += arr[1]+',';
+		})
+		console.log(collect_store_id);
+		console.log(store_id);
+
+		main.ajax({'url':'{:url(\'pc2.0/store/collect_store_delete\')}','data':{'collect_store_id': collect_store_id,'store_id':store_id},callback:function (t) {
+				if (t.code != 0) {
+					layer.msg(t.message);
+					$('.collect-box').hide();
+					$('.depreciate-cover').hide();
+				} else {
+					$('.collect-box').hide();
+					$('.depreciate-cover').hide();
+					layer.msg(t.message, {time: 500},function () {
+						location.reload();
+					});
+				}
+			}})
+
+		$('.collect-box').hide();
+		$('.depreciate-cover').hide();
+		// $('#form').submit()
+	})
+
+	//			取消
+	$('.depreciate-cover .all-shop .countermand').click(function(){
+		$('.collect-box').hide();
+		$('.depreciate-cover').hide();
+
+	})
+
+	//	完成
+	$('.success').click(function(){
+		$('.bulk-operation .operation-btn').show()
+		$('.all-check').hide()
+		$('.cover').hide()
+		$('.allcheck').removeClass('check').addClass('uncheck')
+		$('.shop-list').each(function(){
+			$(this).removeClass('active').find('input').removeAttr('checked')
+		})
+	})
+</script>
+{/block}

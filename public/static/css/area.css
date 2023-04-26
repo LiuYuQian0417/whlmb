@@ -1,0 +1,95 @@
+.areaCon{
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 48px);
+  top:48px;
+  left: 0;
+  max-width: 720px;
+  display: flex;
+  background: #f6f6f6;
+}
+.province{
+  height: 100%;
+  overflow: auto;
+  width: 24%;
+  background: #efefef;
+}
+.city{
+  height: 100%;
+  overflow: auto;
+  width: 38%;
+  background: #f7f7f7;
+}
+.area{
+  height: 100%;
+  overflow: auto;
+  width: 38%;
+  background: #fff;
+}
+.province li{
+  height: 56px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #202224;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.province li div{
+  position: relative;
+  padding: 0 10px;
+  border-left: 3px solid transparent;
+}
+.province li.active{
+  background: #f4f4f4;
+}
+.province li.active div{
+  /*border-left: 3px solid #f23030;*/
+  /*color: #f23030;*/
+  border-left: 3px solid transparent;
+  color: #202224;
+}
+.city li{
+  height: 56px;
+  padding: 0 10px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #202224;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.city li.active{
+  /*color: #f23030;*/
+  color: #202224;
+  background: #f9f9f9;
+}
+.area li{
+  height: 56px;
+  padding: 0 10px;
+  font-size: 14px;
+  line-height: 20px;
+  color: #202224;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.area li .text{
+  flex: 1;
+}
+.area li.active{
+  /*color: #f23030;*/
+  color: #202224;
+}
+.area li .iconPar{
+  display: none;
+  width: 16px;
+  overflow: hidden;
+}
+.area li .iconColor{
+  position: relative;
+  border-right: 16px solid transparent;
+}
+.area li.active .iconPar{
+  display: block;
+}

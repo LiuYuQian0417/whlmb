@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="apple-mobile-web-app-title" content="iShop"/>
+    <meta name="App-Config" content="fullscreen=yes,useHistoryState=yes,transition=yes" />
+    <!--iphone设备中的safari私有meta标签，它表示：允许全屏模式浏览-->
+    <meta content=yes name=apple-mobile-web-app-capable />
+    <meta content=yes name=apple-touch-fullscreen />
+    <link rel="shortcut icon" href="/template/master/resource/image/common/favicon_48.ico" />
+    <link rel="bookmark" href="/template/master/resource/image/common/favicon_64.ico" type="image/x-icon" />
+    <!--告诉设备忽略将页面中的数字识别为电话号码-->
+    <meta content="telephone=no,email=no" name=format-detection />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
+    <meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1">
+    <title>{$title}</title>
+    <link rel="stylesheet" type="text/css" href="/template/interfaces/distribution/my/public.css">
+    <style>
+        #sec{
+            font-size: 14px;
+            margin: auto 0;
+            display: inline-block;
+            top: 18px;
+            position: absolute;
+        }
+        #tit{
+            height: 50px;
+            background-color: rgba(0,0,0,0.2);
+            color: #fcde5e;
+            position: relative;
+        }
+        .invite_img{
+            width: 40px;
+            height: 40px;
+            border-radius: 20%;
+            margin: 5px 15px;
+        }
+        #footer{
+            height: 50px;
+            background-color: rgba(0,0,0,0.2);
+            color: #fcde5e;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        .input_open{
+            display: block;
+            width: 98px;
+            line-height: 30px;
+            margin-top: 10px;
+            font-size: 14px;
+            color: white;
+            background: #F83042;
+            border-radius: 20px;
+            text-align: center;
+            border: none;
+            outline: none;
+            margin-right: 3%;
+        }
+        .right{
+            float: right;
+        }
+    </style>
+</head>
+<body style='background-image: url("{$data[\'combination\']}");background-size: 100% 100%;background-repeat: no-repeat;'>
+<div class="wrap">
+    {if condition="array_key_exists('nickname',$data) && array_key_exists('avatar',$data)"}
+    <div id="tit">
+        <img src="{$data['avatar']}" onerror="this.src='/template/master/resource/image/common/imageError.png'" class="invite_img" alt="邀请人头像" />
+        <div id="sec">{$data['nickname']?:'iShop'}诚邀您为代言人</div>
+    </div>
+    {/if}
+    <div id="footer">
+        <input type="button" class="input_open right cp" onclick="jump(this)" data-clipboard-text="{$shareDataEnc}" value="立即打开">
+    </div>
+    <div id="shade" class="shade" style="display: none;width: 100%;" onclick = "showDiv()">
+        <img src="/template/interfaces/distribution/share/share_bg.png" id="IMG" style="position: absolute;left: 0;z-index: 99999999;width: 100%;height: 100%;">
+    </div>
+</div>
+</body>
+<script src="/template/interfaces/distribution/share/clipboard.min.js"></script>
+<script src="/template/master/resource/js/common/jquery-1.8.2.min.js"></script>
+<script>
+    window.clipboardData.setData("Text","");
+    //打开或者下载
+    function jump(dom){
+
+        copy($(dom).data('clipboardText'))
+
+        var ua = window.navigator.userAgent.toLowerCase();
+        if(ua.match(/MicroMessenger/i) == 'micromessenger') { //如果是微信浏览器
+           showDiv();
+        }else {
+            var loadDateTime = new Date();
+            if (navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)) {
+                window.setTimeout(function() {
+                    var timeOutDateTime = new Date();
+                    if (timeOutDateTime - loadDateTime < 5000) {
+                        window.location.href = "https://itunes.apple.com/cn/app/ishop%E7%94%A8%E6%88%B7%E7%AB%AF/id1254768335?mt=8";
+                    } else {
+                        window.close();
+                    }
+                },500);
+                window.location = "longchan://";
+            }else if (navigator.userAgent.match(/android/i)) {
+                window.setTimeout(function() {
+                    var timeOutDateTime = new Date();
+                    if (timeOutDateTime - loadDateTime < 5000) {
+                        window.location.href = "https://www.pgyer.com/AIGH";
+                    } else {
+                        window.close();
+                    }
+                },500);
+                window.location = "com.lc.everyyearfood://my.app/start";
+            }
+        }
+    }
+
+    //遮罩层
+    function showDiv() {
+        $('#IMG').css('top',$(document).scrollTop());
+        var target = document.getElementById('shade');
+        if (target.style.display == "none") {
+            target.style.display = "block";
+            document.documentElement.ontouchmove = function () {
+                return false;
+            };
+        } else {
+            document.documentElement.ontouchmove = function () {
+                return true;
+            };
+            target.style.display = "none";
+        }
+    }
+
+    function copy(value) {
+        try {
+            var text_area = document.createElement('textarea');
+            text_area.value = value;
+            text_area.style.opacity = '0';
+            text_area.style.width = '0';
+            text_area.style.height = '0';
+            text_area.style.position = 'fixed';
+
+            document.body.appendChild(text_area);
+            text_area.select(); // 选择对象
+            document.execCommand("Copy"); // 执行浏览器复制命令
+            document.body.removeChild(text_area)
+            console.log('复制成功')
+        } catch (e) {
+            console.log('复制失败')
+        }
+    }
+</script>
+</html>

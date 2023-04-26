@@ -1,0 +1,171 @@
+.browsing-history{
+  overflow: hidden;
+  .browsing-history-box{
+    margin-top: 20px;
+    background: #fff;
+    padding-left: 30px;
+    padding-top: 30px;
+    .browsing{
+      position: relative;
+      .line{
+        width: 2px;
+        height: 100%;
+        background: #DDDDDD;
+        position: absolute;
+        top: 5px;
+        left: 5px;
+      }
+      .browsing-list{
+        .date{
+          overflow: hidden;
+          .circle{
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            float: left;
+            margin-right: 25px;
+            position: relative;
+            top: 3px;
+            z-index: 9;
+          }
+          .date-box{
+            float: left;
+            span{
+              margin-right: 20px;
+              color: #666666;
+            }
+            .year{
+              font-size: 14px;
+            }
+            a{
+              color: #666666;
+              font-size: 14px;
+            }
+          }
+        }
+
+        .browsing-box{
+          overflow: hidden;
+          padding-left: 35px;
+          margin-top: 18px;
+          .goods-list {
+            width: 217px;
+            height: 260px;
+            border: 1px solid #F0F0F0;
+            float: left;
+            font-size: 14px;
+            position: relative;
+            margin-right: 18px;
+            margin-bottom: 18px;
+            box-sizing: border-box;
+            background: #fff;
+            a {
+              display: block;
+            }
+
+            .goods-imgs {
+              display: block;
+              margin: 0px auto;
+              width: 145px;
+              height: 154px;
+              margin-top: 15px;
+            }
+
+            .name {
+              padding: 0px 12px;
+              width: 100%;
+              box-sizing: border-box;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              margin-top: 20px;
+              color: #333333;
+            }
+            .pic {
+              padding: 0px 12px;
+              margin-top: 10px;
+              align-items: center;
+            }
+
+
+
+            //遮罩
+            .cover {
+              width: 100%;
+              height: 100%;
+              background: rgba(0, 0, 0, 0.2);
+              position: absolute;
+              top: 0px;
+              left: 0px;
+              box-sizing: border-box;
+              border: 1px solid #666666;
+
+              a {
+                width: 41px;
+                height: 41px;
+                display: block;
+                position: absolute;
+                top: 0px;
+                right: 0px;
+                background: #666666;
+                text-align: center;
+                line-height: 41px;
+              }
+
+            }
+            .but-car{
+              width: 32px;
+              height: 32px;
+              border: 1px solid #D3D3D3;
+              border-radius: 50%;
+              position: absolute;
+              right: 10px;
+              bottom: 10px;
+              text-align: center;
+              img{
+                position: relative;
+                top: 7px;
+              }
+            }
+
+            .delete-individual{
+              width: 41px;
+              height: 41px;
+              position: absolute;
+              top: 0px;
+              right: 0px;
+              background: rgba(0,0,0,0.3);
+              display: none;
+              text-align: center;
+              cursor: pointer;
+             img{
+               position: relative;
+               top: 9px;
+             }
+            }
+            &:hover{
+              .delete-individual{
+                display: block;
+              }
+            }
+          }
+
+          .active {
+            .cover {
+              border: 1px solid #EA5413;
+
+              a {
+                background: #EA5413;
+              }
+            }
+
+          }
+        }
+
+
+
+
+      }
+    }
+  }
+}

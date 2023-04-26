@@ -1,0 +1,334 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<style>
+    .container-right ul li {
+        width: 25% !important;
+    }
+    .sc-btn{margin-right: 0;}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="layui-form">
+    <div class="main-content" id="mainContent">
+        <div class="seller-cont">
+            <!--<div class="hd">-->
+                <!--<h3>资产概况</h3>-->
+            <!--</div>-->
+            <div class="main-left">
+                <div class="container">
+                    <img style="width: 80px;height: 80px;margin-top: 10px;" src="{:session('client_storeLogo')}" onerror=this.src="/template/master/resource/image/common/imageError.png">
+                    <div class="container-right">
+                        <ul>
+                            <li>店铺可用余额（元）<p>{$balance|default='0.00'}</p></li>
+                            <li>
+                                <div class="bf100 fl mt5">
+                                    <!--<a type="submit" name="query_by_date" class="sc-btn sc-blueBg-btn btn30">充值</a>-->
+                                    <a type="submit" onclick="withdraw({title:'提现申请',btn:[]})" name="query_by_date" class="sc-btn sc-orgBg-btn btn30">提现</a>
+                                </div>
+                                <div class="bf100 fl mt5">
+                                    <a href="/client/store_capital/withdraw_details" name="query_by_date" class="sc-btn sc-blueBg-btn btn30">提现记录</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>待结算（元）<p>{$price|default='0.00'}</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <div class="seller-cont">
+            <div class="hd">
+                <h3>销售概况<font style="font-size:12px; color:#7d7d7d">（销售小计：已付款订单，不包括退款成功订单。退款小计：退款成功订单）</font></h3>
+            </div>
+            <div class="main-left">
+                <div class="container">
+                    <div class="container-right">
+                        <ul>
+                            <li>今日销售小计（元）<p>{$today.today}</p></li>
+                            <li>今日退款小计（元）<p>{$todayBack}</p></li>
+                        </ul>
+                        <ul>
+                            <li>昨日销售小计（元）<p>{$yesterday.yesterday}</p></li>
+                            <li>昨日退款小计（元）<p>{$yesterdayBack}</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rank-container">
+            <div class="container type-a">
+                <div class="content">
+                    <div class="items-info">
+                        <div class="wrapper-list">
+                            <div id="order_main" style="height:378px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container type-a">
+                <div class="content">
+                    <div class="wrapper-list">
+                        <div id="order_main_price" style="height:378px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <div class="seller-cont">
+            <div class="hd">
+                <h3>收支概况<font style="font-size:12px; color:#7d7d7d">（收入：销售金额。支出：提现中及提现成功）</font></h3>
+            </div>
+            <div class="list-div" id="listDiv">
+                <table class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>日期</th>
+                        <th>收入</th>
+                        <th>支出</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {volist name="$data" id="item"}
+                    <tr>
+                        <td>{$item.day}</td>
+                        <td>{$item.income}</td>
+                        <td>{$item.spending}</td>
+                    </tr>
+                    {/volist}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.purebox.js"></script>
+<script type="text/javascript" src="__RES__/js/echarts-all.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+
+    function withdraw(obj) {
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shadeClose: true,
+            area: ['70%','670px'],
+            btn: obj.btn,
+            content: '/client/store_capital/withdraw'
+        });
+    }
+
+    //统计数据 start
+    var is_multi = false;
+    var firstDate = new Date();
+    var newDate = new Date(firstDate);
+    var day = '';
+    for (var i = 7; i>0; i--) {
+         day +=   '"'+"10-"+(newDate.getDate()- i)+"" + '"' + ',';
+    }
+    day = day.substring(0,day.length-1);
+    var order_data = {
+        "order": {
+            "title": {"text": "销售金额", "subtext": ""},
+            "series": [{
+                "name": "销售额",
+                "type": "line", "itemStyle": {"normal": {"color": "#6cbd40", "lineStyle": {"color": "#6cbd40"}}},
+                "data": [{$sales[0]}, {$sales[1]}, {$sales[2]}, {$sales[3]}, {$sales[4]}, {$sales[5]}, {$sales[6]}],
+                "markPoint": {
+                    "itemStyle": {"normal": {"color": "#6cbd40"}},
+                    "data": [{"type": "max", "name": "\u6700\u5927\u503c"},
+                        {"type": "min", "name": "\u6700\u5c0f\u503c"}]
+                }
+            },
+                {"type": "force", "name": "", "draggable": false, "nodes": {"draggable": false}}],
+            "tooltip": {"trigger": "axis", "axisPointer": {"lineStyle": {"color": "#6cbd40"}}},
+            "legend": {"data": []},
+            "toolbox": {
+                "show": true, "orient": "vertical", "x": "right", "y": "60",
+                "feature": {
+                    "magicType": {"show": true, "type": ["line", "bar"]},
+                    "saveAsImage": {"show": true}
+                }
+            },
+            "calculable": false,
+            "xAxis": {
+                "type": "category", "boundaryGap": false,
+                "axisLine": {"lineStyle": {"color": "#ccc", "width": 0}},
+                "data": ["{$date[0]}", "{$date[1]}", "{$date[2]}", "{$date[3]}", "{$date[4]}", "{$date[5]}", "{$date[6]}"]
+            },
+            "yAxis": {
+                "type": "value", "axisLine": {"lineStyle": {"color": "#ccc", "width": 0}},
+                "axisLabel": {"formatter": ""},
+                "formatter": "{value}\u4e2a"
+            }, "xy_file": []
+        },
+        "sale": {
+            "title": {"text": "退款金额", "subtext": ""},
+            "series": [{
+                "name": "退款额",
+                "type": "line",
+                "itemStyle": {"normal": {"color": "#6cbd40", "lineStyle": {"color": "#6cbd40"}}},
+                "data": [{$back[0]}, {$back[1]}, {$back[2]}, {$back[3]}, {$back[4]}, {$back[5]}, {$back[6]}],
+                "markPoint": {
+                    "itemStyle": {"normal": {"color": "#6cbd40"}},
+                    "data": [{"type": "max", "name": "\u6700\u5927\u503c"}, {
+                        "type": "min",
+                        "name": "\u6700\u5c0f\u503c"
+                    }]
+                }
+            }, {"type": "force", "name": "", "draggable": false, "nodes": {"draggable": false}}],
+            "tooltip": {"trigger": "axis", "axisPointer": {"lineStyle": {"color": "#6cbd40"}}},
+            "legend": {"data": []},
+            "toolbox": {
+                "show": true,
+                "orient": "vertical",
+                "x": "right",
+                "y": "60",
+                "feature": {"magicType": {"show": true, "type": ["line", "bar"]}, "saveAsImage": {"show": true}}
+            },
+            "calculable": false,
+            "xAxis": {
+                "type": "category",
+                "boundaryGap": false,
+                "axisLine": {"lineStyle": {"color": "#ccc", "width": 0}},
+                "data": ["{$date[0]}", "{$date[1]}", "{$date[2]}", "{$date[3]}", "{$date[4]}", "{$date[5]}", "{$date[6]}"]
+            },
+            "yAxis": {
+                "type": "value",
+                "axisLine": {"lineStyle": {"color": "#ccc", "width": 0}},
+                "axisLabel": {"formatter": ""},
+                "formatter": "{value}\u5143"
+            },
+            "xy_file": []
+        }
+    };
+
+    var myChart_order = echarts.init(document.getElementById("order_main"));
+    var myChart_price = echarts.init(document.getElementById("order_main_price"));
+
+    if (is_multi) {
+        //订单概况
+        var option_order = {
+            title: {
+                text: '订单概况',
+                subtext: ''
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['已确认', '已成交', "未确认", "无效或取消"]
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    data: order_data[0]
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value'
+                }
+            ],
+            series: [
+                {
+                    name: '已确认',
+                    type: 'bar',
+                    data: order_data[1],
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    }
+                },
+                {
+                    name: '已成交',
+                    type: 'bar',
+                    data: order_data[2],
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    }
+                },
+                {
+                    name: '未确认',
+                    type: 'bar',
+                    data: order_data[3],
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    }
+                },
+                {
+                    name: '无效或取消',
+                    type: 'bar',
+                    data: order_data[4],
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    }
+                }
+            ]
+        };
+    } else {
+
+    }
+
+    if (is_multi) {
+        //订单概况
+        myChart_order.setOption(option_order);
+    } else {
+        //订单概况
+        myChart_order.setOption(order_data['order']);
+        myChart_price.setOption(order_data['sale']);
+    }
+    //统计数据 end
+</script>
+{/block}

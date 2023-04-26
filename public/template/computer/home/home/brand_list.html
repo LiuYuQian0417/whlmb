@@ -1,0 +1,160 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<!--品牌甄选css-->
+<link rel="stylesheet" href="__RES__/css/BrandSelection/BrandSelection.css">
+<link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/js/swiper.min.js"></script>
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+
+
+{/block}
+
+{block name="content"}
+<style>
+    .head-container .logo span{
+        font-size: 14px;
+        position: relative;
+        top: -13px;
+        margin-left: 5px;
+    }
+</style>
+<!--轮播-->
+<div class="swiper-view">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            {volist name="$banner" id="ad"}
+            <div class="swiper-slide">
+                <a href="javascript:main.adv_jump({$ad.type},{$ad.content})">
+                    <img src="{$ad.file}" width="900" height="400" alt="">
+                </a>
+            </div>
+            {/volist}
+        </div>
+        <div class="swiper-button-prev"><span></span></div><!--左箭头-->
+        <div class="swiper-button-next"><span></span></div><!--右箭头-->
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+    </div>
+</div>
+<!--轮播结束-->
+
+<!--商品分类-->
+<div class="goods-category">
+    <!--active primary-background-color 高亮-->
+    <ul>
+        {volist name="classify" id="cate"  length='9'}
+        <li  class=" category {eq name="$cate.brand_classify_id" value=":input('brand_classify_id',$brand_classify_id)"} active primary-background-color {/eq}  primary-background-color-hover " data_id="{$cate.brand_classify_id}">
+        <a href="{:url('/pc2.0/home/brand_list')}?brand_classify_id={$cate.brand_classify_id}">
+            <div>
+                <span>{$cate.brand_classify_name}</span>
+            </div>
+        </a>
+        </li>
+        {/volist}
+        <li class="all-menu primary-background-color-hover">
+            <a href="javasctipy:;">
+                <div>
+                    <span style="margin-top: 4px;">全部分类</span>
+                    <img src="__RES__/imgs/findshop/20.png" alt="">
+                </div>
+            </a>
+        </li>
+
+    </ul>
+    <ul {elt name="$num" value="8"}class="second-menu"{/elt}>
+    {volist name="classify" id="cate" offset="9"}
+    <li class=" category {eq name="$cate.brand_classify_id" value=":input('brand_classify_id',$brand_classify_id)"} active primary-background-color {/eq} primary-background-color-hover" data_id="{$cate.brand_classify_id}">
+    <a href="{:url('/pc2.0/home/brand_list')}?brand_classify_id={$cate.brand_classify_id}">
+        <div>
+            <span>{$cate.brand_classify_name}</span>
+        </div>
+    </a>
+    </li>
+    {/volist}
+    </ul>
+</div>
+<!--商品分类结束-->
+
+<!--商品-->
+{volist name="$result" id="item"}
+<div class="goods">
+    <div class="goods-left">
+        <ul>
+            <li>
+                <a href="javascript:jump_store({'store_id':'{$item.store_id}'})">
+                    <img class="store" src="{$item.brand_image}" alt="">
+                    <div class="shop-msg">
+                        <img class="tag-img" src="{$item.logo}" alt="">
+                        <div class="shop-name">
+                            {$item.store_name} >
+                        </div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="goods-right">
+        <ul>
+            {volist name="item.shop_goods" id="val"}
+            <li>
+                <a href="javascript:jump_goods('{$val.goods_id}')">
+                    <img class="goods-img" src="{$val.file}" alt="">
+                    <p class="goods-tit">{$val.goods_name}</p>
+                    <div class="cart">
+                        <span class="primary-color">￥{$val.goods_price}</span>
+                    </div>
+                </a>
+            </li>
+            {/volist}
+        </ul>
+
+    </div>
+
+</div>
+{/volist}
+
+<!--分页-->
+<div class="pageContainer">{$result|raw}</div>
+<!--商品结束-->
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    var swiper = new Swiper('.swiper-container', {
+        loop : true,
+        autoplay:true,
+        effect: 'coverflow',
+        grabCursor: true,
+        centeredSlides: true,
+        slidesPerView: 'auto',
+        coverflowEffect: {
+            rotate: 0,
+            stretch: 900,
+            depth: 400,
+            modifier: 0.3,
+            slideShadows : false,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        type:'custom',
+        pagination: {
+            el: '.swiper-pagination',
+        },
+    });
+
+    $('.all-menu').mouseenter(function () {
+        $('.second-menu').show()
+    })
+    $('.goods-category').mouseleave(function () {
+        $('.second-menu').hide()
+    })
+
+</script>
+{/block}

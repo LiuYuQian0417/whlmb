@@ -1,0 +1,532 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>-->
+<link href="__RES__/css/common/map.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<style>
+    .picShow > .pic {
+        display: none
+    }
+
+    .picShow > .pic:first-child {
+        display: block
+    }
+
+    .picShow > .pic a {
+        position: relative;
+        width: 150px;
+    }
+
+    .picShow > .pic img {
+        width: 150px;
+        display: block;
+    }
+
+    #tooltip {
+        position: absolute;
+        width: 300px;
+        border: 1px solid #f4f4f4;
+        background: #fff;
+        color: #fff;
+        display: none
+    }
+
+    #tooltip img {
+        width: 100%
+    }
+
+    .step {
+        text-align: center;
+    }
+
+    .step > li {
+        width: 50%;
+        display: inline-block;
+    }
+
+    .auth_type > div {
+        float: left;
+        width: 50%;
+    }
+
+    .step > li:not(.active) > .stepLabel:hover:before {
+        background: #fff;
+        color: rgb(51, 51, 51);
+    }
+
+    .step > li:not(.active) > .stepLabel:hover:after {
+        background: rgb(235, 235, 235);
+        color: rgb(51, 51, 51);
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请先选择商城已注册会员进行添加店铺操作。</span></li>
+            <li><span>请根据提示信息准确无误填写店铺信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            <li><span>入驻店铺需认证，自营无需认证。</span></li>
+        </ul>
+    </div>
+</div>
+
+<br>
+
+<form class="layui-form" action="" method="post">
+
+    <ul class="nav nav-pills nav-justified step step-round">
+        <li class="step1 active">
+            <a class="stepLabel">店铺信息</a>
+        </li>
+        <li class="step2 active">
+            <a class="stepLabel">认证信息</a>
+        </li>
+    </ul>
+
+    <!--认证信息-->
+    <div class="contentShell">
+        <!--认证类型-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">认证类型</label>
+            <div class="layui-input-block auth_type">
+                <div onclick="typeChange(1)">
+                    <input type="radio" value="1" title="个人店铺" lay-filter="integral"
+                           {eq name="data.type|default=1" value="1" }checked{/eq}
+                    disabled="disabled"
+                    >
+                </div>
+                <div onclick="typeChange(2)">
+                    <input type="radio" value="2" title="企业店铺" lay-filter="integral"
+                           {eq name="data.type|default=1" value="2" }checked{/eq}
+                    disabled="disabled"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!--姓名-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" id="Name">真实姓名</label>
+            <div class="layui-input-block">
+                <input type="text"
+                       maxlength="6"
+                       class="layui-input"
+                       placeholder="请输入姓名"
+                       readonly
+                       value="{$data.auth_name|default=''}"
+                >
+            </div>
+        </div>
+
+        <!--身份证号-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" id="ID">身份证号码</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$data.auth_number|default=''}" maxlength="18"
+                       autocomplete="off"
+                       placeholder="请输入身份证号码"
+                       class="layui-input"
+                       readonly="readonly"
+                >
+            </div>
+        </div>
+
+        <!--身份证正面照-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证正面照片</label>
+            <div class="layui-input-block photos">
+                <!--                <div-->
+                <!--                        class="imageUpload"-->
+                <!--                        placeholder="/static/img/placeholder/id_front.png"-->
+                <!--                        default="{$data.ID_front_file|default=''}"-->
+                <!--                        width="320"-->
+                <!--                        file-mime="image/gif,image/jpeg,image/png"-->
+                <!--                        dir="store_auth_id_card"-->
+                <!--                        value="{$data.ID_front_file|default=''}"-->
+                <!--                        disabled="disabled"-->
+                <!--                >-->
+                <!--            </div>-->
+                <img src="{$data.ID_front_file|default='/static/img/placeholder/other.png'}"
+                     layer-src="{$data.ID_front_file|default='/static/img/placeholder/other.png'}"
+                     style="width: 320px;" alt="身份证正面照片">
+            </div>
+        </div>
+
+        <!--身份证反面照-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证反面照片</label>
+            <div class="layui-input-block photos">
+                <!--            <div-->
+                <!--                    class="imageUpload"-->
+                <!--                    placeholder="/static/img/placeholder/id_back.png"-->
+                <!--                    default="{$data.ID_back_file|default=''}"-->
+                <!--                    file-mime="image/gif,image/jpeg,image/png"-->
+                <!--                    width="320"-->
+                <!--                    dir="store_auth_id_card"-->
+                <!--                    value="{$data.ID_back_file|default=''}"-->
+                <!--                    disabled="disabled"-->
+                <!--            >-->
+                <!--        </div>-->
+                <img src="{$data.ID_back_file|default='/static/img/placeholder/other.png'}"
+                     layer-src="{$data.ID_back_file|default='/static/img/placeholder/other.png'}"
+                     style="width: 320px;" alt="身份证反面照片">
+            </div>
+        </div>
+
+        <!--营业执照号-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">营业执照号码</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$data.company_number|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入营业执照号码"
+                       class="layui-input"
+                       readonly="readonly"
+                >
+            </div>
+        </div>
+
+        <!--营业执照-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">营业执照</label>
+            <div class="layui-input-block photos">
+<!--                <div-->
+<!--                        class="imageUpload"-->
+<!--                        placeholder="/static/img/placeholder/business_license.png"-->
+<!--                        default="{$data.file1|default=''}"-->
+<!--                        file-mime="image/gif,image/jpeg,image/png"-->
+<!--                        dir="store_auth_license"-->
+<!--                        value="{$data.file1|default=''}"-->
+<!--                        disabled="disabled"-->
+<!--                >-->
+<!--                </div>-->
+                <img src="{$data.file1|default='/static/img/placeholder/other.png'}"
+                     layer-src="{$data.file1|default='/static/img/placeholder/other.png'}"
+                     style="width: 320px;" alt="营业执照">
+            </div>
+        </div>
+
+        <!--个人不同处-->
+        <div id="userSelf" {neq name="data.type|default=1" value="1" }style="display:none" {
+        /neq}>
+        <!--认证类型-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证类型</label>
+            <div class="layui-input-block">
+                <div class="checkbox_items">
+                    <div class="checkbox_item">
+                        <input type="radio" value="1" title="中国大陆"
+                               class="ui-radio"
+                               {eq name="data.ID_type|default='1'" value="1" }checked{/eq}
+                        disabled="disabled"
+                        />
+                    </div>
+                    <div class="checkbox_item">
+                        <input type="radio" value="2" title="香港"
+                               class="ui-radio"
+                               {eq name="data.ID_type|default='1'" value="2" }checked{/eq}
+                        disabled="disabled"
+                        />
+                    </div>
+                </div>
+                </dd>
+            </div>
+        </div>
+
+        <!--手持身份证照片-->
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">手持身份证照片</label>-->
+<!--            <div class="layui-input-block photos">-->
+<!--                <div-->
+<!--                        class="imageUpload"-->
+<!--                        placeholder="/static/img/placeholder/id_card_in_hand.png"-->
+<!--                        default="{$data.file|default=''}"-->
+<!--                        file-mime="image/gif,image/jpeg,image/png"-->
+<!--                        dir="store_auth_id_card_in_hand"-->
+<!--                        value="{$data.file|default=''}"-->
+<!--                        disabled="disabled"-->
+<!--                >-->
+<!--                </div>-->
+<!--                <img src="{$data.file|default='/static/img/placeholder/other.png'}"-->
+<!--                     layer-src="{$data.file|default='/static/img/placeholder/other.png'}"-->
+<!--                     style="width: 320px;" alt="手持身份证照片">-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <!--联系电话-->
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">联系电话</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="text" value="{$data.tel|default=''}" maxlength="11"-->
+<!--                       autocomplete="off"-->
+<!--                       placeholder="请输入联系电话"-->
+<!--                       class="layui-input"-->
+<!--                       readonly="readonly"-->
+<!--                >-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!--企业不同处-->
+    <div id="company" {neq name="data.type|default=1" value="2" }style="display:none" {
+    /neq}>
+    <!--企业名称-->
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">企业名称</label>-->
+<!--        <div class="layui-input-block">-->
+<!--            <input type="text" value="{$data.company_name|default=''}" maxlength="100"-->
+<!--                   autocomplete="off"-->
+<!--                   placeholder="请输入企业名称"-->
+<!--                   class="layui-input"-->
+<!--                   readonly="readonly"-->
+<!--            >-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <!--银行开户证明-->
+<!--    <div class="layui-form-item">-->
+<!--        <label class="layui-form-label">银行开户证明</label>-->
+<!--        <div class="layui-input-block photos">-->
+<!--            <div-->
+<!--                    class="imageUpload"-->
+<!--                    placeholder="/static/img/placeholder/other.png"-->
+<!--                    default="{$data.bank_file|default=''}"-->
+<!--                    file-mime="image/gif,image/jpeg,image/png"-->
+<!--                    dir="store_auth_bank_account"-->
+<!--                    value="{$data.bank_file|default=''}"-->
+<!--                    disabled="disabled"-->
+<!--            >-->
+<!--            </div>-->
+<!--            <img src="{$data.bank_file|default='/static/img/placeholder/other.png'}"-->
+<!--                 layer-src="{$data.bank_file|default='/static/img/placeholder/other.png'}"-->
+<!--                 style="width: 320px;" alt="银行开户证明">-->
+<!--        </div>-->
+<!--    </div>-->
+    </div>
+
+    <label class="layui-form-label stepTips bank_type">
+        <i class="fa fa-dot-circle-o"></i>
+        {eq name="item.type|default=1" value="1"}对私账户信息 {else/}对公账户信息 {/eq}
+    </label>
+
+    <!--开户省市区-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">开户省市</label>
+        <div class="layui-input-inline" style="width: 140px">
+            <select class="state" lay-filter="state" lay-search="" disabled="disabled">
+                <option value="">请选择</option>
+                {volist name="areas.province" id="province"}
+                <option value="{$province.area_id}" {eq name="data.bank_province|default=''" value="$province.area_id"}selected="selected"{/eq}>{$province.area_name}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width: 140px">
+            <select class="state" lay-filter="state" disabled="disabled">
+                <option value="">请选择</option>
+                {volist name="areas.city" id="city"}
+                <option value="{$city.area_id}" {eq name="data.bank_city|default=''" value="$city.area_id"}selected="selected"{/eq}>{$city.area_name}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width: 140px">
+            <select class="state" lay-filter="state" disabled="disabled">
+                <option value="">请选择</option>
+                {volist name="areas.area" id="area"}
+                <option value="{$area.area_id}" {eq name="data.bank_area|default=''" value="$area.area_id"}selected="selected"{/eq}>{$area.area_name}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+
+
+    <!--开户名-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">开户名称</label>
+        <div class="layui-input-block">
+            <input type="text" value="{$data.account_name|default=''}" maxlength="100"
+                   autocomplete="off"
+                   placeholder="请输入开户名称"
+                   class="layui-input"
+                   readonly="readonly"
+            >
+        </div>
+    </div>
+
+    <!--开户行-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">开户行</label>
+        <div class="layui-input-block">
+            <input type="text" value="{$data.account_bank_name|default=''}" maxlength="100"
+                   autocomplete="off"
+                   placeholder="请输入开户行"
+                   class="layui-input"
+                   readonly="readonly"
+            >
+        </div>
+    </div>
+
+    <!--开户支行-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">开户支行</label>
+        <div class="layui-input-block">
+            <input type="text" value="{$data.account_sub_branch|default=''}" maxlength="100"
+                   autocomplete="off"
+                   placeholder="请输入开户支行"
+                   class="layui-input"
+                   readonly="readonly"
+            >
+        </div>
+    </div>
+
+    <!--银行账号-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">银行账号</label>
+        <div class="layui-input-block">
+            <input type="text" value="{$data.bank_number|default=''}" maxlength="100"
+                   autocomplete="off"
+                   placeholder="请输入银行账号"
+                   class="layui-input"
+                   readonly="readonly"
+            >
+        </div>
+    </div>
+
+    <label class="layui-form-label stepTips bank_type">
+        <i class="fa fa-dot-circle-o"></i>
+        审核
+    </label>
+    {if ($store_auth_status == 3) OR (empty($audit_log)) }
+    <div class="layui-form-item">
+        <labe1l class="layui-form-label">认证审核</labe1l>
+        <div class="layui-input-block">
+            <input type="radio" name="status" value="1" title="通过" lay-filter="status" checked="checked">
+            <input type="radio" name="status" value="2" title="不通过" lay-filter="status">
+            <br/>
+            <br/>
+            <textarea
+                    id="reason"
+                    style="display: none"
+                    placeholder="不通过原因 (100字以内)"
+                    name="reason"
+                    class="layui-textarea"
+                    maxlength="100"
+            ></textarea>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="button" class="layui-btn layui-btn-primary"
+                    onclick="main.jumpFour('store/audit_store_info?store_id={$Request.get.store_id}')">返回上一步
+            </button>
+            <button class="layui-btn" type="submit" id="submit">审核</button>
+        </div>
+    </div>
+    </div>
+    {else/}
+    <div class="layui-form-item">
+        <labe1l class="layui-form-label">审核结果</labe1l>
+        <div class="layui-input-block">
+            {switch store_auth_status}
+            {case 0}待入驻{/case}
+            {case 1}入驻审核通过{/case}
+            {case 2}入驻审核未通过{/case}
+            {case 3}待审核{/case}
+            {case 4}通过{/case}
+            {case 5}未通过{/case}
+            {/switch}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <labe1l class="layui-form-label">审核人</labe1l>
+        <div class="layui-input-block">
+            {$audit_log.nickname}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <labe1l class="layui-form-label">审核时间</labe1l>
+        <div class="layui-input-block">
+            {$audit_log.create_time}
+        </div>
+    </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-primary"
+                        onclick="main.jumpFour('store/audit_store_info?store_id={$Request.get.store_id}')">返回上一步
+                </button>
+                <button class="layui-btn" type="button" onclick="main.jumpFour('store/index')">返回列表</button>
+            </div>
+        </div>
+    </div>
+    {/if}
+
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<!--<script src="__RES__/js/common/uploadPreview.js"></script>-->
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('element');
+    main.valid('.layui-form');
+    layer.photos({
+        photos: '.photos'
+        ,shade:0.05
+        ,anim: 5,
+    });
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+
+        form.on('radio(status)', function (data) {
+            if (data.value == 1) {
+                $('#reason').hide()
+            } else {
+                $('#reason').show()
+            }
+
+        })
+    })
+
+    //内容页切换
+    // $('#tabs1 li').click(function () {
+    //     var index = $(this).index();
+    //     $(this).addClass("curr").siblings().removeClass("curr");
+    //     $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    // });
+
+    // 选择
+    // function elect(url, title) {
+    //     layer.open({
+    //         type: 2,
+    //         title: title,
+    //         shadeClose: true,
+    //         shade: 0.8,
+    //         area: ['800px', '600px'],
+    //         content: [url, 'yes']
+    //     });
+    // }
+</script>
+{/block}
+{block name='highSearch'}{/block}

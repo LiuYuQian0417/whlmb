@@ -1,0 +1,164 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+
+    <div class="tabs_info">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);">通用信息</a></li>
+            <li class=""><a href="javascript:void(0);">文章内容</a></li>
+            <li class=""><a href="javascript:void(0);">关联商品</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请注意选择上级分类。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 文章标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="120" autocomplete="off" placeholder="请输入文章标题"
+                       datatype="*"
+                       value="{$item.title|default=''}"
+                       nullmsg="请输入文章标题" errormsg="请输入文章标题"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><font color="red">*</font> 文章分类</label>
+                <div class="layui-input-block">
+                    <select name="article_classify_id" lay-search=""
+                            datatype="*"
+                            nullmsg="请选择文章分类" errormsg="请选择文章分类"
+                    >
+                        <option value="0" {eq name="item.article_classify_id|default=''" value="0" }selected{/eq}>请选择</option>
+                        {volist name='classify_list' id='classify_list'}
+                        <option
+                                {eq name="item.article_classify_id|default=''" value="$classify_list.article_classify_id" }selected{/eq}
+                                value="{$classify_list.article_classify_id}"
+                        >{for start="1" end="$classify_list.level" }　{/for}{$classify_list.title}</option>{/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">顶置状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="state" value="0" title="普通"
+                       {eq name="item.state|default='0'" value="0" }checked{/eq}
+                >
+                <input type="radio" name="state" value="1" title="顶置"
+                       {eq name="item.state|default=''" value="1" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="是"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="否"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">作者</label>
+            <div class="layui-input-block">
+                <input type="text" name="author" value="{$item.author|default=''}" maxlength="30" autocomplete="off"
+                       placeholder="请输入作者"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">关键字</label>
+            <div class="layui-input-block">
+                <input type="text" name="keyword" value="{$item.keyword|default=''}" maxlength="50" autocomplete="off"
+                       placeholder="请输入关键字"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">外部链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="link_url" value="{$item.link_url|default=''}" maxlength="200" autocomplete="off"
+                       placeholder="请输入外部链接"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="describe" maxlength="100" class="layui-textarea">{$item.describe|default=''}</textarea>
+            </div>
+        </div>
+    </div>
+    {if config("user.")["pc"]["is_include"]}
+    <!--商品PC端详细描述-->
+    <div class="layui-form-item describe">
+        <textarea type="text/plain" id="containers" name="content" placeholder="请输入信息内容">{$item.content|default=''}</textarea>
+    </div>
+    {/if}
+    <div class="contentShell" {if config("user.")["pc"]["is_include"]}style="display: none;"{/if}>
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.article_id"}
+                <input type="hidden" name="article_id" value="{$item.article_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script>
+    main.form();
+    main.valid('.layui-form');
+    // main.file();
+    //内容页切换
+    $('.tabs_info li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    });
+
+    {if config("user.")["pc"]["is_include"]}
+    // 实例化编辑器
+    UE.getEditor('containers')
+    {/if}
+</script>
+{/block}
+{block name='highSearch'}{/block}

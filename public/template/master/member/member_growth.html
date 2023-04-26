@@ -1,0 +1,204 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<style>
+    .picShow > .pic {
+        display: none
+    }
+
+    .picShow > .pic:first-child {
+        display: block
+    }
+
+    .picShow > .pic a {
+        position: relative;
+        width: 150px;
+    }
+
+    .picShow > .pic img {
+        width: 150px;
+        display: block;
+    }
+
+    #tooltip {
+        position: absolute;
+        width: 300px;
+        border: 1px solid #f4f4f4;
+        background: #fff;
+        color: #fff;
+        display: none
+    }
+
+    #tooltip img {
+        width: 100%
+    }
+    .layui-form-label{
+        width: 230px;
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>1、设置会员成长值，会员依据此成长值晋升会员等级；</span></li>
+            </ul>
+        </div>
+    </div>
+    <!----------------------------------------------------其他设置------------------------------------------------------>
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label">成长值换算比例</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_conversion" maxlength="5" autocomplete="off" placeholder="成长值换算比例"
+                       value="{:env('growth_conversion','0')}"
+                       class="layui-input">
+                <div>
+                    <span class="remarks" style="float: left">在使用余额购买商品实际支付金额的折算比例</span>
+                </div>
+            </div>
+            <div style="padding-top: 10px;font-size: 14px;">%</div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">完善个人信息</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_info" maxlength="5" autocomplete="off" placeholder="请输入完善个人信息赠送成长值"
+                       value="{:env('growth_info','0')}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">绑定手机号码</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_phone" maxlength="5" autocomplete="off" placeholder="请输入绑定手机号码赠送成长值"
+                       value="{:env('growth_phone','0')}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">绑定三方社交账号</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_third_party" maxlength="5" autocomplete="off"
+                       placeholder="请输入绑定三方社交账号赠送成长值"
+                       value="{:env('growth_third_party','0')}"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">每月购物3天</label>-->
+            <!--<div class="layui-input-inline">-->
+                <!--<input type="text" name="growth_monthly_shopping" maxlength="5" autocomplete="off"-->
+                       <!--placeholder="请输入每月购物3天赠送成长值"-->
+                       <!--value="{:env('growth_monthly_shopping','0')}"-->
+                       <!--class="layui-input">-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">购物年限</label>-->
+            <!--<div class="layui-input-inline">-->
+                <!--<input type="text" name="growth_age_limit" maxlength="5" autocomplete="off" placeholder="请输入购物年限赠送成长值"-->
+                       <!--value="{:env('growth_age_limit','0')}"-->
+                       <!--class="layui-input">-->
+            <!--</div>-->
+        <!--</div>-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">评价商品</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_evaluate" maxlength="5" autocomplete="off" placeholder="请输入评价商品限赠送成长值"
+                       value="{:env('growth_evaluate','0')}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">评价商品（每日限定次数）</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_evaluate_number" maxlength="5" autocomplete="off"
+                       placeholder="请输入评价商品（每日限定次数）"
+                       value="{:env('growth_evaluate_number','0')}"
+                       class="layui-input">
+                <div>
+                    <span class="remarks" style="float: left">评价超过此次数将不再增加成长值</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分享商品或活动</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_share" maxlength="5" autocomplete="off" placeholder="请输入分享商品或活动赠送成长值"
+                       value="{:env('growth_share','0')}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">分享商品或活动（每日限定次数）</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_share_number" maxlength="5" autocomplete="off"
+                       placeholder="请输入分享商品或活动（每日限定次数）"
+                       value="{:env('growth_share_number','0')}"
+                       class="layui-input">
+                <div>
+                    <span class="remarks" style="float: left">分享超过此次数将不再增加成长值</span>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">浏览广告</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_adv" maxlength="5" autocomplete="off" placeholder="请输入浏览广告赠送成长值"
+                       value="{:env('growth_adv','0')}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">使用余额支付</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_balance" maxlength="5" autocomplete="off" placeholder="请输入使用余额支付赠送成长值"
+                       value="{:env('growth_balance','0')}"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">使用余额支付（每日限定成长值）</label>
+            <div class="layui-input-inline">
+                <input type="text" name="growth_balance_number" maxlength="5" autocomplete="off"
+                       placeholder="请输入使用余额支付（每日限定成长值）"
+                       value="{:env('growth_balance_number','0')}"
+                       class="layui-input">
+                <div>
+                    <span class="remarks" style="float: left">余额支付超过此次数将不再增加成长值</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" id="submit">保存</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

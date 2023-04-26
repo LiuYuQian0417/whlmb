@@ -1,0 +1,85 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请按提示文案填写信息，以免出错。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <div class="layui-form-item" {eq name="one_more" value="0"} hidden {/eq}>
+            <label class="layui-form-label"><em class="require">* </em>选择店铺：</label>
+            <div class="layui-input-inline">
+                <select name="store_id" lay-search="" datatype="*"
+                        nullmsg="请选择店铺" errormsg="请选择店铺">
+                    <option value="">选择店铺</option>
+                    {volist name="storeData" id="store"}
+                    <option value="{$store.store_id}" {eq name="$store.store_id"
+                            value="$item.store_id|default=''" }selected{/eq}>{$store.store_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        {eq name="one_more" value="0"} <input type="hidden" name="store_id" value="{$one_store_id}"> {/eq}
+
+        <!--品牌分类名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 商品类型名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="type_name" maxlength="10" autocomplete="off" placeholder="请输入商品类型名称"
+                       value="{$item.type_name|default=''}" class="layui-input">
+            </div>
+        </div>
+
+        <!--显示状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="显示"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="不显示"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.attr_type_id"}
+                <input type="hidden" name="attr_type_id" value="{$item.attr_type_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

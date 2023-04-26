@@ -1,0 +1,816 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+{block name='imgUpload'}
+{/block}
+{block name='multiImgUpload'}
+{/block}
+<style>
+    #tooltip{
+        position:absolute;
+        border:1px solid #cccccc;
+        background:#fff;
+        color:#fff;
+        display: none;
+        padding: 5px;
+        border-radius: 2px;
+    }
+    * {
+        margin: 0px;
+        padding: 0px;
+    }
+
+    a {
+        text-decoration: none;
+    }
+
+    li {
+        list-style: none;
+    }
+
+    body {
+        background: #f6f6f6;
+    }
+
+    .childrenBody {
+        min-width: 1100px;
+        max-width: 1600px;
+    }
+    .childrenBody > div:first-child {
+        background: #f6f6f6 !important;
+    }
+
+    .hrader-top {
+        width: 1124px;
+        height: 95px;
+        background: url(/template/master/resource/image/store_capital/header-top.png) no-repeat center;
+        margin: 0px auto;
+        margin-top: 30px;
+        line-height: 95px;
+        padding-left: 20px;
+        box-sizing: border-box;
+    }
+
+    .hrader-top .logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0px 0px 5px #fdd9ca;
+        position: relative;
+        top: 17.5px;
+        float: left;
+    }
+
+    .hrader-top span {
+        float: left;
+        margin-left: 20px;
+        font-size: 18px;
+        color: #333333;
+    }
+
+    .reconciliation {
+        display: flex;
+        width: 1124px;
+        margin: 20px auto;
+        justify-content: space-between;
+    }
+
+    .reconciliation .reconciliation-list {
+        float: left;
+        width: 360px;
+        height: 145px;
+        position: relative;
+        padding-left: 90px;
+        padding-top: 40px;
+        box-sizing: border-box;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .reconciliation .reconciliation-list:nth-child(3n+3){
+        margin-right: 0;
+    }
+
+
+    .reconciliation .reconciliation-list .help {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        cursor: pointer;
+    }
+
+    .reconciliation .reconciliation-list .pic {
+        font-weight: bold;
+        margin-top: 15px;
+    }
+
+    .reconciliation .reconciliation-list .pic span {
+        font-size: 28px;
+    }
+
+    .reconciliation .receipts {
+        background: url(/template/master/resource/image/store_capital/jinzhang.png) no-repeat center;
+    }
+
+    .reconciliation .expenditure {
+        background: url(/template/master/resource/image/store_capital/chuzhang.png) no-repeat center;
+    }
+
+    .reconciliation .terrace {
+        background: url(/template/master/resource/image/store_capital/maoli.png) no-repeat center;
+    }
+
+    .reconciliation .receipts1 {
+        background: url(/template/master/resource/image/store_capital/chongzhi.png) no-repeat center !important;
+    }
+
+    .reconciliation .expenditure1 {
+        background: url(/template/master/resource/image/store_capital/shiyongfei.png) no-repeat center !important;
+    }
+
+    .reconciliation .terrace1 {
+        background: url(/template/master/resource/image/store_capital/tuikuan.png) no-repeat center !important;
+    }
+
+    .list {
+        width: 1124px;
+        margin: 0px auto;
+    }
+
+    .list .con {
+        background: #fff;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .list .con .con-tit {
+        height: 60px;
+        border-bottom: 1px solid #FFF1DE;
+        color: #333;
+        line-height: 60px;
+        padding-left: 20px;
+    }
+
+    .list .con .con-tit img {
+        float: left;
+        position: relative;
+        top: 22px;
+        margin-right: 14px;
+    }
+
+    .list .con .content {
+        display: flex;
+        justify-content: flex-start;
+        padding: 19px 0px;
+    }
+
+    .list .con .content .content-list {
+        width: 280px;
+        height: 62px;
+        border-right: 1px solid #EAEAEA;
+        padding-left: 24px;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .list .con .content .content-list:last-child {
+        border-right: none;
+    }
+
+    .list .con .content .content-list .help-h {
+        position: absolute;
+        top: 4px;
+        right: 14px;
+        cursor: pointer;
+    }
+
+    .list .con .content .content-list .title {
+        line-height: 24px;
+    }
+
+    .list .con .content .content-list .title span {
+        background: linear-gradient(left, #FA8E4D, #FEBC8E);
+        background: -webkit-linear-gradient(left, #FA8E4D, #FEBC8E);
+        background: -moz-linear-gradient(left, #FA8E4D, #FEBC8E);
+        background: -o-linear-gradient(left, #FA8E4D, #FEBC8E);
+        background: -ms-linear-gradient(left, #FA8E4D, #FEBC8E);
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 5px;
+    }
+
+    .list .con .content .content-list .title .sj {
+        background: linear-gradient(left, #2CCDBF, #6EE8DE);
+        background: -webkit-linear-gradient(left, #2CCDBF, #6EE8DE);
+        background: -moz-linear-gradient(left, #2CCDBF, #6EE8DE);
+        background: -o-linear-gradient(left, #2CCDBF, #6EE8DE);
+        background: -ms-linear-gradient(left, #2CCDBF, #6EE8DE);
+    }
+
+    .list .con .content .content-list .title .jr {
+        background: linear-gradient(left, #3098F4, #43B5F7);
+        background: -webkit-linear-gradient(left, #3098F4, #43B5F7);
+        background: -moz-linear-gradient(left, #3098F4, #43B5F7);
+        background: -o-linear-gradient(left, #3098F4, #43B5F7);
+        background: -ms-linear-gradient(left, #3098F4, #43B5F7);
+    }
+
+    .list .con .content .content-list .title .tx {
+        background: linear-gradient(left, #A24EF8, #B97AFA);
+        background: -webkit-linear-gradient(left, #A24EF8, #B97AFA);
+        background: -moz-linear-gradient(left, #A24EF8, #B97AFA);
+        background: -o-linear-gradient(left, #A24EF8, #B97AFA);
+        background: -ms-linear-gradient(left, #A24EF8, #B97AFA);
+    }
+
+    .list .con .content .content-list .pic {
+        color: #666666;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+
+    .list .con .content .content-list .pic span {
+        font-size: 18px;
+    }
+    .reconciliation{
+        width: 100%;
+    }
+    .list{
+        width: 100%;
+    }
+
+    .zhanwei{
+        width: 360px;
+        height: 145px;
+        opacity: 0;
+    }
+</style>
+<div class="reconciliation">
+    <div class="reconciliation-list receipts">
+        <img
+            class="help"
+            src="/template/master/resource/image/store_capital/help.png"
+            title="所有已支付的金额，包括三方支付（微信、支付宝）、线下支付（货到付款、线下订单）、余额支付"
+        />
+        <p class="tit">
+            进账金额
+        </p>
+        <p class="pic">￥<span>{$money_list.PLATFORM_IN|number_format=###,2,'.',''}</span></p>
+    </div>
+    <div class="reconciliation-list expenditure">
+        <img
+            class="help"
+            src="/template/master/resource/image/store_capital/help.png"
+            title="包括商家订单支付金额、平台优惠券、平台红包、分销返佣、给会员充值余额、用户退款金额"
+        />
+        <p class="tit">
+            出账金额
+        </p>
+        <p class="pic">￥<span>{$money_list.PLATFORM_OUT|number_format=###,2,'.',''}</span></p>
+    </div>
+    <div class="reconciliation-list terrace">
+        <img
+            class="help"
+            src="/template/master/resource/image/store_capital/help.png"
+            title="进账金额-出账金额"
+        />
+        <p class="tit">
+            平台毛利
+        </p>
+        <p class="pic">￥<span>{$money_list.PLATFORM_GROSS_PROFIT|number_format=###,2,'.',''}</span></p>
+    </div>
+</div>
+<div class="reconciliation flex-start">
+    <div class="reconciliation-list receipts receipts1">
+        <img
+            class="help"
+            src="/template/master/resource/image/store_capital/help.png"
+            title="会员用户通过商城充值金额总和"
+        />
+        <p class="tit">
+            商城充值统计
+        </p>
+        <p class="pic">￥<span>{$money_list.PLATFORM_RECHARGE|number_format=###,2,'.',''}</span></p>
+    </div>
+
+    <div class="reconciliation-list expenditure expenditure1" {eq name="one_more" value="0"} hidden {/eq}>
+        <img
+            class="help"
+            src="/template/master/resource/image/store_capital/help.png"
+            title="所有商家平台使用费合计"
+        />
+        <p class="tit">
+            平台使用费
+        </p>
+        <p class="pic">￥<span>{$money_list.PLATFORM_HANDLING_FEE|number_format=###,2,'.',''}</span></p>
+    </div>
+
+
+    <div  {eq name="one_more" value="0"} class="reconciliation-list expenditure expenditure1" {else/} class="reconciliation-list terrace terrace1" {/eq}>
+        <img
+            class="help"
+            src="/template/master/resource/image/store_capital/help.png"
+            title="已退款金额合计"
+        />
+        <p class="tit">
+            订单退款
+        </p>
+        <p class="pic">￥<span>{$money_list.PLATFORM_ORDER_REFUND|number_format=###,2,'.',''}</span></p>
+    </div>
+
+    <div  class="zhanwei" {eq name="one_more" value="1"} hidden {/eq}></div>
+</div>
+
+<div class="list">
+    <div class="con">
+        <div class="con-tit">
+            <img class="tit-img" src="/template/master/resource/image/store_capital/zhyl.png" alt=""/>
+            <span>进账预览</span>
+        </div>
+        <div class="content">
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="通过微信方式支付的累计金额"
+                />
+                <p class="title">
+                    <span></span>
+                    微信支付
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.IN_REVIEW.WE_PAY|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                     class="help-h"
+                     src="/template/master/resource/image/store_capital/help-h.png"
+                     title="通过支付宝方式支付的累计金额"/>
+                <p class="title">
+                    <span></span>
+                    支付宝支付
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.IN_REVIEW.ALI_PAY|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="线上使用余额支付的金额"
+                />
+                <p class="title">
+                    <span></span>
+                    线上余额支付
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.IN_REVIEW.BALANCE|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+<!--            <div class="content-list">-->
+<!--                <img-->
+<!--                    class="help-h"-->
+<!--                    src="/template/master/resource/image/store_capital/help-h.png"-->
+<!--                    title="货到付款累计金额"-->
+<!--                />-->
+<!--                <p class="title">-->
+<!--                    <span></span>-->
+<!--                    货到付款-->
+<!--                </p>-->
+<!--                <p class="pic">-->
+<!--                    ￥ <span>{$money_list.IN_REVIEW.CASH_ON_DELIVERY|number_format=###,2,'.',''}</span>-->
+<!--                </p>-->
+<!--            </div>-->
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="线下订单支付累计金额"
+                />
+                <p class="title">
+                    <span></span>
+                    线下订单
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.IN_REVIEW.OFFLINE|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="con">
+        <div class="con-tit">
+            <img class="tit-img" src="/template/master/resource/image/store_capital/sjzj.png" alt=""/>
+            <span class="sj">出账预览</span>
+        </div>
+        <div class="content">
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="商家订单实际支付金额"
+                />
+                <p class="title">
+                    <span class="sj"></span>
+                    商家订单金额
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.OUT_PREVIEW.MERCHANT_SETTLEMENT|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="为分销商已结算佣金总金额"
+                />
+                <p class="title">
+                    <span class="sj"></span>
+                    分销佣金结算
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.OUT_PREVIEW.DISTRIBUTION|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="退款合计金额"
+                />
+                <p class="title">
+                    <span class="sj"></span>
+                    订单退款
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.OUT_PREVIEW.ORDER_REFUND|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="会员下单（已支付订单）使用平台优惠券的总金额"
+                />
+                <p class="title">
+                    <span class="sj"></span>
+                    平台优惠券
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.OUT_PREVIEW.PLATFORM_COUPON|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="会员下单（已支付订单）使用平台红包的总金额"
+                />
+                <p class="title">
+                    <span class="sj"></span>
+                    平台红包
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.OUT_PREVIEW.PLATFORM_RED_ENVELOPE|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="会员下单(已支付订单)使用折扣优惠的总金额"
+                />
+                <p class="title">
+                    <span class="sj"></span>
+                    会员折扣
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.OUT_PREVIEW.MEMBER_DISCOUNT|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="con">
+        <div class="con-tit">
+            <img class="tit-img" src="/template/master/resource/image/store_capital/jrxs.png" alt=""/>
+            <span>充值统计</span>
+        </div>
+        <div class="content">
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="手动为会员充值余额合计"
+                />
+                <p class="title">
+                    <span class="jr"></span>
+                    后台手动充值合计
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.CHARGE_STATISTICS.MANUAL_CHARGE|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="商城会员充值到余额合计"
+                />
+                <p class="title">
+                    <span class="jr"></span>
+                    商城会员充值合计
+                </p>
+                <p class="pic">
+                    ￥ <span>{$money_list.CHARGE_STATISTICS.TOTAL_MEMBER_CHARGE|number_format=###,2,'.',''}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+	
+  	{eq name='Think.config.user.one_more' value='1'}
+    <div class="con">
+        <div class="con-tit">
+            <img class="tit-img" src="/template/master/resource/image/store_capital/sjtg.png" alt=""/>
+            <span>商家结算统计</span>
+        </div>
+        <div class="content">
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="未给商家结算已完结订单总金额"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    待结算金额
+                </p>
+                <p class="pic">
+                    {$money_list.MERCHANT_SETTLEMENT_STATISTICS.WAIT_SETTLEMENT|number_format=###,2,'.',''}
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="给商家已结算的总金额"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    已结算金额
+                </p>
+                <p class="pic">
+                    {$money_list.MERCHANT_SETTLEMENT_STATISTICS.WAS_SETTLEMENT|number_format=###,2,'.',''}
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="商家累计结算的平台使用费"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    已结算平台使用费
+                </p>
+                <p class="pic">
+                    {$money_list.MERCHANT_SETTLEMENT_STATISTICS.HANDLING_FEE_SETTLEMENT|number_format=###,2,'.',''}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="con">
+        <div class="con-tit">
+            <img class="tit-img" src="/template/master/resource/image/store_capital/sjtg.png" alt=""/>
+            <span>商家提现统计</span>
+        </div>
+        <div class="content">
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="商家提交的待审核提现申请"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    待审核
+                </p>
+                <p class="pic">
+                    {$money_list.MERCHANT_WITHDRAW_STATISTICS.PENDING_REVIEW|number_format=###,2,'.',''}
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="统计提现申请审核通过后，正在转账中的申请"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    转账中
+                </p>
+                <p class="pic">
+                    {$money_list.MERCHANT_WITHDRAW_STATISTICS.TRANSFER|number_format=###,2,'.',''}
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="提现申请没有通过审核的数据"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    审核失败
+                </p>
+                <p class="pic">
+                    {$money_list.MERCHANT_WITHDRAW_STATISTICS.REVIEW_FAILED|number_format=###,2,'.',''}
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="审核通过后，转账失败的数据"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    提现失败
+                </p>
+                <p class="pic">
+                    {$money_list.MERCHANT_WITHDRAW_STATISTICS.TRANSFER_FAILED|number_format=###,2,'.',''}
+                </p>
+            </div>
+        </div>
+    </div>
+  	{/eq}
+
+    <div class="con">
+        <div class="con-tit">
+            <img class="tit-img" src="/template/master/resource/image/store_capital/sjtg.png" alt=""/>
+            <span>今日销售情况</span>
+        </div>
+        <div class="content">
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="今日所有已支付的金额，包括三方支付（微信、支付宝）、线下支付（货到付款、线下订单）、余额支付"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    进账金额
+                </p>
+                <p class="pic">
+                    {$money_list.TODAY_SHELL_INFO.IN|number_format=###,2,'.',''}
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="今日包括商家订单支付金额、平台优惠券、平台红包、运费、分销返佣、给会员充值余额、用户退款金额"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    出账金额
+                </p>
+                <p class="pic">
+                    {$money_list.TODAY_SHELL_INFO.OUT|number_format=###,2,'.',''}
+                </p>
+            </div>
+            <div class="content-list">
+                <img
+                    class="help-h"
+                    src="/template/master/resource/image/store_capital/help-h.png"
+                    title="今日进账金额-今日出账金额"
+                />
+                <p class="title">
+                    <span class="tx"></span>
+                    毛利
+                </p>
+                <p class="pic">
+                    {$money_list.TODAY_SHELL_INFO.GROSS_PROFIT|number_format=###,2,'.',''}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="con">
+        <div class="con-tit">
+
+            <span>近七日进账金额</span>
+        </div>
+        <div class="content" id="7-day-in" style="height:600px;width: 100%">
+
+        </div>
+    </div>
+    <div class="con">
+        <div class="con-tit">
+
+            <span>近七日出账金额</span>
+        </div>
+        <div class="content" id="7-day-out" style="height:600px;width: 100%">
+
+        </div>
+    </div>
+
+</div>
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/js/common/jQuery.toolTip.js"></script>
+<script type="text/javascript" src="/template/client/resource/js/echarts-all.js"></script>
+<script>
+
+
+    $('.help').toolTip({fade: true});
+    $('.help-h').toolTip({fade: true});
+
+    var colors = ['#ffa283', '#e690d1', '#99c1ff'];
+
+    var date = JSON.parse('{$date|raw}')
+    var _7_day_in_data = JSON.parse('{$money_list.7_DAY_IN|raw}')
+    var _7_day_out_data = JSON.parse('{$money_list.7_DAY_OUT|raw}')
+    var _7_day_in = echarts.init(document.getElementById('7-day-in'));
+    var _7_day_out = echarts.init(document.getElementById('7-day-out'));
+
+    _7_day_in.setOption({
+        color: colors,
+
+        // title: {
+        //     text: '近30日订单趋势'
+        // },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            data: date
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel:{
+                formatter: '{value} 元'
+            }
+        },
+        series: [{
+            name: '进账金额',
+            data: _7_day_in_data,
+            type: 'line'
+        }]
+    });
+    _7_day_out.setOption({
+        color: colors,
+
+        // title: {
+        //     text: '近30日订单趋势'
+        // },
+        tooltip: {
+            trigger: 'axis'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            data: date
+        },
+        yAxis: {
+            type: 'value',
+            axisLabel:{
+                formatter: '{value} 元'
+            }
+        },
+        series: [{
+            name: '出账金额',
+            data: _7_day_out_data,
+            type: 'line'
+        }]
+    });
+</script>
+
+{/block}

@@ -1,0 +1,308 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .value{color: #1e9fff;font-weight: bold;font-size: 20px;}
+    .layui-laydate{
+        margin: 40px 0 !important;
+    }
+</style>
+
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+
+        <div class="order_stats">
+            <div class="order_stats_search">
+                <!--时间-->
+                <div class="layui-form-item order_item">
+                    <label class="layui-form-label">变动时间：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="start_date" id="start_date" lay-verify="datetime" value="{:input('start_date','')}" readonly placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="end_date" id="end_date" lay-verify="datetime" value="{:input('end_date','')}" readonly placeholder="" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label">金额区间：</label>
+                    <div class="layui-input-block">
+                        <input name="min" value="{:input('min','')}" type="number" placeholder="" class="text text_2 layui-input"  autocomplete="off" style="margin-right: 0"/>
+                        <span class="bolang">&nbsp;&nbsp;至&nbsp;&nbsp;</span>
+                        <input name="max" value="{:input('max','')}" type="number" placeholder="" class="text text_2 layui-input"   autocomplete="off" />
+                    </div>
+                </div>
+                <!--支付方式-->
+                <div class="layui-form-item order_item">
+                    <label class="layui-form-label">支付方式：</label>
+                    <div class="layui-input-inline">
+                        <select name="pay_channel" lay-filter="time">
+                            <option value="0" {eq name=":input('pay_channel','0')" value='0' } selected {/eq}>全部</option>
+                            <option value="1" {eq name=":input('pay_channel','0')" value='1' } selected {/eq}>微信</option>
+                            <option value="2" {eq name=":input('pay_channel','0')" value='2' } selected {/eq}>支付宝</option>
+                            <option value="3" {eq name=":input('pay_channel','0')" value='3' } selected {/eq}>余额</option>
+                            <option value="5" {eq name=":input('pay_channel','0')" value='5' } selected {/eq}>线下支付</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px;height: 20px;">
+                    </div>
+                    <label class="layui-form-label">类型：</label>
+                    <div class="layui-input-inline">
+                        <select name="status" lay-filter="time">
+                            <option {eq name=":input('status','-1')" value='-1' } selected {/eq} value="-1" >全部</option>
+                            <option {eq name=":input('status','-1')" value='2' } selected {/eq} value="2" >交易订单</option>
+                            <option {eq name=":input('status','-1')" value='3' } selected {/eq} value="3" >退款订单</option>
+                            <option {eq name=":input('status','-1')" value='0' } selected {/eq} value="0" >充值</option>
+                            <option {eq name=":input('status','-1')" value='1.2' } selected {/eq} value="1.2" >提现</option>
+                            <option {eq name=":input('status','-1')" value='4' } selected {/eq} value="4" >会员充值赠送</option>
+                        </select>
+                    </div>
+                </div>
+                <!--状态-->
+                <div class="layui-form-item order_item">
+                    <label class="layui-form-label">状 态：</label>
+                    <div class="layui-input-inline">
+                        <select name="order_referer" lay-filter="time">
+                            <option {eq name=":input('order_referer','-1')" value='-1' } selected {/eq} value="-1" >全部</option>
+                            <option {eq name=":input('order_referer','-1')" value='0' } selected {/eq} value="0" >进行中</option>
+                            <option {eq name=":input('order_referer','-1')" value='1' } selected {/eq} value="1" >交易成功</option>
+                            <option {eq name=":input('order_referer','-1')" value='3' } selected {/eq} value="3" >退款成功</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px;height: 20px;">
+                    </div>
+                    <label class="layui-form-label">关键词：</label>
+                    <div class="layui-input-block">
+                        <input name="keyword" value="{:input('keyword','')}" type="text" placeholder="流水号/订单号" class="text text_2 layui-input"  autocomplete="off" />
+                        <button class="layui-btn" lay-submit="">查询</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <!--列表-->
+        <!--<div class="list-div" id="listDiv">-->
+        <div class="layui-form-item order_item">
+            <label class="layui-form-label">进账金额：</label>
+            <div class="layui-input-inline">
+                <span class="value"><em>¥</em>{$price.income|default=0}</span>
+            </div>
+
+            <label class="layui-form-label">出账金额：</label>
+            <div class="layui-input-inline">
+                <span class="value"><em>¥</em>{$price.expend|default=0}</span>
+            </div>
+            <div class="f_right">
+                <a class="layui-btn layui-btn-sm layui-btn-normal down_btn" href="#download" onclick="exportList()"><i class="layui-icon layui-icon-download-circle"></i> 导出</a>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item order_item">-->
+            <!--<label class="layui-form-label">出账金额：</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<span class="value"><em>¥</em>{$price.expend}</span>-->
+            <!--</div>-->
+        <!--</div>-->
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th width="10%">账户变动时间</th>
+                <th width="10%">类型</th>
+                <th width="10%">名称/备注</th>
+                <th width="10%">收入/支出</th>
+                <th width="10%">状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr>
+                <td class="no-records" colspan="10">没有找到任何记录</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>
+                    {$item.create_time}
+                </td>
+                <td>
+                    {switch name="item.status"}
+                    {case value="0"}充值{/case}
+                    {case value="1.2"}提现{/case}
+                    {case value="2"}交易订单{/case}
+                    {case value="3"}退款订单{/case}
+                    {case value="4"}充值赠送{/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+                <td>
+                    {switch name="item.status"}
+                    {case value="0"}
+                    店铺充值<br>
+
+                    {/case}
+                    {case value="1.2"}
+                    店铺提现<br>
+                    <!--提现编号：{$item.withdraw_number}<br>-->
+                    提现时间：{$item.create_time}<br>
+                    提现金额：{$item.price}<br>
+                    {/case}
+                    {case value="2"}
+                    店铺售卖商品收益<br>
+                    订单编号：{$item.order_attach_number}<br>
+                    下单时间：{$item.create_time}<br>
+                    订单金额：{$item.subtotal_price}<br>
+                    支付方式：{switch name="$item.pay_channel"}
+                    {case value="1"}微信{/case}
+                    {case value="2"}支付宝{/case}
+                    {case value="3"}余额{/case}
+                    {case value="4"}银行卡{/case}
+                    {case value="5"}线下{/case}
+                    {case value="6"}货到付款{/case}
+                    {/switch}<br>
+                    {/case}
+                    {case value="3"}
+                    {if condition="$item.orderGoodsRefund.type eq 1"}
+                    店铺未发货申请的订单退款<br>
+                    {else/}
+                    店铺完成发货后申请的订单退款<br>
+                    {/if}
+                    订单编号：{$item.orderGoodsRefund.order_attach_number}<br>
+                    下单时间：{$item.orderGoodsRefund.create_time}<br>
+                    订单金额：{$item.orderGoodsRefund.single_price}元<br>
+                    支付方式：{switch name="$item.orderGoodsRefund.pay_channel"}
+                    {case value="1"}微信{/case}
+                    {case value="2"}支付宝{/case}
+                    {case value="3"}余额{/case}
+                    {case value="4"}银行卡{/case}
+                    {case value="5"}线下{/case}
+                    {case value="6"}货到付款{/case}
+                    {/switch}<br>
+                    {/case}
+                    {case value="4"}
+                    会员充值赠送<br>
+                    会员账号：{$item.phone}<br>
+                    赠送金额：{$item.price}<br>
+                    {/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+                <td>
+                    {switch name="item.status"}
+                    {case value="0"}+{$item.price}{/case}
+                    {case value="2"}+{$item.subtotal_price}{/case}
+                    {case value="1.2"}-{$item.price}{/case}
+                    {case value="3"}-{$item.orderGoodsRefund.refund_amount}{/case}
+                    {case value="4"}-{$item.price}{/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+                <td>
+                    {switch name="item.status"}
+                    {case value="0"}充值成功{/case}
+                    {case value="1.2"}提现成功{/case}
+                    {case value="2"}
+                    {if condition="$item.is_checking eq 1"}
+                    交易成功
+                    {else/}
+                    进行中
+                    {/if}
+                    {/case}
+                    {case value="3"}退款成功{/case}
+                    {case value="4"}赠送成功{/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        <!--</div>-->
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script type="text/javascript">
+    // 筛选选中效果
+
+    // 多选状态
+    function clearCheck(num) {
+        if (num == 1) {
+            $(".origin_type").removeAttr("checked");
+        } else if (num == 2) {
+            $('#a_2').removeAttr("checked");
+        } else if (num == 3) {
+            $(".order_type").removeAttr("checked");
+        } else if (num == 4) {
+            $('#b_2').removeAttr("checked");
+        } else if (num == 5) {
+            $(".distribution_type").removeAttr("checked");
+        } else if (num == 6) {
+            $("#shipping_2").removeAttr("checked");
+        } else if (num == 7) {
+            $(".status").removeAttr("checked");
+        } else if (num == 8) {
+            $("#status_0").removeAttr("checked");
+        } else if (num == 9) {
+            $(".pay_channel").removeAttr("checked");
+        } else if (num == 10) {
+            $("#status_10").removeAttr("checked");
+        }
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+
+    // function exportList() {
+    //     var start_date = $("#start_date").val();
+    //     var end_date = $("#end_date").val();
+    //     window.location.href = "{:url('/store_capital/exportList')}?pay_channel="+'{:input("pay_channel",0)}'+'&keyword='+'{:input("keyword","")}'+'&start_date='+start_date+'&end_date='+end_date+'&order_referer='+'{:input("order_referer",0)}'+'&min='+'{:input("min","")}'+'&max='+'{:input("max","")}'+'&status='+'{:input("status",-1)}';
+    // }
+
+</script>
+<script type="text/javascript">
+
+
+    main.form()
+
+    main.laydate([{
+        elem: '#start_date',
+        type: 'datetime'
+    },{
+        elem: '#end_date',
+        type: 'datetime'
+    }]);
+</script>
+{/block}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{:env('title')}</title>
+    <!--网站图标-->
+    <link rel="shortcut icon" href="/template/master/resource/image/common/favicon_48.ico" />
+    <link rel="bookmark" href="/template/master/resource/image/common/favicon_64.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="__RES__//layui/css/modules/layer/default/layer.css?v=3.1.1"/>
+    <script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/layui/lay/modules/layer.js" type="text/javascript" charset="utf-8"></script>
+    <script src="//res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+{if $is_qr_code}
+<div id="wx-login-code" style="width: 350px;height: 450px;"></div>
+{else/}
+{$content|raw}
+{/if}
+</body>
+<script>
+    function self_reload(){
+        parent.window.location.reload();
+    }
+    {if $is_qr_code}
+    if ($('#wx-login-code').length > 0) {
+        new WxLogin({
+                self_redirect: true,
+            id: "wx-login-code",
+            appid: "{:config('wechat.')['pc_login']['app_id']}",
+            scope: "snsapi_login",
+            redirect_uri: encodeURI('{:request()->domain()."/pc2.0/setting/bind_wx"}'),
+            state: "",
+            style: "",
+            href: 'https://' + location.host + "/template/computer/resource/css/wx_login_css.css"
+        });
+    }
+    {/if}
+</script>
+</html>

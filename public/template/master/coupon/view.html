@@ -1,0 +1,371 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/formSelects-v4.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请注意选择商品分类。</span></li>
+            <li><span>此处只能创建平台优惠券及自营店铺优惠券，店铺优惠券请商铺后台创建。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 优惠券标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="20" autocomplete="off" placeholder="请输入优惠券标题"
+                       datatype="*"
+                       value="{$item.title|default=''}"
+                       disabled
+                       nullmsg="请输入优惠券标题" errormsg="请输入优惠券标题"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 优惠券类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" value="0" title="自营店铺优惠券" lay-filter="type"
+                       {eq name="item.type|default='0'" value="0" }checked{/eq}
+                >
+                <input type="radio" name="type" value="1" title="平台优惠券" lay-filter="type"
+                       {eq name="item.type|default=''" value="1" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="category" {neq name="item.type|default='0'" value="1"}hidden{/neq}>
+            <label class="layui-form-label"><font color="red">*</font> 优惠券所属商品分类</label>
+            <div class="layui-input-block">
+                <select name="goods_classify_id" xm-select="goods_classify_id">
+                    <option value="">选择分类</option>
+                    {volist name="categoryOne" id="vo"}
+                    <option value="{$vo.goods_classify_id}" {present name="$item.coupon_id"}
+                            {in name="$vo.goods_classify_id" value="$item.classify_str"}selected="selected"{/in}{/present}>{$vo.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="shops" {neq name="item.type|default='0'" value="0"}hidden{/neq}>
+            <label class="layui-form-label"><font color="red">*</font> 自营店铺</label>
+            <div class="layui-input-block">
+                <select name="member_id" lay-search="" datatype="*"
+                        nullmsg="请选择自营店铺" errormsg="请选择自营店铺">
+                    <option value="">选择店铺</option>
+                    {volist name="shops" id="shop"}
+                    <option value="{$shop.store_id}"{eq name="$shop.store_id" value="$item.classify_str|default=''"}selected{/eq}>{$shop.store_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 缩略图</label>
+            <div class="layui-input-inline">
+                <div>
+                    <div class="layui-upload-drag" {notempty name="$item.file"}style="padding:1px;"{/notempty} id="goods_file">
+                    {empty name="$item.file"}
+                    <i class="layui-icon">&#xe681;</i>
+                    <p>点击上传，或将文件拖拽到此处</p>
+                    <input type="text" name="file" value="" title style="opacity: 0;"
+                           datatype="*" nullmsg="请上传缩略图" errormsg="请上传缩略图" />
+                    {else/}
+                    <img src="{$item.file|default=''}" onerror=this.src="/template/master/resource/image/common/imageError.png" title="" class="uploadImg" alt=""/>
+                    <input type="text" name="file" value="{$item.file_extra|default=''}" title style="display: none;"
+                           datatype="*" nullmsg="请上传缩略图" errormsg="请上传缩略图" />
+                    {/empty}
+                </div>
+            </div>
+        </div>
+        <!--<div class="layui-form-mid layui-word-aux">-->
+            <!--建议尺寸，800 X 800-->
+        <!--</div>-->
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 优惠券金额</label>
+            <div class="layui-input-block">
+                <input type="number" name="actual_price" value="{$item.actual_price|default=''}" maxlength="10"
+                       autocomplete="off"
+                       placeholder="请输入优惠券面值"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 优惠券满减条件金额</label>
+            <div class="layui-input-block">
+                <input type="number" name="full_subtraction_price" value="{$item.full_subtraction_price|default=''}"
+                       maxlength="10" autocomplete="off"
+                       placeholder="请输入优惠券满减条件金额"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 优惠券总数量</label>
+            <div class="layui-input-block">
+                <input type="number" name="total_num" value="{$item.total_num|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入优惠券总数量"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="description" maxlength="100" class="layui-textarea">{$item.description|default=''}</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">积分兑换</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_integral_exchage" value="1" title="是" lay-filter="integral"
+                       {eq name="item.is_integral_exchage|default=''" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_integral_exchage" value="0" title="否" lay-filter="integral"
+                       {eq name="item.is_integral_exchage|default='0'" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="integral" {neq name="item.is_integral_exchage|default='0'" value="1"}hidden{/neq}>
+            <label class="layui-form-label">所需积分</label>
+            <div class="layui-input-block">
+                <input type="number" name="integral" value="{$item.integral|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入积分数"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否推荐</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_recommend" value="1" title="是"
+                       {eq name="item.is_recommend|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_recommend" value="0" title="否"
+                       {eq name="item.is_recommend|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">是否为礼包</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_gift" value="1" title="是"
+                       {eq name="item.is_gift|default='0'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_gift" value="0" title="否"
+                       {eq name="item.is_gift|default='0'" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">启用状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="是"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="否"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 使用开始时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="start_time" id="start_time" value="{$item.start_time|default=''}"
+                       autocomplete="off" placeholder="请选择开始时间"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 使用结束时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end_time" id="end_time" value="{$item.end_time|default=''}" autocomplete="off"
+                       placeholder="请选择结束时间"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 领取开始时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="receive_start_time" id="receive_start_time"
+                       value="{$item.receive_start_time|default=''}" autocomplete="off" placeholder="请选择开始时间"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 领取结束时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="receive_end_time" id="receive_end_time"
+                       value="{$item.receive_end_time|default=''}" autocomplete="off" placeholder="请选择结束时间"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.coupon_id"}
+                <input type="hidden" name="coupon_id" value="{$item.coupon_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/common/formSelects-v4.js"></script>
+<script>
+    main.form([{selector:'radio(type)',callback:function(data){
+        var cate = $('#category');
+        var shop = $('#shops');
+        if (data.value == 0) {
+            cate.prop('hidden', true);
+            shop.prop('hidden',false);
+        }
+        if (data.value == 1) {
+            cate.prop('hidden', false);
+            shop.prop('hidden',true);
+        }
+    }},{selector:'radio(integral)',callback:function(data){
+        var integral = $('#integral');
+        if (data.value == 0) {
+            integral.prop('hidden', true);
+        }
+        if (data.value == 1) {
+            integral.prop('hidden', false);
+        }
+    }}]);
+    main.valid('.layui-form');
+    // 上传图片
+    main.upload([{
+        elem: '#mobileImg',
+        size: 2 * 1024,
+        data: {name: 'content_img', dir: 'content_img', auth: 'public-read', style: 3, crypt: 0},
+        field: 'content_img',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                '<img src="' + res.data.ossUrl + '" title="' + res.data.name + '">'
+                + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_file',
+        size: 2 * 1024,
+        data: {name: 'goods_file', dir: 'goods_file', auth: '', style: 1, crypt: 1},
+        field: 'goods_file',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" alt="' + res.data.name + '" class="uploadImg">' +
+                '<input type="text" name="file" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+            $(this.elem).css('padding','1px').html(html);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_video',
+        size: 10 * 1024,
+        data: {name: 'goods_video', dir: 'video', auth: '', style: 1, crypt: 1},
+        field: 'goods_video',
+        accept: 'video',
+        acceptMime: 'video/*',
+        exts: 'mp4',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<video controls><source src="'+ res.data.ossCryptUrl +'" type = “application/ogg” /></video>';
+            $(this.elem).css('padding','1px').html(html);
+            $('[name="video"]').val(res.data.ossUrl);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#photos_area',
+        size: 2 * 1024,
+        data: {name: 'goods_album', dir: 'album', auth: '', style: 1, crypt: 1},
+        field: 'goods_album',
+        multiple: true,
+        number: 5,
+        auto: false,
+        choose: function (obj) {
+            var length = $('.img-item').length,num = 1;
+            obj.preview(function (index,file,result) {
+                if (length <= 5 && (length + num) <= 5 ) obj.upload(index, file);
+                num++;
+            });
+        },
+        done: function (res,index,upload) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="img-item">' +
+                '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                '<input type="hidden" name="picArr[]" value="'+ res.data.ossUrl +'" />' +
+                '<div class="operate">' +
+                '<i class="toleft">左移</i>' +
+                '<i class="toright">右移</i>' +
+                '<i class="del">删除</i>' +
+                '</div></div>';
+            if ($(this.elem).children('.img-item').length == 0) $(this.elem).empty();
+            $(this.elem).css('padding',0).append(html);
+            layer.closeAll('loading');
+        }
+    }]);
+    main.laydate([{
+        elem: '#start_time',
+        type: 'date'
+    },{
+        elem: '#end_time',
+        type: 'date'
+    },{
+        elem: '#receive_start_time',
+        type: 'date'
+    },{
+        elem: '#receive_end_time',
+        type: 'date'
+    }]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

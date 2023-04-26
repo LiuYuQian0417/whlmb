@@ -1,0 +1,173 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/color_picker/spectrum.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .layui-tab-title .layui-this{
+        background-color:#fff!important;
+    }
+    .show{
+        margin-top:1%;padding: 20px; background-color: #F2F2F2;
+    }
+</style>
+<div class="layui-tab layui-tab-brief">
+    <ul class="layui-tab-title">
+        <li >
+            <a href="/goods_batch_operation/index">
+                商品批量修改
+            </a>
+        </li>
+        <li class="layui-this">
+            <a href="javascript:void(0);" onclick="main.jumpFour('goods_import/index')">
+                商品批量上传
+            </a>
+        </li>
+        <li >
+            <a href="javascript:void(0);" onclick="main.jumpFour('goods_export/index')">
+                商品批量导出
+            </a>
+        </li>
+    </ul>
+</div>
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请认真填写链接名称、链接地址等信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="/goods_import/create" method="post">
+
+    <div class="contentShell">
+        <!--链接LOGO-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>.csv文件</label>
+            <div class="layui-input-inline">
+                <div>
+                    <div class="layui-upload-drag" id="" style="position: relative">
+                        <i class="layui-icon">&#xe681;</i>
+                        <p id="file_name">点击上传，或将文件拖拽到此处</p>
+                        <input type="file" name="file" id="file" title style="opacity: 0;position: absolute;width: 100%;height: 100%;z-index: 2;top:0;left:0;"
+                               datatype="*" nullmsg="请上传.csv文件" errormsg="请上传.csv文件" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                （请注意文件格式，导入的商品条数建议500条以下）
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <!--操作提示end-->
+</form>
+<div class="contentShellBtn">
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" onclick="xz()">下载.cvs模板</button>
+
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/color_picker/spectrum.js" type="application/javascript"></script>
+<script src="__RES__/js/color_picker/docs.js" type="application/javascript"></script>
+<!--商品属性js-->
+<script src="__RES__/js/common/goods_attr.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script>
+    main.form();
+    main.valid('.layui-form');
+
+
+    $('#file').change(function(){
+
+        var file_name=this.files[0]['name'];
+
+        if(file_name!=undefined){
+            $('#file_name').text(file_name);
+        }else{
+            $('#file_name').text('点击上传，或将文件拖拽到此处');
+        }
+    });
+
+    if ($('.extra-div').find("tr:not(.head):not(.addTrDiv)").length === 0)
+        $('.addTrDiv').before(step.trSample('is_parameter')+step.trSample('is_parameter')+step.trSample('is_parameter'));
+    main.form([{
+        selector: 'select(attrType)', callback: function (data) {
+            attrControl.init('',data.value);
+        }
+    },{
+        selector: 'checkbox(attr-val)',callback: function (data) {
+            attrControl.changeTable($(data.elem));
+        }
+    },{
+        selector: 'select(store)',callback: function (data,formObj) {
+            $('[name="store_id"]').val(data.value);
+            if (data.value !== '')
+                main.ajax({data:{store_id:data.value},url:'/goods/getAttrType',callback:function (res) {
+                    var html = '<option value="0">-请选择商品属性-</option>';
+                    if (res.data.length > 0){
+                        $.each(res.data,function (i,o) {
+                            html += '<option value="'+o.attr_type_id+'">'+o.type_name+'</option>'
+                        })
+                    }
+                    $('[name="attr_type_id"]').html(html);
+                    formObj.render();
+                }})
+        }
+    },{
+        selector: 'select(cateHistory)',callback: function (data) {
+            if (data.value == ''){
+                $('.category-2').find('ul').html('<li>请选择二级分类</li>');
+                $('.category-3').find('ul').html('<li>请选择三级分类</li>');
+                $('.cur').removeClass('cur');
+                $('.classifyId').val('');
+                $('[name="goods_classify_info"]').val('');
+                $('#curCateContent').val('');
+            }else{
+                var cateIdArr = data.value.split(',') || {};
+                $('#cate_'+cateIdArr[0]).addClass('cur').siblings('li').removeClass('cur');
+                main.ajax({data:{id:cateIdArr},url:'/goods/getCateHistory',callback: function (res) {
+                    $.each(res.data,function (i,o) {
+                        $('.category-'+(i+2)).find('ul').html(o);
+                    });
+                    $('#curCateContent').val(res.title);
+                    $('[name="goods_classify_info"]').val(res.title);
+                    $('.classifyId').val(cateIdArr.pop());
+                }});
+            }
+        }
+    }]);
+
+    function xz(){
+        window.location.href="/goods_import/createcsv";
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

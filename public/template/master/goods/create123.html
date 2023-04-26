@@ -1,0 +1,971 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/color_picker/spectrum.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>请按提示栏信息进行商品添加。
+            <li>
+            <li>标注<font>*</font>的为必填项。
+            <li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div>
+    <div class="contentHeader">
+        <!--步骤开始-->
+        <ul class="nav nav-pills nav-justified step step-round">
+            <li class="step1 active dynamic">
+                <a>选择商品分类</a>
+            </li>
+            <li class="step2">
+                <a>填写商品基本信息</a>
+            </li>
+            <li class="step3">
+                <a>填写商品规格及图片</a>
+            </li>
+            <li class="step4">
+                <a>选择商品关联</a>
+            </li>
+        </ul>
+        <!--步骤结束-->
+        <!--表单开始-->
+        <form class="layui-form" action="/goods/createAct" method="post" enctype="multipart/form-data">
+            <!--第一步开始-->
+            <div class="contentShellFull stepList">
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 选择商品分类</label>
+                <hr class="layui-bg-gray">
+                <div class="common-head">
+                    <div class="curCate">
+                        <label>您当前选择的商品分类是：</label>
+                        <input type="text" title="" placeholder="请选择" id="curCateContent" value="{$goodsData['cateTitle']?:''}" readonly/>
+                        <!--商品分类id-->
+                        <input type="text" title="" name="goods_classify_id" value="{$goodsData['goods_classify_id']?:''}" datatype="*" nullmsg="请选择一级商品分类"
+                               class="classifyId" readonly/>
+                    </div>
+                    <div class="inquire_search">
+                        <label class="tips">您最近使用的商品分类：</label>
+                        <div class="imitate_select">
+                            <select class="ps-container" lay-filter="cateHistory" title="选择您最近使用的商品分类">
+                                <option value="">请选择</option>
+                                {foreach $cateCache as $cateCacheKey => $cateCache}
+                                <option value="{:implode(',',$cateCache.goods_classify_id)}">{$cateCache.goods_classify_info}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="category_box">
+                    <div class="category_content category-1">
+                        <div class="category_list_all">
+                            <div class="category_list">
+                                <ul>
+                                    <li>请选择一级分类</li>
+                                    {foreach $categoryOne as $key => $_categoryOne}
+                                    <li onclick="step.getSon(1,'{$_categoryOne.goods_classify_id}');"
+                                        {notempty name="$goodsData"}
+                                        class="{$_categoryOne.goods_classify_id == $goodsData['firstCate']?'cur':''}"
+                                        {/notempty}
+                                        id="cate_{$_categoryOne.goods_classify_id}">
+                                        <a href="javascript:void(0);"><i></i>{$_categoryOne.title}</a>
+                                    </li>
+                                    {/foreach}
+                                    {empty name='$categoryOne'}
+                                    <li class="empty">暂无此级分类</li>
+                                    {/empty}
+                                </ul>
+                            </div>
+                            <div class="category_flag"></div>
+                        </div>
+                    </div>
+                    <div class="category_content category-2">
+                        <div class="category_list_all">
+                            <div class="category_list">
+                                <ul>
+                                    <li>请选择二级分类</li>
+                                    {notempty name='$goodsData'}
+                                        {foreach $goodsData['cateArr'][0]?:[] as $cKeyOne => $_cKeyOne}
+                                        <li  onclick="step.getSon(2,'{$_cKeyOne.goods_classify_id}');"
+                                             class="{$_cKeyOne['checked']?'cur':''}"
+                                             id="cate_{$_cKeyOne.goods_classify_id}">
+                                            <a href="javascript:void(0);"><i></i>{$_cKeyOne.title}</a>
+                                        </li>
+                                        {/foreach}
+                                        {if condition="count($goodsData['cateArr']) lt 1"}
+                                        <li class="empty">暂无此级分类</li>
+                                        {/if}
+                                    {/notempty}
+                                </ul>
+                            </div>
+                            <div class="category_flag"></div>
+                        </div>
+                    </div>
+                    <div class="category_content category-3" style="margin: 0">
+                        <div class="category_list_all">
+                            <div class="category_list">
+                                <ul>
+                                    <li>请选择三级分类</li>
+                                    {notempty name='$goodsData'}
+                                        {foreach $goodsData['cateArr'][1]?:[] as $cKeyTwo => $_cKeyTwo}
+                                        <li  onclick="step.getSon(2,'{$_cKeyTwo.goods_classify_id}');"
+                                             class="{$_cKeyTwo['checked']?'cur':''}"
+                                             id="cate_{$_cKeyTwo.goods_classify_id}">
+                                            <a href="javascript:void(0);"><i></i>{$_cKeyTwo.title}</a>
+                                        </li>
+                                        {/foreach}
+                                        {if condition="count($goodsData['cateArr']) lt 2"}
+                                        <li class="empty">暂无此级分类</li>
+                                        {/if}
+                                    {/notempty}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr class="layui-bg-gray">
+                <!--更新商品ID-->
+                {if condition="$goods_id = input('get.id','')"}
+                <input type="hidden" name="goods_id" value="{$goods_id}"/>
+                {/if}
+                <input type="hidden" name="shop" value="{:input('shop',0)}" />
+            </div>
+            <!--第一步结束-->
+            <!--第二步开始-->
+            <div class="contentShellFull stepList">
+                <!--商品基本信息-->
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写商品基本信息</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell65">
+                    <!--商品分类-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品分类</label>
+                        <div class="layui-input-inline">
+                            <!--选定的商品分类名称拼接串-->
+                            <input type="text" name="goods_classify_info" title autocomplete="off" value="{$goodsData['cateTitle']?:''}"
+                                   class="layui-input hiddenInput" readonly>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux pointer" title="点击修改商品分类" onclick="step.toPrev(1)">
+                            <i class="fa fa-edit" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <!--自营添加 选择自营店铺-->
+                    {notempty name='$storeData'}
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">自营店铺</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter='store' title="选择自营店铺">
+                                <option value="">-请选择自营店铺-</option>
+                                {foreach $storeData as $storeKey => $_store}
+                                <option value="{$_store['store_id']}" {eq name="$_store['store_id']?:''" value="$goodsData['store_id']?:''"}selected{/eq}>{$_store['store_name']}</option>
+                                {/foreach}
+                            </select>
+                        </div>
+                        <input type="text" readonly title style="opacity: 0;" name="store_id" value="{$goodsData['store_id']?:''}" datatype="*" nullmsg="请选择自营店铺" errormsg="请选择自营店铺" />
+                    </div>
+                    {/notempty}
+                    <!--商品名称-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>商品名称</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="goods_name" value="{$goodsData['goods_name']?:''}" title autocomplete="off"
+                                   placeholder="填写商品名称,30字符以内"
+                                   datatype="s30" maxlength="30" minlength="1"
+                                   nullmsg="请填写商品名称" errormsg="商品名称格式错误"
+                                   class="layui-input">
+                            <input type="hidden" name="goods_name_style" value="{$goodsData['goods_name_style']?:'#000000'}" title autocomplete="off"/>
+                        </div>
+                        <input type="text" id="full" title="颜色选择器" readonly/>
+                    </div>
+                    <!--商品图片-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>商品图片</label>
+                        <div class="layui-input-inline">
+                            <div>
+                                <div class="layui-upload-drag" {notempty name="$goodsData"}style="padding:1px;"{/notempty} id="goods_file">
+                                    {empty name="$goodsData"}
+                                    <i class="layui-icon">&#xe681;</i>
+                                    <p>点击上传，或将文件拖拽到此处</p>
+                                    <input type="text" name="file" value="" title style="opacity: 0;"
+                                           datatype="*" nullmsg="请上传商品图片" errormsg="请上传商品图片" />
+                                    {else/}
+                                    <img src="{$goodsData['file']}" title="{$goodsData['goods_name']}" class="uploadImg" alt="{$goodsData['goods_name']}"/>
+                                    <input type="text" name="file" value="{$goodsData['file_extra']}" title style="display: none;"
+                                           datatype="*" nullmsg="请上传商品图片" errormsg="请上传商品图片" />
+                                    {/empty}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">
+                            建议尺寸，800 X 800
+                        </div>
+                    </div>
+                    <!--商品品牌-->
+                    <div class="layui-form-item brand_form">
+                        <label class="layui-form-label"><em class="require">* </em>商品品牌</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="brand_name" title autocomplete="off" readonly
+                                   placeholder="请选择商品品牌" value="{$item['brand_name']?:''}"
+                                   datatype="*"
+                                   nullmsg="请选择商品品牌" errormsg="请选择商品品牌"
+                                   class="layui-input drop-down">
+                            <input type="hidden" name="brand_id" value="{$goodsData['brand_id']?:''}" title/>
+                            <div class="brand-container" style="display: none;">
+                                <div class="brand-header">
+                                    <div class="letter">
+                                        <ul>
+                                            <li class="backStyle"><a class="backStyle" rel=""
+                                                                     onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'','keyword':''}})"
+                                                                     href="javascript:void(0);">全部品牌</a>
+                                            </li>
+                                            {foreach $brandFirstChr as $key => $item}
+                                            <li>
+                                                <a href="javascript:void(0);"
+                                                   onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'{$item}','keyword':''}})"
+                                                   rel="{$item}">{$item}</a></li>
+                                            {/foreach}
+                                        </ul>
+                                    </div>
+                                    <div class="search">
+                                        <input type="text" value="" placeholder="请输入品牌关键字" class="brand-search-input"/>
+                                        <a href="javascript:void(0);"
+                                           onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':$('a[class=\'backStyle\']').attr('rel'),'keyword':$('.brand-search-input').val()}})"
+                                           class="brand-search-btn">
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </a>
+                                        <a title="点击清空品牌输入框内容"
+                                           href="javascript:$('[name=\'brand_name\']').val('');$('[name=\'brand_id\']').val('');"
+                                           class="brand-clear-btn">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="brand-list">
+                                    <ul>
+                                        {foreach $brand as $key => $item}
+                                        <li title="{$item.brand_name}" {eq name="$item.brand_id" value="($goodsData[\'brand_id\']?:0)"}class="choose"{/eq} value="{$item.brand_id}"><em>{$item.brand_first_char}</em>{$item.brand_name}
+                                        </li>
+                                        {/foreach}
+                                        {empty name="$brand"}
+                                        <li class="empty">暂无品牌数据</li>
+                                        {/empty}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--商品货号-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品货号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="goods_sn" value="{$goodsData['goods_sn']?:''}" title
+                                   onblur="checkUnique(this,this.value,'{:input(\'get.goods_id\',\'\')}')"
+                                   autocomplete="off" placeholder="填写商品货号" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">
+                            若不填写商品货号，则系统自动生成一个唯一的货号
+                        </div>
+                    </div>
+                    <!--商品本店售价-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>本店售价</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="shop_price" value="{$goodsData['shop_price']?:''}" title
+                                   datatype="num"
+                                   nullmsg="请输入商品本店售价" errormsg="商品本店售价格式错误"
+                                   autocomplete="off" placeholder="填写本店售价" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">
+                            <a href="javascript:;">按市场价换算</a>
+                        </div>
+                    </div>
+                    <!--商品市场售价-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>市场售价</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="market_price" value="{$goodsData['market_price']?:''}" title
+                                   datatype="num"
+                                   nullmsg="请输入商品市场售价" errormsg="商品市场售价格式错误"
+                                   autocomplete="off" placeholder="填写商品市场售价" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid layui-word-aux">
+                            <a href="javascript:var mp = $('[name=\'market_price\']');mp.val(Math.round(mp.val()));">科学取整</a>
+                        </div>
+                    </div>
+                    <!--商品成本价-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>成本价</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="cost_price" value="{$goodsData['cost_price']?:''}" title
+                                   datatype="num"
+                                   nullmsg="请输入商品成本价" errormsg="商品成本价格式错误"
+                                   autocomplete="off" placeholder="填写商品成本价" class="layui-input">
+                        </div>
+                    </div>
+                    <!--商品库存-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>商品库存</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="goods_number" value="{$goodsData['goods_number']?:''}" title
+                                   datatype="zNum"
+                                   nullmsg="请输入商品库存" errormsg="商品库存格式错误"
+                                   autocomplete="off" placeholder="填写商品库存(正整数)" class="layui-input">
+                        </div>
+                    </div>
+                    <!--库存预警值-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>商品库存预警值</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="warn_number" value="{$goodsData['warn_number']?:''}" title
+                                   datatype="zNum"
+                                   onblur="if (this.value >= parseInt($('[name=\'goods_number\']').val())){layer.msg('预警值应小于库存值');this.value='';$(this).focus();}"
+                                   nullmsg="请输入商品库存预警值" errormsg="商品库存预警值格式错误"
+                                   autocomplete="off" placeholder="填写商品库存预警值(正整数)" class="layui-input">
+                        </div>
+                    </div>
+                    <!--商品简单描述-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label"><em class="require">* </em>商品简单描述</label>
+                        <div class="layui-input-block">
+                            <textarea type="text" name="describe" title autocomplete="off" placeholder="填写商品描述,200字符以内"
+                                      style="resize: none;width: 100%;height: 150px;"
+                                      datatype="s200" minlength="1" maxlength="200"
+                                      nullmsg="请填写商品简单描述" errormsg="商品简单描述格式错误"
+                                      class="layui-textarea">{$goodsData['describe']?:''}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--商品详细描述-->
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写商品详细描述</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell90">
+                    <div class="layui-tab layui-tab-brief">
+                        <ul class="layui-tab-title">
+                            {if config("user.")["pc"]["is_include"]}
+                            <li class="layui-this">
+                                <a href="javascript:void(0);"
+                                   onclick="$('.describe').eq(0).show().next('.layui-form-item').hide();">
+                                    <i class="fa fa-laptop" aria-hidden="true"></i> PC端
+                                </a>
+                            </li>
+                            {/if}
+                            <li {if !config("user.")["pc"]["is_include"]}class="layui-this"{/if}>
+                                <a href="javascript:void(0);"
+                                   onclick="$('.describe').eq(1).show().prev('.layui-form-item').hide();">
+                                    <i class="fa fa-mobile" aria-hidden="true"></i> 移动端
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {if config("user.")["pc"]["is_include"]}
+                    <!--商品PC端详细描述-->
+                    <div class="layui-form-item describe">
+                        <input type="hidden" id="editorContent" name="content" value="{$goodsData['content']?:''}"/>
+                        <iframe src="/goods/uEditor" id="content" style="overflow: auto;" frameborder="0" width="100%"
+                                height="609px" scrolling="no"></iframe>
+                    </div>
+                    {/if}
+                    <div class="layui-form-item describe" {if config("user.")["pc"]["is_include"]}style="display: none;"{/if}>
+                        <div class="mobile-shell">
+                            <div class="mobile-content">
+                                <div class="container">
+                                    <div class="info">{:($goodsData['web_content']?:'')}</div>
+                                </div>
+                                <input type="hidden" title="" name="web_content" value=""/>
+                                <div class="mo-btn">
+                                    <a class="layui-btn layui-btn-normal" id="mobileImg" href="javascript:void(0);">
+                                        <i class="fa fa-file-picture-o" aria-hidden="true"></i> 添加图片
+                                    </a>
+                                    <a class="layui-btn layui-btn-normal"
+                                       href="javascript:step.addFont('.mobile-content .container .info');">
+                                        <i class="fa fa-font" aria-hidden="true"></i> 添加文字
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="explain">
+                            <p>
+                                <strong>一、基本要求</strong>
+                                <span><em>1、</em>手机详情总体大小：图片+文字，<i class="red">图片不超过20张，文字不超过5000字</i>；</span>
+                                <span><em>建议：</em>所有图片都是本宝贝相关的图片。</span>
+                            </p>
+
+                            <p>
+                                <strong>二、图片大小</strong>
+                                <span><em>1、</em>建议使用宽度480 ~ 620像素、高度小于等于960像素的图片；</span>
+                                <span><em>2、</em>格式为：JPG\JEPG\GIF\PNG；</span>
+                                <span><em>举例：</em>可以上传一张宽度为480，高度为960像素，格式为JPG的图片。</span>
+                            </p>
+                            <p>
+                                <strong>三、文字要求</strong>
+                                <span><em>1、</em>每次插入文字不能超过500个字，标点、特殊字符按照一个字计算；</span>
+                                <span><em>2、</em>请手动输入文字，不要复制粘贴网页上的文字，防止出现乱码；</span>
+                                <span><em>3、</em>以下特殊字符“&lt;”、“&gt;”、“"”、“’”、“\”会被替换为空。</span>
+                                <span><em>建议：</em>不要添加太多的文字，这样看起来更清晰。</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!--商品特殊信息-->
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写特殊信息</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell65">
+                    <!--会员价格开关-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否使用店铺会员折扣</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="is_vip" value="0" title="否" {eq name="0" value="($goodsData[\'is_vip\']?:0)"}checked{/eq}>
+                            <input type="radio" name="is_vip" value="1" title="是" {eq name="1" value="($goodsData[\'is_vip\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                    <!--店铺特推开关-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否店铺特别推荐</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="store_particularly_recommend" value="0" title="否" {eq name="0" value="($goodsData[\'store_particularly_recommend\']?:0)"}checked{/eq}>
+                            <input type="radio" name="store_particularly_recommend" value="1" title="是" {eq name="1" value="($goodsData[\'store_particularly_recommend\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                    <!--店铺普推开关-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否店铺普通推荐</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="store_recommend" value="0" title="否" {eq name="0" value="($goodsData[\'store_recommend\']?:0)"}checked{/eq}>
+                            <input type="radio" name="store_recommend" value="1" title="是" {eq name="1" value="($goodsData[\'store_recommend\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                    <!--店铺海报推荐-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否为店铺海报推荐</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="store_poster" value="0" title="否" {eq name="0" value="($goodsData[\'store_poster\']?:0)"}checked{/eq}>
+                            <input type="radio" name="store_poster" value="1" title="是" {eq name="1" value="($goodsData[\'store_poster\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                    <!--精品开关-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否为精品</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="is_best" value="0" title="否" {eq name="0" value="($goodsData[\'is_best\']?:0)"}checked{/eq}>
+                            <input type="radio" name="is_best" value="1" title="是" {eq name="1" value="($goodsData[\'is_best\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                    <!--热销开关-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否为热销</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="is_hot" value="0" title="否" {eq name="0" value="($goodsData[\'is_hot\']?:0)"}checked{/eq}>
+                            <input type="radio" name="is_hot" value="1" title="是" {eq name="1" value="($goodsData[\'is_hot\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                    <!--人气开关-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否为人气</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="is_popularity" value="0" title="否" {eq name="0" value="($goodsData[\'is_popularity\']?:0)"}checked{/eq}>
+                            <input type="radio" name="is_popularity" value="1" title="是" {eq name="1" value="($goodsData[\'is_popularity\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                    <!--是否特惠-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">是否为特惠</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="is_preference" value="0" title="否" {eq name="0" value="($goodsData[\'is_preference\']?:0)"}checked{/eq}>
+                            <input type="radio" name="is_preference" value="1" title="是" {eq name="1" value="($goodsData[\'is_preference\']?:0)"}checked{/eq}>
+                        </div>
+                    </div>
+                </div>
+                <!--商品拓展信息-->
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 填写拓展信息</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell65">
+                    <!--商品参数-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品参数</label>
+                        <div class="layui-input-block">
+                            <div class="extra-div">
+                                <table class="table-div">
+                                    <tbody>
+                                    <tr class="head">
+                                        <th>参数名称</th>
+                                        <th>参数值</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    {notempty name='$goodsData'}
+                                        {foreach $goodsData['parameter'] as $parameterKey => $parameterVal}
+                                            <tr>
+                                                <td>
+                                                    <input title="" class="text" type="text" name="parameter_name[]" autocomplete="off" value="{$parameterVal['parameter_name']}" />
+                                                </td>
+                                                <td>
+                                                    <input title="" class="text" type="text" name="parameter_val[]" autocomplete="off" value="{$parameterVal['parameter_val']}" />
+                                                </td>
+                                                <td>
+                                                    <a class="btn_trash" href="javascript:void(0);" onclick="$(this).parents('tr').remove();">
+                                                        <i class="fa fa-trash-o"></i>删除
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {/foreach}
+                                    {/notempty}
+                                    <tr class="addTrDiv">
+                                        <td colspan="3">
+                                            <a href="javascript:void(0);" class="addTr" onclick="step.addTr(this,'is_parameter');"></a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!--商品关键词-->
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品关键词</label>
+                        <div class="layui-input-block">
+                             <textarea type="text" name="keyword" title autocomplete="off"
+                                       placeholder="填写商品关键词（作为站内商品搜索关键词和互联网搜索引擎SEO收录用），200字符以内"
+                                       style="resize: none;width: 100%;height: 150px;"
+                                       datatype="s200" minlength="1" maxlength="200"
+                                       nullmsg="请填写商品关键词" errormsg="商品关键词格式错误"
+                                       class="layui-textarea">{$goodsData['keyword']?:''}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <hr class="layui-bg-gray">
+            </div>
+            <!--第二步结束-->
+            <!--第三步开始-->
+            <div class="contentShellFull stepList">
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 设置商品属性</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell90">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品类型</label>
+                        <div class="layui-input-inline">
+                            <select name="attr_type_id" lay-filter="attrType" title="选择商品类型">
+                                {notempty name="$goodsData['attr']"}
+                                    <option value="0">-请选择商品属性-</option>
+                                    {foreach $goodsData['attr'] as $attrKey => $attrVal}
+                                        <option value="{$attrVal['attr_type_id']}" {if condition="$goodsData['attr_type_id'] eq $attrVal['attr_type_id']"}selected{/if}>{$attrVal['type_name']}</option>
+                                    {/foreach}
+                                {/notempty}
+                            </select>
+                        </div>
+                    </div>
+                    <!--规格容器-->
+                    <div class="layui-form-item attr-container"></div>
+                    <!--结果容器-->
+                    <div class="layui-form attr-ret"></div>
+                </div>
+                <!--商品相册-->
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 设置商品相册</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell90">
+                    <div class="layui-form-item">
+                        <div id="upload_area">
+                            <div id='photos_area' {if condition="!empty($goodsData['multiple_file'])"}style="padding:0;"{/if} class="photos_area clearfix">
+                                {if condition="empty($goodsData['multiple_file'])"}
+                                    <p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>
+                                {else/}
+                                    {foreach $goodsData['multiple_file'] as $mfKey => $mfVal}
+                                        <div class="img-item"><img src="{$mfVal}" title="" class="uploadImg">
+                                            <input type="hidden" name="picArr[]" value="{$goodsData['multiple_file_extra'][$mfKey]}" />
+                                            <div class="operate">
+                                                <i class="toleft">左移</i>
+                                                <i class="toright">右移</i>
+                                                <i class="del">删除</i>
+                                            </div>
+                                        </div>
+                                    {/foreach}
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--商品视频文件-->
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 设置商品视频</label>
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <div>
+                            <div class="layui-upload-drag" id="goods_video">
+                                <i class="layui-icon">&#xe681;</i>
+                                <p>点击上传，或将文件拖拽到此处</p>
+                                <input type="text" name="video" value="{$goods['video']?:''}" title style="opacity: 0;"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">
+                        大小不应超过10M，支持mp4
+                    </div>
+                </div>
+            </div>
+            <!--第三步结束-->
+            <!--第四步开始-->
+            <div class="contentShellFull stepList">
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 关联商品</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell90">
+                    <div class="layui-form-item">
+                        <!--商品分类-->
+                        <div class="layui-input-inline" style="width: 450px;">
+                            <input type="text" value="" title autocomplete="off" readonly
+                                   placeholder="请选择商品分类" class="layui-input drop-down-cate form-control">
+                            <input type="hidden" class="cate_id_keyword" title/>
+                            <div class="cate-container" style="display: none;">
+                                <div class="cate-header">
+                                    <ul class="checkedCate">
+                                        <li>请选择商品分类</li>
+                                    </ul>
+                                </div>
+                                <div class="cate-list">
+                                    <ul>
+                                        {foreach $categoryOne as $key => $item}
+                                        <li title="{$item.title}" data-count="{$item.count}"
+                                            value="{$item.goods_classify_id}"><em>Ⅰ</em>{$item.title}
+                                        </li>
+                                        {/foreach}
+                                        {empty name="$categoryOne"}
+                                        <li class="empty">暂无分类数据</li>
+                                        {/empty}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--商品品牌-->
+                        <div class="layui-input-inline brand_keyword">
+                            <input type="text" value="" title autocomplete="off" readonly
+                                   placeholder="请选择商品品牌" class="brand_name_keyword layui-input drop-down">
+                            <input type="hidden" class="brand_id_keyword" title/>
+                            <div class="brand-container" style="display: none;">
+                                <div class="brand-header">
+                                    <div class="letter">
+                                        <ul>
+                                            <li class="backStyle">
+                                                <a class="backStyle" rel="" href="javascript:void(0);"
+                                                   onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'','keyword':''}})">全部品牌</a>
+                                            </li>
+                                            {foreach $brandFirstChr as $key => $item}
+                                            <li>
+                                                <a href="javascript:void(0);"
+                                                   onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'{$item}','keyword':''}})"
+                                                   rel="{$item}">{$item}</a></li>
+                                            {/foreach}
+                                        </ul>
+                                    </div>
+                                    <div class="search">
+                                        <input type="text" value="" placeholder="请输入品牌关键字" class="brand-search-input"/>
+                                        <a href="javascript:void(0);"
+                                           onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':$('.brand_keyword a[class=\'backStyle\']').attr('rel'),'keyword':$('.brand_keyword .brand-search-input').val()}})"
+                                           class="brand-search-btn">
+                                            <i class="fa fa-search" aria-hidden="true"></i>
+                                        </a>
+                                        <a title="点击清空品牌输入框内容"
+                                           href="javascript:$('.brand_name_keyword').val('');$('.brand_id_keyword').val('');"
+                                           class="brand-clear-btn">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="brand-list">
+                                    <ul>
+                                        {foreach $brand as $key => $item}
+                                        <li title="{$item.brand_name}" value="{$item.brand_id}"><em>{$item.brand_first_char}</em>{$item.brand_name}
+                                        </li>
+                                        {/foreach}
+                                        {empty name="$brand"}
+                                        <li class="empty">暂无品牌数据</li>
+                                        {/empty}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--关键字-->
+                        <div class="layui-input-inline">
+                            <input type="text" value="" title autocomplete="off" placeholder="填写商品关键词"
+                                   class="layui-input search_keyword form-control">
+                        </div>
+                        <!--查询按钮-->
+
+                        <a href="javascript:void(0);" class="layui-btn layui-btn-normal" onclick="step.openCity({title:'添加可配送区域',url:'/goods/content'});">
+                            <i class="fa fa-search" aria-hidden="true"></i> 查询</a>
+                        <a href="javascript:void(0);" onclick="step.openCity({title:'添加可配送区域',url:'/goods/content'});"
+                           class="layui-btn layui-btn-normal"><i class="fa fa-search" aria-hidden="true"></i>
+                            弹出城市</a>
+
+                        <a href="javascript:;" class="layui-btn layui-btn-normal"><i class="fa fa-search"
+                                                                                     aria-hidden="true"></i> 查询</a>
+                        <!--<a href="javascript:void(0);" onclick="step.city();"-->
+                           <!--class="layui-btn layui-btn-normal"><i class="fa fa-search" aria-hidden="true"></i>-->
+                            <!--弹出城市</a>-->
+
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="relation-div">
+                            <div class="relation-left">
+                                <h4>可选商品</h4>
+                                <div class="relation-left-info">
+                                    <div class="relation-left-container">
+                                        <ul>
+                                            <li><input type="checkbox" name="like[write]" title="测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试" lay-skin="primary"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="relation-footer">
+                                    <input type="checkbox" title="全选" lay-skin="primary" />
+                                    <button class="layui-btn layui-btn-xs layui-btn-normal"><i class="fa fa-check-circle"></i>&nbsp;确定</button>
+                                </div>
+                            </div>
+                            <div class="relation-middle">
+                                <div class="relation-middle-item">
+                                    <input type="radio" name="relation_type" value="1" title="单向关联" checked />
+                                </div>
+                                <div class="relation-middle-item">
+                                    <input type="radio" name="relation_type" value="2" title="双向关联" />
+                                </div>
+                            </div>
+                            <div class="relation-right">
+                                <h4>跟该商品关联的商品</h4>
+                                <div class="relation-right-info">
+                                    <div class="relation-right-container">
+                                        <ul>
+                                            <li><input type="checkbox" name="like[write]" title="测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试" lay-skin="primary"></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="relation-footer">
+                                    <input type="checkbox" title="全选" lay-skin="primary" />
+                                    <button class="layui-btn layui-btn-xs layui-btn-normal"><i class="fa fa-check-circle"></i>&nbsp;移除关联</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="step_footer ">
+                <div class="step_btn step_btn_fixed">
+                    <a href="javascript:void(0);" data-num="0" onclick="step.toPrev($(this).attr('data-num'))"
+                       class="layui-btn layui-btn-primary prev"></a>
+                    <a href="javascript:void(0);" class="layui-btn sub_2 next" id="submit"></a>
+                </div>
+            </div>
+            <!--第四步结束-->
+        </form>
+    </div>
+</div>
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/color_picker/spectrum.js" type="application/javascript"></script>
+<script src="__RES__/js/color_picker/docs.js" type="application/javascript"></script>
+<!--商品属性js-->
+<script src="__RES__/js/common/goods_attr.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script>
+    if ($('.extra-div').find("tr:not(.head):not(.addTrDiv)").length === 0)
+    $('.addTrDiv').before(step.trSample('is_parameter')+step.trSample('is_parameter')+step.trSample('is_parameter'));
+    main.form([{
+        selector: 'select(attrType)', callback: function (data) {
+            attrControl.init('',data.value);
+        }
+    },{
+        selector: 'checkbox(attr-val)',callback: function (data) {
+            attrControl.changeTable($(data.elem));
+        }
+    },{
+        selector: 'select(store)',callback: function (data,formObj) {
+            $('[name="store_id"]').val(data.value);
+            if (data.value !== '')
+            main.ajax({data:{store_id:data.value},url:'/goods/getAttrType',callback:function (res) {
+                var html = '<option value="0">-请选择商品属性-</option>';
+                if (res.data.length > 0){
+                    $.each(res.data,function (i,o) {
+                        html += '<option value="'+o.attr_type_id+'">'+o.type_name+'</option>'
+                    })
+                }
+                $('[name="attr_type_id"]').html(html);
+                formObj.render();
+            }})
+        }
+    },{
+        selector: 'select(cateHistory)',callback: function (data) {
+            if (data.value == ''){
+                $('.category-2').find('ul').html('<li>请选择二级分类</li>');
+                $('.category-3').find('ul').html('<li>请选择三级分类</li>');
+                $('.cur').removeClass('cur');
+                $('.classifyId').val('');
+                $('[name="goods_classify_info"]').val('');
+                $('#curCateContent').val('');
+            }else{
+                var cateIdArr = data.value.split(',') || {};
+                $('#cate_'+cateIdArr[0]).addClass('cur').siblings('li').removeClass('cur');
+                main.ajax({data:{id:cateIdArr},url:'/goods/getCateHistory',callback: function (res) {
+                    $.each(res.data,function (i,o) {
+                        $('.category-'+(i+2)).find('ul').html(o);
+                    });
+                    $('#curCateContent').val(res.title);
+                    $('[name="goods_classify_info"]').val(res.title);
+                    $('.classifyId').val(cateIdArr.pop());
+                }});
+            }
+        }
+    }]);
+    // 初始化表单验证对象
+    step.sub(1);
+    if ("{$goods_id}" != ''){
+        attrControl.init("{$goods_id}","{$goodsData['attr_type_id']?:''}");
+        $.ajax({type:'post',data:{id:"{$goods_id}",type:4},url:'/goods/getProducts',success: function (res) {
+            if (res.code != 0){
+                layer.msg(res.message);
+                return false;
+            }
+            if (res.data != ''){
+                $('.attr-ret').prepend(attrControl.tableHeader);
+                var arr = [];
+                $('.spec_table',document).append(res.data).children('tbody').children('tr').each(function (i,o) {
+                    arr.push($(o).children('td:first-child').children('span').attr('class').split(' '));
+                });
+                attrControl.uploadImg(arr);
+                attrControl.insDT();
+            }
+        }});
+    }
+    // 上传图片
+    main.upload([{
+        elem: '#mobileImg',
+        size: 2 * 1024,
+        data: {name: 'content_img', dir: 'content_img', auth: 'public-read', style: 3, crypt: 0},
+        field: 'content_img',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                    '<img src="' + res.data.ossUrl + '" title="' + res.data.name + '">'
+                    + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_file',
+        size: 2 * 1024,
+        data: {name: 'goods_file', dir: 'goods_file', auth: '', style: 1, crypt: 1},
+        field: 'goods_file',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" alt="' + res.data.name + '" class="uploadImg">' +
+                    '<input type="text" name="file" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+            $(this.elem).css('padding','1px').html(html);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_video',
+        size: 10 * 1024,
+        data: {name: 'goods_video', dir: 'video', auth: '', style: 1, crypt: 1},
+        field: 'goods_video',
+        accept: 'video',
+        acceptMime: 'video/*',
+        exts: 'mp4',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<video controls><source src="'+ res.data.ossCryptUrl +'" type = “application/ogg” /></video>';
+            $(this.elem).css('padding','1px').html(html);
+            $('[name="video"]').val(res.data.ossUrl);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#photos_area',
+        size: 2 * 1024,
+        data: {name: 'goods_album', dir: 'album', auth: '', style: 1, crypt: 1},
+        field: 'goods_album',
+        multiple: true,
+        number: 5,
+        auto: false,
+        choose: function (obj) {
+            var length = $('.img-item').length,num = 1;
+            obj.preview(function (index,file,result) {
+                if (length <= 5 && (length + num) <= 5 ) obj.upload(index, file);
+                num++;
+            });
+        },
+        done: function (res,index,upload) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="img-item">' +
+                    '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                    '<input type="hidden" name="picArr[]" value="'+ res.data.ossUrl +'" />' +
+                    '<div class="operate">' +
+                    '<i class="toleft">左移</i>' +
+                    '<i class="toright">右移</i>' +
+                    '<i class="del">删除</i>' +
+                    '</div></div>';
+            if ($(this.elem).children('.img-item').length == 0) $(this.elem).empty();
+            $(this.elem).css('padding',0).append(html);
+            layer.closeAll('loading');
+        }
+    }]);
+    $("#photos_area").on("click", '.toright', function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_right = item.next(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_right.length == 0) {
+                item.insertBefore($(this).parents('#photos_area').children(".img-item:first"));
+            } else {
+                item.insertAfter(item_right);
+            }
+        }
+    }).on("click", ".toleft", function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_left = item.prev(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_left.length == 0) {
+                item.insertAfter($(this).parents('#photos_area').children(".img-item:last"));
+            } else {
+                item.insertBefore(item_left);
+            }
+        }
+    }).on("click", ".del", function () {
+        $(this).parent().parent(".img-item").remove();
+        var pa = $('#photos_area');
+        if (pa.html() == '')
+            pa.css({'padding':'60px'}).html('<p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>');
+
+    }).on('click', '.img-item', function (ev) {
+        var oEvent = ev || event;
+        oEvent.stopPropagation();
+    });
+    // 检测商品货号唯一性
+    function checkUnique(o, val, goods_id) {
+        $.ajax({
+            url: '/goods/checkGoodsSn',
+            dataType: 'json',
+            type: 'post',
+            data: {goods_sn: val, goods_id: goods_id},
+            success: function (res) {
+                if (res.code !== 0) {
+                    layer.msg(res.message);
+                    $(o).focus();
+                }
+            }
+        })
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

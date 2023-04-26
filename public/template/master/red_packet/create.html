@@ -1,0 +1,210 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>平台注册红包：平台注册红包只能编辑，不能新增多个注册红包，可以修改红包内容，每个新注册的会员可以在新人大礼包中领取；</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>红包标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="20" autocomplete="off" placeholder="请输入红包标题"
+                       datatype="*"
+                       value="{$item.title|default=''}"
+                       nullmsg="请输入红包标题" errormsg="请输入红包标题"
+                       class="layui-input">
+            </div>
+        </div>
+        <input type="hidden" name="member_id" value="0">
+        {switch name=":input('classify_id')"}
+        {case value="1"}
+        <div class="layui-form-item">
+            <label class="layui-form-label">红包金额</label>
+            <div class="layui-input-block">
+                <input type="number" name="actual_price" value="{$item.actual_price|default=''}" maxlength="10"
+                       autocomplete="off"
+                       placeholder="请输入红包金额面值"
+                       class="layui-input">
+            </div>
+        </div>
+        <input type="hidden" name="type" value="1">
+        <input type="hidden" name="genre" value="0">
+        {/case}
+        {case value="2"}
+        <div class="layui-form-item">
+            <label class="layui-form-label">随机红包金额区间</label>
+            <div class="layui-input-block">
+                <input type="number" name="min_actual_price" value="{$item.min_actual_price|default=''}" maxlength="10"
+                       autocomplete="off"
+                       placeholder="请输入红包面值最低金额"
+                       class="layui-input" style="width: 200px;float: left;"><span
+                    style="float: left;margin: 10px;color: #999;">---</span>
+                <input type="number" name="max_actual_price" value="{$item.max_actual_price|default=''}" maxlength="10"
+                       autocomplete="off"
+                       placeholder="请输入红包面值最高金额"
+                       class="layui-input" style="width: 200px;float: left;">
+            </div>
+
+        </div>
+        <input type="hidden" name="type" value="2">
+        <input type="hidden" name="genre" value="1">
+        {/case}
+        {case value="3"}
+        <div class="layui-form-item">
+            <label class="layui-form-label">红包金额</label>
+            <div class="layui-input-block">
+                <input type="number" name="actual_price" value="{$item.actual_price|default=''}" maxlength="10"
+                       autocomplete="off"
+                       placeholder="请输入红包面值"
+                       class="layui-input">
+            </div>
+        </div>
+        <input type="hidden" name="type" value="3">
+        <input type="hidden" name="genre" value="0">
+        {/case}
+        {/switch}
+        <div class="layui-form-item">
+            <label class="layui-form-label">红包满减条件金额</label>
+            <div class="layui-input-block">
+                <input type="number" name="full_subtraction_price" value="{$item.full_subtraction_price|default=''}"
+                       maxlength="10" autocomplete="off"
+                       placeholder="请输入红包满减条件金额"
+                       class="layui-input">
+            </div>
+        </div>
+
+        {eq name=":input('classify_id')" value="1"}
+        <div class="layui-form-item">
+            <label class="layui-form-label">红包总数量</label>
+            <div class="layui-input-block">
+                <input type="number" name="total_num" value="{$item.total_num|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入红包总数量"
+                       class="layui-input">
+            </div>
+        </div>
+        {else/}
+        <input type="hidden" name="total_num" value="0">
+        {/eq}
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="description" maxlength="100" class="layui-textarea">{$item.description|default=''}</textarea>
+            </div>
+        </div>
+
+        {eq name=":input('classify_id')" value="1"}
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 使用开始时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="start_time" id="start_time" value="{$item.start_time|default=''}"
+                       autocomplete="off" placeholder="请选择开始时间"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 使用结束时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="end_time" id="end_time" value="{$item.end_time|default=''}" autocomplete="off"
+                       placeholder="请选择结束时间"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 领取开始时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="receive_start_time" id="receive_start_time"
+                       value="{$item.receive_start_time|default=''}" autocomplete="off" placeholder="请选择开始时间"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 领取结束时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="receive_end_time" id="receive_end_time"
+                       value="{$item.receive_end_time|default=''}" autocomplete="off" placeholder="请选择结束时间"
+                       class="layui-input">
+            </div>
+        </div>
+        {else/}
+        <div class="layui-form-item">
+            <label class="layui-form-label">红包有效时间</label>
+            <div class="layui-input-block">
+                <input type="number" name="extend_time" value="{$item.extend_time|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入红包有效时间，以小时为单位"
+                       class="layui-input">
+                <span style="color: #c3c3c3">红包生效后，超过有效时间不使用，则红包无效</span>
+            </div>
+        </div>
+        {/eq}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">启用状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="是"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="否"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.red_packet_id"}
+                <input type="hidden" name="red_packet_id" value="{$item.red_packet_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#start_time',
+        type: 'datetime'
+    },{
+        elem: '#end_time',
+        type: 'datetime'
+    },{
+        elem: '#receive_start_time',
+        type: 'datetime'
+    },{
+        elem: '#receive_end_time',
+        type: 'datetime'
+    }]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,16 @@
+iframe
+{
+    width: 173px;
+    height: 173px;
+}
+.impowerBox .qrcode{
+    width: 234px !important;
+    height: 234px !important;
+
+}
+.impowerBox .info{
+    /*width: 190px !important;*/
+}
+.title{
+    display: none !important;
+}

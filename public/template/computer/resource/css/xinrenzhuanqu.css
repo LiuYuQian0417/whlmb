@@ -1,0 +1,50 @@
+.public-bottom-box{
+    margin-top: 0;
+}
+.flash-sale{
+    background: url(../../resource/imgs/xianshiqianggou/top.png) #f6f6f6 top center no-repeat;
+    border-top: 1px solid;
+    padding-bottom: 125px;
+}
+.barline{
+    width:182px;
+    background:#fed8c5;
+    height:8px;
+    overflow:hidden;
+    border-radius: 8px;
+    float: left;
+    margin-top: 4px;
+}
+.charts {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+.new-people{
+    background: url(../../resource/imgs/xinrenzhuanqu/xinrenbeijing.png) top center no-repeat;
+    padding-bottom: 320px;
+}
+.new-people-height{
+   height: 624px;
+}
+.new-people-gift{
+    width: 1220px;
+    padding: 0 10px;
+    background: url(../../resource/imgs/xinrenzhuanqu/liwujianbian.png) top center no-repeat;
+    margin: 0 auto;
+    height: 1065px;
+}
+.new-people-title{
+    width: 1075px;
+    height: 122px;
+    margin: 0 auto 82px auto;
+    font-size: 32px;
+    line-height: 122px;
+    text-align: center;
+    color: #fff;
+    background: url(../../resource/imgs/xinrenzhuanqu/xinrenbiaoti.png) center center no-repeat;
+}
+.new-people-gift li{
+    width: 380px;
+    height: 146px;
+}

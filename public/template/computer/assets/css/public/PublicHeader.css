@@ -1,0 +1,94 @@
+.public-header{
+  width: 100%;
+  height: 42px;
+  background: #F8F8F8;
+  font-size: 12px;
+}
+.public-header .header-center{
+  width: 1200px;
+  height: 42px;
+  margin: 0px auto;
+  line-height: 42px;
+}
+.public-header .header-center  .header-left{
+    float: left;
+    color: #8C8C8C;
+  }
+.public-header .header-center  .header-left a{
+  color: #8C8C8C;
+
+}
+.public-header .header-center a:hover{
+	color: #EA5413 !important;
+	}
+.public-header .header-center  .img-color{
+  margin-right: 8px;
+  position: relative;
+  top: 1px;
+}
+.public-header .header-center  .header-left .partition{
+  margin: 0px 8px;
+}
+.public-header .header-center .header-right{
+  float: right;
+  color: #8C8C8C;
+	height: 42px;
+}
+
+.public-header .header-center .header-right a{
+  color: #8C8C8C;
+}
+.public-header .header-center .header-right .partition {
+  margin: 0px 8px;
+}
+.public-header .header-center .header-right  .service{
+  display: inline-block;
+	width: 67px;
+	height: 25px;
+	position: relative;
+	line-height: 25px;
+	top: 7px;
+	margin-left: 8px;
+}
+.public-header .header-center .header-right  .service img{
+	float: right;
+	position: relative;
+	top: 9px;
+}
+.public-header .header-center .header-right  .service .customer-service{
+	width: 100%;
+	height: 27px;
+	float: left;
+	border: 1px solid transparent;
+	text-align: center;
+	
+}
+.public-header .header-center .header-right  .service .partition{
+  margin: 0px;
+	float: left;
+}
+.public-header .header-center .header-right  .service .secondary-menu{
+	position: absolute;
+	top: 26px;
+	background:#fff ;
+	left: 0px;
+	width: 100%;
+	z-index: 2;
+	border: 1px solid transparent;
+	border-top: none;
+	display: none;
+	}
+	.public-header .header-center .header-right  .service .secondary-menu a{
+		display: block;
+		text-align: center;
+	}
+	
+	.public-header .header-center .header-right  .service:hover .customer-service{
+		background: #fff;
+		border: 1px solid #CCCCCC;
+	}
+	.public-header .header-center .header-right  .service:hover .secondary-menu{
+		display: block;
+		border: 1px solid #ccc;
+		border-top: none;
+	}

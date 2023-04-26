@@ -1,0 +1,122 @@
+.imageUploadDialog {
+    display: none;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.imageUploadDialog .layui-layer-wrap {
+    display: block;
+}
+
+.imageUploadDialog img {
+    max-width: 100%;
+}
+
+.imageUploadDialog .handleArea {
+    float: left;
+    width: 70%;
+    height: 100%;
+}
+
+.imageUploadDialog .operationArea {
+    float: left;
+    width: 30%;
+    height: 100%;
+    position: relative;
+}
+
+.imageUploadDialog .operationArea .imageUploadPreview {
+    width: 100%;
+    height: 240px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.imageUploadDialog .operationArea .title {
+    height: 30px;
+    line-height: 30px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.imageUpload {
+    border: 1px dashed #c0ccda;
+    border-radius: 6px;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-width: 135px;
+    min-height: 135px;
+    max-width: 320px;
+}
+
+.imageUpload > .plus {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: #8c939d;
+    z-index: 200;
+    text-align: center;
+    background-color: #ffffff;
+}
+
+.imageUpload > .plus >img{
+    height: 30%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+
+}
+
+.imageUpload > .file-input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.imageUpload > .default {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.imageUploadPreview {
+    max-width: 100%;
+    margin-top: 30px;
+}
+
+.imageUploadDialog .button-group {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.imageUpload > .hidden_input {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+#imageView{
+    padding: 5px;
+    display: none;
+    overflow: hidden;
+    position: absolute;
+    z-index: 9999999;
+    border-radius: 6px;
+    border: 1px dashed #c0ccda;
+    background: #ffffff;
+}
+#imageView > img{
+    float: left;
+    max-width: 320px;
+}

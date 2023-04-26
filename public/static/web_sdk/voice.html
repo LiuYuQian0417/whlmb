@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>voice</title>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+</head>
+<body>
+<link rel="stylesheet" href="./res/rongcloud.css">
+
+<script type="text/javascript" src="./lib/jquery-3.1.1.js"></script>
+
+<!-- IE9下 swfobject 报错问题解决 -->
+<!--[if !IE]><!--> 
+<script src="./lib/Libamr-2.2.5.min.js"></script>
+<!--<![endif]-->
+<script type="text/javascript" src="./lib/RongIMVoice-2.2.6.js"></script>
+
+<!-- 引入base64编码的 amr 音频数据 -->
+<script src="./res/voice-amr-base64.json"></script>
+
+<a href="https://github.com/rongcloud/websdk-demo/blob/master/voice.html" class="get-source">获取源码</a>
+
+<h1>声音库</h1>
+<h2><a href="http://www.rongcloud.cn/docs/web.html#声音库">http://www.rongcloud.cn/docs/web.html#声音库</a></h2>
+<div>支持范围：
+	<p>（1）IE9+、Windows Edge、Chrome、Firefox、Safari 等主流桌面版浏览器</p>
+	<p>（2）iOS Safari、iOS 微信浏览器 </p>
+	<p>（3）Android 4.4+ 默认浏览器、Android 微信浏览器</p>
+</div>
+
+<button class="voiceInfo" messageUId="5FNN-5MIH-S1VP-FT2O">播放测试语音1 base64 </button>
+<button class="voiceInfo" messageUId="5FNN-5MSJ-068O-EPDH">播放测试语音2 base64</button>
+
+<script>
+/*
+	初始化声音库
+*/
+var RongIMVoice = RongIMLib.RongIMVoice;
+	RongIMVoice.init();
+
+/*
+	* play() 播放音频消息
+	* 参数 voice 为 amr 格式的 base64
+	* 示例: voice = "IyFBTVIKLNEafAAeef/hgmeAH8AD...";
+*/
+
+function play(voice){
+	if(voice){
+		var duration = voice.length/1024;    // 音频持续大概时间(秒)
+   
+		if(!!window.ActiveXObject || "ActiveXObject" in window){
+			//如果是 IE 浏览器
+	    	RongIMVoice.preLoaded(voice);
+	    	RongIMVoice.play(voice,duration);
+		}else{
+			RongIMVoice.preLoaded(voice, function(){
+			    RongIMVoice.play(voice,duration);
+			});
+		}
+	}else{
+		console.error('请传入 amr 格式的 base64 音频文件');
+	}
+}
+
+/*
+    * messageData 为音频示例数据，在 voice-amr-base64.json 中
+    * 通过监听 button 的点击事件获取 消息的唯一标示 messageUId
+    * 根据 messageUId 获取到 音频消息的 base64 数据，然后执行 play() 方法
+*/
+
+$(".voiceInfo").on("click",function(){
+	var messageUId = $(this).attr('messageUId');
+	var voiceData = messageData[messageUId].content.content;    //获取 base64 音频文件
+	play(voiceData);
+});
+
+
+</script>
+</body>
+</html>

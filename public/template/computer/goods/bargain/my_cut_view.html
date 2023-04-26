@@ -1,0 +1,217 @@
+{extend name="public/common"}
+
+{block name="content_css"}
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<link rel="stylesheet" href="__RES__/css/MyBargain/BargainDetail.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+<style>
+    .finish{
+        width: 286px;
+        height: 45px;
+        background: #fadc22;
+        border-radius: 22.5px;
+        box-shadow: 5px 3px 0px #f9b61f;
+        text-align: center;
+        line-height: 45px;
+        font-size: 14px;
+        font-weight:bolder;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<div class="bargain">
+    <div class="title">
+        <div class="tittle-center" >
+            <a href="javascript:;" class="logo" >
+                <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            </a>
+            <p class="txt">
+                <span>砍价</span>
+            </p>
+
+        </div>
+    </div>
+
+    <div class="bargain-con">
+        <div class="bargain-box">
+            <div class="people">
+                <div class="rofile-photo">
+                    <img src="{$result.member.avatar}" alt="">
+                </div>
+                <p class="name">
+                    {$result.member.nickname}
+                </p>
+                <p>
+                    “我发现一件好货，帮我把价格砍掉吧”
+                </p>
+            </div>
+
+            <form action="{:url('/pc2.0/cart/confirm_order')}" method="post" id="cut_order">
+            <div class="bargain-top">
+                <div class="goods-box">
+                    <a href="javascript:;">
+                        <img class="goods-img" src=" {$result.goods.file}" alt="">
+                        <div class="goods-detail">
+                            <div class="goods-name">
+                                {$result.goods.goods_name}
+                            </div>
+                            <p class="pic">
+                                <span class="low-price primary-color">
+                                    底价{$result.cut_price}元
+                                </span>
+                                <del>￥{$result.original_price}</del>
+                            </p>
+
+                            <div class="pic-box">
+                                <span class="now-pic primary-color">
+                                    ￥{$result.present_price}
+                                </span>
+                                <span class="success">{$result.goods.cut_success_num}人砍价成功</span>
+                            </div>
+
+                            <div class=" plan-box">
+                                <div class="plan-con">
+                                    <div class="plan">
+                                        <span style="width:{:round(($result['original_price']-$result['present_price'])/($result['original_price']-$result['cut_price']))*100}%"></span>
+                                    </div>
+                                    <div  class="old">
+                                        <del class="old-pic">
+                                            原价{$result.original_price}
+                                        </del>
+                                        <span class="low-price">
+                                        ￥{$result.cut_price}
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <div class="plan-txt">
+                                    {eq name="$result.cut_price" value="$result.present_price"}
+                                    恭喜您砍价成功,已砍到底价
+                                    {else/}
+                                    已砍<span class="primary-color ">{$result.original_price-$result.present_price}</span>元，还差<span class="primary-color" >{$result.present_price}</span>元
+                                    {/eq}
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </a>
+                </div>
+
+                <div class="bargain-group">
+                    {switch name="$result.status"}
+                    {case value="1"}
+                    {neq name="$result.cut_price" value="$result.present_price"}
+                    <div class="btn-group">
+                        <div class="invitation primary-color">
+                            扫码分享给好友砍价
+                            <div class="code">
+                                <img src="{$result.qr_code.domain}{$result.qr_code.qr_code}" alt="">
+                            </div>
+                        </div>
+                        <a href="javascript:;"   class="pay primary-color">
+                            付款
+                        </a>
+                    </div>
+                    {else/}
+                    <div class="finish primary-color">
+                        付款
+                    </div>
+
+                    {/neq}
+                    <p>还剩 <span class="primary-color data-time_str" data-time_str="{:date('Y-m-d H:i:s',time()+$result.expiration_time)}"></span>结束，快让好友帮忙砍价吧~</p>
+                    {/case}
+                    {case value="2"}
+                    <!--砍价成功的按钮-->
+                    <a href="javascript:main.jump({'url':'/pc2.0/bargain/index'});" class="success-btn primary-color">
+                    去逛逛其他砍价商品
+                    </a>
+                    {/case}
+                    {case value="3"}
+                    <a href="javascript:jump_goods('{$result.goods_id}');" class="success-btn primary-color">
+                        重砍一个
+                    </a>
+                    <p>未在活动时间内完成，砍价已过期</p>
+                    {/case}
+                    {/switch}
+
+                </div>
+            </div>
+                <input type="hidden" name="number" value="1">
+                <input type="hidden" name="goods_id" value="{$result.goods_id}">
+                <input type="hidden" name="price" value="{$result.present_price}">
+                <input type="hidden" name="store_id" value="{$result.store_id}">
+                <input type="hidden" name="products_id" value="{$result.products_id}">
+                <input type="hidden" name="pay_channel" value="1">
+                <input type="hidden" name="order_type" value="3">
+            </form>
+            <!--砍价帮-->
+
+            <div class="assist">
+                <div class="assist-title">
+                    <img src="__RES__/imgs/my/kjtitle.png" alt="">
+                </div>
+
+                <div class="assist-con">
+                    {volist name="$result.attach_list" id="item"}
+                    <div class="assist-list">
+                        <div class="sightseer">
+                            <img src="{$item.member.avatar}" alt="">
+                            <span class="name">{$item.member.nickname}</span>
+                        </div>
+
+                        <div class="bargain-pic">
+                            <img src="__RES__/imgs/my/cd.png" alt="">
+                            <span>砍掉{$item.cut_price}元</span>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+
+            <!--砍价规则-->
+            <div class="rule">
+                <div class="rule-title">
+                    <img src="__RES__/imgs/my/kjgz.png" alt="">
+                </div>
+                {$info.content|raw}
+            </div>
+
+        </div>
+    </div>
+</div>
+{/block}
+
+
+{block name="js"}
+<script type="text/javascript">
+
+    //付款
+    $('.pay').click(function () {
+        var form = document.getElementById('cut_order');
+
+        form.submit();
+    })
+
+
+    function limit(){
+        main.count_down({
+            'time_select': $('.data-time_str'),
+            'function_name': limit,
+            'dispose_callback':function(time){
+                var text = '';
+                return  text +time.h+'时'+time.m+'分'+time.s+'秒';
+            },
+            'callback': function () {
+                window.location.href=window.location.href;
+            }
+        });
+    }
+    if($('span.data-time_str').length>0) {
+        limit();
+    };
+
+</script>
+{/block}

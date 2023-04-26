@@ -1,0 +1,135 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 会员等级名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="rank_name" maxlength="30" autocomplete="off" placeholder="请输入会员等级名称"
+                       value="{$item.rank_name|default=''}"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 成长值下限</label>
+            <div class="layui-input-inline">
+                <input type="text" name="min_points" value="{$item.min_points|default=''}" maxlength="9" autocomplete="off" placeholder="请输入成长值下限"
+                       class="layui-input">
+                <div style="overflow: hidden">
+                    <span class="remarks" style="float: left">超过此成长值即可成为该等级会员</span>
+                </div>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label"><font color="red">*</font> 成长值上限</label>-->
+            <!--<div class="layui-input-inline">-->
+                <!--<input type="text" name="max_points" value="{$item.max_points|default=''}" maxlength="9" autocomplete="off" placeholder="请输入成长值上限"-->
+                       <!--class="layui-input">-->
+                <!--<div style="overflow: hidden">-->
+                    <!--<span class="remarks" style="float: left">当会员成长值大于等于成长值下限，小于等于成长值上限时成为该级别会员</span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 初始折扣率(%)</label>
+            <div class="layui-input-inline">
+                <input type="text" name="discount" value="{$item.discount|default=''}" maxlength="3" autocomplete="off" placeholder="请输入初始折扣率"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 文字标示</label>
+            <div class="layui-input-inline">
+                <input type="text" name="mark" value="{$item.mark|default=''}" maxlength="5" autocomplete="off" placeholder="请输入文字标示"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">我的页面 - 等级标志</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$item.file|default=''}"
+                        width="138"
+                        height="43"
+                        file-mime="image/gif,image/jpeg,image/png" 文件类型
+                        name="file"
+                        dir="member_rank/file"
+                        value="{$item.file_data|default=''}"
+                ></div>
+                <div style="overflow: hidden">
+                    <span class="remarks" style="float: left">上传等级标志图，尺寸要求138*43，如果不上传图片会影响展示效果</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">等级页面 - 等级标志</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$item.file2|default=''}"
+                        width="68"
+                        height="68"
+                        file-mime="image/gif,image/jpeg,image/png" 文件类型
+                        name="file2"
+                        dir="member_rank/file"
+                        value="{$item.file2_data|default=''}"
+                ></div>
+                <div style="overflow: hidden">
+                    <span class="remarks" style="float: left">上传等级标志图，尺寸要求68*68，如果不上传图片会影响展示效果</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.member_rank_id"}
+                <input type="hidden" name="member_rank_id" value="{$item.member_rank_id}">
+                {/present}
+                <a type="reset" class="layui-btn layui-btn-primary" href="/member_rank/index">返回</a>
+                <button class="layui-btn" type="submit" id="submit">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

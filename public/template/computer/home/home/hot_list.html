@@ -1,0 +1,72 @@
+{extend name='public/common'/}
+{block name="content_css"}
+<!--热点css-->
+<link rel="stylesheet" href="__RES__/css/hot/hot.css">
+<link rel="stylesheet" href="__RES__/css/my/my.css" />
+<!--iconfont-->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1111076_ie7fbzwcysd.css">
+
+<script src="__RES__/js/public/jquery.min.js"></script>
+{/block}
+{block name="content"}
+<!--我的页面头部-->
+<div class="my-box">
+    <div class="my primary-background-color">
+        <div class="my-center">
+            <!-- logo -->
+            <a class="logo left" href="javascript:;">
+                <img src="__RES__/imgs/logo.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            </a>
+            <div class="my-top-menu left">
+                <span style="color:#fff;">热点</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--我的页面头部结束-->
+
+<!--热点-->
+<div class="hot-container">
+    <ul class="hot-list">
+        {volist name="data" id="item"}
+        <li class="hot-item">
+            <a href="{:url('pc2.0/home/hot_view')}?article_id={$item.article_id}" style="width: 240px;">
+                <img src="{$item.file}" alt="">
+                <div class="icon-btm">{$item.goods_number}件商品</div>
+            </a>
+            <div class="hot-item-view">
+                <a href="{:url('pc2.0/home/hot_view')}?article_id={$item.article_id}" class="hot-item-title">{$item.title}</a>
+                <p>{$item.describe}</p>
+                <div class="hits">
+                    <i class="iconfont icon-liulan"></i>
+                    <span>{$item.hits}人浏览</span>
+                </div>
+            </div>
+        </li>
+        {/volist}
+
+    </ul>
+</div>
+<!--热点结束-->
+
+<!--置顶-->
+<div class="back-top">
+    <i class="iconfont icon-arrow_top"></i>
+    <span>返回顶部</span>
+</div>
+{/block}
+
+
+
+{block name="js"}
+<script type="text/javascript">
+    var len = $('.hot-item').length;
+    for(var i=0;i<len;i++){
+        $('.hot-item').eq(i).hover(function () {
+            $('.hot-item-title').eq(i).addClass('primary-color')
+        },function () {
+            $('.hot-item-title').eq(i).removeClass('primary-color')
+        })
+    }
+</script>
+{/block}

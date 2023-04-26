@@ -1,0 +1,180 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css"  rel="stylesheet" type="text/css" />
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<style>
+    .remarks {
+        display: block;
+        width: 445px;
+        margin: 5px 0;
+        color: #767676;
+    }
+    .layui-btn-new {
+        display: inline-block;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 12px;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        background-color: #cc3300;
+        float: left;
+    }
+    .layui-btn-new:hover img{
+        display: block !important;
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                {eq name="$level" value="2"}
+                <li><span>1、添加商品二级分类；</span></li>
+                <li><span>2、可设置二级分类信息；</span></li>
+                {else/}
+                <li><span>1、添加商品三级分类；</span></li>
+                <li><span>2、可设置三级分类信息；</span></li>
+                {/eq}
+
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">上级分类</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" maxlength="8" autocomplete="off" placeholder="上级分类名称"
+                           value="{$parent_data.title|default=''}" class="layui-input" disabled>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 分类名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="6" autocomplete="off" placeholder="请输入分类名称"
+                       datatype="*"
+                       value="{$item.title|default=''}"
+                       nullmsg="请输入分类名称" errormsg="请输入分类名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">移动端图标</label>
+            <div class="layui-input-block">
+                <div
+                    class="imageUpload"
+                    default="{$item.web_file|default=''}"
+                    width="110"
+                    height="110"
+                    file-mime="image/gif,image/jpeg,image/png" 文件类型
+                    name="web_file"
+                    dir="goods_classify/file"
+                    value="{$item.web_file_data|default=''}"
+                ></div>
+                <div  style="display: flex;">
+                    <span class="remarks" style="float: left">上传分类图标，尺寸要求110*110，如果不上传分类图片会影响展示效果</span>
+                    <div class="layui-btn-new"  style="float: left;margin-left: 20px;position: relative;">显示预览
+
+                        <img src="__RES__/image/hover/u11378.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -160px;left: 90px;z-index: 999;display: none;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="text" name="sort" value="{$item.sort|default='100'}" maxlength="5" autocomplete="off" placeholder="请输入分类名称"
+                       class="layui-input">
+                <span class="remarks">数值越大，排序越靠前</span>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">关键字</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" name="keyword" value="{$item.keyword|default=''}" maxlength="50" autocomplete="off" placeholder="请输入关键字"-->
+                       <!--class="layui-input">-->
+                <!--<span class="remarks">最多可设置5个关键，每个关键字用英文逗号分开","，例如：户外,帽衫,防寒</span>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">PC端图标</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<div>-->
+                    <!--<div class="uploader white left">-->
+                        <!--<input type="text" class="filename" id="localPath" value="{$item.file|default=''}" readonly/>-->
+                        <!--<input type="button" class="button" value="上传..."/>-->
+                        <!--<input type="file" id="up_img" name="image" />-->
+                    <!--</div>-->
+                    <!--<div id="imgPrev" style="float: left;margin: 10px 0 0 10px;">-->
+                        <!--<img id="imgShow" src="{$item.file|default=''}" height="30" onerror="this.src='__RES__/image/common/imageError.png'"  alt="PC端图标"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="是"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="否"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+                <span class="remarks">选择否，商城分类中则无法显示该分类</span>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a type="reset" class="layui-btn layui-btn-primary" href="/goods_classify/index">返回</a>
+                <input type="hidden" name="parent_id" value="{$parent_data.goods_classify_id|default=''}">
+                <input type="hidden" name="goods_classify_id" value="{$item.goods_classify_id|default=''}">
+                <input type="hidden" name="level" value="{$level|default=''}">
+                <button class="layui-btn" type="submit" id="submit">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#date',
+        type: 'datetime',
+        range: true,
+    }]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

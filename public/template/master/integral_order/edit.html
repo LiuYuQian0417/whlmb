@@ -1,0 +1,191 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>用户在商城通过积分兑换或换购的订单</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+    <!--步骤开始-->
+    <ul class="nav nav-pills nav-justified step step-round">
+        <li {neq name="item.status" value="3"}{egt name="item.status" value="0" }class="step1 active"{else/}class="step2"{/egt} {else/}class="step2"{/neq} style="width: 33%;">
+            <a>待发货</a>
+        </li>
+        <li {neq name="item.status" value="3"}{egt name="item.status" value="1" }class="step1 active"{else/}class="step2"{/egt}{else/}class="step2"{/neq} style="width: 33%;">
+            <a>已发货</a>
+        </li>
+        <li {neq name="item.status" value="3"}{egt name="item.status" value="2" }class="step1 active"{else/}class="step2"{/egt}{else/}class="step2"{/neq} style="width: 33%;">
+            <a>已完成</a>
+        </li>
+    </ul>
+    <!--步骤结束-->
+    <div class="contentShell90">
+        <!--基本信息开始-->
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top:20px;">
+            <legend>基本信息</legend>
+        </fieldset>
+            <table class="layui-table" lay-skin="line">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>订单号：</th>
+                    <th>购货人</th>
+                    <th>订单来源</th>
+                    <th>订单类型</th>
+                    <th>下单时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$item.order_number|default=''}</td>
+                    <td>{$item.member.nickname}</td>
+                    <td>{$item.FormText}</td>
+                    <td>
+                        {switch name="item['integralGoods']['type']"}
+                        {case value="0"}积分兑换{/case}
+                        {case value="1"}积分换购{/case}
+                        {/switch}
+                    </td>
+                    <td>{$item.create_time}</td>
+                </tr>
+                </tbody>
+            </table>
+        <!--基本信息结束-->
+
+        <!--收货人信息开始-->
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top:40px;">
+            <legend>收货人信息</legend>
+        </fieldset>
+            <table class="layui-table" lay-skin="line">
+                <colgroup>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>收货人</th>
+                    <th>手机号码</th>
+                    <th>收货地址</th>
+                    <th>配送方式/快递单号</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$item.name}</td>
+                    <td>{$item.phone}</td>
+                    <td>[{$item.province}&nbsp;{$item.city}&nbsp;{$item.area}&nbsp;{$item.street}]{$item.address}</td>
+                    <td>{$item.express_name}/{$item.express_number}</td>
+                </tr>
+                </tbody>
+            </table>
+        <br/>
+        <!--收货人信息结束-->
+
+        <!--订单信息开始-->
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 40px;">
+            <legend>订单信息</legend>
+        </fieldset>
+            <table class="layui-table" lay-skin="line">
+                <colgroup>
+                    <col>
+                    <col width="300">
+                    <col>
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>积分商品ID</th>
+                    <th>积分商品名称</th>
+                    <th>缩略图</th>
+                    <th>所需积分</th>
+                    <th>所需金额</th>
+                    <th>购买数量</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$item.integral_id}</td>
+                    <td>{$item.integral_name}</td>
+                    <td><img src="{$item.file}" onerror=this.src="/template/master/resource/image/common/imageError.png"></td>
+                    <td>{$item.integral}</td>
+                    <td>{$item.price}</td>
+                    <td>{$item.number}</td>
+                </tr>
+                </tbody>
+            </table>
+        <!--订单信息结束-->
+
+        <!--快递设置开始-->
+        <div class="contentShell80">
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 快递公司名称</label>
+                <div class="layui-input-inline">
+                    <select name="express_value" lay-search="" datatype="*"
+                            nullmsg="请选择快递公司" errormsg="请选择快递公司" {neq name="item.status" value="0"}disabled="disabled"{/neq}>
+                        <option value="" {eq name="item.express_value|default=''" value="" }selected{/eq}>请选择快递公司</option>
+                        {volist name="express" id="vo"}
+                        <option value="{$vo.code}" {eq name="item.express_value|default=''" value="$vo.code" }selected{/eq}>{$vo.name}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <label class="layui-form-label"><font color="red">*</font> 快递单号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="express_number" maxlength="20" autocomplete="off" placeholder="请输入快递单号"
+                           value="{$item.express_number|default=''}"
+                           datatype="n" {neq name="item.status" value="0"}readonly{/neq}
+                           nullmsg="请输入快递单号" errormsg="快递单号格式错误"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <!--快递设置结束-->
+    </div>
+    <!--操作订单开始-->
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.integral_order_id"}
+                <input type="hidden" name="integral_order_id" value="{$item.integral_order_id}">
+                <input type="hidden" name="status" value="1">
+                {/present}
+                {eq name="item.status" value="0"}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                {/eq}
+            </div>
+        </div>
+    </div>
+    <!--操作订单结束-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

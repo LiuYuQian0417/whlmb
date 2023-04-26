@@ -1,0 +1,230 @@
+
+
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyRedPacket.css" />
+<style type="text/css">
+	.red-packet-con{
+		display: none;
+	}
+	.un-used{
+		display: block;
+	}
+    .card-box{
+        width:770px;
+        padding:33px 0 0 37px ;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .box-title{
+        font-size: 18px;
+        line-height: 40px;
+        color: #fff;
+        font-weight: 600;
+    }
+    .box-titlea{
+        color: #fff;
+        font-size: 14px;
+        line-height: 30px;
+    }
+    .box-titlea span{
+        margin-right: 10px;
+    }
+    .box-list{
+        position: relative;
+        z-index: 3;
+        width: 348px;
+        height:108px;
+        border-radius: 5px;
+        /*overflow: hidden;*/
+        box-sizing: border-box;
+        padding:15px 0 15px 30px;
+        margin: 0 0 15px 0;
+    }
+    .add{
+        display: block;
+        width: 122px;
+        height:32px;
+        line-height: 32px;
+        font-size: 14px;
+        color: #fff;
+        background: #ea5413;
+        text-align: center;
+        margin-left: 30px;
+    }
+    .my-red-packet{
+        min-height: 550px;
+    }
+    .my-red-packet .title{
+        border-bottom: 10px solid #f0f3ef;
+    }
+    .remove-bj{
+        display: none;
+        width: 100%;
+        height:100%;
+        background: rgba(0,0,0,.3);
+        position: fixed;
+        top:0;
+        left:0;
+        z-index: 9999;
+    }
+    .remover-content{
+        display: none;
+        background: #fff;
+        width: 355px;
+        height:200px;
+        position: fixed;
+        z-index: 99999;
+        /*border: 5px solid rgba(0,0,0,.5);*/
+        overflow: hidden;
+        top:50%;
+        left:50%;
+        margin-top: -100px;
+        margin-left: -180px;
+    }
+    .remover-content p{
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        text-align: center;
+        width: 100%;
+        height:130px;
+        line-height: 130px;
+    }
+    .remover-content .button{
+        display: flex;
+        justify-content: space-between;
+    }
+    .remover-content .button div{
+        width:50%;
+        height:40px;
+        line-height: 40px;
+        font-size: 20px;
+        background: #ddd;
+        font-size: 16px;
+        text-align: center;
+    }
+    .remover-content .top{
+        display: flex;
+        height:30px;
+        line-height: 30px;
+        background: #ddd;
+        color: #555;
+        padding: 0 10px;
+        font-size: 14px;
+        justify-content: space-between;
+    }
+    .remover-content .button div:nth-child(2){
+        background: #ea5413;
+        color: #fff;
+    }
+    .card-remove{
+        position: absolute;
+        z-index: 3;
+        right:-4px;
+        top:-5px;
+        width:20px;
+        height:20px;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+			<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+			<!--我的页面左侧公共部分结束-->
+
+
+			<div class="index-right" style="padding-bottom: 20px;">
+				<!-- 我的右侧 -->
+				<div class="my-red-packet">
+				    <h5 class="title">
+				     银行卡
+				    </h5>
+					<ul class="card-box">
+                        {empty name='result'}
+                        <li class="box-list" style="margin: 0 auto; width: 285px;" >
+                            <div class="red-packet-enty" style=" display: flex; align-content: center; align-items: center;  text-align: center; line-height: 68px;">
+                                <img src="__RES__/imgs/yield/card.png" style="padding: 0 20px;">
+                                <span>您暂未添加银行卡</span>
+
+
+                            </div>
+                        </li>
+                        {else/}
+                        {volist name='result' id='item'}
+						<li class="box-list" style="background: url('__RES__/imgs/card/1.png') center/cover no-repeat;">
+                            <div class="card-content">
+                                <div  class="box-title">{$item.card_remark}</div>
+                                <div class="box-titlea">
+                                    <span>****</span>
+                                    <span>****</span>
+                                    <span>****</span>
+                                    <span>{$item.card_number_enc}</span>
+                                </div>
+                            </div>
+                            <div class="card-remove">
+                                 <img src="__RES__/imgs/card/sc.png" width="20" height="20" kk="{$item.card_id}">
+                          <!--        <input type="hidden" name="card_id" value="{$item.card_id}"> -->
+                            </div>
+                        </li>
+                        {/volist}
+                        <div class="remove-bj">
+                        </div>
+                        <div class="remover-content">
+                            <div class="top">
+                                <div>银行卡删除</div>
+                                <div class="qd" style="cursor:pointer;">×</div>
+                            </div>
+                            <p>你确定要删除么？</p>
+                            <div class="button">
+                                <div class="qx" style="cursor:pointer;">取消</div>
+                                <div class="qd" style="cursor:pointer;">确定</div>
+                            </div>
+                        </div>
+                        {/empty}
+					</ul>
+
+					<a href="/pc2.0/member_card/add.html" class="add">添加银行卡</a>
+
+				    </div>
+				    <!--分页-->
+				<!--分页-->
+				<div class="pageContainer" style="width: auto;">{$result|raw}</div>
+
+				  <!-- </div> -->
+			</div>
+		</div>
+<script>
+    $('.card-remove').click(function(){
+         // console.log(1)
+         card_id = $(this).children('img').attr('kk');
+         $('.remover-content').show()
+         $('.remove-bj').show()
+    })
+    $('.qd').click(function(){
+        $(this).parents('.remover-content').hide()
+        $(this).parents('.remover-content').siblings('.remove-bj').hide()
+        $.post("{:url('/pc2.0/member_card/destroy')}",{card_id:card_id},function(t){
+            if(t.code == 1){
+                layer.msg('删除成功',{time:2000},function(){
+                    window.location.href="{:url('/pc2.0/member_card/index')}";
+                })
+            }
+        },'json');
+    })
+    $('.qx').click(function(){
+        $(this).parents('.remover-content').hide()
+        $(this).parents('.remover-content').siblings('.remove-bj').hide()
+    })
+</script>
+{/block}
+

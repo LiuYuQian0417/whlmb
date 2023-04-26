@@ -1,0 +1,105 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .inline-input{
+        display: inline-block;
+        width: calc(100% - 86px)
+    }
+    .inline-button{
+        display: inline-block;
+    }
+</style>
+<form class="layui-form" action="" method="post">
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+            <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="content">
+            <div class="explanation" id="explanation">
+                <div class="ex_tit">
+                    <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                </div>
+                <ul>
+                    <li>1、开启分销功能后，系统将为您开放分销功能使用权限，请做好相关规则设置再使用；</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+
+    <!----------------------------------------------------基本设置------------------------------------------------------>
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 270px;">功能开启</label>
+            <div class="layui-input-block">
+                <input title type="checkbox" name="distribution_status" lay-skin="switch" lay-text="开|关"
+                       {if condition="$distribution['DISTRIBUTION_STATUS'] eq 1"}checked{/if}>
+            </div>
+        </div>
+        {if condition="$distribution['DISTRIBUTION_STATUS']"}
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 270px;">
+                是否按照商品利润分佣
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input title type="checkbox"  name="distribution_goods_profit" lay-skin="switch" lay-text="开|关"
+                       {if condition="$distribution['DISTRIBUTION_GOODS_PROFIT'] eq 1"}checked{/if} >
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                系统默认按照实际成交金额分佣，如果开启此开关，系统会按照实际成交金额 - 成本价 = 商品利润进行分佣<br/>
+                <span style="color: red;">
+                    注：如果一个订单中有多样商品，该订单享受的是整单优惠，会用优惠价乘以商品原价在订单金额的占比，再用商品原价减去占比后的优惠价，
+                    就是该商品的实际成交金额，再减去成本价就是利润，例如订单中有A商品原价是30、B商品原价是20、C商品原价是50，订单原价金额为100元，
+                    优惠了10元，实际成交金额是90元，那么A商品优惠了10*（30/100） = 3元，成交价为30-3=27，B商品优惠了10*（20/100）=2元，
+                    成交价为20-2=18，C商品优惠了10*（50/100）=5元，成交价为50-5=45元。订单总金额为27+18+45=90元，佣金总额=A商品的成交价或利润*分佣比例+C商品的成交价或利润*分佣比例+B商品的成交价或利润*分佣比例。
+                </span>
+            </div>
+        </div>
+        {eq name="single_store" value="1"}
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 270px;">
+                是否允许商家编辑分销商等级的分佣比例
+            </label>
+            <div class="layui-input-block" style="width: 100px;display: -webkit-box;">
+                <input title type="checkbox"  name="distribution_proportion" lay-skin="switch" lay-text="开|关"
+                       {if condition="$distribution['DISTRIBUTION_PROPORTION'] eq 1"}checked{/if} >
+            </div>
+            <div class="layui-form-mid layui-word-aux">
+                商家可在商品发布页面设置单品分佣比例和分销商等级对应的分佣比例<br/>
+                <span style="color: red;">
+                    注：每个结算周期内只能修改一次比例。
+                </span>
+            </div>
+        </div>
+        {/eq}
+        {/if}
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

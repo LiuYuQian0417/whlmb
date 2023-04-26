@@ -1,0 +1,138 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、订单：参与活动的用户生成的抽奖订单；</li>
+                <li>2、活动：创建活动，可在活动中制定活动规则并选择参与活动的商品，进行中的活动不可编辑，每次只能启动一个活动</li>
+                <li>3、优惠券：生成优惠券供抽奖活动使用</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('lottery/order_list')">订单</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('lottery/activity_list')">活动</a></li>
+        {if $Think.INI_CONFIG['IS_COUPON']}<li><a href="javascript:void(0);" onclick="main.jumpFour('lottery/coupon_list')">优惠券</a></li>{/if}
+    </ul>
+</div>
+<form class="layui-form">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('lottery/activity_create')">
+                <div class="fbutton">
+                    <div class="add" title="添加活动"><span><i class="fa fa-plus"></i> 添加活动</span></div>
+                </div>
+            </a>
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据"  onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入活动名称"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                    <!--<input type="submit" class="btn" name="secrch_btn" value="">-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<!--列表-->
+<form class="layui-form" action="">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>活动名称</th>
+            <th>库存状态</th>
+            <th>启用状态</th>
+            <!--<th>创建时间</th>-->
+            <th width="150">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td><input type="checkbox" value="{$item.activity_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>{$item.title}</td>
+            <td>{$item.inventory_status}
+                {if condition="$item.inventory_status eq '不足'"}
+                <img style="width: 20px;height: 20px;margin-left: 10px;position: absolute;" src="__RES__/image/common/warning.png" alt="">
+                {/if}
+            </td>
+            <td>
+                <input type="checkbox" name="status" lay-skin="switch"
+                       lay-filter="status"
+                       lay-text="是|否"
+                       value="{$item.is_open}" id="{$item.activity_id}"
+                       {eq name="item.is_open" value="2" }checked{/eq}>
+            </td>
+            <!--<td>{$item.create_time}</td>-->
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('lottery/activity_edit?id={$item.activity_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash 1" href="javascript:void(0);" onclick="main.destroy('/lottery/activity_destroy','{$item.activity_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/lottery/activity_destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{selector:'switch(status)',callback:function (data) {
+            main.ajax({type:'post',url:'/lottery/activity_open',data:{'id': data.elem.id},callback:function(res){
+                    layer.msg(res.message);
+                    switch (res.is_open) {
+                        case 1:
+                            $(data.elem).removeAttr('checked');
+                            $(data.elem).next('div').find('em').text('否');
+                            $(data.elem).next('div').removeClass('layui-form-onswitch');
+                            break;
+                        case 2:
+                            $(data.elem).attr('checked','checked');
+                            $(data.elem).next('div').find('em').text('是');
+                            $(data.elem).next('div').addClass('layui-form-onswitch');
+                            break;
+                    }
+                }});
+        }}]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

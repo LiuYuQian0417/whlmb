@@ -1,0 +1,72 @@
+{extend name='layout/frame'}
+{block name='body'}
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+{block name='breadcrumb'}{/block}
+<div class="explanation mb10" id="explanation">
+    <div class="ex_tit">
+        <i class="sc_icon"></i><h4>操作提示</h4>
+    </div>
+    <ul>
+        <li>该页面展示了商城所有的商品属性信息，可对商品属性参数进行单独修改操作。<li>
+    </ul>
+</div>
+<div class="goods-sn-div">商品货号：<label class="goods-sn-name" title="{:input('sn')}">{:input('sn')}</label></div>
+<div class="layui-form" >
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>规格货号</th>
+            <th>规格名称</th>
+            <th>价格</th>
+            <th>库存</th>
+            <th>库存预警</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $data as $key => $val}
+        <tr>
+            <td>{$val['attr_goods_sn']}</td>
+            <td>{$val['goods_attr']}</td>
+
+            <!--<td>{$val['attr_shop_price']}</td>-->
+            <td class="intervene" >
+                <input type="text" data-number="{$val.attr_shop_price}" data-goods_sn="{$val.attr_goods_sn}" data-type="price" onblur="edit(this)" class="sort-txt-out price{$val.attr_goods_sn}" title name="sort-txt" value="{$val['attr_shop_price']}" />
+            </td>
+            <td class="intervene" >
+                <input type="text"  data-number="{$val.attr_goods_number}" data-goods_sn="{$val.attr_goods_sn}" data-type="stock" onblur="edit(this)" class="sort-txt-out stock{$val.attr_goods_sn}" title name="sort-txt" value="{$val['attr_goods_number']}" />
+            </td>
+            <td class="intervene" >
+                <input type="text"  data-number="{$val.attr_warn_number}" data-goods_sn="{$val.attr_goods_sn}" data-type="warm" onblur="edit(this)" class="sort-txt-out warm{$val.attr_goods_sn}" title name="sort-txt" value="{$val['attr_warn_number']}" />
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+</div>
+{/block}
+{block name='script'}
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script>
+    $('.layui-table').dataTable({
+        columnDefs: [
+            {orderable: false,targets: [1,2,3,4] }
+        ],
+        bLengthChange: false,
+        language: {
+            "url": "__RES__/js/DataTables-1.10.15/media/chinese.json"
+        }
+    });
+    //修改单个属性的价格和库存
+    function edit(e){
+        $(e).removeClass('sort-txt-out');
+        var number = $(e).data('number');
+        var type = $(e).data('type');
+        var goods_sn = $(e).data('goods_sn');
+        var newTxt = $(e).val();
+        if (number != newTxt)$.post('/goods/editAttr', {goods_id: goods_sn, attr_value: newTxt, type: type});
+        $(e).addClass('sort-txt-out');
+        $(e).off("blur");
+    }
+</script>
+{/block}
+{block name='sidebar'}{/block}

@@ -1,0 +1,138 @@
+
+{extend name='public/my_header' /}
+
+
+{block name='content_css'}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/AccountBalance.css" />
+{/block}
+
+{block name="content"}
+<div class="index-box">
+	<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+	<!--我的页面左侧公共部分结束-->
+
+			<!-- 我的右侧 -->
+			<div class="index-right">
+				
+				<!--左侧内容开始-->
+				<div class="account-balance">
+					{if $function_status.is_balance==1}
+				    <div class="account-balance-top">
+				      <div class="tit">
+				        账户余额（元）
+				      </div>
+				      <div class="money">
+				        <div class="balance">
+				          <span class="integer">{$balance|mb_substr=0,-2}</span>{$balance|mb_substr=-2,2}
+				        </div>
+						  {if $function_status.is_recharge==1}
+							<a class="recharge primary-background-color" href="javascript:main.jump({'url':'/pc2.0/recharge/index'})">
+							  充值
+							</a>
+						  {/if}
+				      </div>
+				      <p>金额可用于线上及线下门店购物支付</p>
+				    </div>
+					{/if}
+				    <div class="account-balance-bottom">
+				      <div class="tit">
+				        <a {empty name=":input('type')"} class="primary-color border-color" {/empty} href="{:url('pc2.0/recharge/balance_record')}">
+				          全部记录
+				        </a>
+				        <a {eq name=":input('type')" value="4" } class="primary-color border-color" {/eq}  href="{:url('pc2.0/recharge/balance_record')}?type=4&month={:input('month')}">
+				          充值记录
+				        </a>
+				        <a {eq name=":input('type')" value="2" } class="primary-color border-color" {/eq}  href="{:url('pc2.0/recharge/balance_record')}?type=2&month={:input('month')}">
+				          消费记录
+				        </a>
+				        <a {eq name=":input('type')" value="3" } class="primary-color border-color" {/eq}  href="{:url('pc2.0/recharge/balance_record')}?type=3&month={:input('month')}">
+				          退款记录
+				        </a>
+				        <div class="right">
+				          <div class="now-month" ><span>{:input('month')}月</span> <img src="__RES__/imgs/my/datebottom.png" alt=""></div>
+				          <ul class="month"  style="display: none;">
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=1&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  1月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=2&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  2月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=3&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  3月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=4&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  4月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=5&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  5月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=6&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  6月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=7&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  7月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=8&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  8月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=9&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  9月  </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=10&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  10月 </a></li>
+				          	 <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=11&type={:input(\'type\')}'});"><a class="primary-color-hover" href="javascript:">  11月 </a></li>
+				             <li onclick="main.jump({'url':'/pc2.0/recharge/balance_record?month=12&type={:input(\'type\')}'})"><a class="primary-color-hover" href="javascript:;">  12月 </a></li>
+				          </ul>
+				        </div>
+				      </div>
+				      <!--全部-->
+				      <div class="list" style="display: block;">
+				        <div class="list-tit">
+				          <span>时间</span>
+				          <span>金额</span>
+				          <span>操作</span>
+				
+				        </div>
+				        <!--每条记录-->
+						  {empty name='$result'}
+						  <div class="indent-box indent-box-emty">
+							  <img src="__RES__/imgs/orderemty.png" alt="">
+							  <p>暂无数据</p>
+						  </div>
+						  {/empty}
+						{volist name="result" id="item"}
+							<div class="list-detail" >
+							<span>{$item.create_time}</span>
+							<span >
+								{if in_array($item->getdata('type'),[0,1,3])}+{else/}-{/if}
+								{$item.price}</span>
+							<span>{$item.type}</span>
+							</div>
+						{/volist}
+
+				        <!--每条结束-->
+				      </div>
+				      <!--分页-->
+				       <div class="pageContainer" style="width: auto">{$result|raw}</div>
+				      
+				    </div>
+				  </div>
+				<!--左侧内容结束-->
+				
+			</div>
+
+		</div>
+{/block}
+
+{block name="js"}
+	<script type="text/javascript">
+//			月份选择
+		$('.now-month').click(function(e){
+			e.stopPropagation();
+			$('.month').show();
+		})
+		$('.month li').click(function(){
+			var txt = $(this).text();
+			$('.now-month span').html(txt)
+		})
+		$(document).click(function(){
+			$('.month').hide();
+		})
+
+
+// //			tab切换
+// 		$('.account-balance-bottom .tit a').click(function(){
+// 			var num = $(this).index();
+// 			$(this).addClass('primary-color border-color').siblings().removeClass('primary-color border-color')
+//
+// 			$('.account-balance-bottom .list').eq(num).show().siblings('.list').hide()
+// 		})
+	</script>
+{/block}

@@ -1,0 +1,70 @@
+{extend name="public/index_header"}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/NewZone/newzone.css">
+{/block}
+
+{block name="content"}
+<!--新人专区开始-->
+<div class="new-people">
+    <div class="new-people-height">
+    </div>
+    <div class="new-people-title">
+        您有一个大礼包未领取
+    </div>
+    <div class="new-people-gift">
+        <ul>
+            {volist name="result" id="item"}
+            <li>
+                <img src="{$item.file}" width="104" height="104">
+                <div class="gift">
+                    <p class="primary-color gift-content"><span>￥</span>{$item.actual_price}</p>
+                    <p class="available primary-color">满{$item.full_subtraction_price}元可用</p>
+                    <p class="rob">已抢{:round(($item.total_num-$item.exchange_num)/$item.total_num,2)*100}%</p>
+                    <div class="barline">
+                        <div w="{:round(($item.total_num-$item.exchange_num)/$item.total_num,2)*100}" style="width:0px;" class="charts primary-background-color" ></div>
+                    </div>
+                </div>
+                <a href="javascript:;" class="receive">立</br>即</br>领</br>取</br></a>
+            </li>
+            {/volist}
+            <li class="clear"></li>
+        </ul>
+    </div>
+    <a href="javascript:;" class="key-get">一键领取</a>
+    <p class="Introduce-title">< 活动规则 ></p>
+    <div class="Introduce">{$content|raw}</div>
+</div>
+
+{/block}
+
+{block name="js"}
+<!--新人专区结束-->
+<script type="text/javascript">
+
+    $('.key-get').click(function () {
+        main.ajax({'url':'{:url(\'pc2.0/register/get_coupon\')}',callback:function (t) {
+                console.log(t.code);
+                if (t.code == 0) {
+                    layer.msg(t.message,{time:500},function () {
+                        main.jump({'url':'/pc2.0/index/index'})
+                    });
+                } else if(t.code != -200 || t.code != -201) {
+                    layer.msg(t.message, {time: 500},function () {
+                        // main.jump({'url':'/pc2.0/index/index'})
+                    });
+                }
+            }})
+    })
+
+    function animate(){
+        $(".charts").each(function(i,item){
+            var a=parseInt($(item).attr("w"));
+            $(item).animate({
+                width: a+"%"
+            },1000);
+        });
+    }
+    animate();
+</script>
+
+{/block}

@@ -1,0 +1,70 @@
+.cur_tips{
+  padding: 58px 3% 10px;
+  margin-top: -48px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+}
+.cur_tips img{
+  width: 20px;
+  margin-right: 5px;
+}
+.city_list{
+  padding-left: 3%;
+  background: #fff;
+}
+.city_list div{
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  line-height: 24px;
+  padding: 10px 16px 9px 0;
+  color: #202224;
+}
+.cur_city .city_list div{
+  font-weight: bold;
+}
+.word_fix{
+  position: fixed;
+  width: 14px;
+  height: 100%;
+  top:0;
+  right:0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+
+}
+.word_fix ul{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.word_fix li{
+  font-size: 14px;
+  line-height: 17px;
+  padding: 2px 0;
+  color: #202224;
+  text-align: center;
+}
+
+.hot_list{
+  background: #fff;
+  overflow: hidden;
+  padding-bottom: 8px;
+}
+.hot_list .list{
+  width: 22%;
+  margin-left: 2.4%;
+  background: #f6f6f6;
+  color: #202224;
+  border-radius: 2px;
+  float: left;
+  font-size: 14px;
+  line-height: 32px;
+  text-align: center;
+  margin-top: 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

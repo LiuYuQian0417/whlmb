@@ -1,0 +1,489 @@
+.head-container-center {
+    width: 1200px;
+    padding-bottom: 0;
+}
+
+.spokesperson-center {
+    display: flex;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.spokesperson-center p {
+    width: 125px;
+    border-left: 1px solid #f0f3ef;
+    text-align: center;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.my-grade {
+    display: flex;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+}
+
+.my-grade a {
+    display: block;
+    font-size: 16px;
+    width: 90px;
+    margin-left: 10px;
+    height: 78px;
+    line-height: 78px;
+    text-align: center;
+    color: #333;
+}
+
+.border-color-bottom {
+    border-bottom: 2px solid;
+}
+
+.member-navigation a {
+    display: block;
+    float: left;
+    height: 75px;
+    line-height: 75px;
+    border-bottom: 1px solid;
+    margin-top: 25px;
+    margin-right: 65px;
+}
+
+
+.member-navigation a:nth-child(2) {
+    color: #000000;
+    border-bottom: none;
+    margin-right: 0;
+}
+
+.head-container-center {
+    padding-bottom: 0;
+}
+
+.head-container {
+    padding-bottom: 0;
+}
+
+.membershipcard-content {
+    background: #f6f6f6;
+    padding-bottom: 30px;
+}
+
+.membership-card-content {
+    width: 1200px;
+    margin: 0 auto;
+    padding-top: 25px;
+}
+
+.membership-card-content-top {
+    width: 1200px;
+    margin: 0px 0 0 -19px;
+    padding: 0 0 0 19px;
+    background: url(../../imgs/membershipcard/topbeijing.png) center no-repeat;
+    height: 425px;
+    box-shadow: 0px 12px 10px -10px rgba(200, 200, 200, .2);
+}
+
+.clear {
+    clear: both;
+    height: 0;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.membership-card-content-top-left {
+    width: 645px;
+    float: left;
+}
+
+.h100 {
+    height: 100px;
+}
+
+.card-content-top-img {
+    border-radius: 38px;
+}
+
+.card-content-top-portrait {
+    float: left;
+    margin: 0 10px 0 0;
+    padding: 0 0 0 40px;
+}
+
+.card-content-top-level {
+    float: left;
+}
+
+.top-level-progress {
+    position: relative;
+    width: 475px;
+    height: 30px;
+    padding-top: 15px;
+}
+
+.card-content-top-level-progress {
+    width: 470px;
+    height: 6px;
+    margin: 0 auto;
+    background: #b58f3e;
+
+}
+
+.card-content-top-level-progress-span {
+    display: block;
+    line-height: 20px;
+    height: 20px;
+    position: absolute;
+    font-size: 16px;
+    left: 0;
+    top: 5px;
+    background: #866820;
+    width: 120px;
+    height: 27px;
+    color: #d9be83;
+    line-height: 27px;
+    border-radius: 14px;
+    padding-left: 7px;
+    text-align: center;
+}
+
+.card-content-top-level-progress-span1 {
+    display: block;
+    line-height: 40px;
+    width: 40px;
+    height: 30px;
+    position: absolute;
+    font-size: 16px;
+    padding: 5px 0;
+    left: 50%;
+    top: -2px;
+    background: #f9d99f;
+    border-radius: 20px;
+    color: #b58f3e;
+    text-align: center;
+    line-height: 30px;
+
+}
+
+.card-content-top-level-progress-span2 {
+    display: block;
+    line-height: 40px;
+    width: 40px;
+    height: 30px;
+    position: absolute;
+    font-size: 16px;
+    padding: 5px 0;
+    right: 0;
+    top: -2px;
+    background: #f9d99f;
+    border-radius: 20px;
+    color: #b58f3e;
+    text-align: center;
+    line-height: 30px;
+    line-height: 30px;
+}
+
+.card-content-top-level-name {
+    height: 30px;
+    line-height: 30px;
+    color: #866820;
+    font-size: 18px;
+}
+
+.sign-in {
+    height: 74px;
+    margin-top: 125px;
+}
+
+.sign-in-img {
+    height: 74px;
+    padding: 0 0 0 20px;
+    float: left;
+    margin-right: 25px;
+}
+
+.continuous-sign {
+    float: left;
+    padding-top: 10px;
+}
+
+.continuous-sign span {
+    color: #2e3244;
+    font-size: 22px;
+}
+
+.continuous-sign p {
+    font-size: 14px;
+    margin-top: 6px;
+    color: #866820;
+}
+
+.membership-card-content-top-right {
+    float: right;
+    width: 530px;
+    height: 425px;
+}
+
+.my-growth {
+    text-align: center;
+    font-size: 30px;
+    line-height: 50px;
+    padding-top: 20px;
+    background-image: -webkit-linear-gradient(bottom, #d0aa70, #e9cf9c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.growth {
+    text-align: center;
+    color: #fff;
+    font-size: 30px;
+    position: relative;
+    height: 42px;
+    line-height: 42px;
+}
+
+.ascend {
+    display: block;
+    width: 63px;
+    padding: 0 0 0 7px;
+    height: 37px;
+    font-size: 16px;
+    line-height: 37px;
+    color: #d0aa70;
+    position: absolute;
+    top: 2px;
+    right: 165px;
+    background: url(../../imgs/membershipcard/qutisheng.png) center no-repeat;
+}
+
+.growth-line-chart {
+    padding-top: 50px;
+    position: relative;
+    text-align: center;
+}
+
+.growth-chart-value {
+    position: absolute;
+    display: block;
+    top: 90px;
+    left: 425px;
+    color: #d0aa70;
+    height: 40px;
+    line-height: 40px;
+    background-image: -webkit-linear-gradient(bottom, #d0aa70, #e9cf9c);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 20px;
+}
+
+.distance-growth {
+    padding-top: 30px;
+    font-size: 16px;
+    color: #d0aa70;
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+}
+
+.distance-growth span {
+    color: #fff;
+    padding: 0 5px;
+}
+
+.description-growth {
+    background: url(../../imgs/membershipcard/chengzhangzhishuoming.png) top center no-repeat;
+    margin: 75px 0 0 0;
+    padding: 65px 50px;
+}
+
+.description-growth-top {
+    color: #2e3244;
+    height: 60px;
+    line-height: 60px;
+    background: url(../../imgs/membershipcard/shuomingtoubu.png) center no-repeat;
+    text-align: center;
+    font-size: 36px;
+}
+
+.membership-system {
+    width: 205px;
+    float: left;
+    height: 170px;
+    margin-right: 145px;
+}
+
+.membership-system:nth-child(3n) {
+    margin-right: 0;
+}
+
+.member-content-img {
+    width: 35px;
+    height: 35px;
+    background: #aedeff;
+    border-radius: 17px;
+    line-height: 35px;
+    text-align: center;
+    float: left;
+}
+
+.gradebackground-color-two {
+    background: #ea5413;
+}
+
+.gradebackground-color-three {
+    background: #ff1b1b;
+}
+
+.gradebackground-color-four {
+    background: #d1aa71;
+}
+
+.gradebackground-color-five {
+    background: #3192ff;
+}
+
+.member-content {
+    font-size: 16px;
+    color: #666;
+    line-height: 35px;
+}
+
+.member-content span {
+    padding-left: 5px;
+}
+
+.membership-grade {
+    color: #886820;
+    font-size: 22px;
+    height: 70px;
+    line-height: 70px;
+}
+
+.membership-grade img {
+    width: 35px;
+    height: 35px;
+    vertical-align: middle;
+    margin-top: -8px;
+}
+
+.level-introduction {
+    background: #fff;
+    padding: 70px 90px 0;
+
+    margin: 25px 0 0;
+}
+
+.member-exclusive-top {
+    color: #886820;
+    font-size: 22px;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+}
+
+.member-exclusive-content {
+    font-size: 16px;
+    color: #666;
+    line-height: 40px;
+}
+
+.member-exclusive {
+    background: #fff;
+    margin-top: 58px;
+    padding: 40px 90px;
+}
+
+.member-number {
+    width: 280px;
+    position: relative;
+    float: left;
+    height: 98px;
+}
+
+.member-number:nth-child(4) {
+    width: 40px;
+}
+
+.member-number-border {
+    position: absolute;
+    height: 0;
+    width: 270px;
+    top: 20px;
+    left: 10px;
+    border-top: 1px solid;
+    z-index: 1;
+}
+
+.member-number-border-deach {
+    position: absolute;
+    height: 0;
+    width: 270px;
+    top: 20px;
+    left: 10px;
+    border-top: 1px dashed;
+    z-index: 1;
+}
+
+.member-number-img {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 44px;
+    background: #fff;
+    border: 1px solid;
+    border-radius: 20px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+}
+
+.membership-grade-level {
+    position: absolute;
+    font-size: 16px;
+    color: #666;
+    left: -13px;
+    z-index: 3;
+    top: 50px;
+    width: 68px;
+    text-align: center;
+}
+
+.membership-grade-discount {
+    position: absolute;
+    font-size: 20px;
+    width: 50px;
+    text-align: center;
+    top: 78px;
+    left: -3px;
+}
+
+.member-number-selected {
+    width: 26px;
+    height: 26px;
+    border: 13px solid rgba(253, 238, 231, .8);
+    border-radius: 26px;
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    background: #fff;
+    z-index: 2;
+}
+
+.member-number-selected-img {
+    background: none;
+}
+
+.member-exclusive-break {
+    width: 880px;
+    margin: 40px auto;
+}
+
+.public-bottom-box {
+    margin-top: 0;
+}

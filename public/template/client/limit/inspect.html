@@ -1,0 +1,235 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form class="layui-form" action="" method="post">
+    <div class="main-content" id="mainContent">
+        <div class="btn-info">
+            <a class="sc-btn sc-blue-btn" href="javascript:void(0);" onclick="main.jumpFour('client/limit/index')"><i class="icon-reply"></i>限时抢购商品列表</a>
+        </div>
+        <div class="explanation clear" id="explanation">
+            <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>
+            <ul>
+                <li>温馨提示：提交操作将会重新审核，请慎重提交确定。</li>
+            </ul>
+        </div>
+        <div class="ecsc-form-goods">
+            <div class="wrapper-list border1">
+                <!--商品名称-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;商品名称：</dt>
+                    <dd>
+                        <input type='text' name='title' maxlength="20" value="{$item.Goods.goods_name|default=''}" size='20'
+                               class="text" autocomplete="off"
+                               readonly
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--商品原价-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;商品原价：</dt>
+                    <dd>
+                        <input type="number" name="actual_price" value="{$item.Goods.shop_price|default=''}" size="20" class="text"
+                               readonly autocomplete="off" maxlength="10"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--商品属性砍价价格-->
+                <div class="layui-form-item" style="display:none;">
+                    <label class="layui-form-label">设置属性砍价价</label>
+                    <div class="layui-input-block">
+                        <div class="layui-form">
+                            <table class="layui-table spec_table">
+                                <thead>
+                                <tr>
+                                    <th>规格</th>
+                                    <th>属性原价</th>
+                                    <th>属性砍价底价</th>
+                                    <th>属性砍价单刀最低值</th>
+                                    <th>属性砍价单刀最高值
+                                        <div class="batch">
+                                            <b onclick="$('.batch-input').not($(this).next('.batch-input')).hide();$(this).next('.batch-input').toggle();$('.batch_set').focus();" class="fa fa-edit" title="批量设置此列"></b>
+                                            <div class="batch-input" style="display: none;">
+                                                <h6>批量设置属性砍价价：</h6>
+                                                <a href="javascript:void(0)" class="close" onclick="$(this).parent('.batch-input').hide();">
+                                                    <div class="fa fa-close (alias)"></div></a>
+                                                <input type="text" title class="text price batch_set">
+                                                <a href="javascript:void(0)" class="ncsc-btn-mini" onclick="batchSetTxt($(this))">设置</a>
+                                                <span class="arrow"></span>
+                                            </div></div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <!--所属场次-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;所属场次：</dt>
+                    <dd>
+                        <select disabled name="interval_id" lay-search="" datatype="*"
+                                nullmsg="请选择所属场次" errormsg="请选择所属场次">
+                            <option value="0" {eq name="item.interval_id|default=''" value="0" }selected{/eq}></option>
+                            {volist name='classify_list' id='classify'}
+                            <option  {eq name="item.interval_id|default=''"
+                                    value="$classify.limit_interval_id" }selected{/eq}
+                            value="{$classify.limit_interval_id}">{$classify.interval_name}
+                            </option>
+                            {/volist}
+                        </select>
+                    </dd>
+                </dl>
+                <!--可售数量-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;可售数量：</dt>
+                    <dd>
+                        <input name="available_sale" type="number" id="single_cut_min" value="{$item.available_sale|default=''}"
+                               size="20" class="text"
+                               maxlength="10" autocomplete="off"
+                               readonly
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--每人限购数量-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;每人限购数量：</dt>
+                    <dd>
+                        <input name="limit_purchase" type="number" id="single_cut_max" value="{$item.limit_purchase|default=''}"
+                               size="20" class="text"
+                               maxlength="10" autocomplete="off"
+                               readonly
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--上架时间-->
+                <dl id="qizhi">
+                    <dt><span class="require-field">*</span>&nbsp;上架时间：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time1">
+                            <input name="up_shelf_time" type="text" class="text"
+                                   size="22" value="{$item.up_shelf_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+                <!--下架时间-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;下架时间：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time2">
+                            <input name="down_shelf_time" type="text" class="text"
+                                   size="22" value="{$item.down_shelf_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    main.form();
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+    main.laydate([
+        {
+            elem: '#up_shelf_time'
+        },
+        {
+            elem: '#down_shelf_time'
+        }
+    ]);
+    $(function () {
+        getProducts('{$item.goods_id?:\'\'}');
+    });
+    var option = {
+        columnDefs: [
+            {orderable: false,targets: [1, -1] }
+        ],
+        bLengthChange: false,
+        language: {
+            "url": "__RES__/js/DataTables-1.10.15/media/chinese.json"
+        }
+    };
+    // 获取规格
+    function getProducts(id) {
+        if (id === '') return;
+        main.ajax({data: {id:id,type:3},url: '/client/goods/getProducts',callback: function (res) {
+                if (res.code != 0){
+                    layer.msg(res.message);
+                    return false;
+                }
+                if (res.data == ''){
+                    $('.spec_table tbody').parents('.layui-form-item').hide();
+                } else{
+                    $('.spec_table tbody').children().remove();
+                    $('.spec_table').dataTable().fnClearTable();    //清空数据
+                    $('.spec_table').dataTable().fnDestroy();       // 销毁
+                    $('.spec_table tbody').html(res.data).parents('.layui-form-item').show()
+                    $('.spec_table').dataTable(option);
+                }
+            }});
+    }
+    // 批量设置
+    function batchSetTxt(jq) {
+        var dt = {},
+            txt = jq.prev('.batch_set').val(),
+            index = jq.parents('th').index();
+        if ($.fn.dataTable.isDataTable('.spec_table')){
+            dt = $('.spec_table').dataTable().api();
+        }else {
+            dt = $('.spec_table').dataTable(option).api();
+        }
+        jq.parent('.batch-input').hide();
+        dt.$('.batch-'+index).val(txt);
+    }
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId': 'send_start_date',//时间写入对象的id
+        'triggerId': ['send_start_date'],//触发事件的对象id
+        'alignId': 'text_time1',//日历对齐对象
+        'format': '-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    }, opts2 = {
+        'targetId': 'send_end_date',
+        'triggerId': ['send_end_date'],
+        'alignId': 'text_time2',
+        'format': '-'
+    }, opts3 = {
+        'targetId': 'use_start_date',
+        'triggerId': ['use_start_date'],
+        'alignId': 'text_time3',
+        'format': '-'
+    }, opts4 = {
+        'targetId': 'use_end_date',
+        'triggerId': ['use_end_date'],
+        'alignId': 'text_time4',
+        'format': '-'
+    }
+    xvDate(opts1);
+    xvDate(opts2);
+    xvDate(opts3);
+    xvDate(opts4);
+    //日期选择插件调用end sunle
+</script>
+{/block}

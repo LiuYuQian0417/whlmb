@@ -1,0 +1,113 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请按提示文案填写信息，以免出错。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>所属商品类型：</label>
+            <div class="layui-input-block">
+                <input type="text" maxlength="20" autocomplete="off"
+                       value="{$attrTypeData.type_name}"
+                       class="layui-input" readonly>
+                <input type="hidden" value="{$attrTypeData.attr_type_id}" name="attr_type_id">
+            </div>
+        </div>
+        <!--品牌分类名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 属性名称：</label>
+            <div class="layui-input-block">
+                <input type="text" name="attr_name" maxlength="20" autocomplete="off" placeholder="请输入属性名称"
+                       datatype="*"
+                       value="{$item.attr_name|default=''}"
+                       nullmsg="请输入属性名称" errormsg="请输入属性名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--手动/系统录入-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 该属性值的录入方式：</label>
+            <div class="layui-input-block">
+                <input type="radio" name="attr_input_type" value="1" title="从下面的列表中选择（一行代表一个可选值）"
+                       lay-filter="radio"
+                       {eq name="item.attr_input_type|default='系统定义'" value="系统定义" }checked{/eq}
+                >
+                <input type="radio" name="attr_input_type" value="0"  title="手工录入"
+                       lay-filter="radio"
+                       {eq name="item.attr_input_type|default=''" value="手工录入"}checked{/eq}
+                >
+            </div>
+        </div>
+        <!--可选值列表-->
+        <div class="layui-form-item" id="attr-list" style="{eq name="item.attr_input_type|default='系统定义'" value="手工录入" }display:none{/eq}">
+            <label class="layui-form-label"><font color="red">*</font> 可选值列表：</label>
+            <div class="layui-input-block">
+                <textarea name="attr_value" style="resize:none;" class="layui-textarea" cols="30" rows="8" placeholder="按Enter键分隔每个可选值" spellcheck="false">{$item.attr_value|default=''}</textarea>
+            </div>
+        </div>
+        <!--排序-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="text" name="sort" value="{$item.sort|default='100'}" maxlength="5" autocomplete="off" placeholder="请输入分类名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.attr_type_id"}
+                <input type="hidden" name="attr_id" value="{$item.attr_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{
+        selector:'radio(radio)',
+        callback:function(data){
+            switch (data.value) {
+                // 手工录入
+                case '0':
+                    $('#attr-list').hide()
+                    break;
+                // 选择
+                case '1':
+                    $('#attr-list').show()
+                    break;
+            }
+        }
+    }]);
+    main.valid('.layui-form');
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

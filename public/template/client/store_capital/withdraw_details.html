@@ -1,0 +1,198 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css" />
+<style>
+    .contentShell65 {
+        width: 100%;
+    }
+    .goods-img {
+        width: 110px!important;
+    }
+    .common-head .imitate_select {
+        width: 275px;
+    }
+    .layui-form-item .layui-input-inline {
+        width: 205px;
+        margin: 11px 0 0 0;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+        <div class="content">
+            <div class="explanation" id="explanation">
+                <div class="ex_tit">
+                    <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                </div>
+                <ul>
+                    <li>1、商家提现申请记录；</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="imitate_select select_w145">
+            <div class="text_time" id="text_time1">
+                <input name="date" type="text" id="date" size="15" placeholder="申请时间查询" value="{:input('get.date','')}" readonly  class="text" />
+            </div>
+        </div>
+        <!--搜索审核状态-->
+        <div class="imitate_select select_w145">
+            <div class="cite">提现状态</div>
+            <ul>
+                <li><a href="javascript:;" data-value="-1" class="ftx-01">请选择提现状态</a></li>
+                <li><a href="javascript:;" data-value="1.1" class="ftx-01">待审核</a></li>
+                <li><a href="javascript:;" data-value="1.4" class="ftx-01">审核通过转账中</a></li>
+                <li><a href="javascript:;" data-value="1.2" class="ftx-01">提现成功</a></li>
+                <li><a href="javascript:;" data-value="1.3" class="ftx-01">提现失败</a></li>
+                <li><a href="javascript:;" data-value="1.5" class="ftx-01">审核失败</a></li>
+            </ul>
+            <input name="status" type="hidden" value="{:input('status','-1')}"/>
+        </div>
+
+        <!--搜索审核状态-->
+        <div class="imitate_select select_w145">
+            <div class="cite">提现类型</div>
+            <ul>
+                <li><a href="javascript:;" data-value="-1" class="ftx-01">请选择提现类型</a></li>
+                <li><a href="javascript:;" data-value="1" class="ftx-01">对公账户转账</a></li>
+                <li><a href="javascript:;" data-value="2" class="ftx-01">对私账户转账</a></li>
+            </ul>
+            <input name="back_type" type="hidden" value="{:input('back_type','-1')}"/>
+        </div>
+
+        <!--搜索名称-->
+        <div class="search-info">
+            <div class="search-form">
+                <input type="hidden" name="id" value="{:input('id')}">
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+
+        <hr class="layui-bg-gray">
+
+        <div class="layui-form-item order_item" style="margin-top: 20px;">
+            <label class="layui-form-label" style="width: 106px;">待审核提现金额：</label>
+            <div class="layui-input-inline">
+                <span class="value"><em>¥</em>{$price.N_checking|number_format=###,2}</span>
+            </div>
+
+            <label class="layui-form-label">转账中金额：</label>
+            <div class="layui-input-inline">
+                <span class="value"><em>¥</em>{$price.Y_checking|default=0|number_format=###,2}</span>
+            </div>
+
+            <label class="layui-form-label">成功提现金额：</label>
+            <div class="layui-input-inline">
+                <span class="value"><em>¥</em>{$price.succeed|default=0|number_format=###,2}</span>
+            </div>
+
+            <label class="layui-form-label">提现失败金额：</label>
+            <div class="layui-input-inline">
+                <span class="value"><em>¥</em>{$price.N_succeed|default=0|number_format=###,2}</span>
+            </div>
+
+            <div class="f_right">
+                <a class="layui-btn layui-btn-sm layui-btn-normal down_btn" href="#download" onclick="exportList()"><i class="layui-icon layui-icon-download-circle"></i> 导出</a>
+            </div>
+        </div>
+        <!-- 列表 -->
+        <div class="list-div" id="listDiv">
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th>申请时间</th>
+                    <th>提现金额</th>
+                    <th>提现账户</th>
+                    <th>提现状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr>
+                    <td class="no-records" colspan="11">没有找到任何记录</td>
+                </tr>
+                {/empty}
+                {volist name="data" id="item"}
+                <tr>
+                    <td>{$item.create_time|default=''}</td>
+                    <td>{$item.price}</td>
+                    <td>
+                        {switch name="item.type"}
+                        {case value="1"}微信账户{/case}
+                        {case value="2"}{$item.bank_number|default=''}{/case}
+                        {/switch}
+                    </td>
+                    <td>
+                        {switch name="item.status"}
+                        {case value="1.1"}待审核{/case}
+                        {case value="1.4"}审核通过转账中{/case}
+                        {case value="1.2"}提现成功{/case}
+                        {case value="1.3"}提现失败{/case}
+                        {case value="1.5"}审核失败{/case}
+                        {default /}出错啦
+                        {/switch}
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" class="btn_see" onclick="isOkay({title:'提现详情',btn:[]},'{$item.capital_id}','1.3')">查看</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+                <tfoot>
+                {notempty name='data'}
+                <tr>
+                    <th class="batch-operation" colspan="20">
+                        <span class="page page_3">
+                            {:$data->render()}
+                        </span>
+                    </th>
+                </tr>
+                {/notempty}
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+    main.laydate([{
+        elem: "#date",
+        type: "date",
+        range: true,
+        max:0
+    }]);
+    function isOkay(obj,id,status) {
+        var param = 'capital_id='+ id + '&status=' + status;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['55%', '750px'],
+            btn: obj.btn,
+            content: '/client/store_capital/withdraw_examine?' + param
+        });
+    }
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+</script>
+<script type="text/javascript" src="__RES__/js/jquery.purebox.js"></script>
+{/block}

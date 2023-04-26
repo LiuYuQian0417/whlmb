@@ -1,0 +1,135 @@
+
+
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyRedPacket.css" />
+<style type="text/css">
+	.red-packet-con{
+		display: none;
+	}
+	.un-used{
+		display: block;
+	}
+	.card{
+	    padding-top: 80px;
+	}
+	.my-red-packet{
+		min-height: 550px;
+	}
+	.my-red-packet .title{
+		border-bottom: 10px solid #f0f3ef;
+	}
+	.add-list{
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		align-content: center;
+		height:50px;
+		width: 400px;
+		margin: 0 auto;
+
+	}
+	.list-title{
+		width: 100px;
+		height:30px;
+		text-align: right;
+		margin-right: 20px;
+		font-size: 14px;
+		color: #333;
+		line-height: 30px;
+	}
+	.list-input{
+		width: 228px;
+	}
+	.list-input input{
+		padding-left: 8px;
+		width: 220px;
+		height:30px;
+		border:1px solid #e6e6e6;
+	}
+	.submit{
+		display: block;
+		margin: 15px  auto;
+		width: 150px;
+		height:42px;
+		text-align: center;
+		line-height: 42px;
+		border:none;
+		background: #ea5413;
+		color: #fff;
+	}
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+			<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+			<!--我的页面左侧公共部分结束-->
+
+
+			<div class="index-right">
+				<!-- 我的右侧 -->
+				<div class="my-red-packet">
+				    <h5 class="title">
+				     银行卡添加
+				    </h5>
+                    <div class="card">
+						<form>
+							<ul>
+								<li class="add-list">
+									<div class="list-title">开户银行:</div>
+									<div class="list-input"><input type="text" name='card_bank_name' placeholder="请输入开户行"></div>
+								</li>
+								<li class="add-list">
+									<div class="list-title">持卡人姓名:</div>
+									<div class="list-input"><input type="text" name='card_bank_owner' placeholder="请输入持卡人姓名"></div>
+								</li>
+								<li class="add-list">
+									<div class="list-title">银行卡号:</div>
+									<div class="list-input"><input type="number" name='card_number' placeholder="请输入银行卡号"></div>
+								</li>
+							</ul>
+							<button type="button" class="submit">提交</button>
+						</form>
+					</div>
+				</div>
+
+			</div>
+		</div>
+<script type="text/javascript">
+	//  添加功能
+	$('.submit').click(function(){
+		var card_bank_name = $('input[name=card_bank_name]').val();
+		var card_bank_owner = $('input[name=card_bank_owner]').val();
+		var card_number = $('input[name=card_number]').val();
+		if(card_bank_name == '' || card_bank_owner == '' || card_number == ''){
+			layer.msg('添加信息不能为空');
+			return false;
+		}
+		$(this).prop('disabled',true);
+		
+
+		$.post("{:url('/pc2.0/member_card/add')}",{card_bank_name:card_bank_name,card_bank_owner:card_bank_owner,card_number:card_number},function(t){
+			if(t.code == 0){
+				layer.msg(t.message,{time:2000},function(){
+					window.location.href="{:url('/pc2.0/member_card/index')}";
+				})
+			}else{
+				layer.msg(t.message)
+			}
+			$('.submit').prop('disabled',false);
+		},'json');
+	})
+		
+	
+</script>
+{/block}
+
+

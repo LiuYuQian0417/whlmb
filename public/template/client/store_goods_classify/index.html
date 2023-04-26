@@ -1,0 +1,188 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css" />
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    a.link{
+        color: #1e9fff;
+        text-decoration: underline;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、展示商家所有商品分类；</li>
+                <li>2、可添加子分类并进行编辑删除等操作；</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+
+<!--导航-->
+<div class="common-head">
+    <div class="fl">
+        {notempty name="parent_classify|default=NULL"}
+        <a href="/client/store_goods_classify/index?classify_id={$parent_classify.parent_id}&level={:input('get.level') - 1}" class="left">
+            <div class="btn-info">
+                <div class="sc-btn sc-blue-btn" title="返回上级"><span><i class="fa fa-mail-reply (alias)"></i>上级分类:{$parent_classify.title}</span></div>
+            </div>
+        </a>
+        {/notempty}
+        {switch level}
+        {case 1}
+        <a href="javascript:void(0);" class="left" onclick="main.jumpFour('client/store_goods_classify/create?classify_id={:input(\'get.classify_id\')}')">
+            <div class="btn-info">
+                <div class="sc-btn sc-blue-btn" title="添加分类"><span><i class="fa fa-plus"></i>添加分类</span></div>
+            </div>
+        </a>
+        <a href="javascript:void(0);" class="left" onclick="addGoodsClassify()">
+            <div class="btn-info">
+                <div class="sc-btn sc-blue-btn" title="快捷添加分类"><span><i class="fa fa-plus"></i>快捷添加分类</span></div>
+            </div>
+        </a>
+        {/case}
+        {case 2}
+        <a href="javascript:void(0);" class="left" onclick="main.jumpFour('client/store_goods_classify/create?classify_id={$parent_classify.store_goods_classify_id}&level=2')">
+            <div class="btn-info">
+                <div class="sc-btn sc-blue-btn" title="添加分类"><span><i class="fa fa-plus"></i>添加二级分类</span></div>
+            </div>
+        </a>
+        <a href="javascript:void(0);" class="left" onclick="addGoodsClassify(2,'{$parent_classify.store_goods_classify_id}','{$parent_classify.title}')">
+            <div class="btn-info">
+                <div class="sc-btn sc-blue-btn" title="快捷添加二级分类"><span><i class="fa fa-plus"></i>快捷添加二级分类</span></div>
+            </div>
+        </a>
+        {/case}
+        {/switch}
+        <div class="refresh" onclick="location.reload();">
+            <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+            <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+        </div>
+    </div>
+
+</div>
+
+<hr class="layui-bg-gray">
+<!--列表-->
+<form class="layui-form" action="">
+    <table class="ecsc-default-table">
+        <thead>
+        <tr>
+            <!--<th width="80"></th>-->
+            <th width="10%">分类编码</th>
+            <th>分类名称</th>
+
+            {lt name="level" value="2"}
+            <th>下级分类</th>
+            {/lt}
+            <th>排序</th>
+            <th>显示状态</th>
+            <th width="30%">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td>{$item.store_goods_classify_id}</td>
+            <td id="title{$item.store_goods_classify_id}"><span class="onpress" onclick="main.viewText('{$item.store_goods_classify_id}','title','/client/store_goods_classify/text_update')">{$item.title}</span></td>
+
+            {lt name="level" value="2"}
+            <td>
+                <a class="link" href="/client/store_goods_classify/index?classify_id={$item.store_goods_classify_id}&level={$level+1}">
+                    {:$item->childrenCount()}
+                </a>
+            </td>
+            {/lt}
+            <td><input type="text" id="sort{$item.store_goods_classify_id}" value="{$item.sort}" class="text_center" oninput="main.triggerText('{$item.store_goods_classify_id}','sort','/client/store_goods_classify/text_update')"></td>
+            <td>
+                <input type="checkbox" name="status" lay-skin="switch"
+                       lay-filter="status"
+                       lay-text="开|关"
+                       data-id="status"
+                       value="{$item.store_goods_classify_id}"
+                       {eq name="item.status" value="1" }checked{/eq}
+                >
+            </td>
+            <td>
+                {switch level}
+                {case 1}
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('client/store_goods_classify/edit?id={$item.store_goods_classify_id}&classify_id={$item.parent_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('client/store_goods_classify/create?classify_id={$item.store_goods_classify_id}&level=2')"><i
+                        class="fa fa-plus-square-o"></i>新增二级分类</a>
+                <a class="btn_edit" href="javascript:void(0);" onclick="addGoodsClassify(2,'{$item.store_goods_classify_id}','{$item.title}')"><i
+                        class="fa fa-plus-square-o"></i>快捷创建二级分类</a>
+                {/case}
+                {case 2}
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('client/store_goods_classify/edit?id={$item.store_goods_classify_id}&level=3&classify_id={$item.parent_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                {/case}
+                {/switch}
+                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/client/store_goods_classify/destroy','{$item.store_goods_classify_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div class="right">{:$data->render()}</div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{
+        selector: 'switch(status)', callback: function (data) {
+            main.ajax({data: {'id': data.value,'type':data.elem.getAttribute('data-id')}, url: '/client/store_goods_classify/auditing'})
+        }
+    }]);
+
+    // 快捷添加分类
+    function addGoodsClassify(level,parent_id,parent_title) {
+        var url
+        if (level === undefined || parent_id === undefined){
+            url = '/client/store_goods_classify/fast_create'
+        } else{
+            url = '/client/store_goods_classify/fast_create?level='+ level +'&parent_id='+parent_id
+        }
+
+        var title = '快捷添加分类'
+
+        if (parent_title !== undefined){
+            title = '上级分类: ' + parent_title
+        }
+
+
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['60%', '60%'],
+            content: [url]
+        });
+    }
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

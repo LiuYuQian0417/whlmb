@@ -1,0 +1,128 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>会员充值编辑类型和到款状态是不可以修改的。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+
+        <!--选择会员-->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><em class="require">* </em>会员信息</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" value="{$item.Member.username|default=''}"
+                           datatype="*" {neq name="$item.status" value="待审核"} disabled {/neq}
+                           nullmsg="请填写会员信息" errormsg="请填写会员信息" title readonly
+                           autocomplete="off" placeholder="请填写会员信息" class="layui-input">
+                    <input type="hidden" name="member_id" value="{$item.member_id}">
+                </div>
+            </div>
+        </div>
+
+        <!--金额-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>金额</label>
+            <div class="layui-input-inline">
+                <input type="number" name="price" value="{$item.price|default=''}"
+                       datatype="*" {neq name="$item.status" value="待审核"} disabled {/neq}
+                       nullmsg="请填写金额" errormsg="请填写金额"
+                       autocomplete="off" placeholder="请填写金额" class="layui-input">
+            </div>
+        </div>
+
+        <!--支付方式-->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><em class="require">* </em>支付方式</label>
+                <div class="layui-input-block">
+                    <select name="way" lay-search="" {neq name="$item.status" value="待审核"} disabled {/neq}>
+                        <option value="1" {present name="item.consumption_id"}{eq name="item.way" value="支付宝" }selected{/eq}{/present}>支付宝</option>
+                        <option value="2" {present name="item.consumption_id"}{eq name="item.way" value="微信" }selected{/eq}{/present}>微信</option>
+                        <option value="3" {present name="item.consumption_id"}{eq name="item.way" value="银行卡" }selected{/eq}{/present}>银行卡</option>
+                        <option value="5" {present name="item.consumption_id"}{eq name="item.way" value="线下" }selected{/eq}{/present}>线下</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!--类型-->
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label"><em class="require">* </em>类型</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="radio" name="type" value="0" title="充值"-->
+                       <!--{eq name="item.type|default=''" value="充值" }checked{/eq} {neq name="$item.status" value="待审核"} disabled {/neq}-->
+                <!--&gt;-->
+                <!--<input type="radio" name="type" value="1" title="提现"-->
+                       <!--{eq name="item.type|default=''" value="提现" }checked{/eq} {neq name="$item.status" value="待审核"} disabled {/neq}-->
+                <!--&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--审核状态-->
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label"><em class="require">* </em>审核状态</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="radio" name="status" value="0" title="未通过"-->
+                       <!--{eq name="item.status|default=''" value="未通过" }checked{/eq} {neq name="$item.status" value="待审核"} disabled {/neq}-->
+                <!--&gt;-->
+                <!--<input type="radio" name="status" value="1" title="通过"-->
+                       <!--{eq name="item.status|default=''" value="通过" }checked{/eq} {neq name="$item.status" value="待审核"} disabled {/neq}-->
+                <!--&gt;-->
+                <!--<input type="radio" name="status" value="2" title="待审核"-->
+                       <!--{eq name="item.status|default=''" value="待审核" }checked{/eq} {neq name="$item.status" value="待审核"} disabled {/neq}-->
+                <!--&gt;-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="layui-form-item layui-form-text">-->
+            <!--<label class="layui-form-label">管理员备注</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<textarea placeholder="请输入内容" {neq name="$item.status" value="待审核"} disabled {/neq} name="describe" maxlength="100" class="layui-textarea">{$item.manage_describe|default=''}</textarea>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        {if condition="$item.status eq '待审核'"}
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.consumption_id"}
+                <input type="hidden" name="consumption_id" value="{$item.consumption_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+        {/if}
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.file();
+</script>
+{/block}
+{block name='highSearch'}{/block}

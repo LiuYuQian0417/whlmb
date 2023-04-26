@@ -1,0 +1,127 @@
+
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyCoupon.css" />
+<style>
+	.coupon-list{
+		display: block !important;
+	}
+	.limit{
+		height: 32px;
+	}
+</style>
+{/block}
+
+
+{block name="content"}
+<div class="index-box">
+	<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+	<!--我的页面左侧公共部分结束-->
+
+	<!-- 我的右侧 -->
+	<div class="index-right">
+		<div class="coupon">
+			<h5 class="title">
+			  优惠券
+			</h5>
+
+			<div class="coupon-con">
+				<div class="tit">
+					<a {eq name=":input('status',0)" value="0"} class="primary-color border-color" {/eq} href="{:url('pc2.0/member_coupon/index')}?status=0">
+						未使用({$statistics.unused})
+					</a>
+					<a {eq name=":input('status')" value="1"} class="primary-color border-color" {/eq} href="{:url('pc2.0/member_coupon/index')}?status=1">
+						使用记录({$statistics.been_used})
+					</a>
+					<a {eq name=":input('status')" value="2"} class="primary-color border-color" {/eq} href="{:url('pc2.0/member_coupon/index')}?status=2">
+						已过期({$statistics.have_expired})
+					</a>
+				</div>
+				<div class="coupon-box">
+
+					<div {eq name=":input('status',0)" value="0"} class="coupon-list coupon-unused" {/eq} {eq name=":input('status',0)" value="1"} class="coupon-list coupon-used" {/eq} {eq name=":input('status',0)" value="2"} class="coupon-list coupon-overdue" {/eq}>
+
+					{empty name="result"}
+					<!--如果优惠券为空-->
+					<div class="coupon-enty" >
+						<p>您暂无可用优惠券，去领券中看看</p>
+						<a href="javascript:main.jump({'url':'/pc2.0/coupon/get'})" class="primary-background-color">去看看</a>
+					</div>
+					{/empty}
+
+					{volist name="result" id="item"}
+					<div class="list">
+						<div class="list-top">
+							<!-- 面值 -->
+							<div class="face-value ">
+								<span class="symbol">￥</span>
+								<span class="money">{$item.actual_price}</span>
+								<span class="character">券</span>
+							</div>
+							<!-- 条件 -->
+							<div class="condition">
+								满{$item.full_subtraction_price}可用
+							</div>
+							<!-- 时限 -->
+							<div class="time">
+								{$item.start_time}- {$item.end_time}
+							</div>
+						</div>
+						<!-- 底部条件 -->
+						<div class="list-bottom">
+							<div class="limit">
+								<span class="limit-condition">限品类：</span>
+								<p>
+									{eq name="$item.type" value="1"} 仅限平台购买使用{else}
+									仅可购买{$item.condition}商品{/eq}
+								</p>
+							</div>
+							{switch name=":input('status',0)"}
+							{case value="0"}
+								{eq name="$item.type" value="1"}
+								<a href="javascript:main.jump({'url':'/pc2.0/goods/index?goods_classify_id={$item.goods_classify_id}'});" class="now">立即使用</a>
+								{else/}
+								<a href="javascript:main.jump({'url':'/pc2.0/store/index?store_id={$item.store_id}'});" class="now">立即使用</a>
+								{/eq}
+							{/case}
+							{case value="1"}<img class="coupon-used-img" src="__RES__/imgs/my/used.png" alt="">{/case}
+							{case value="2"}<img class="coupon-overdue-img" src="__RES__/imgs/my/overdue.png" alt="">{/case}
+							{/switch}
+						</div>
+
+					</div>
+					{/volist}
+
+					</div>
+
+					<!--分页-->
+				<div class="pageContainer" style="width: auto;">{$result|raw}</div>
+				</div>
+			</div>
+
+			<div class="gain-coupon">
+				<div class="get-coupon">
+					<p class="tit">领券中心</p>
+					<p>精选好券，券多多</p>
+					<a href="javascript:main.jump({'url':'/pc2.0/coupon/get'})">去看看 ></a>
+				</div>
+				<div class="getinreturn">
+					<p class="tit">换券中心</p>
+					<p>进来淘一张好券</p>
+					<a href="javascript:main.jump({'url':'/pc2.0/coupon/exchange'})">去逛逛 ></a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<!--右侧内容结束-->
+
+</div>
+{/block}

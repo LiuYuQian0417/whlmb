@@ -1,0 +1,526 @@
+<!--公共头部结束-->
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的设置左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MySetting.css"/>
+
+<link rel="stylesheet" href="__RES__/css/my/ChangePayPasswordList.css"/>
+<!--账户安全css-->
+<link rel="stylesheet" href="__RES__/css/my/MyAddress.css"/>
+{/block}
+{block name="content"}
+<!--我的设置主体-->
+<div class="setting">
+    <!--据中部分-->
+    <div class="setting-center">
+        <!--左侧列表-->
+        <div class="setting-left">
+            {include file="public/setting_left" /}
+        </div>
+        <!--右侧内容-->
+        <div class="setting-right">
+            <!--账号安全右侧开始-->
+            <div class="my-address">
+                <div class="title">
+                    <div class="title-left">
+                        <span class="tit">收货地址</span>
+                        {eq name="$result->count()" value="0"}
+                        <span class="prompt">您暂未创建收货地址，最多可创建20个</span>
+                        {else/}
+                        <span class="prompt">您已创建{$result->count()}个收货地址，最多可创建20个</span>
+                        {/eq}
+                    </div>
+                    {lt name="$result->count()" value="20"}
+                    <a class="add-address primary-color border-color" href="javascript:site(this,'1');">
+                        +新增收货地址
+                    </a>
+                    {/lt}
+                </div>
+                <div class="address-box">
+                    <div class="address-big">
+
+                        {empty name='$result'}
+                        <div class="indent-box indent-box-emty">
+                            <img src="__RES__/imgs/orderemty.png" alt="">
+                            <p>暂无地址</p>
+                        </div>
+                        {/empty}
+                        <!--每一条地址-->
+                        {volist name="$result" id="item"}
+                        <div class="address default-address">
+                            <div class="address-top">
+                                {eq name="item.is_default" value="1"}
+                                <div class="primary-background-color default">
+			                    <span>
+			                      默认地址
+			                    </span>
+                                </div>
+                                {/eq}
+                                <div class="deitor-del">
+                                    <a href="javascript:;" onclick="site(this,'2');" class="deitor"
+                                       address_id="{$item.member_address_id}">
+                                        <img src="__RES__/imgs/my/editor.png" alt="">
+                                    </a>
+                                    <a href="javascript:;"
+                                       onclick="main.ajax({'url':'/pc2.0/address/destroy',data:{'member_address_id':'{$item.member_address_id}'}})"
+                                       class="del">
+                                        <img src="__RES__/imgs/my/del-address.png" alt="" data-address="{$item.address}"
+                                             data-lat="{$item.lat}" data-lng="{$item.lng}">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="contact">
+                                <span class="name">{$item.name}</span>
+                                <span class="iphone">{$item.phone}</span>
+                            </div>
+                            <div class="detailed-address">
+                                {$item.province} {$item.city} {$item.area} {$item.street}
+                                <!--黑龙江省 哈尔滨市 南岗区 爱民小区132号-->
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+                <!--添加地址-->
+                <div class="mask" style="display: none;">
+                    <div style="position: relative;z-index: 100000000;background-color: #000;width: 40%">
+                        <form action="" id="create_address">
+                            <div class="address-con">
+                                <div class="tit">
+                                    <span>添加地址</span>
+                                    <div class="right" onclick="$('.mask').hide();">
+                                        <img src="__RES__/imgs/my/close.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="address-left" style="float: left">
+                                    <div class="list">
+                                        <p class="list-tit">
+                                            <span class="primary-color">*</span>收货人：
+                                        </p>
+                                        <input type="text" class="sty" id="address_name" maxlength="15" datatype="*" nullmsg="请填写收货人"
+                                               errormsg="请填写收货人"
+                                               name="name">
+                                    </div>
+                                    <div class="list">
+                                        <p class="list-tit">
+                                            <span class="primary-color">*</span>手机号码：
+                                        </p>
+                                        <input type="text" class="sty"  oninput="value=value.replace(/[^\d]/g,'')" id="address_phone" maxlength="11" datatype="m" nullmsg="请填写手机号码"
+                                               errormsg="请填写正确手机号码" name="phone">
+                                    </div>
+                                    <div class="list">
+                                        <p class="list-tit">
+                                            <span class="primary-color">*</span>所在地区：
+                                        </p>
+                                        <div class="select-address">
+                                            <div class="address-detailed-box" style="height: 32px;width: 234px">
+                                                <span>--请选择--</span>
+                                                <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                            </div>
+                                            <div class="detailed-box" style="display: none;">
+                                                <div class="detailed-box-top">
+                                                    <div class="address-text active">
+                                                        <a href="javascript:;">--请选择--</a>
+                                                        <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                                    </div>
+                                                    <div class="address-text" style="display:none;">
+                                                        <a href="javascript:;">--请选择--</a>
+                                                        <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                                    </div>
+                                                    <div class="address-text" style="display:none;">
+                                                        <a href="javascript:;">--请选择--</a>
+                                                        <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                                    </div>
+                                                    <div class="address-text" style="display:none;">
+                                                        <a href="javascript:;">--请选择--</a>
+                                                        <img src="__RES__/imgs/my/datebottom.png" alt="">
+                                                    </div>
+                                                    <img class="close" src="__RES__/imgs/my/address-close.png" alt="">
+                                                </div>
+                                                <div class="address-detailed" id="province">
+                                                    <!--省份列表-->
+                                                    {volist name="province" id="val"}
+                                                    <a class="provincial" data_id="{$val.area_id}">{$val.area_name}</a>
+                                                    {/volist}
+                                                </div>
+                                                <div class="address-detailed" id="city" style="display: none">
+                                                    <!--市-->
+                                                </div>
+                                                <div class="address-detailed" id="area" style="display: none">
+                                                    <!--区-->
+                                                </div>
+                                                <div class="address-detailed" id="street" style="display: none">
+                                                    <!--街道-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="province" datatype="*" nullmsg="请选择所在地区省"
+                                               id="address_province" value="">
+                                        <input type="hidden" name="city" datatype="*" nullmsg="请选择所在地区市"
+                                               id="address_city" value="">
+                                        <input type="hidden" name="area" datatype="*" nullmsg="请选择所在地区区"
+                                               id="address_area" value="">
+                                        <input type="hidden" name="street" datatype="*" nullmsg="请选择所在地区街道"
+                                               id="address_street" value="">
+                                        <input type="hidden" name="lat" id="address_lat" datatype="*" nullmsg="定位失败,请手动输入收货地址" value="">
+                                        <input type="hidden" name="lng" id="address_lng" datatype="*" nullmsg="定位失败,请手动输入收货地址" value="">
+                                        <input type="hidden" name="member_address_id" id="address_member_address_id"
+                                               value="">
+                                    </div>
+                                    <div class="list">
+                                        <p class="list-tit">
+                                            <span class="primary-color">*</span>收货地址：
+                                        </p>
+                                        <input type="text" name="location_address" style="width: 100%"
+                                               oninput="address_share($(this).val())"
+                                               id="address_location_address"
+                                               autocomplete="OFF"
+                                               datatype="*" nullmsg="请填写收货地址"  maxlength="200"
+                                               errormsg="请填写收货地址" class="sty">
+                                        <div class="location-address" hidden>
+                                            <a href="javascript:;" class="location-address-list">
+                                                请填写收货地址
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="list">
+                                        <p class="list-tit">
+                                            <span class="primary-color">*</span>详细地址：
+                                        </p>
+                                        <input type="text" name="address" id="address_address" datatype="*"
+                                               nullmsg="请填写详细地址" maxlength="200"
+                                               errormsg="请填写详细地址" class="sty">
+                                    </div>
+                                    <input name="is_default"  type="hidden" value="0">
+                                    <div class="setting-default-address">
+                                        <label>
+                                            <input name="is_default" id="address_is_default" type="checkbox" value="1">
+                                            <span>设为默认收货地址</span>
+                                        </label>
+                                    </div>
+                                    <input type="submit" class="submit primary-background-color" value="保存">
+                                </div>
+                                <div class="adress-right" id="address_container"
+                                     style="float: right;width: 550px;height: 500px">
+                                    <div class="show-address">
+                                        <p>小二郎家的地址小二郎家的地址小二郎家的地址小二郎家的地址小二郎家的地址小二郎家的地址小二郎家的地址</p>
+                                        <a class="primary-background-color" href="javascript:set_dragend();">确认</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--账号安全右侧结束-->
+        </div>
+        <div id="topTwo"></div>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<!--引入UI组件库（1.0版本） -->
+<script src="//webapi.amap.com/ui/1.0/main.js"></script>
+<script type="text/javascript">
+    /******************************地图***********************************/
+    var address_map = new AMap.Map('address_container', {
+        resizeEnable: true,
+        zoom: 20,
+    });
+    // 实例化Autocomplete   搜索提示
+    var autoOptions = {
+        city: '全国'
+    };
+
+    //加载地理编码插件
+    var geocoder = {};
+    AMap.plugin('AMap.Geocoder', function() {
+        geocoder = new AMap.Geocoder({
+            // city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+            city: '全国',
+            batch:false,//是否批量查询batch=true为批量查询,batch=false为单点查询batch=false时即使传入多个点也只返回第一个点结果
+        })
+
+        // 使用geocoder做地理/逆地理编码
+    });
+    var autoComplete = new AMap.Autocomplete(autoOptions);
+
+    //地址搜索展示
+    function address_share(keywords) {
+        if (keywords) {
+            autoComplete.search(keywords, function (status, result) {
+                if (result.info) {
+                    var seek_html = '';
+                    $.each(result.tips, function (k, v) {
+                        if(typeof v.location!=='undefined') {
+                            var address = '';
+                            if (v.district) {
+                                address += v.district + ' ';
+                            }
+                            if (v.address) {
+                                address += v.address + ' ';
+                            }
+                            if (v.name) {
+                                address += v.name + ' ';
+                            }
+                            seek_html += '<a href="javascript:;" class="location-address-list" data-lat="' + v.location.lat + '" data-lng="' + v.location.lng + '" onclick="address_share_set(this)">' + address + '</a>';
+                        }
+                        });
+                    $('.location-address').show().html(seek_html);
+                }
+            })
+        }
+    }
+
+    //地址搜索设置
+    function address_share_set(e) {
+        var lng = $(e).data('lng');
+        var lat = $(e).data('lat');
+        $('#address_lng').val(lng);
+        $('#address_lat').val(lat);
+        address_map.setZoomAndCenter(20, [lng, lat]);
+        $('#address_location_address').val($(e).text());
+        $('.location-address').hide().html();
+    }
+
+    //地图拖拽
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',//设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
+            map: address_map//依赖地图对象
+        });
+        positionPicker.on('success', function (positionResult) {
+            $('.show-address p').text(positionResult.address);
+            $('.show-address p').data('lat', positionResult.position.lat);
+            $('.show-address p').data('lng', positionResult.position.lng);
+        });
+        positionPicker.start();
+    });
+
+    //拖拽选址确认
+    function set_dragend() {
+        $('#address_location_address').val($('.show-address p').text());
+        $('#address_lat').val($('.show-address p').data('lat'));
+        $('#address_lng').val($('.show-address p').data('lng'));
+    }
+
+    //定位
+    function address_position() {
+        address_map.plugin('AMap.Geolocation', function (PositionPicker) {
+            geolocation = new AMap.Geolocation({
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                buttonPosition: 'RB',    //定位按钮停靠位置，默认：'LB'，左下角
+                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            });
+            address_map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+            // 解析定位结果
+            function onComplete(data) {
+            }
+
+            //解析定位错误信息
+            function onError(data) {
+                layer.msg('定位失败,请手动输入收货地址确认');
+            }
+        });
+    }
+
+    /******************************地图***********************************/
+    var addres_data_map = ['name', 'phone', 'province', 'city', 'area', 'street', 'address', 'location_address', 'lat', 'lng', 'member_address_id'];
+
+    /**
+     * 地址操作
+     * @param obj
+     * @param type  1新增  2编辑
+     */
+    function site(obj, type) {
+        //清空数据
+        $('.address-left input[type!=submit][type!=checkbox]').val('');
+        $('#address_is_default').removeAttr('checked');
+        $('.detailed-box-top div').eq(0).addClass('active').siblings('div').hide();
+        $('.address-detailed').show().nextAll('.address-detailed').hide().text('');
+        $('.detailed-box').hide();
+        $('.address-detailed-box').removeClass('border-bottom');
+        //清空数据
+        switch (type) {
+            case '1':
+                $('.address-detailed-box span').html('--请选择--');
+                $('#create_address').attr('action', "{:url('pc2.0/address/create')}");
+                $('.mask').show();
+                //定位
+                address_position();
+                break;
+            case '2':
+                $('#create_address').attr('action', "{:url('pc2.0/address/update')}");
+                main.ajax({
+                    'url': "{:url('/pc2.0/address/find')}",
+                    data: {member_address_id: $(obj).attr('address_id')},
+                    callback: function (res) {
+                        if (res.code === 0) {
+                            if (res.result.lng || res.result.lat) {
+                                //设置地图中心点
+                                address_map.setZoomAndCenter(20, [res.result.lng, res.result.lat]);
+                            } else {
+                                //从新定位
+                                address_position();
+                            }
+                            //赋值
+                            $.each(addres_data_map, function (k, v) {
+                                $('#address_' + v).val(res.result[v]);
+                            });
+                            $('.address-detailed-box span').html('<i>/' + res.result.province + '</i><i>/' + res.result.city + '</i><i>/' + res.result.area + '</i><i>/' + res.result.street);
+                            //最后一个地址添加选中样式
+                            $('.detailed-box-top .address-text').addClass('finish').show().removeClass('active').eq(3).addClass('active');
+                            var address_id_map = ['province', 'city', 'area', 'street'];
+                            $.each(address_id_map, function (k, v) {
+                                var address_html = '';
+                                $.each(res.result[v + '_array'], function (kk, vv) {
+                                    var pitch_on = '';
+                                    //判断当前地址是否是选中
+                                    if (vv.area_name.toString() === res.result[v].toString()) {
+                                        pitch_on = 'primary-background-color checked';
+                                    }
+                                    //拼接对应地址html
+                                    address_html += '<a class="city ' + pitch_on + '" data_id="' + vv.area_id + '">' + vv.area_name + '</a>';
+                                });
+                                //地址栏显示隐藏
+                                $('.address-detailed').eq(3).show().siblings('.address-detailed').hide();
+                                $('.detailed-box-top .address-text').eq(k).children('a').text(res.result[v]);
+                                $('#' + v).html(address_html);
+                            });
+                            //判断是否是默认地址
+                            if (res.result.is_default === 1) {
+                                $('#address_is_default').attr('checked', 'checked');
+                            }
+
+                            $('.mask').show();
+                        } else {
+                            layer.msg(res.message);
+                        }
+                    }
+                });
+        }
+    }
+
+    //地址栏切换
+    $('.detailed-box-top .address-text').click(function () {
+        var num = $(this).index();
+        $('.address-detailed').eq(num).show().siblings('.address-detailed').hide();
+        if (num === 0 || $(this).prev().hasClass('finish')) {
+            $(this).addClass('active').siblings('.address-text').removeClass('active')
+        }
+    });
+    //地址选择信息显示隐藏
+    $('.detailed-box .close').click(function () {
+        $('.detailed-box').hide();
+        $('.address-detailed-box').removeClass('border-bottom')
+    });
+    $('.address-detailed-box').click(function () {
+        if($('.detailed-box').is(':hidden')){
+            $('.detailed-box').show()
+            $(this).addClass('border-bottom')
+        }else{
+            $('.detailed-box').hide()
+            $(this).removeClass('border-bottom')
+        }
+
+
+    });
+    /**
+     * 详细地址选择
+     */
+    $('.address-detailed').on('click', 'a', function () {
+        var clear_site = ['province', 'city', 'area', 'street'];
+        $(this).addClass('primary-background-color checked').siblings('a').removeClass('primary-background-color checked');
+        var txt = $(this).text();
+        $('.address-detailed-box span').append();
+        if ($('.address-detailed-box span').html() == '--请选择--') {
+            $('.address-detailed-box span').html('');
+        }
+        var parent_id = $(this).attr('data_id');
+        //设置当前选择省市区数据
+        $('#address_' + $(this).parent('div').attr('id')).val($(this).text());
+        var index, district;
+        //判断是点击省市区不同操作
+        switch ($(this).parent('div').attr('id')) {
+            case 'province':
+                index = 0;
+                district = 'city';
+                $('.address-detailed').eq(1).show().siblings('.address-detailed').hide();
+                break;
+            case 'city':
+                index = 1;
+                district = 'area';
+                $('.address-detailed').eq(2).show().siblings('.address-detailed').hide();
+                break;
+            case 'area':
+                index = 2;
+                district = 'street';
+                $('.address-detailed').eq(3).show().siblings('.address-detailed').hide();
+                break;
+            case 'street':
+                index = 3;
+                district = undefined;
+                break;
+            default :
+                return;
+        }
+        $.each(clear_site, function (k, v) {
+            if (k > index) {
+                $('#address_' + v).val('');
+            }
+        });
+        $('.detailed-box-top .address-text').eq(index).find('a').html(txt);
+        $('.detailed-box-top .address-text').eq(index).addClass('finish');
+        $('.detailed-box-top .address-text').eq(index).next('div').show().addClass('active').siblings().removeClass('active');
+        $('.detailed-box-top .address-text').eq(index).next('div').html('<a href="javascript:;">--请选择--</a><img src="__RES__/imgs/my/datebottom.png" alt="">').nextAll('.address-text').hide();
+        if ($('.address-detailed-box span i').eq(index).length != 0) {
+            $('.address-detailed-box span i').eq(index).html('/' + txt).nextAll().remove();
+        } else {
+            $('.address-detailed-box span').append("<i>/" + txt + "</i>")
+        }
+        // console.log(district);
+        //城市联动
+        if (district) {
+            main.ajax({
+                'url': '/pc2.0/address/linkage', data: {'parent_id': parent_id}, callback: function (t) {
+                    if (t.code !== 0) {
+                        layer.msg(t.message);
+                    } else {
+                        var str = '';
+                        if(district === 'street'){
+                            str += '<a class="' + district + '" data_id="000">暂不选择</a>';
+                        }
+                        for (var i = 0; i < t.result.length; i++) {
+                            str += '<a class="' + district + '" data_id="' + t.result[i]['area_id'] + '">' + t.result[i]['area_name'] + '</a>';
+                        }
+                        $('#' + district).html(str);
+                    }
+                }
+            })
+        } else {
+            //如果是最后一级则去请求地图获取经纬度  设置在对应城市查询
+            var address_str = '';
+            $.each(clear_site,function(k,v){
+                address_str += $('#address_' + v).val();
+            });
+            geocoder.getLocation(address_str, function(status, result) {
+                if (status === 'complete' && result.info === 'OK') {
+                    //设置地图中心点
+                    address_map.setZoomAndCenter(20, [result['geocodes'][0]['location']['lng'], result['geocodes'][0]['location']['lat']]);
+                    // result中对应详细地理坐标信息
+                }
+            });
+            $('.detailed-box').hide();
+            $('.address-detailed-box').removeClass('border-bottom')
+        }
+    });
+    main.valid('#create_address');
+</script>
+{/block}

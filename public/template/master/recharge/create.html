@@ -1,0 +1,178 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/formSelects-v4.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<style>
+    .uploadImg{width: auto!important;}
+</style>
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请注意选择商品分类。</span></li>
+            <li><span>此处只能创建充值奖励。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label">缩略图</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$item.file|default=''}"
+                        width="230"
+                        height="170"
+                        file-mime="image/gif,image/jpeg,image/png" 文件类型
+                        name="file"
+                        dir="recharge/file"
+                        value="{$item.file_data|default=''}"
+                ></div>
+                <div style="overflow: hidden">
+                    <span class="remarks" style="float: left">上传充值卡图片，尺寸要求230*170</span>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em> 充值金额</label>
+            <div class="layui-input-inline">
+                <input type="number" name="recharge_money" value="{$item.recharge_money|default=''}" maxlength="10"
+                       autocomplete="off"
+                       placeholder="请输入充值金额"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em> 奖励金额</label>
+            <div class="layui-input-inline">
+                <input type="number" name="award_money" value="{$item.award_money|default=''}"
+                       maxlength="10" autocomplete="off"
+                       placeholder="请输入奖励金额"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.recharge_id"}
+                <input type="hidden" name="recharge_id" value="{$item.recharge_id}">
+                {/present}
+                <a type="reset" class="layui-btn layui-btn-primary" href="/recharge/index">返回</a>
+                <button class="layui-btn" type="submit" id="submit">提交</button>
+            </div>
+        </div>
+    </div>
+
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/common/formSelects-v4.js"></script>
+<script>
+    main.form();
+    main.valid('.layui-form');
+    // 上传图片
+    main.upload([{
+        elem: '#mobileImg',
+        size: 2 * 1024,
+        data: {name: 'content_img', dir: 'content_img'},
+        field: 'content_img',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                '<img src="' + res.data.domain + res.data.url + '">' + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_file',
+        size: 2 * 1024,
+        data: {name: 'goods_file', dir: 'goods_file'},
+        field: 'goods_file',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.domain +　res.data.url + '" class="uploadImg">' +
+                '<input type="text" name="file" value="'+res.data.url+'" title style="display:none;"/>';
+            $(this.elem).css('padding','1px').html(html);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_video',
+        size: 10 * 1024,
+        data: {name: 'goods_video', dir: 'video'},
+        field: 'goods_video',
+        accept: 'video',
+        acceptMime: 'video/*',
+        exts: 'mp4',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<video controls><source src="'+ res.data.domain + res.data.url +'" type = “application/ogg” /></video>';
+            $(this.elem).css('padding','1px').html(html);
+            $('[name="video"]').val(res.data.url);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#photos_area',
+        size: 2 * 1024,
+        data: {name: 'goods_album', dir: 'album'},
+        field: 'goods_album',
+        multiple: true,
+        number: 5,
+        auto: false,
+        choose: function (obj) {
+            var length = $('.img-item').length,num = 1;
+            obj.preview(function (index,file,result) {
+                if (length <= 5 && (length + num) <= 5 ) obj.upload(index, file);
+                num++;
+            });
+        },
+        done: function (res,index,upload) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="img-item">' +
+                '<img src="' + res.data.domain + res.data.url + '"class="uploadImg">' +
+                '<input type="hidden" name="picArr[]" value="'+ res.data.url +'" />' +
+                '<div class="operate">' +
+                '<i class="toleft">左移</i>' +
+                '<i class="toright">右移</i>' +
+                '<i class="del">删除</i>' +
+                '</div></div>';
+            if ($(this.elem).children('.img-item').length == 0) $(this.elem).empty();
+            $(this.elem).css('padding',0).append(html);
+            layer.closeAll('loading');
+        }
+    }]);
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

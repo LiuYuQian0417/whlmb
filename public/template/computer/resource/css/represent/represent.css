@@ -1,0 +1,27 @@
+.my-right{
+    padding: 20px 20px 395px 20px;
+    box-sizing: border-box;
+    background-color: #fff;
+    margin-top: 10px;
+    display: flex;
+}
+.my-item{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.my-item img{
+    width: 149px;
+    height: 147px;
+    margin-top: 27px;
+}
+.my-item1{
+    margin-left: 112px;+
+
+    margin-top: 117px;
+}
+.my-item2{
+    margin-left: 142px;
+    margin-top: 117px;
+
+}

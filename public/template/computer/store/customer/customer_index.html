@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>在线客服</title>
+    <!--网站图标-->
+    <link rel="shortcut icon" href="/template/master/resource/image/common/favicon_48.ico"/>
+    <link rel="bookmark" href="/template/master/resource/image/common/favicon_64.ico" type="image/x-icon"/>
+    <script>
+        var _user_id = '{:session("member_info")["member_id"]}';
+    </script>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/customer/service.css"/>
+    <style>
+        .chat-header {
+            position: relative;
+        }
+
+        #marks {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 0px;
+            width: 100%;
+            padding: 7px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        /*新消息样式*/
+        .new_message_style {
+            background: #FFF9CD !important;,
+        }
+    </style>
+</head>
+
+<body>
+<div class="service-bg">
+    <div class="service-box">
+        <div class="service-left">
+            <!--头部开始-->
+            <div class="service-header">
+                <div class="personal-info">
+                    <img class="header-img" src="{$member_info.avatar|default='__RES__/imgs/user_default.png'}"/>
+                    <div class="name-box">
+                        <div class="name">
+                            {$member_info.nickname}
+                        </div>
+                        <div class="leave">
+                            <span class="vip">{$member_info->get_rank_info()->mark}</span>
+                            <span class="vip-con">
+									{$member_info->get_rank_info()->rank_name}
+								</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="input-box">-->
+                <!--<img src="__RES__/imgs/customer/search.png" />-->
+                <!--<input type="text" placeholder="搜索商品/店铺" name="" id="" value="" />-->
+                <!--</div>-->
+            </div>
+
+            <!--头部结束-->
+            <div class="shop-list">
+                <!--<div class="list active">-->
+                <!--<img class="shop-logo" src="__RES__/imgs/customer/k1.png"/>-->
+                <!--<span class="shop-name">小二郎牛肉干</span>-->
+                <!--&lt;!&ndash;<span class="mark">&ndash;&gt;-->
+                <!--&lt;!&ndash;自营&ndash;&gt;-->
+                <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                <!--</div>-->
+                {volist name='customer_list' id='customer_list_data'}
+                <!--选中样式 active-->
+                <div id="store_list_{$customer_list_data->store_id}" modification="store_list"
+                     class="list"
+                     data-store_id="{$customer_list_data->store_id}">
+                    <img class="shop-logo" src="{$customer_list_data->logo|default='__RES__/imgs/user_default.png'}"/>
+                    <span class="shop-name"
+                          title="{$customer_list_data->store_name}">{$customer_list_data->store_name}</span>
+                    <span class="mark">
+                    {if condition="config('user.one_more') eq 1"}
+                        {switch name='customer_list_data->shop'}
+                            {case 0}自营{/case}
+                            {case 1}个人{/case}
+                            {case 2}公司{/case}
+                            {default /}平台
+                        {/switch}
+                    {/if}
+                    </span>
+                </div>
+                {/volist}
+            </div>
+        </div>
+        <div class="service-right">
+            <div class="shop-content">
+                <div class="chat-box">
+                    <div class="chat-header">
+                        <img class="shop-logo store_info_logo"/>
+                        <span class="shop-name store_info_name"></span>
+                        <div id="marks">
+                        </div>
+                    </div>
+                    <!--聊天内容-->
+                    <div class="chat-con" id="chat_log_info" data-first_message_time="0" data-last_id="0"
+                         data-last_page="0">
+                    </div>
+                    <!--状态栏-->
+                    <div class="input-box">
+                        <div class="state">
+                            <div class="expression">
+                                <img src="__RES__/imgs/customer/bq.png"/>
+
+                            </div>
+                            <div class="img-send">
+                                <label for="file">
+                                    <img src="__RES__/imgs/customer/tp.png"/>
+                                </label>
+                                <input type="file" hidden="hidden" name="" accept="image/jpeg,image/png,image/gif"
+                                       id="file" value=""/>
+                            </div>
+
+                            <div class="expression-box">
+                                <div class="expression-con">
+                                    {for start="0" end="90"}
+                                    <div class="box">
+                                        <img class="expression-img" modification="emoji_select" data-index="{$i}"
+                                             src="__RES__/imgs/customer/emoji/{$i}.png"/>
+                                        <div class="big-expression">
+                                            <img src="__RES__/imgs/customer/emoji/{$i}.png"/>
+                                        </div>
+                                    </div>
+                                    {/for}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="txt">
+                            <pre contenteditable="true" class="input" id="import_message"></pre>
+                        </div>
+                        <div class="btn">
+                            <a href="javascript:;" modification="send_text_message" class="send">
+                                发送
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="shop-list">
+                    <div class="header">
+                        <a class="active" href="javascript:;" data-click_type="consult">
+                            正在咨询
+                        </a>
+                        <!--<a href="javascript:;" data-click_type="my_order">-->
+                        <!--我的订单-->
+                        <!--</a>-->
+                        <a href="javascript:;" data-click_type="store_info">
+                            店铺信息
+                        </a>
+                    </div>
+
+                    <div class="shop-box">
+                        <!--咨询-->
+                        <div class="shop-tab counsel" data-switch_type="consult">
+                            <div class="goods" style="display: none;" id="consult_goods">
+                                <a href="javascript:;">
+                                    <div class="goods-img">
+                                        <img src="__RES__/imgs/default_loading.png">
+                                    </div>
+                                    <div class="goods-right">
+                                        <div class="goods-name"></div>
+                                        <div class="pic-box">
+                                            <span class="price"></span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                            <!--<p class="fw"><span><i>促销信息</i>:</span>暂无促销信息</p>-->
+                            <!--<p class="fw"><span><i>服务</i>:</span>暂无服务信息</p>-->
+                            <!--最近浏览-->
+                            <div class=" browse-box">
+                                <div class=" browse-header">
+                                    <a class="active" href="javascript:;">最近浏览</a>
+                                    <a href="javascript:;">店铺推荐</a>
+                                </div>
+
+                                <div class="table-box">
+                                    <!--最近浏览-->
+                                    <div class="table" id="browse_goods_log_table">
+                                        <div id="browse_goods_log" data-last_page="1" data-current_page="0">
+
+                                        </div>
+                                    </div>
+                                    <!--店铺推荐-->
+                                    <div class="table" style="display: none;" id="store_goods_recommend_table">
+                                        <div id="store_goods_recommend"
+                                             data-last_page="1" data-current_page="0"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--订单-->
+                        <!--<div class="shop-tab order" style="display: none;" data-switch_type="my_order">-->
+                        <!--<div class="order_list" data-last_page="1" data-current_page="0">-->
+                        <!--&lt;!&ndash;<div class="order-box">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="order-header">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="order-number">&ndash;&gt;-->
+                        <!--&lt;!&ndash;订单号:132546548798897987&ndash;&gt;-->
+                        <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="time">2019-05-24 12:54:50</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="goods">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<a href="javascript:;">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="goods-img">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<img src="__RES__/imgs/customer/k1.png">&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<div class="goods-right">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="goods-name">&ndash;&gt;-->
+                        <!--&lt;!&ndash;纯正的牛肉干&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<div class="pic-box">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="price">&ndash;&gt;-->
+                        <!--&lt;!&ndash;￥330.00&ndash;&gt;-->
+                        <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="btn">发送</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="goods-bottom">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<p class="je">订单金额: <span>￥39.00</span></p>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="order-btn">&ndash;&gt;-->
+                        <!--&lt;!&ndash;待付款&ndash;&gt;-->
+                        <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="fg"></div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="order-box">&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<div class="goods">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<a href="javascript:;">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="goods-img">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<img src="__RES__/imgs/customer/k1.png">&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<div class="goods-right">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="goods-name">&ndash;&gt;-->
+                        <!--&lt;!&ndash;纯正的牛肉干&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+                        <!--&lt;!&ndash;<div class="pic-box">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="price">&ndash;&gt;-->
+                        <!--&lt;!&ndash;￥330.00&ndash;&gt;-->
+                        <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="btn">发送</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<div class="goods-bottom">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<p class="je">订单金额: <span>￥39.00</span></p>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<span class="consignment">&ndash;&gt;-->
+                        <!--&lt;!&ndash;待付款&ndash;&gt;-->
+                        <!--&lt;!&ndash;</span>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                        <!--</div>-->
+                        <!--</div>-->
+                        <div class="shop-tab store" style="display: none;" data-switch_type="store_info">
+                            <div class="store-top">
+                                <p>
+                                    <span class="tit">店铺名称：</span> <span class="store_info_name"></span>
+                                </p>
+                                <div class="fs">
+                                    <span class="tit">综合评分：</span>
+                                    <div class="start">
+                                        <div class="active-start" style="width: 90%"></div>
+                                    </div>
+                                    <span class="score"><span class="store_info_grade"></span>分</span>
+                                </div>
+                                <p>
+                                    <span class="tit">联系电话：</span><span class="store_info_phone"></span>
+                                </p>
+                            </div>
+                            <!--<div class="store-bottom">-->
+                            <!--<div class="particulars">-->
+                            <!--<div class="tit">-->
+                            <!--评分明细-->
+                            <!--</div>-->
+                            <!--<p>-->
+                            <!--<span>商品评价：</span>4.5分-->
+                            <!--</p>-->
+                            <!--&lt;!&ndash;<p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span>服务态度：</span>4.5分&ndash;&gt;-->
+                            <!--&lt;!&ndash;</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<span>物流速度：</span>4.5分&ndash;&gt;-->
+                            <!--&lt;!&ndash;</p>&ndash;&gt;-->
+                            <!--</div>-->
+
+                            <!--<div class="contrast">-->
+                            <!--<div class="tit">-->
+                            <!--与行业对比-->
+                            <!--</div>-->
+                            <!--<p>-->
+                            <!--<img src="__RES__/imgs/customer/shang.png"/><span>30.1%</span>-->
+                            <!--</p>-->
+                            <!--&lt;!&ndash;<p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img src="__RES__/imgs/customer/xia.png"/>30.1%&ndash;&gt;-->
+                            <!--&lt;!&ndash;</p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<p>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<img src="__RES__/imgs/customer/shang.png"/>30.1%&ndash;&gt;-->
+                            <!--&lt;!&ndash;</p>&ndash;&gt;-->
+                            <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="__RES__/js/reconnecting-websocket.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="__RES__/js/customer_service.js" type="text/javascript" charset="utf-8"></script>
+<script src="__RES__/js/public/moment.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    document.addEventListener("visibilitychange", function () {
+        //document.hidden  true  当前标签被切换
+        if (document.hidden) {
+            //设置来新消息闪烁
+            message.is_show = true;
+        } else {
+            //设置来新消息不闪烁
+            message.is_show = false;
+            //取消title闪烁
+            message.clear();
+        }
+    });
+    //消息框内检测用户按键操作
+    $('#import_message').on('keydown', function (e) {
+        var keycode = e.keyCode || e.which;
+        //如果是回车键
+        switch (keycode) {
+            //回车键
+            case 13:
+                //判断是否是组合键回车
+                if (!e.ctrlKey && !e.shiftKey) {
+                    //发送键点击
+                    $('a[modification=send_text_message]').click();
+                    return false;
+                }
+                if (e.shiftKey) {
+                    return;
+                }
+                if (e.ctrlKey) {
+                    if (browserType() == "IE" || browserType() == "Edge") {
+                        $(this).append("<div br></div>");
+                    } else if (browserType() == "FF") {
+                        $(this).append("<br><br br>");
+                    } else {
+                        $(this).append("<div br><br></div>");
+                    }
+                    //设置输入焦点
+                    var o = $(this)[0].lastChild;
+                    var textbox = $(this)[0];
+                    var sel = window.getSelection();
+                    var range = document.createRange();
+                    range.selectNodeContents(textbox);
+                    range.collapse(false);
+                    range.setEndAfter(o);//
+                    range.setStartAfter(o);//
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                }
+                break;
+        }
+    });
+    //检测上传图片
+    $('#file').change(function () {
+        var file = document.getElementById("file").files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+        $.ajax({
+            url: "{:url('/v2.0/customer/uploadFile')}",
+            type: "post",
+            data: formData,
+            contentType: false,
+            processData: false,
+            mimeType: "multipart/form-data",
+            success: function (data) {
+                data = ObjectOrJson(data);
+                if (data.error == 0) {
+                    var message_info = {
+                        image_path: data.ossUrl,
+                        store_id: store_id,
+                        diversion_id: get_diversion_id(),
+                    };
+                    send_image_message(message_info, function (data) {
+                        var chat_log_html_str = dispose_chat_log(data);
+                        $('.chat-con').append(chat_log_html_str);
+                        //设置消息列表滚动条置低
+                        set_scroll_bar_bottom('.chat-con');
+                    });
+                } else {
+                    layer.msg('服务器异常');
+                }
+            },
+            error: function (data) {
+                layer.msg('服务器异常');
+            }
+        });
+        //清除图片内容
+        $("#file").val('');
+    });
+    //表情转换数组
+    const EmojiList = ['[微笑]', '[撇嘴]', '[色]', '[发呆]', '[得意]', '[流泪]', '[害羞]', '[闭嘴]', '[睡]', '[大哭]', '[尴尬]', '[发怒]', '[调皮]', '[呲牙]', '[惊讶]', '[难过]', '[囧]', '[抓狂]', '[吐]', '[偷笑]', '[愉快]', '[白眼]', '[傲慢]', '[困]', '[惊恐]', '[流汗]', '[憨笑]', '[悠闲]', '[奋斗]', '[咒骂]', '[疑问]', '[嘘]', '[晕]', '[衰]', '[骷髅]', '[敲打]', '[再见]', '[擦汗]', '[抠鼻]', '[鼓掌]', '[坏笑]', '[左哼哼]', '[右哼哼]', '[哈欠]', '[鄙视]', '[委屈]', '[快哭了]', '[阴险]', '[亲亲]', '[可怜]', '[菜刀]', '[西瓜]', '[啤酒]', '[咖啡]', '[猪头]', '[玫瑰]', '[凋谢]', '[嘴唇]', '[爱心]', '[心碎]', '[蛋糕]', '[炸弹]', '[便便]', '[月亮]', '[太阳]', '[拥抱]', '[强]', '[弱]', '[握手]', '[胜利]', '[抱拳]', '[勾引]', '[拳头]', '[OK]', '[跳跳]', '[发抖]', '[欧火]', '[转圈]', '[大笑]', '[生病]', '[破涕为笑]', '[吐舌]', '[脸红]', '[恐惧]', '[失望]', '[无语]', '[嘿哈]', '[捂脸]', '[奸笑]', '[机智]', '[皱眉]'];
+    //ajax请求返回对象保存
+    var chat_log_ajax = [], store_info_ajax = [], browse_goods_log_ajax = [], store_goods_recommend_ajax = [];
+    //店铺名字，店铺_user_idlogo
+    var service_store_name = '', service_store_logo = '';
+    //店铺id
+    var store_id = '{:input("pid")}';
+    //订单列表当前已加载页数
+    var order_current_page = 0;
+    //历史聊天记录已加载页数
+    var chat_log_current_page = 0;
+    //最近浏览加载页数
+    var browse_goods_log_page = 0;
+    //店铺推荐已加载页数
+    var store_goods_recommend_page = 0;
+    //记录订单列表上次滚动位置
+    var order_list_p = 0, order_list_t = 0;
+    //记录浏览记录列表上次滚动位置
+    var browse_goods_log_p = 0, browse_goods_log_t = 0;
+    //记录店铺推荐列表上次滚动位置
+    var store_goods_recommend_p = 0, store_goods_recommend_t = 0;
+    //记录消息列表上次滚动位置
+    var chat_log_list_p = 0, chat_log_list_t = 0;
+    //请求是否加载lodin[聊天记录，浏览历史，店铺推荐]
+    var get_chat_log_not_load = true, get_goods_browse_log_not_load = true,
+        get_store_recommend_goods_not_load = true;
+    //记录上一条消息时间
+    var prev_message_time = 0;
+    //注册点击事件
+    $(document).on('click', 'div[modification],span[modification],a[modification],img[modification]', function () {
+        var modification = $(this).attr('modification');
+        switch (modification) {
+            //店铺列表切换
+            case 'store_list':
+                //当前店铺id赋值
+                store_id = $(this).data('store_id');
+                //判断如果点击的是自己则不做处理
+                if ($(this).hasClass('active')) {
+                    return;
+                }
+                $(this).removeClass('new_message_style').addClass('active').siblings().removeClass('active');
+                service_store_logo = $('#store_list_' + store_id).find('img.shop-logo').attr('src');
+                service_store_name = $('#store_list_' + store_id).find('span.shop-name').text();
+                //执行店铺切换操作
+                switch_store();
+                $('.chat-con').html('');
+                break;
+            //表情选择
+            case 'emoji_select':
+                $('.expression-box').hide();
+                $('.expression').removeClass('show-expression');
+                //获取当前点击的图片地址
+                var src = $(this).attr('src');
+                //获取当前点击图片对应的字符串标识
+                var emoji_str = EmojiList[$(this).data('index')];
+                //设置图片标签
+                var img = '<img src="' + src + '" data-item="' + emoji_str + '"/>';
+                //				插入输入框
+                $('#import_message').append(img);
+                break;
+            //发送商品消息
+            case 'send_message_goods':
+                var message_info = {
+                    goods_id: $(this).data('goods_id'),
+                    store_id: store_id,
+                    diversion_id: get_diversion_id(),
+                };
+                //发送消息
+                send_goods_message(message_info, $(this).data());
+                break;
+            //发送文本消息
+            case 'send_text_message':
+                var import_message = matchMessageImageToTag(EmojiList, $('#import_message').html()).trim();
+                //如果没有输入消息
+                if (import_message.replace(/<div><div\/>|<div><br><div\/>|<br><br>/g, '') == '') {
+                    return;
+                }
+                var message_info = {
+                    message: htmlspecialchars(import_message.replace(/<div br="">|<br br="">/g, '\n').replace(/<br>|<div>|<\/div>/g, '')),
+                    store_id: store_id,
+                    diversion_id: get_diversion_id(),
+                };
+                //发送消息
+                send_text_message(message_info, function (data) {
+                    //清空消息框内容
+                    $('#import_message').html('');
+                    //消息上屏
+                    var chat_log_html_str = dispose_chat_log(data);
+                    $('.chat-con').append(chat_log_html_str);
+                    //设置消息列表滚动条置低
+                    set_scroll_bar_bottom('.chat-con');
+                });
+                break;
+        }
+    });
+
+    //清除历史ajax请求
+    function clear_ajax(ajax_list) {
+        $.each(ajax_list, function (k, v) {
+            v.abort();
+        });
+    }
+
+    //获取分流id
+    function get_diversion_id() {
+        var diversion_id_info = ObjectOrJson(get_localStorage('service_diversion_id_{:input("pid")}'));
+        //默认消息通知页面分流id 判断是平台还是商家
+        var diversion_id = store_id.toString() === '0' ? '5000' : '1000';
+        if (diversion_id_info != '') {
+            diversion_id = diversion_id_info.diversion_id;
+        }
+        return diversion_id;
+    }
+
+    //切换店铺
+    function switch_store() {
+        //清除当前店铺身上消息未读标识
+        $('#store_list_' + store_id).removeAttr('new_message');
+        //判断如果全部店铺消息已读则取消新消息提醒
+        if ($('div[id^=store_list][new_message]').length <= 0) {
+            //清除新消息提醒
+            message.clear();
+        }
+        $('#marks').hide();
+        //数据初始化
+        order_current_page = chat_log_current_page = store_goods_recommend_page = browse_goods_log_page = order_list_p = order_list_t = store_goods_recommend_p = store_goods_recommend_t = browse_goods_log_p = browse_goods_log_t = chat_log_list_p = chat_log_list_t = prev_message_time = 0;
+        //消息列表数据初始化
+        $('#chat_log_info').data('first_message_time', 0);
+        $('#chat_log_info').data('last_id', 0);
+        $('#chat_log_info').data('self_page', 0);
+        //请求是否加载lodin初始化
+        get_chat_log_not_load = get_goods_browse_log_not_load = get_store_recommend_goods_not_load = true;
+
+        //最近浏览
+        $('#browse_goods_log').data('last_page', 1);
+        $('#browse_goods_log').data('current_page', 0);
+        $('#browse_goods_log').html('');
+        //店铺推荐
+        $('#store_goods_recommend').data('last_page', 1);
+        $('#store_goods_recommend').data('current_page', 0);
+        $('#store_goods_recommend').html('');
+
+        //发送店铺客服分配请求
+        if (ws.is_open) {
+            send_match_customer({store_id: store_id, diversion_id: get_diversion_id()});
+        }
+        //如果是咨询商品则发送商品信息
+        var send_goods_info = ObjectOrJson(get_localStorage('service_goods_id_' + store_id));
+
+
+        //发送商品咨询信息
+        if (send_goods_info !== '') {
+            $('#consult_goods .goods-name').text(send_goods_info.goods_name);
+            $('#consult_goods').find('span.price').text('￥' + send_goods_info.goods_price);
+            $('#consult_goods .goods-img').find('img').attr('src', send_goods_info.goods_file);
+            $('#consult_goods').show();
+            if (!send_goods_info.is_send) {
+                //发送商品消息
+                var message_info = {
+                    goods_id: send_goods_info.goods_id,
+                    store_id: store_id,
+                    diversion_id: get_diversion_id(),
+                };
+                var goods_info = {
+                    goods_id: send_goods_info.goods_id,
+                    file: send_goods_info.goods_file,
+                    goods_name: send_goods_info.goods_name,
+                    goods_price: send_goods_info.goods_price,
+                };
+                //发送消息
+                send_goods_message(message_info, goods_info);
+                //商品是否发送
+                send_goods_info.is_send = true;
+                set_localStorage({name: 'service_goods_id_' + store_id, value: ObjectOrJson(send_goods_info)});
+            }
+        } else {
+            $('#consult_goods').hide();
+        }
+        //获得店铺信息
+        get_store_info();
+        //获得历史聊天记录
+        get_chat_log();
+        //获得店铺订单列表
+        // get_store_order_list();
+        //店铺浏览历史记录
+        get_browse_goods_log();
+        //店铺商品推荐
+        get_store_goods_recommend();
+
+    }
+
+    //获取店铺信息
+    function get_store_info() {
+        var store_info = ObjectOrJson(get_sessionStorage('service_store_info_' + store_id));
+        //如果有缓存
+        if (store_info !== '') {
+            set_store_info(store_info);
+        } else {
+            //关闭之前的请求
+            clear_ajax(store_info_ajax);
+            store_info_ajax.push(main.ajax({
+                'url': "{:url('/pc2.0/customer/get_store_info')}",
+                'not_load': true,
+                data: {store_id: store_id},
+                callback: function (res) {
+                    if (res.code == 0) {
+                        set_sessionStorage({name: 'service_store_info_' + store_id, value: ObjectOrJson(res.data)});
+                        set_store_info(res.data);
+                    } else {
+                        layer.msg(res.message)
+                    }
+                }
+            }));
+        }
+    }
+
+    /*************************************************聊天记录处理start**********************************************************/
+
+    //获得聊天记录
+    function get_chat_log() {
+        //返回消息id
+        var last_id = $('#chat_log_info').data('last_id');
+        //返回消息时间
+        var first_message_time = $('#chat_log_info').data('first_message_time');
+        //当前加载页数 没有消息则-1
+        var self_page = $('#chat_log_info').data('self_page');
+
+        if (self_page != -1 && chat_log_current_page >= self_page) {
+            //当前加载页数
+            $('#chat_log_info').data('self_page', ++self_page);
+            //关闭之前的请求
+            clear_ajax(chat_log_ajax);
+
+            chat_log_ajax.push(main.ajax({
+                'url': "{:url('/pc2.0/customer/get_chat_log')}",
+                'not_load': get_chat_log_not_load,
+                data: {store_id: store_id, limit: 7, last_id: last_id, first_message_time: first_message_time},
+                callback: function (res) {
+                    if (res.code == 0) {
+                        if (res.store_id == store_id) {
+                            set_chat_log(res.data);
+                            //已加载页数累计
+                            ++chat_log_current_page;
+                        }
+                    } else {
+                        layer.msg(res.message)
+                    }
+                    //更改
+                    get_chat_log_not_load = false;
+                }
+            }));
+        }
+    }
+
+    //历史聊天记录渲染
+    function set_chat_log(data) {
+        var chat_log_html_str = '';
+        $.each(data, function (k, v) {
+            chat_log_html_str += dispose_chat_log(v);
+        });
+        //如果消息长度大于0
+        if (data.length > 0) {
+            $('#chat_log_info').data('first_message_time', data[0]['message']['MESSAGE_ID']);
+            $('#chat_log_info').data('last_id', data[0]['id']);
+        } else {
+            $('#chat_log_info').data('self_page', -1);
+        }
+
+        var before_scroll_height = $('.chat-con')[0].scrollHeight;
+
+        $('.chat-con').prepend(chat_log_html_str);
+        //如果是第一次加载历史记录则滚动条定位到最下面
+        if (get_chat_log_not_load) {
+            set_scroll_bar_bottom('.chat-con');
+        } else {
+            $('.chat-con').scrollTop($('.chat-con')[0].scrollHeight - before_scroll_height);
+        }
+    }
+
+    //处理聊天记录
+    function dispose_chat_log(data) {
+        //判断距离上一次聊天记录相差时间差距三分钟
+        var chat_log_str = (parseInt(data.message.MESSAGE_ID) - prev_message_time >= 180000) && prev_message_time != 0 ? '<div class="time">' + moment(parseInt(data.message.MESSAGE_ID)).format('YYYY-MM-DD HH:mm') + '</div>' : '';
+        //用户类型处理
+        switch (data.type) {
+            //用户发的消息
+            case 'USER':
+                chat_log_str += '<div class="my-info" id="message_id_' + data.message.MESSAGE_ID + '"><div class="img"><img src="' + ('{$member_info.avatar}' || '__RES__/imgs/user_default.png') + '"></div><div class="con"><div class="name">{$member_info.nickname}</div>';
+                break;
+            //客服发送的消息
+            case 'CUSTOMER':
+                chat_log_str += '<div class="service-info" id="message_id_' + data.message.MESSAGE_ID + '"><div class="img"><img src="' + (service_store_logo || '__RES__/imgs/user_default.png') + '"></div><div class="con"><div class="name">' + service_store_name + '</div>';
+                break;
+        }
+        //消息类型处理
+        switch (data.message.MESSAGE_TYPE) {
+            //文本
+            case 'TEXT':
+                chat_log_str += '<div class="chat">' + htmlspecialchars(matchMessageTagToImage(EmojiList, data.message.MESSAGE_DATA).replace(/[\r|\n|\r\n]/g, "<br/>")) + '</div>';
+                break;
+            //图片
+            case 'IMAGE':
+                chat_log_str += '<div class="chat"><img class="imgRUL" src="' + data.message.MESSAGE_DATA + '" onclick="examine_img(this)"></div>';
+                break;
+            //语音
+            case 'VOICE':
+                break;
+            //商品
+            case 'GOODS':
+                var goods_data = data.message.GOODS_DATA;
+                chat_log_str += '<div class="goods" onclick="jump_goods({goods_id:' + goods_data.goods_id + ',is_open: true})">\n' +
+                    '                                    <a href="javascript:;">\n' +
+                    '                                        <div class="goods-img">\n' +
+                    '                                            <img src="' + goods_data.file + '">\n' +
+                    '                                        </div>\n' +
+                    '                                        <div class="goods-right">\n' +
+                    '                                            <div class="goods-name">' + goods_data.goods_name + '</div>\n' +
+                    '                                            <div class="pic-box"><span class="price">￥' + goods_data.goods_price + '</span>\n' +
+                    '                                            </div>\n' +
+                    '                                        </div>\n' +
+                    '                                    </a>\n' +
+                    '                                </div>';
+                break;
+            //订单
+            case 'ORDER':
+                break;
+        }
+        chat_log_str += '</div></div>';
+        //记录上一次消息时间
+        prev_message_time = parseInt(data.message.MESSAGE_ID);
+        return chat_log_str;
+    }
+
+    //匹配 消息图片 到 标签
+    function matchMessageImageToTag(emojiList, message) {
+        return message.replace(/<(?:img|IMG).*?data-item="(.*?)".*?>/g, (data, emoji) => {
+            var index = emojiList.indexOf(emoji)
+            return index === -1 ? data : emoji
+        })
+    }
+
+    //匹配消息标签 到图片
+    function matchMessageTagToImage(emojiList, message) {
+        return message.replace(/\[[^\[\]]+\]/g, (data) => {
+            var index = emojiList.indexOf(data)
+            return index === -1 ? data : `<img class="emoji_img" src="__RES__/imgs/customer/emoji/${index}.png" data-item="${data}">`
+        })
+    }
+
+    //检测消息列表滚动条滚动
+    $('.chat-con').on('scroll', function (e) {
+        //当前元素距离顶部位置
+        chat_log_list_p = $(this).scrollTop();
+        if (chat_log_list_p < 10 && chat_log_list_t > chat_log_list_p) {
+            //判断是否加载加一页
+            get_chat_log();
+        }
+        chat_log_list_t = chat_log_list_p;
+    });
+
+    /*************************************************聊天记录处理end**********************************************************/
+
+    /**
+     * 店铺信息设置
+     */
+    function set_store_info(store_info) {
+        //设置店铺logo
+        $('.store_info_logo').attr('src', store_info.logo);
+        //设置店铺名字
+        $('.store_info_name').text(store_info.store_name);
+        //设置店铺评分
+        $('.store_info_grade').text(store_info.store_percent.self_score);
+        //设置店铺联系电话
+        $('.store_info_phone').text(store_info.phone);
+        //设置店铺评分比例
+        $('.active-start').css({width: (store_info.store_percent.self_score * 20) + '%'});
+    }
+
+    //获得店铺订单
+    function get_store_order_list() {
+        var current_page = $('.shop-tab.order .order_list').data('current_page');
+        var last_page = $('.shop-tab.order .order_list').data('last_page');
+        if (order_current_page <= current_page && current_page < last_page) {
+            ++order_current_page;
+            main.ajax({
+                'url': '{:url("/pc2.0/customer/get_store_order_list")}',
+                data: {store_id: store_id, page: ++current_page},
+                callback: function (res) {
+                    if (res.code == 0) {
+                        set_order_list(res.data);
+                    } else {
+                        layer.msg(res.message)
+                    }
+                }
+            })
+        }
+    }
+
+    //订单列表设置
+    function set_order_list(order_list_info) {
+        var html_str = '';
+        $.each(order_list_info.data, function (order_k, order_v) {
+            html_str += '<div class="order-box">' +
+                '<div class="order-header">\n' +
+                '<span class="order-number">订单号:' + order_v.order_attach_number + '</span><span class="time">' + order_v.create_time + '</span></div>';
+            //拼接订单商品
+            $.each(order_v.order_goods, function (order_goods_k, order_goods_v) {
+                html_str += '<div class="goods"><a href="javascript:;">\n' +
+                    '               <div class="goods-img"><img src="' + (order_goods_v.file || '/template/computer/resource/imgs/default_loading.png') + '"></div>\n' +
+                    '               <div class="goods-right">\n' +
+                    '                   <div class="goods-name">' + order_goods_v.goods_name + '</div>\n' +
+                    '                   <div class="pic-box">' +
+                    '                       <span class="price">￥' + order_goods_v.single_price + '</span>\n' +
+                    '                       <span modification="send_order_goods" class="btn">发送</span>\n' +
+                    '        </div></div></a></div>';
+            });
+            html_str += '<div class="goods-bottom"><p class="je">订单金额: <span>￥' + order_v.subtotal_price + '</span></p><span class="order-btn">' + order_v.order_operation.OrderStatusText + '</span></div></div><div class="fg"></div>';
+        });
+        //赋值当前页数
+        $('.shop-tab.order .order_list').data('current_page', order_list_info.current_page);
+        //赋值总页数
+        $('.shop-tab.order .order_list').data('last_page', order_list_info.last_page);
+        $('.shop-tab.order .order_list').append(html_str);
+    }
+
+    //设置滚动条滚动到底部
+    function set_scroll_bar_bottom(select) {
+        $(select).scrollTop($(select)[0].scrollHeight);
+    }
+
+    //检测订单列表滚动条滚动
+    $('.shop-tab.order').on('scroll', function (e) {
+        order_list_p = $(this).scrollTop();
+        if ($(this).scrollTop().toFixed(0) >= ($(this).find('.order_list').height() - $(this).height()).toFixed(0) - 50 && order_list_t <= order_list_p) {
+            //判断是否加载加一页
+            get_store_order_list();
+        }
+        order_list_t = order_list_p;
+    });
+
+    /**********************************************最近浏览start**************************************************************/
+
+    //检测浏览记录滚动
+    $('#browse_goods_log_table').on('scroll', function (e) {
+        browse_goods_log_p = $(this).scrollTop();
+        if ($(this).scrollTop().toFixed(0) >= ($(this).find('#browse_goods_log').height() - $(this).height()).toFixed(0) - 50 && browse_goods_log_t <= browse_goods_log_p) {
+            //判断是否加载加一页
+            get_browse_goods_log();
+        }
+        browse_goods_log_t = browse_goods_log_p;
+    });
+
+    //获得店铺浏览历史记录
+    function get_browse_goods_log() {
+        //当前
+        var current_page = $('#browse_goods_log').data('current_page');
+        //总页数
+        var last_page = $('#browse_goods_log').data('last_page');
+        if (browse_goods_log_page <= current_page && current_page < last_page) {
+            ++browse_goods_log_page;
+            //关闭之前的请求
+            clear_ajax(browse_goods_log_ajax);
+            browse_goods_log_ajax.push(main.ajax({
+                'url': '{:url("/pc2.0/customer/goods_browse_log")}',
+                not_load: get_goods_browse_log_not_load,
+                data: {store_id: store_id, page: ++current_page},
+                callback: function (res) {
+                    if (res.code == 0) {
+                        if (res.store_id == store_id) {
+                            var html_str = goods_dispose(res.data.data);
+                            //赋值当前页数
+                            $('#browse_goods_log').data('current_page', res.data.current_page);
+                            //赋值总页数
+                            $('#browse_goods_log').data('last_page', res.data.last_page);
+
+                            $('#browse_goods_log').append(html_str);
+                        }
+                    } else {
+                        layer.msg(res.message)
+                    }
+                    get_goods_browse_log_not_load = false;
+                }
+            }));
+        }
+    }
+
+    //商品列表处理
+    function goods_dispose(data) {
+        var goods_html_str = '';
+        $.each(data, function (k, v) {
+            goods_html_str += '<div class="goods">\n' +
+                '                          <a href="javascript:;">\n' +
+                '                                                <div class="goods-img"><img src="' + (v.file || '/template/computer/resource/imgs/default_loading.png') + '"></div>\n' +
+                '                                                <div class="goods-right">\n' +
+                '                                                    <div class="goods-name">' + v.goods_name + '</div>\n' +
+                '                                                    <div class="pic-box">\n' +
+                '                                   <span class="price">￥' + v.goods_price + '</span>\n' +
+                '                                               <span modification="send_message_goods" class="btn" data-goods_id="' + v.goods_id + '" data-file="' + (v.file || '/template/computer/resource/imgs/default_loading.png') + '" data-goods_name="' + v.goods_name + '" data-goods_price="' + v.goods_price + '">发送</span>' +
+                '</div></div></a></div>';
+        });
+        return goods_html_str;
+    }
+
+    /**********************************************最近浏览end**************************************************************/
+
+
+    /**********************************************店铺推荐 start**************************************************************/
+
+    //检测店铺推荐商品滚动
+    $('#store_goods_recommend_table').on('scroll', function (e) {
+        store_goods_recommend_p = $(this).scrollTop();
+        if ($(this).scrollTop().toFixed(0) >= ($(this).find('#store_goods_recommend').height() - $(this).height()).toFixed(0) - 50 && store_goods_recommend_t <= store_goods_recommend_p) {
+            //判断是否加载加一页
+            get_store_goods_recommend();
+        }
+        store_goods_recommend_t = store_goods_recommend_p;
+    });
+
+    //获得店铺推荐商品
+    function get_store_goods_recommend() {
+        var current_page = $('#store_goods_recommend').data('current_page');
+        var last_page = $('#store_goods_recommend').data('last_page');
+        if (store_goods_recommend_page <= current_page && current_page < last_page) {
+            ++store_goods_recommend_page;
+            //关闭之前的请求
+            clear_ajax(store_goods_recommend_ajax);
+            store_goods_recommend_ajax.push(main.ajax({
+                'url': '{:url("/pc2.0/customer/store_recommend_goods")}',
+                not_load: get_store_recommend_goods_not_load,
+                data: {store_id: store_id, page: ++current_page},
+                callback: function (res) {
+                    if (res.code == 0) {
+                        if (res.store_id == store_id) {
+                            var html_str = goods_dispose(res.data.data);
+                            //赋值当前页数
+                            $('#store_goods_recommend').data('current_page', res.data.current_page);
+                            //赋值总页数`
+                            $('#store_goods_recommend').data('last_page', res.data.last_page);
+                            $('#store_goods_recommend').append(html_str);
+                        }
+                    } else {
+                        layer.msg(res.message)
+                    }
+                    get_store_recommend_goods_not_load = false;
+                }
+            }));
+        }
+    }
+
+    /**********************************************店铺推荐 end**************************************************************/
+
+    /**
+     * 图片放大
+     */
+    function examine_img(e) {
+        layer.examine_img_index = layer.open({
+            offset: 'auto',
+            area: '450px',
+            title: false,
+            type: 1,
+            closeBtn: 0,
+            shadeClose: true,
+            content: '<div><img onclick="layer.examine_img_close()" style="width: 100%" src="' + $(e).attr('src') + '"></div>'
+        });
+        layer.examine_img_close = function () {
+            layer.close(layer.examine_img_index);
+        };
+    }
+
+    //			显示表情框
+    $('.expression').click(function () {
+        if ($(this).hasClass('show-expression')) {
+            $('.expression-box').hide();
+            $(this).removeClass('show-expression')
+        } else {
+            $('.expression-box').show();
+            $(this).addClass('show-expression')
+        }
+    });
+    //			最近浏览切换
+    $('.browse-box .browse-header a').click(function () {
+        var index = $(this).index()
+        $(this).addClass('active').siblings().removeClass('active');
+        $('.browse-box .table-box .table').eq(index).show().siblings().hide();
+    });
+
+    //			右侧切换
+    $('.shop-list .header a').click(function () {
+        $(this).addClass('active').siblings().removeClass('active');
+        var switch_type = $(this).data('click_type');
+        $(' .shop-box div.shop-tab[data-switch_type=' + switch_type + ']').show().siblings().hide();
+    });
+</script>
+</body>
+</html>

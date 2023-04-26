@@ -1,0 +1,83 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="/template/client/resource/css/font-awesome.min.css">
+<style>
+    .fa{
+        display: inline-block;
+        font: 14px/1 FontAwesome;
+        font-size: inherit;
+        text-rendering: auto;
+        -webkit-font-smoothing: antialiased;
+        transform: translate(0,0);
+        margin-top: 6%;
+    }
+
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+
+<div class="move_div">
+    <div class="move_left" style="width: 200px;">
+        <h4>&nbsp;</h4>
+        <div class="move_info">
+            <div class="move_list" style="overflow-y:auto;">
+                <ul style="list-style:none;">
+                    {volist name="provinces" id="province"}
+                    <li><input type="checkbox" value="{$province.area_id}"/>{$province.area_name}<i class="fa icon-angle-right pull-right" onclick="add_area({$province.area_id},1);"></i></li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="move_middle" style="width: 4%;"></div>
+
+    <div class="move_right" style="width: 200px;" id="city"></div>
+
+    <div class="move_middle" style="width: 4%;"></div>
+    <div class="move_right" style="width: 200px;" id="county"></div>
+    <div class="move_middle" style="width: 4%;"></div>
+    <div class="move_right" style="width: 200px;" id="street"></div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    function add_area(area_id,type) {
+        var url = '/client/area/change_area?id='+area_id;
+        getJSON(url,type);
+    }
+    
+    function getJSON(url,type) {
+        $.getJSON(url, function (json) {
+            var areas = '<div class="move_right" style="width:200px;"><h4>&nbsp;</h4><div class="move_info"><div class="move_list" style="overflow-y:auto;"><ul>';
+            if (type!=3){
+                var mm = type+1;
+                $(json).each(function () {
+                    areas +='<li><input type="checkbox" value="' + this.area_id + '">'+this.area_name+'<i class="fa icon-angle-right pull-right" onclick="add_area('+this.area_id+','+mm+')"></i></li>';
+                });
+                areas += '</ul></div></div></div>';
+                switch (type){
+                    case 1:
+                        $('#city').html(areas);
+                        break;
+                    case 2:
+                        $('#county').html(areas);
+                        break;
+                }
+
+            }else {
+                $(json).each(function () {
+                    areas +='<li><input type="checkbox" value="' + this.area_id + '">'+this.area_name+'</li>';
+                });
+                areas += '</ul></div></div></div>';
+                $('#street').html(areas);
+            }
+
+
+        })
+    }
+</script>
+{/block}

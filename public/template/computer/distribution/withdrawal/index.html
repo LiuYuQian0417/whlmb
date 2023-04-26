@@ -1,0 +1,299 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/distribution/withdrawal_index.css">
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+<style>
+    .card{
+        display: none;
+    }
+    .card-list{
+        width: 650px;
+        margin: 20px 0 0 100px;
+    }
+    .card-list label{
+        float: left;
+        margin-right: 10px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        width: 40%;
+        font-size: 14px;
+        height:30px;
+        align-content: center;
+        align-items: center;
+    }
+    .card-list label:nth-child(2n){
+        margin-left: 10%;
+    }
+    input[type="checkbox"]:checked + .square {
+        padding: 2px;
+        font-size: 16px;
+        font-weight: bold;
+        line-height: 15px;
+        background: #cda349;
+        color: #cda349;
+        border-color: #cda349;
+        box-sizing: border-box;
+        background-clip: content-box;
+    }
+
+    .circle {
+        display: inline-block;
+        vertical-align: middle;
+        width: 15px;
+        height: 15px;
+        border-radius: 3px;
+        border: 1px solid #ddd;
+    }
+    .card-title{
+        color: #333;
+    }
+    .card-title span{
+        color: #999;
+    }
+    input[type="radio"]:checked + .circle {
+        /*padding: 2px;*/
+        background: #cda349;
+        box-sizing: border-box;
+        border-color: #cda349;
+        background-clip: content-box;
+    }
+    .box-bj{
+        /*display: none;*/
+        position: fixed;
+        width: 100%;
+        height:100%;
+        top:0;
+        left: 0;
+        z-index: 9;
+        background: rgba(0,0,0,.3);
+    }
+    .add-card{
+        /*display: none;*/
+        position: fixed;
+        top:50%;
+        left:50%;
+        z-index: 10;
+        background: #fff;
+        border:5px solid rgba(0,0,0,.4);
+        height:220px;
+        width:440px;
+        margin: -110px 0 0 -220px;
+    }
+    .add-card-top{
+        height:30px;
+        line-height: 30px;
+        color: #333;
+        font-size: 14px;
+        padding: 0 10px;
+        display: flex;
+        justify-content: space-between;
+        background: #f3f3f3;
+    }
+    .prompt{
+        text-align: center;
+        height:128px;
+        box-sizing: border-box;
+        padding: 20px 0;
+    }
+    .prompt p{
+        line-height: 50px;
+        font-weight: 500;
+        font-size: 18px;
+    }
+    .prompt span{
+        color: #999;
+        font-size: 16px;
+        line-height: 30px;
+    }
+    .choose{
+        width:200px;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+    }
+    .choose span:nth-child(1){
+        width: 90px;
+        border:1px solid #ddd;
+        background: #f5f5f5;
+        height:34px;
+        line-height: 34px;
+        color: #333;
+        text-align: center;
+    }
+    .choose span:nth-child(2){
+        width: 90px;
+        border:1px solid #ea5413;
+        background: #ea5413;
+        color: #fff;
+        height:34px;
+        line-height: 34px;
+        text-align: center;
+    }
+    .cash-balance input{
+        outline: none;
+        box-sizing: border-box;
+        padding-left: 5px;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    {include file="public/my_left"}
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div>
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="{:url('/pc2.0/distribution_withdrawal/index')}" class='primary-color border-color'>
+                        提现
+                    </a>
+                    <a href="{:url('/pc2.0/distribution_withdrawal/record')}" >
+                        提现记录
+                    </a>
+                </div>
+            </div>
+            <div class="withdrawal">
+                <form action="{:url('/pc2.0/distribution_withdrawal/to_apply')}" method="post" id="withdrawal_index">
+                <div class="cash-balance">
+                    <span>提现余额：</span>
+                    <input type="text" name="price" datatype="*" nullmsg="请填写提现余额" errormsg="请填写提现余额">
+                    <span>元</span>
+                </div>
+                <span class="tip">全部收益{$data.total_brokerage} 可提现:{$data.close_brokerage}</span>
+
+                 <label class="withdrawal-way">
+                    <span>提现方式：</span>
+                    {volist name='data.rule.type' id='vo'}
+                    {switch name='vo'}
+                    {case value='1'}
+                    <label class="way" style="margin:0 10px 0 10px;">
+                        <img src="__RES__/imgs/yield/ye.png" alt="">
+                        <span>余额</span>
+                        <div class="triangle border-color" style="display: none">
+                            <img src="__RES__/imgs/yield/ok.png" alt="">
+                        </div>
+                        <input type="radio" hidden value="1" name="distribution_type">
+                    </label>
+                    {/case}
+                    {case value='2'}
+                    <label class="way border-color" style="margin:0 10px 0 20px;">
+                        <img src="__RES__/imgs/yield/wx.png" alt="">
+                        <span>微信</span>
+                        <div class="triangle border-color">
+                            <img src="__RES__/imgs/yield/ok.png" alt="">
+                        </div>
+                        <input type="radio" hidden checked value="2" name="distribution_type">
+                    </label>
+                    {/case}
+                    {case value='3'}
+                    <label class="way" style="margin:0 10px 0 10px;">
+                        <img src="__RES__/imgs/yield/bank_1.png" alt="" width="18">
+                        <span>银行卡</span>
+                        <div class="triangle border-color" style="display: none">
+                            <img src="__RES__/imgs/yield/ok.png" alt="">
+                        </div>
+                        <input type="radio" hidden value="3" name="distribution_type">
+                    </label>
+                    {/case}
+                    {/switch}
+                    {/volist}
+                </label>
+                    <div class="card">
+                        <div class="card-list">
+                            {notempty name='card'}
+                            {volist name='card' id='card_item'}
+                            <label>
+                                <div>
+                                    <input type="radio" hidden name="card_id" value="{$card_item.card_id}">
+                                    <span class="circle"></span>
+                                </div>
+                                <div class="card-title">
+                                    {$card_item.card_remark}
+                                </div>
+                                <div class="card-title">
+                                    <span>****</span>
+                                    <span>****</span>
+                                    <span>****</span>
+                                    <span>{$card_item.card_number_enc}</span>
+                                </div>
+                            </label>
+                            {/volist}
+                            {/notempty}
+                             {empty name='card'}
+                             <!--无银行卡弹窗-->
+                                <div class="box-bj"></div>
+                                <div class="add-card">
+                                    <div class="add-card-top">
+                                        <span>添加银行卡</span>
+                                        <span  class="card-close">×</span>
+                                    </div>
+                                    <div class="prompt">
+                                        <p>提示</p>
+                                        <span>你需要添加一张储蓄卡？</span>
+                                    </div>
+                                    <div class="choose">
+                                        <span class="card-close">取消</span><span><a href="{:url('/pc2.0/member_card/add')}">确定</a></span>
+                                    </div>
+                                </div>
+                                <!--无银行卡弹窗-->
+                                {/empty}
+                                <div style="clear: both; width: 100%; overflow: hidden; height: 0; padding: 0; margin: 0"></div>
+                            </div>
+                        </div>
+
+
+
+                <!--<div class="">立即提现</div>-->
+                    <input type="hidden" name="distribution_id" value="{$distribution_id}">
+                    <input type="submit" class="withdrawaling primary-background-color" value="立即提现">
+                </form>
+                <a href="{:url('/pc2.0/distribution_withdrawal/record')}" class="withdrawal-record">提现记录</a>
+                <div class="warning">
+                    <div class="warning-title">注意事项</div>
+                    {volist name="$data.notify_explain" id="item"}
+                    <p>{$key+1}、{$item}</p>
+                    {/volist}
+                </div>
+                <!--<div  class="tip-img-view">-->
+                <!--<div class="tip-img">-->
+                <!--<img src="__RES__/imgs/yield/success.png" alt="">-->
+                <!--<p>提现申请提交成功!</p>-->
+                <!--<div class="withdrawal-record primary-background-color">提现记录</div>-->
+                <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    main.valid({'select':'#withdrawal_index','return_url':ObjectOrJson({'use_url':'distribution_withdrawal/index','return_url':'{:url("/pc2.0/distribution_withdrawal/success")}'})});
+
+$('.withdrawal-way .way').click(function () {
+//    $(this).find(span).text == '银行卡'
+    var index =$(this).index()
+    console.log(index)
+    if(index == 3){
+        $('.card').show()
+    }else{
+        $('.card').hide()
+    }
+    $(this).addClass('border-color').siblings('.way').removeClass('border-color');
+    $(this).find('.triangle').show();
+    $(this).siblings('.way').find('.triangle').hide();
+
+
+})
+    $('.card-close').click(function(){
+        $(this).parents('.way').eq(0).addClass('border-color').siblings().removeClass('border-color')
+        $('.add-card').hide()
+        $('.box-bj').hide()
+    })
+</script>
+{/block}

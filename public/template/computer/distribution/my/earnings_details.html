@@ -1,0 +1,150 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyFans.css" />
+<link rel="stylesheet" href="__RES__/css/my/FansEarnings.css">
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css">
+{/block}
+
+{block name="content"}
+<div class="index-box">
+   {include file="public/my_left"}
+    <div class="index-right">
+        <!-- 我的右侧 -->
+        <div class="fans">
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="{:url('/pc2.0/distribution_my/earnings_view')}"  >
+                        收益
+                    </a>
+                    <a href="{:url('/pc2.0/distribution_my/earnings_details')}" class="primary-color border-color">
+                        收益记录
+                    </a>
+                </div>
+            </div>
+            <div class="fans-earnings">
+                <div class="fans-earnings-box">
+                    <div class="title">
+                        <div class="tit-left">
+                            <!--<a  href="{:url('/pc2.0/distribution_my/earnings_details')}?type=0" class=" primary-color-hover primary-color" >-->
+                                <!--累计收益-->
+                            <!--</a>-->
+                            <!--<span>|</span>-->
+                            <a  href="{:url('/pc2.0/distribution_my/earnings_details')}?type=2" {eq name=":input('type',0)" value="2"}style="color:#EA5413"{/eq} class=" primary-color-hover" >
+                                已结算
+                            </a>
+                            <span>|</span>
+                            <a  href="{:url('/pc2.0/distribution_my/earnings_details')}?type=1" {eq name=":input('type',0)" value="1"}style="color:#EA5413"{/eq} class=" primary-color-hover" >
+                                未结算
+                            </a>
+                        </div>
+                        <div class="tit-right ">
+                            订单总量：<span class="primary-color order-num">{$data->total()}</span>
+                            累计收益：<span class="primary-color">￥{$total_price|default=0.00} </span>
+                        </div>
+                    </div>
+
+
+                    <div class="fans-earnings-content">
+                        <div class="fans-top">
+                            <!--<div class="date-picker " >-->
+                                <!--<a href="javascript:;" class="select" >-->
+                                    <!--今日收益详情-->
+                                    <!--<img src="__RES__/imgs/my/TopCornerMark.png" alt="">-->
+                                <!--</a>-->
+                                <!--&lt;!&ndash;<div class="date-picker-list" >&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<div class="cover" style="width: 100%; height: 100%; position: fixed; left: 0px; top: 0px; z-index: 100;"></div>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<a href="{:url('/pc2.0/distribution_my/earnings_details')}?data=2019-01" class="primary-color-hover">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;2019年1月详情&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--</div>-->
+                            <div>
+                                <a href="javascript:;" >
+                                    商品名字
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:;" >
+                                    金额
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:;" >
+                                    下单用户
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:;" >
+                                    下单时间
+                                </a>
+                            </div>
+                        </div>
+                        <div class="fans-earnings-list">
+
+                            {empty name="$data"}
+                            <div class="indent-box indent-box-emty">
+                                <img src="__RES__/imgs/orderemty.png" alt="">
+                                <p>暂无数据</p>
+                                <!--<span>“暂无订单，忙里偷闲下一单吧”</span>-->
+                            </div>
+                            {/empty}
+                            {volist name="$data" id="item"}
+                            <div class="list">
+                                <div class="goods">
+                                    <img src="{$item->file}" alt="">
+                                    <span class="goods-name">{$item.goods_name}</span>
+                                </div>
+                                <div class="money primary-color">
+                                    +￥{$item.brokerage}
+                                </div>
+                                <div class="user">
+                                    <span class="name">{$item.nickname}</span>
+                                    <img src="__RES__/imgs/my/fans/user.png" alt="">
+                                </div>
+                                <div class="date">
+                                    {$item.underOrder_time}
+                                </div>
+                            </div>
+                            {/volist}
+
+                        </div>
+                    </div>
+                </div>
+                <!--分页-->
+                <div class="pageContainer" style="width: auto">{$data|raw}</div>
+            </div>
+        <!--右侧内容结束-->
+    </div>
+</div>
+
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $('.title .tit-left a').click(function () {
+        $(this).addClass('primary-color').siblings('a').removeClass('primary-color')
+    })
+
+
+    $('.select ').click(function () {
+        $('.date-picker-list').show();
+
+        $('.date-picker').addClass('date_picker_show')
+    })
+
+    $('.date-picker-list .cover').click(function () {
+        $('.date-picker-list').hide()
+        $('.date-picker').removeClass('date_picker_show')
+    })
+    $('.date-picker-list a').click(function () {
+        $('.date-picker-list').hide()
+        $('.date-picker').removeClass('date_picker_show')
+    })
+
+
+</script>
+{/block}

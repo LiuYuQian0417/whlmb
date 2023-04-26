@@ -1,0 +1,1 @@
+2019-08-08 13:47:36: strlen() expects parameter 1 to be string, array given2019-08-08 13:48:09: strlen() expects parameter 1 to be string, array given2019-08-08 13:49:24: strlen() expects parameter 1 to be string, array given2019-08-08 13:53:24: strlen() expects parameter 1 to be string, array given

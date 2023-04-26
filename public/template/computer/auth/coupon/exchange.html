@@ -1,0 +1,117 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<!--换券中心css-->
+<link rel="stylesheet" href="__RES__/css/TicketCenter/TicketCenter.css">
+<link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/js/swiper.min.js"></script>
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+{/block}
+
+{block name="content"}
+<div class="ticket-center">
+    <a href="javascript:main.adv_jump({$result.banner.type},{$result.banner.content})"  class="ticket-link">
+        <img src="{$result.banner.file}" width="1200" height="362" alt="">
+    </a>
+    <img class="ticket-market" src="__RES__/imgs/ticket/3.png" alt="">
+    <div class="ticket-view">
+        <ul>
+            {volist name="$result.data" id="item"}
+            <li>
+                <a href="javascript:;">
+                    <img width="106" height="106" src="{$item.file}" alt="">
+                </a>
+                <div class="ticket-cen">
+                    <div class="ticket-price {eq name="$item.exchange_num" value="0"}gray{else/}primary-color{/eq}">
+                        <span>￥</span>{$item.actual_price}
+                    </div>
+                    <div class="discount {eq name="$item.exchange_num" value="0"}gray{else/}primary-color{/eq}">满{$item.full_subtraction_price}元可用</div>
+
+                {eq name="$item.exchange_num" value="0"} <img class="has-gone" src="__RES__/imgs/ticket/5.png" alt="">{/eq}
+                </div>
+                <div class="ticket-integral">
+                    <p class="{eq name="$item.exchange_num" value="0"}gray{else/}primary-color{/eq}">消耗积分</p>
+                    <p class="{eq name="$item.exchange_num" value="0"}gray{else/}primary-color{/eq}">{$item.integral}</p>
+                    <div class=" {eq name="$item.exchange_num" value="0"}gray-background-color {else/}primary-background-color immediately {/eq} "> {eq name="$item.exchange_num" value="0"}暂时抢光 {else/}立即兑换{/eq}</div>
+                    <div class="immediately-content">
+                        <div class="immediately-popup">
+                            <div class="immediately-popup-title">
+                                <img src="__RES__/imgs/ticket/tanchuangguanbi.png" class="immediately-content-close" height="19" width="19"/>
+                            </div>
+                            <div class="immediately-popup-content">
+                                <div class="immediat-preferential"><span>￥</span><span>{$item.actual_price}</span><p class="immediat-preferential-full">满{$item.full_subtraction_price}可用</p>
+                                    <div class="clear"></div>
+                                    <!--<p class="immediat-preferential-content"></p>-->
+                                </div>
+                                <ul class="recommended">
+                                    {volist name="$item.goods_list" id="goods"}
+                                    <li><a href="javascript:jump_goods({$goods.goods_id})"> <img src="{$goods.file}" height="103" width="103"/></a></li>
+                                    {/volist}
+                                </ul>
+                                <a {eq name="$item.type" value="0"} href="{:url('/pc2.0/store/index')}?store_id={$item.classify_str}" {else/}  href="{:url('/pc2.0/goods/index')}?goods_classify_id={$item.classify_str}"  {/eq}class="recommended-all">查看全部适用商品></a>
+                                <div class="clear"></div>
+                            </div>
+
+                            <a href="javascript:;" data_integral="{$item.integral}" data_pay_points="{$pay_points}" data_coupon_id ="{$item.coupon_id}" {eq name="$item.type" value="0"}data_store_id="{$item.classify_str}" {else/} data_goods_classify_id="{$item.classify_str}" {/eq}   class="cost primary-background-color">花{$item.integral}积分兑换</a>
+                            <a href="javascript:;" class="integral">您的账号还有<span class="primary-color">{$pay_points}</span>个积分，<span onclick="main.jump({'url':'/pc2.0/integral/my'})">去领积分</span>></a>
+
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+<div id="page-container" class="pageContainer">{$result.data|raw}</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $(".immediately").click(function(){
+        var member_id = '{$Think.session.member_info.member_id}';
+        if (member_id == '') {
+            sessionStorage.return_url = ObjectOrJson({'use_url':'login/index','return_url':window.location.href});
+            layer.msg('你还没有登录,请登录',{
+                timer:300
+            } ,function(){
+                window.location.href = '{:url(\'/pc2.0/login/index\')}'
+            });
+        }else{
+            $(this).next(".immediately-content").show();
+        }
+    });
+
+    $(".cost").click(function () {
+        var coupon_id = $(this).attr('data_coupon_id');
+        var goods_classify_id = $(this).attr('data_goods_classify_id');
+        var store_id = $(this).attr('data_store_id');
+        var integral = $(this).attr('data_integral');
+        var pay_points = $(this).attr('data_pay_points');
+        var that = $(this);
+        console.log(integral);
+        console.log(pay_points);
+
+        main.ajax({'url':'{:url(\'pc2.0/member_coupon/exchange\')}','data':{'coupon_id': coupon_id,'goods_classify_id':goods_classify_id,'store_id':store_id},callback:function (t) {
+                if (t.code == 0) {
+                    $('.immediately-content').hide();
+                    console.log(pay_points - integral);
+                    that.next().find('.primary-color').html(pay_points - integral);
+                    that.attr('data_pay_points',pay_points - integral);
+
+                    layer.msg(t.message);
+                } else if(t.code != -200 || t.code != -201) {
+                    layer.msg(t.message, {time: 500},function () {
+                        // location.reload();
+                    });
+                }
+            }})
+    })
+
+    $(".immediately-content-close").click(function(){
+        $(".immediately-content").hide();
+    });
+</script>
+{/block}

@@ -1,0 +1,113 @@
+{extend name='layout/frame' /}
+{block name='title'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>展示了直播间的相关信息。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--导航-->
+<form class="layui-form" method="get" action="">
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh" onclick="location.reload();">
+                <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+        </div>
+
+    </div>
+    <hr class="layui-bg-gray">
+    <div class="semi-circle3"></div>
+    <!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th width="30">编号</th>
+            <th>封面图</th>
+            <th>直播间名称</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>主播名</th>
+            <th>直播类型</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td>{$item.roomid}</td>
+            <td>
+                <img src="{$item.feeds_img}" style="width: 100px;" alt="封面图">
+            </td>
+            <td>{$item.name}</td>
+            <td>{:date('Y-m-d H:i:s',$item.start_time)}</td>
+            <td>{:date('Y-m-d H:i:s',$item.end_time)}</td>
+            <td>{$item.anchor_name}</td>
+            <td>{:['手机直播','推流'][$item.live_type]}</td>
+            <td>
+                {switch name="$item.live_status"}
+                {case value='101'}直播中{/case}
+                {case value='102'}未开始{/case}
+                {case value='103'}已结束{/case}
+                {case value='104'}禁播{/case}
+                {case value='105'}暂停{/case}
+                {case value='106'}异常{/case}
+                {case value='107'}已过期{/case}
+                {/switch}
+            </td>
+            <td>
+                {if condition="$item.replay_url neq ''"}
+                <a class="btn_edit" target="_blank" href="{$item.replay_url}">
+                    查看回放
+                </a>
+                {else/}
+                尚未生成回放
+                {/if}
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/preview.js"></script>
+<script>
+    main.form();
+    if ($('a.preview').length) {
+        var img = preloadIm();
+        imagePreview(img);
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

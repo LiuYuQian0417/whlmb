@@ -1,0 +1,88 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/FlashSale/xianshiqianggou.css">
+{/block}
+
+{block name="content"}
+<!--限时抢购开始-->
+<div class="flash-sale border-color-top">
+    <div class="limited-time">
+
+        <div class="already-robbed" onclick="main.jump({'url':'/pc2.0/time_limit/index?interval_id={$result[0][\'limit_interval_id\']}'})">
+            {$result[0]['interval_name']}
+            <p>已抢购</p>
+        </div>
+        <div class="begin" onclick="main.jump({'url':'/pc2.0/time_limit/index?interval_id={$result[1][\'limit_interval_id\']}'})">
+            {$result[1]['interval_name']}
+            <p>即将开始</p>
+        </div>
+        <div class="time-item" data-time_str="{:date('Y-m-d H:i:s',time()+$when.time)}">
+            {eq name="$when.state" value="1"}<p>距离本场结束还有</p>{else/}<p>距离本场开始还有</p>{/eq}
+            <strong id="hour_show">0</strong>
+            <img src="__RES__/imgs/flashsale/shijian.png" width="28" height="46">
+            <strong id="minute_show">0</strong>
+            <img src="__RES__/imgs/flashsale/shijian.png" width="28" height="46">
+            <strong id="second_show">0</strong>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <ul class="rush-buy">
+        {volist name="data" id="item"}
+        <li class="rush-buy-commodity">
+            <a href="javascript:jump_goods('{$item.goods_id}')"><img src="{$item.file}" width="292" height="292"></a>
+            <P class="rush-buy-commodity-title"><a href="javascript:jump_goods('{$item.goods_id}')" style="color: #333;">{$item.goods_name}</a> </P>
+            {eq name="$when.state" value="1"}
+            <div class="commodity-surplus">
+                <div class="barline">
+                    <div w="50" style="width:{:round(($item.available_sale-$item.exchange_num)/$item.available_sale,2)*100}px;" class="charts primary-background-color" ></div>
+                </div>
+                <p class="surplus">已售{:round(($item.available_sale-$item.exchange_num)/$item.available_sale,2)*100}%</p>
+            </div>
+            {/eq}
+            <div class="price-purchase">
+                <p class="discount-price primary-color"><span>￥</span>{$item.time_limit_price}</p><span class="original-price">￥{$item.shop_price}</span>
+                {eq name="$when.state" value="1"}
+                <a href="javascript:;" onclick="jump_goods('{$item.goods_id}')" class="discount-immediate-purchase">立即抢购</a>
+                {/eq}
+                <div class="clear"></div>
+            </div>
+
+        </li>
+        {/volist}
+        <li class="clear"></li>
+    </ul>
+</div>
+<!--限时抢购结束-->
+<!--分页-->
+<div class="pageContainer">{$data|raw}</div>
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    var count_time_text = '{$when.time}';
+    limit();
+    function limit(){
+        main.count_down_new({
+            'time_select': $('.time-item'),
+            'function_name': limit,
+            'count_down':count_time_text,
+            'dispose_callback':function(time){
+                var status = {$when.state};
+                var text = status == 1 ? '<p>距离本场结束还有</p>':'<p>距离本场开始还有</p>';
+                return  text +
+                '            <strong id="hour_show">'+time.h+'</strong>\n' +
+                '            <img src="__RES__/imgs/flashsale/shijian.png" width="28" height="46">\n' +
+                '            <strong id="minute_show">'+time.m+'</strong>\n' +
+                '            <img src="__RES__/imgs/flashsale/shijian.png" width="28" height="46">\n' +
+                '            <strong id="second_show">'+time.s+'</strong>';
+            },
+            'callback': function () {
+               window.location.reload();
+            }
+        });
+    }
+
+</script>
+{/block}

@@ -1,0 +1,332 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<!--附近商家css-->
+<link rel="stylesheet" href="__RES__/css/nearbybusinesses.css">
+<!--筛选效果JQ库-->
+<script src="__RES__/js/public/jquery.min.js"></script>
+
+{/block}
+
+{block name="content"}
+<style>
+    .head-container .logo span{
+        font-size: 14px;
+        position: relative;
+        top: -13px;
+        margin-left: 5px;
+    }
+</style>
+<!--代言专区开始-->
+<div class="nearbybusinesses">
+    <div class="nearbybusinesses-content">
+        <div class="crumbs" onclick="main.jump({'url':'/pc2.0/index/index'})">首页<span> > </span>附近商家</div>
+    </div>
+    <div class="nearbybusinesses-election">
+        <ul class="select">
+            <li class="category select-list">
+                <dl id="select1">
+                    <dt>分类</dt>
+                    {volist name="$classify" id="cate"}
+                    <dd><a  data_store_classify_id="{$cate.store_classify_id}" href="javascript:;">{$cate.title}</a></dd>
+                    {/volist}
+                    <div class="clear"></div>
+                </dl>
+            </li>
+            <li class="shop_type select-list">
+                <dl id="select2">
+                    <dt>店铺类型</dt>
+                    <dd><a data_type_id="0" href="JavaScript:;">自营店铺</a></dd>
+                    <dd><a data_type_id="1" href="JavaScript:;">个人店铺</a></dd>
+                    <dd><a data_type_id="2" href="JavaScript:;">企业店铺</a></dd>
+                    <div class="clear"></div>
+                </dl>
+            </li>
+            <li class="other select-list">
+                <dl id="select3">
+                    <dt>特色服务</dt>
+                    <dd><a  class="is_city" data_id="1" href="javascript:;">同城配送</a></dd>
+                    <dd><a class="is_shop"  data_id="1" href="javascript:;">门店自提</a></dd>
+                    <div class="clear"></div>
+                </dl>
+            </li>
+        </ul>
+    </div>
+    <div class="nearbybusinesses-list">
+        <ul class="two-navigation">
+            <li class="two-navigation-color">推荐</li>
+            <li class="distance">距离最近</li>
+            <li class="sales_volume">销量最高</li>
+        </ul>
+        <ul class="business-list">
+
+        </ul>
+    </div>
+    <!--此处加分页-->
+    <div id="page-container" class="pageContainer"><ul class="pagination"></ul></div>
+
+</div>
+<!--侧导航-->
+<ul class="side-navigation">
+    <li class="side-navigation-top back-top"><img src="__RES__/imgs/nearbybusinesses/xiangshang.png"><p>返回顶部</p> </li>
+</ul>
+<!--代言专区结束-->
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    var pageInited = false //分页
+    var data = {
+        'lng': localStorage.lng,
+        'lat': localStorage.lat,
+    };
+    $(function () {
+        nearby_list();
+    })
+
+    //  分类 店铺类型 特色服务
+    $('.nearbybusinesses-election .select dd').click(function () {
+       if( $(this).hasClass('selected')){
+           $(this).removeClass('selected')
+       }else{
+           $(this).addClass('selected')
+       }
+        var store_classify_id ='';  //分类
+        $('.nearbybusinesses-election .category dd[class="selected"]').each(function () {
+            store_classify_id += $(this).find('a').attr('data_store_classify_id')+',';
+        })
+
+        var shop = ''; //店铺类型
+        $('.nearbybusinesses-election .shop_type dd[class="selected"]').each(function () {
+            if(shop != '') {
+                shop += ',';
+            }
+            shop += $(this).find('a').attr('data_type_id');
+        })
+
+        var is_shop = ''; //同城配送
+        var is_city = ''; //门店自提
+        $('.nearbybusinesses-election .other dd[class="selected"]').each(function () {
+            if($(this).find('a').hasClass('is_shop')){
+                is_shop = $(this).find('a').attr('data_id')
+            }
+            if($(this).find('a').hasClass('is_city')){
+                is_city = $(this).find('a').attr('data_id')
+            }
+        })
+
+        //排序
+        var distance =''; //距离
+        if ($('.distance').hasClass('two-navigation-color')) {
+            distance = 1;
+        }
+
+        var sales_volume =''; //销量
+        if ($('.sales_volume').hasClass('two-navigation-color')) {
+            sales_volume = 1;
+        }
+
+        data = {
+            'category': store_classify_id,
+            'shop': shop,
+            'is_city': is_city,
+            'is_shop': is_shop,
+            'sales_volume': sales_volume,
+            'distance': distance,
+            'lat': data.lat,
+            'lng': data.lng,
+        };
+        pageInited = false
+        nearby_list();
+    })
+
+    //排序
+    $(".two-navigation li").click(function () {
+        $(this).addClass("two-navigation-color").siblings().removeClass("two-navigation-color");
+        var store_classify_id ='';
+        $('.nearbybusinesses-election .category dd[class="selected"]').each(function () {
+            store_classify_id += $(this).find('a').attr('data_store_classify_id')+',';
+        })
+
+        var shop = '';
+        $('.nearbybusinesses-election .shop_type dd[class="selected"]').each(function () {
+            shop += $(this).find('a').attr('data_type_id')+',';
+        })
+
+        var is_shop = '';
+        var is_city = '';
+        $('.nearbybusinesses-election .other dd[class="selected"]').each(function () {
+            if($(this).find('a').hasClass('is_shop')){
+                is_shop = $(this).find('a').attr('data_id')
+            }
+            if($(this).find('a').hasClass('is_city')){
+                is_city = $(this).find('a').attr('data_id')
+            }
+        })
+
+        //排序
+        var distance ='';
+        if ($('.distance').hasClass('two-navigation-color')) {
+            distance = 1;
+        }
+        var sales_volume ='';
+        if ($('.sales_volume').hasClass('two-navigation-color')) {
+            sales_volume = 1;
+        }
+
+        data = {
+            'category': store_classify_id,
+            'shop': shop,
+            'is_city': is_city,
+            'is_shop': is_shop,
+            'sales_volume': sales_volume,
+            'distance': distance,
+            'lat': data.lat,
+            'lng': data.lng,
+        };
+        pageInited = false
+        nearby_list();
+    })
+
+
+    //分页类
+    function init_pages(currentPage,lastPage) {
+        // 初始化分页
+        $('#page-container').find('ul.pagination').pagination({
+            currentPage: currentPage,
+            prevText: '«',
+            nextText: '»',
+            pages: lastPage, //总页数
+            edges: 2,
+            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+            displayedPages: 9, //显示几个
+            onPageClick: function(pageNumber, event) {
+                nearby_list(pageNumber)
+            }
+        });
+    }
+
+    //ajax
+    function nearby_list(pages){
+        data.page  = pages === undefined ? 1 : pages
+        main.ajax({
+            url:'{:url(\'pc2.0/store/nearby_list\')}',
+            data:data,
+            callback:function (res) {
+                if (!pageInited){
+                    if(parseInt(res.store_list.last_page) >1){
+                        init_pages(parseInt(res.store_list.current_page),parseInt(res.store_list.last_page))
+                        pageInited = true
+                    }
+                    else{
+                        $('#page-container').find('ul.pagination').html('')
+                    }
+                }
+
+                var html = '';
+                $.each(res.store_list.data, function (k, v) {
+
+                    var div='';
+                    $.each(v.shop_goods,function (k1,v1) {
+                        div +=' <div class="business-address-product">\n' +
+                            '    <a href="{:url(\'pc2.0/goods/view\')}?goods_id='+v1.goods_id+'">' +
+                            '<img onerror="this.src=\'/template/computer/resource/imgs/zwt.png\'" src="'+v1.file+'">' +
+                            '    <p class="business-address-product-title"><a href="{:url(\'pc2.0/goods/view\')}?goods_id='+v1.goods_id+'"> '+v1.goods_name+'</a></p>\n' +
+                            '    <p class="business-address-product-price"><a href="{:url(\'pc2.0/goods/view\')}?goods_id='+v1.goods_id+'">￥'+v1.goods_price +'</a></p>\n' +
+                            '</a>' +
+                            '</div>'
+                    })
+                    var sc='';
+                    if (v.collect_store_id > 1){
+                        sc = '<img src="__RES__/imgs/nearbybusinesses/yiguanzhu.png">';
+                    }else {
+                        sc ='<img src="__RES__/imgs/nearbybusinesses/guanzhu.png">'
+                    }
+                    html+='<li class="business-list-li">\n' +
+                        '                <div class="business-list-business" onclick="jump_store({\'store_id\':'+v.store_id+'})"><img onerror="this.src=\'/template/computer/resource/imgs/zwt.png\'" src="'+v.logo+'"></div>\n' +
+                        '                <div class="business-list-introduce">\n' +
+                        '                    <p class="business-list-title">'+v.store_name+'</p>\n' +
+                        '                    <div class="business-list-score">\n' +
+                        '                        <div class="test2"></div>\n' +
+                        '                        <div class="business-list-score-content primary-color">'+v.store_percent.self_score+'<span>分</span></div>\n' +
+                        '                        <div class="business-follow" data_store_id="'+v.store_id+'" data_collect_store_id="'+v.collect_store_id+'" data_collect="'+v.collect+'">'+sc+'<span>'+v.collect+'人'+'</span>关注 </div>\n' +
+                        '                        <div class="clear"></div>\n' +
+                        '                    </div>\n' +
+                        '                    <div class="business-address">\n' +
+                        '                        <div class="business-address-content">'+v.address+'</div>\n' +
+                        '                        <!--<div class="business-address-map"><img src="__RES__/imgs/nearbybusinesses/dingwei.png"></div>-->\n' +
+                        '                        <div class="clear"></div>\n' +
+                        '                    </div>\n' +
+                        '                    <p class="business-address-distance">距离 <span class="primary-color">'+v.distance+'km</span></p>\n' +
+                        '                </div>\n' +
+                        '                <div>\n' + div +
+                        '                </div>\n' +
+                        '            </li>'
+                })
+
+                $('.business-list').html(html)
+
+            }})
+    }
+
+    //关注
+    $('.business-list').on('click','.business-follow', function () {
+
+            var store_id = $(this).attr('data_store_id');
+            var collect_store_id = $(this).attr('data_collect_store_id');
+            var that = $(this)
+
+            if ($(this).find('img').attr('src') == '__RES__/imgs/nearbybusinesses/guanzhu.png') {
+                main.ajax({
+                    'url': '{:url(\'pc2.0/store/collect_store\')}',
+                    'data': {'store_id': store_id},
+                    callback: function (t) {
+                        if (t.code === 0) {
+                            that.find('img').attr('src', '__RES__/imgs/nearbybusinesses/yiguanzhu.png');
+                            that.find("span").text(parseInt(that.attr('data_collect')) + 1 + '人');
+                            that.attr('data_collect_store_id', t.collect_store_id)
+                            that.attr('data_collect', parseInt(that.attr('data_collect')) + 1);
+                        }else{
+                            layer.msg(t.message);
+                        }
+
+                    }
+                })
+            } else {
+                main.ajax({
+                    'url': '{:url(\'pc2.0/store/collect_store_delete\')}',
+                    'data': {'collect_store_id': collect_store_id, 'store_id': store_id},
+                    callback: function (t) {
+                        if (t.code === 0) {
+                            that.find('img').attr('src', '__RES__/imgs/nearbybusinesses/guanzhu.png');
+                            that.find("span").text(parseInt(that.attr('data_collect')) - 1 + '人');
+                            that.attr('data_collect', parseInt(that.attr('data_collect')) - 1)
+                        }else{
+                            layer.msg(t.message);
+                        }
+                    }
+                })
+
+            }
+
+
+        });
+
+    $(function(){
+        //当滚动条的位置处于距顶部100像素以下时，跳转链接出现，否则消失
+        $(function () {
+            $(window).scroll(function(){
+                if ($(window).scrollTop()>100){
+                    $(".side-navigation").fadeIn(1500);
+                }
+                else
+                {
+                    $(".side-navigation").fadeOut(1500);
+                }
+            });
+        });
+    });
+</script>
+
+{/block}

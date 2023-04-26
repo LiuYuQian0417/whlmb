@@ -1,0 +1,232 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css"  rel="stylesheet" type="text/css" />
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post"  enctype="multipart/form-data">
+
+    <div class="contentShellFull">
+
+        <div class="contentShell65">
+            <!--商品名称-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 标题</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="title" maxlength="50" autocomplete="off" placeholder="请输入标题"
+                           datatype="*"
+                           value="{$item.title|default=''}"
+                           nullmsg="请输入标题" errormsg="请输入标题"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <!--用户ID-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><em class="require">* </em>	会员ID（0为全部接收）</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="member_id" value="{$item.member_id|default='0'}" title
+                           datatype="zNum"
+                           nullmsg="请输入会员ID" errormsg="会员ID错误"
+                           autocomplete="off" placeholder="填写会员ID(正整数)" class="layui-input">
+                </div>
+            </div>
+
+            <!--商品图片-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><em class="require">* </em>图片</label>
+                <div class="layui-input-inline">
+                    <div>
+                        <div id="imgPrev">
+                            <img id="imgShow" src="{$item.file?:'?'}" class="uploadImg" onerror="this.src='__RES__/image/common/imageError.png'"  alt="图片"/>
+                        </div>
+                        <div class="uploader white">
+                            <input type="text" class="filename" id="localPath" title value="{$item.file?:''}" readonly/>
+                            <input type="button" name="file" class="button" value="上传..."/>
+                            <input type="file" id="up_img" name="image" />
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="layui-form-mid layui-word-aux">-->
+                    <!--建议尺寸，800 X 800-->
+                <!--</div>-->
+            </div>
+
+            <!--跳转状态-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 跳转状态</label>
+                <div class="layui-input-inline">
+                    <select name="integral_classify_id" lay-search="" datatype="*"
+                            nullmsg="请选择跳转状态" errormsg="请选择跳转状态">
+                        <option value="0" {eq name="item.type|default=''" value="0" }selected{/eq}></option>
+
+                        <option {eq name="item.type|default=''" value="packet" }selected{/eq} value="packet">红包</option>
+                        <option {eq name="item.type|default=''" value="packet" }selected{/eq} value="packet">红包</option>
+
+                    </select>
+                </div>
+            </div>
+
+            <!--ID-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><em class="require">* </em>ID（红包/优惠券/文章）</label>
+                <div class="layui-input-inline">
+                    <input type="number" name="attach_id" value="{$item.attach_id?:''}" title
+                           datatype="zNum"
+                           nullmsg="请输入ID" errormsg="ID错误"
+                           autocomplete="off" placeholder="填写ID(正整数)" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+        <!--描述-->
+        <label class="layui-form-label"><em class="require">* </em>描述</label>
+        <hr class="layui-bg-gray">
+        <div class="contentShell90">
+            <div class="layui-tab layui-tab-brief">
+                <ul class="layui-tab-title">
+                    {if config("user.")["pc"]["is_include"]}
+                    <li class="layui-this">
+                        <a href="javascript:void(0);"
+                           onclick="$('.describe').eq(0).show().next('.layui-form-item').hide();">
+                            <i class="fa fa-laptop" aria-hidden="true"></i> PC端
+                        </a>
+                    </li>
+                    {/if}
+                    <li {if !config("user.")["pc"]["is_include"]}class="layui-this"{/if}>
+                        <a href="javascript:void(0);"
+                           onclick="$('.describe').eq(1).show().prev('.layui-form-item').hide();">
+                            <i class="fa fa-mobile" aria-hidden="true"></i> 移动端
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {if config("user.")["pc"]["is_include"]}
+            <!--商品PC端详细描述-->
+            <div class="layui-form-item describe">
+                <input type="hidden" id="editorContent" name="content" value="{$item.content?:''}"/>
+                <iframe src="/goods/uEditor" id="content" style="overflow: auto;" frameborder="0" width="100%"
+                        height="609px" scrolling="no"></iframe>
+            </div>
+            {/if}
+            <div class="layui-form-item describe" {if config("user.")["pc"]["is_include"]}style="display: none;"{/if}>
+                <div class="mobile-shell">
+                    <div class="mobile-content">
+                        <div class="container">
+                            {present name="$item.web_content"}
+                            <div class="info">{$item.web_content|raw|default=''}</div>
+                            {else/}
+                            <div class="info"></div>
+                            {/present}
+                        </div>
+
+                        <input type="hidden" title="" name="web_content" value=""/>
+                        <div class="mo-btn">
+                            <a class="layui-btn layui-btn-normal" id="mobileImg" href="javascript:void(0);">
+                                <i class="fa fa-file-picture-o" aria-hidden="true"></i> 添加图片
+                            </a>
+                            <a class="layui-btn layui-btn-normal"
+                               href="javascript:step.addFont('.mobile-content .container .info');">
+                                <i class="fa fa-font" aria-hidden="true"></i> 添加文字
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="explain">
+                    <p>
+                        <strong>一、基本要求</strong>
+                        <span><em>1、</em>手机详情总体大小：图片+文字，<i class="red">图片不超过20张，文字不超过5000字</i>；</span>
+                        <span><em>建议：</em>所有图片都是本宝贝相关的图片。</span>
+                    </p>
+                    <p>
+                        <strong>二、图片大小</strong>
+                        <span><em>1、</em>建议使用宽度480 ~ 620像素、高度小于等于960像素的图片；</span>
+                        <span><em>2、</em>格式为：JPG\JEPG\GIF\PNG；</span>
+                        <span><em>举例：</em>可以上传一张宽度为480，高度为960像素，格式为JPG的图片。</span>
+                    </p>
+                    <p>
+                        <strong>三、文字要求</strong>
+                        <span><em>1、</em>每次插入文字不能超过500个字，标点、特殊字符按照一个字计算；</span>
+                        <span><em>2、</em>请手动输入文字，不要复制粘贴网页上的文字，防止出现乱码；</span>
+                        <span><em>3、</em>以下特殊字符“&lt;”、“&gt;”、“"”、“’”、“\”会被替换为空。</span>
+                        <span><em>建议：</em>不要添加太多的文字，这样看起来更清晰。</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!--提交-->
+        <div class="contentShell65">
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    {present name="$item.integral_id"}
+                    <input type="hidden" name="integral_id" value="{$item.integral_id}">
+                    {/present}
+                    <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script src="__RES__/js/common/formSelects.js"></script>
+<script>
+    main.form([{selector:'radio(type)',callback:function (data) {
+        var cate = $('#category');
+        if (data.value == 0) {
+            cate.prop('hidden', true);
+        }
+        if (data.value == 1) {
+            cate.prop('hidden', false);
+        }
+    }}]);
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+
+    // 手机站添加图片
+    main.upload({
+        elem: '#mobileImg',
+        url: '/file_act/upload',
+        data: {name: 'file', dir: 'content_img', auth: 'public-read', style: 3, crypt: 0},
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                    '<img src="' + res.data.ossUrl + '" title="' + res.data.name + '">'
+                    + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+        }
+    });
+
+    // 单图上传
+    new uploadPreview({UpBtn: "up_img", DivShow: "imgPrev", ImgShow: "imgShow",localPath:'localPath'});
+</script>
+{/block}
+{block name='highSearch'}{/block}

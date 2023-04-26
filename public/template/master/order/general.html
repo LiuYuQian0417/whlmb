@@ -1,0 +1,341 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<link rel="stylesheet" href="__RES__/css/common/home.css">
+<style>
+    body{
+        padding-bottom: 50px !important;
+    }
+    .operation-title {
+        color: #999!important;
+        font-size: 15px!important;
+    }
+    .operation-desc {
+        color: #333333!important;
+        font-size: 19px!important;
+        font-weight: bold;
+    }
+    .operation-wrap > a .operation-bg {
+        text-align: center;
+    }
+    .goodsDataList .list {
+        width: 50.55% !important;
+    }
+    #tooltip{
+        font-size: 14px;
+        padding: 10px;
+    }
+    .dataTabList li , .fa-refresh{
+        cursor: pointer;
+    }
+</style>
+<div>
+    <div>
+        <div>
+            <div class="sub-title">订单类型</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?type=3')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_1.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">快递邮寄</div>
+                            <div class="operation-desc">{$item.express_mail}</div>
+                        </div>
+                    </div>
+                </a>
+                {if $Think.INI_CONFIG['IS_CITY']}
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?type=1')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_2.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">同城速递</div>
+                            <div class="operation-desc">{$item.city_express}</div>
+                        </div>
+                    </div>
+                </a>
+                {/if}
+                {if $Think.INI_CONFIG['IS_SHOP']}
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?type=2')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_3.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">门店自提</div>
+                            <div class="operation-desc">{$item.self_help}</div>
+                        </div>
+                    </div>
+                </a>
+                {/if}
+                {if $Think.INI_CONFIG['IS_PAY_DELIVERY']}
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?pay_type=2')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_4.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">货到付款</div>
+                            <div class="operation-desc">{$item.pay_on_delivery}</div>
+                        </div>
+                    </div>
+                </a>
+                {/if}
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">订单状态</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?status[]=1')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_5.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待发货/待配送</div>
+                            <div class="operation-desc">{$item.non_deliver}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?status[]=5')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_6.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">退款中</div>
+                            <div class="operation-desc">{$item.refund}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?status[]=2')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_7.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待收货{if $Think.INI_CONFIG['IS_SHOP']}/待自提{/if}/配送中</div>
+                            <div class="operation-desc">{$item.deliver}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?status[]=0')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_8.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待付款</div>
+                            <div class="operation-desc">{$item.non_payment}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?status[]=3')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_9.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">已完成</div>
+                            <div class="operation-desc">{$item.done}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('order/index?status[]=4')">
+                    <img class="operation-img" src="__RES__/image/general/order_general_10.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">已关闭</div>
+                            <div class="operation-desc">{$item.closed}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">近30日订单笔数趋势</div>
+            <div class="rank-container">
+                <div class="container type-a">
+                    <div class="content">
+                        <div class="items-info">
+                            <div class="wrapper-list">
+                                <div id="order_main" style="height:600px;width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">近30日订单支付金额趋势</div>
+            <div class="rank-container">
+                <div class="container type-a">
+                    <div class="content">
+                        <div class="items-info">
+                            <div class="wrapper-list">
+                                <div id="order_main1" style="height:600px;width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    body{
+        background: #f6f6f6;
+    }
+
+    .childrenBody > div:first-child{
+        background: #f6f6f6!important;
+    }
+    .title{
+        font-size: 16px;
+        color: #8d8d8d;
+        margin: 30px auto;
+        text-align: center;
+    }
+
+    .sub-title{
+        font-size: 16px;
+        padding: 20px 0;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap{
+        overflow: hidden;
+    }
+
+    .operation-wrap > a{
+        float: left;
+        width: 22%;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        margin-right:3% ;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 2px 2px 2px #f2f5f6;
+
+        cursor: pointer;
+    }
+
+    .operation-wrap > a:nth-child(n + 5){
+        margin-top: 24px;
+    }
+
+    .operation-wrap > a .operation-img{
+        margin-left: 24px;
+    }
+
+    .operation-wrap > a .operation-bg{
+        margin-left: 30px;
+        width: 160px;
+    }
+
+    .operation-wrap > a .operation-title{
+        font-size: 15px;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap > a .operation-desc{
+        font-size: 14px;
+        color: #8d8d8d;
+        margin-top: 10px;
+    }
+    .operation-wrap > a .operation-bg {
+        text-align: center;
+        margin-left: 0px;
+        width: 100%;
+    }
+    .operation-wrap>a>div{
+        width: 100%;
+    }
+</style>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/jQuery.toolTip.js"></script>
+<script src="__RES__/js/pages.js"></script>
+<script type="text/javascript" src="/template/client/resource/js/echarts-all.js"></script>
+<script>
+    $('.help').toolTip({fade: true});
+    $(function () {
+
+    })
+
+    var colors = ['#ffa283', '#e690d1', '#99c1ff'];
+
+    var myChart = echarts.init(document.getElementById('order_main'));
+    var myChart1 = echarts.init(document.getElementById('order_main1'));
+
+    var date = JSON.parse('{$date|raw}');
+    var order_total = JSON.parse('{$order_total|raw}');
+    var order_pay = JSON.parse('{$order_pay|raw}');
+    var order_pay_total = JSON.parse('{$order_pay_total|raw}');
+
+    $.get('data.json').done(function (data) {
+        myChart.setOption({
+            color: colors,
+
+            // title: {
+            //     text: '近30日订单趋势'
+            // },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['下单笔数','支付笔数']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: date
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name:'下单笔数',
+                    type:'line',
+                    data:order_total
+                },
+                {
+                    name:'支付笔数',
+                    type:'line',
+                    data:order_pay
+                }
+            ]
+        });
+
+        myChart1.setOption({
+            color: colors,
+
+            // title: {
+            //     text: '近30日订单趋势'
+            // },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data:['支付金额']
+            },
+            xAxis: {
+                type: 'category',
+                data: date
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: '支付金额',
+                data: order_pay_total,
+                type: 'line'
+            }]
+        });
+    });
+</script>
+{/block}

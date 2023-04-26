@@ -1,0 +1,81 @@
+.index-right {
+  .title {
+    line-height: 58px;
+    font-size: 14px;
+    font-weight: bolder;
+    background: #fff;
+    text-indent: 20px;
+    margin-bottom: 20px;
+  }
+  .invoice{
+    height: 750px;
+    background: #fff;
+    box-sizing: border-box;
+    padding: 20px;
+    font-size: 12px;
+    .invoice-list{
+      overflow: hidden;
+      margin-bottom: 20px;
+      .invoice-tit{
+        float: left;
+        line-height: 30px;
+        width: 85px;
+      }
+      .invoice-con{
+        float: left;
+        .btn{
+          display: inline-block;
+          cursor: pointer;
+          padding: 6px 15px;
+          border: 1px solid #CCCCCC;
+          margin-right: 5px;
+
+        }
+
+        .inp{
+          width: 228px;
+          height: 28px;
+          border: 1px solid #CCCCCC;
+          text-indent: 10px;
+          &::-webkit-input-placeholder{
+            font-size: 12px;
+          }    /* 使用webkit内核的浏览器 */
+          &:-moz-placeholder{
+            font-size: 12px;
+          }                  /* Firefox版本4-18 */
+          &::-moz-placeholder{
+            font-size: 12px;
+          }                  /* Firefox版本19+ */
+          &:-ms-input-placeholder{
+            font-size: 12px;
+          }
+        }
+      }
+
+    }
+
+    .btn-group{
+      margin-left:  85px;
+      .submit{
+          width: 90px;
+          height: 30px;
+          text-align: center;
+          line-height: 30px;
+          color: #fff;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+      }
+      .button{
+        width: 90px;
+        height: 30px;
+        text-align: center;
+        line-height: 30px;
+        border: 1px solid #DDDDDD;
+        border-radius: 5px;
+        background: #F6F6F6;
+        margin-left: 10px;
+      }
+    }
+  }
+}

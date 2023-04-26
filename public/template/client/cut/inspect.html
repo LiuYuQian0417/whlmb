@@ -1,0 +1,209 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css" />
+<style>
+    .contentShell65 {
+        width: 100%;
+    }
+    .goods-img {
+        width: 110px!important;
+    }
+    .common-head .imitate_select {
+        width: 275px;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+        <div class="content">
+            <div class="explanation" id="explanation">
+                <div class="ex_tit">
+                    <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                </div>
+                <ul>
+                    <li>1、根据砍价商品查看该商品的砍价活动；</li>
+                </ul>
+            </div>
+        </div>
+        <div class="contentShell65">
+            <div class="order_goods-info">
+                <div class="goods-img"><img style="width: 100%;height: 100%" src="{$item.Goods.file|default=''}"
+                        onerror=this.src="/template/master/resource/image/common/imageError.png"></div>
+                <div class="goods-desc">
+                    <div class="name title">
+                        <font title="">商品名称</font>：
+                        <font class="orange">{$item.goods_name|default=''}</font>
+                    </div>
+                    <div class="name">
+                        <font title="">原价</font>：{$item.shop_price|default=''}
+                        <font class="orange"></font>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="imitate_select select_w145">
+            <div class="text_time" id="text_time1">
+                <input name="date" type="text" id="date" size="15" placeholder="发起时间查询" value="{:input('get.date','')}" readonly  class="text" />
+            </div>
+        </div>
+        <!--搜索审核状态-->
+        <div class="imitate_select select_w145">
+            <div class="cite">活动状态</div>
+            <ul>
+                <li><a href="javascript:;" data-value="-1" class="ftx-01">请选择活动状态</a></li>
+                <li><a href="javascript:;" data-value="1" class="ftx-01">进行中</a></li>
+                <li><a href="javascript:;" data-value="2" class="ftx-01">成功</a></li>
+                <li><a href="javascript:;" data-value="3" class="ftx-01">失败</a></li>
+            </ul>
+            <input name="status" type="hidden" value="{:input('status','-1')}"/>
+        </div>
+
+        <!--搜索审核状态-->
+        <div class="imitate_select select_w145">
+            <div class="cite">订单类型</div>
+            <ul>
+                <li><a href="javascript:;" data-value="-1" class="ftx-01">请选择订单类型</a></li>
+                <li><a href="javascript:;" data-value="1" class="ftx-01">同城速递</a></li>
+                <li><a href="javascript:;" data-value="2" class="ftx-01">门店自提</a></li>
+                <li><a href="javascript:;" data-value="3" class="ftx-01">快递邮寄</a></li>
+                <li><a href="javascript:;" data-value="5" class="ftx-01">货到付款</a></li>
+            </ul>
+            <input name="distribution_type" type="hidden" value="{:input('distribution_type','-1')}"/>
+        </div>
+
+        <div class="imitate_select select_w145">
+            <div class="cite">订单状态</div>
+            <ul>
+                <li><a href="javascript:;" data-value="-1" class="ftx-01">请选择订单状态</a></li>
+                <li><a href="javascript:;" data-value="-2" class="ftx-01">未下单</a></li>
+                <li><a href="javascript:;" data-value="0" class="ftx-01">等待买家付款</a></li>
+                <li><a href="javascript:;" data-value="1" class="ftx-01">待发货/待配送</a></li>
+                <li><a href="javascript:;" data-value="2" class="ftx-01">待收货/待自提/配送中</a></li>
+                <li><a href="javascript:;" data-value="3" class="ftx-01">已完成</a></li>
+                <li><a href="javascript:;" data-value="4" class="ftx-01">已关闭</a></li>
+                <li><a href="javascript:;" data-value="5" class="ftx-01">退款中</a></li>
+            </ul>
+            <input name="order_status" type="hidden" value="{:input('order_status','-1')}"/>
+        </div>
+        <!--搜索名称-->
+        <div class="search-info">
+            <div class="search-form">
+                <div class="search-key">
+                    <input type="text" name="keyword" size="30" class="text text_2" placeholder="订单编号/昵称/手机号" value="{:input('keyword')}"/>
+                    <!--<input type="submit" value=" 搜索 " class="submit" />-->
+                </div>
+                <input type="hidden" name="id" value="{:input('id')}">
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+        <!-- 列表 -->
+        <div class="list-div" id="listDiv">
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th>发起人</th>
+                    <th>订单编号</th>
+                    <th>砍价人数</th>
+                    <th>已砍价格</th>
+                    <th>成交价格</th>
+                    <th>活动状态</th>
+                    <th>订单状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr>
+                    <td class="no-records" colspan="11">没有找到任何记录</td>
+                </tr>
+                {/empty}
+                {volist name='data' id='item'}
+                <tr>
+                    <td>
+                        {$item.nickname|default=''}<br>
+                        {$item.phone|default=''}
+                    </td>
+                    <td>{$item.order_attach_number|default='--'}</td>
+                    {volist name="$item.cut_activity_attach" id="cut_activity_attach"}
+                    <td>{$cut_activity_attach.memberCount|default=''}</td>
+                    <td>{$cut_activity_attach.cutTotal|default=''}</td>
+                    {/volist}
+                    <td>{$item.subtotal_price|default='--'}</td>
+                    <td>
+                        {switch name="item.status"}
+                        {case value="1"}进行中{/case}
+                        {case value="2"}成功{/case}
+                        {case value="3"}失败{/case}
+                        {default /}未下单
+                        {/switch}
+                    </td>
+                    <td>
+                        {switch name="item.order_status"}
+                        {case value="0"}待付款{/case}
+                        {case value="1"}待发货/待配送{/case}
+                        {case value="2"}待收货/待自提/配送中{/case}
+                        {case value="3"}已完成{/case}
+                        {case value="4"}已关闭{/case}
+                        {case value="5"}退款中{/case}
+                        {case value="6"}已取消{/case}
+                        {default /}未下单
+                        {/switch}
+                    </td>
+                    <td>
+                        <a class="btn_edit" onclick="cutActivity({title:'砍价详情',btn:[]},{$item.cut_activity_id})">砍价详情</a>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+                <tfoot>
+                {notempty name='data'}
+                <tr>
+                    <th class="batch-operation" colspan="20">
+                        <span class="page page_3">
+                            {:$data->render()}
+                        </span>
+                    </th>
+                </tr>
+                {/notempty}
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+    main.laydate([{
+        elem: "#date",
+        type: "date",
+        range: true,
+        max:0
+    }]);
+    function cutActivity(obj,id) {
+        var param = 'cut_activity_id='+id;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['50%', '500px'],
+            btn: obj.btn,
+            content: '/client/cut_activity/editAL?' + param
+        });
+    }
+</script>
+<script type="text/javascript" src="__RES__/js/jquery.purebox.js"></script>
+{/block}

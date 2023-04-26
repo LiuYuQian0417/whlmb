@@ -1,0 +1,296 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .area_name>span{
+        width: 100%;
+        display: block;
+    }
+</style>
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+        <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、分销商冻结后，将无法提现，解冻后才能发起提现；</span>
+            </li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tab" style="margin-top: 15px;">
+    <ul>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/member_convert_distribution')">会员转分销商</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/distribution_audit_list')">分销商审核</a></li>
+    </ul>
+</div>
+
+<!--导航-->
+<form class="layui-form" action="">
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">目前共有 {:$data->total()} 名分销商&nbsp;&nbsp;每页<font> {:$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select" style="width: 180px;">
+                    <input title="成为分销商日期" name="date" type="text" class="layui-input"
+                           value="{:input('get.date','')}"
+                           id="date" readonly placeholder="按成为分销商日期范围查询">
+                </div>
+                <div class="imitate_select">
+                    <select name="level" title="请选择分销商等级">
+                        <option value="">选择分销商等级</option>
+                        {foreach $level as $_level}
+                        <option {:input('get.level') == $_level.distribution_level_id ? 'selected' : ''}  value="{$_level.distribution_level_id}">{$_level.level_title}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus"
+                           placeholder="请输入昵称/手机号" value="{:input('get.keyword','')}" autocomplete="off">
+                </div>
+                <input type="submit" class="btn search_btn" value="搜索">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>分销商</th>
+            <th>电话</th>
+            <th>分销商等级</th>
+            <th>总消费金额</th>
+            <th>总佣金金额</th>
+            <th>下级分销人数</th>
+            <th>成为分销商日期</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td>
+                <input type="checkbox" data-status="{$item.status}" value="{$item.distribution_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>
+                <a rel="{$item.avatar}" class="preview">
+                    <img src="{$item.avatar?:'?'}" class="avatar" alt="头像" onerror="this.src='__RES__/image/common/imageError.png'" />
+                </a>
+                {$item.nickname}
+            </td>
+            <td>{$item.phone?:'未填写'}</td>
+            <td>{$item.level_title}</td>
+            <td>{$item.cumulative_order_sum}</td>
+            <td>{$item.total_brokerage}</td>
+            <td>{$item.next_sum}</td>
+            <td>{$item.audit_time}</td>
+            <td>
+                <a class="btn_see" onclick="main.jumpFour('distribution_manage/distribution_fans?did={$item.distribution_id}&type=3');">
+                    <i class="fa fa-eye"></i>粉丝
+                </a>
+                <a class="btn_edit" onclick="editLevel('{$item.distribution_id}','{$item.distribution_level_id}');">
+                    <i class="fa fa-edit"></i>编辑
+                </a>
+                <a class="{$item.status?'btn_trash':'btn_edit'}"
+                   href="javascript:void(0);" onclick="frozen('{$item.distribution_id}','{$item.status}')">
+                    <i class="fa {$item.status?'fa-lock':'fa-unlock'}"></i>{$item.status?'冻结':'解冻'}</a>
+                <a class="btn_trash" onclick="cancelDist('{$item.distribution_id}');">
+                    <i class="fa fa-trash-o"></i>撤销资格
+                </a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="frozen()"><i class="fa fa-exchange"></i>批量反设置</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</form>
+<form class="layui-form" hidden id="level_content">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>等级信息</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='level'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach $level as $_k => $_levelArr}
+        <tr>
+            <td>
+                <a rel="{$_levelArr.mark_alias}" class="preview">
+                    <img src="{$_levelArr.mark_alias?:'?'}" class="avatar" alt="等级标志" onerror="this.src='__RES__/image/common/imageError.png'" />
+                </a>
+                {$_levelArr.level_title}&nbsp;&nbsp;
+                分佣比例：{$_levelArr.one_ratio}、{$_levelArr.two_ratio}、{$_levelArr.three_ratio}
+            </td>
+            <td>
+                <input type="radio" name="dis_level" lay-filter="dis_level" data-flag="{$_levelArr.distribution_level_id}" value="{$_levelArr.distribution_level_id}"/>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <input type="hidden" name="mark_dis_level" value="" />
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{
+        selector:'radio(dis_level)',
+        callback: function (d) {
+            $('[name="mark_dis_level"]').val(d.value)
+        }
+    }]);
+    main.laydate([{
+        elem: "#date",
+        type: "date",
+        range: true,
+        max:0
+    }]);
+    function editLevel(did,lid) {
+        layui.use(['form'],function () {
+            var form = layui.form;
+            $($('[name="dis_level"]')).each(function (i,o) {
+                if (lid == $(o).attr('data-flag')) {
+                    $(o).attr('checked',true);
+                    $('[name="mark_dis_level"]').val(lid)
+                }
+            });
+            form.render();
+            layer.open({
+                type: 1,
+                skin: 'layui-layer-rim', //加上边框
+                area: ['500px', '600px'], //宽高
+                shade: 0.01,
+                title: '选择分销商等级',
+                content: $('#level_content'),
+                btn: ['确定','取消'],
+                yes: function () {
+                    var sid = $('[name="mark_dis_level"]').val();
+                    if (sid == lid) {
+                        layer.msg('选中的为该分销商当前级别,无需更改');
+                        return false;
+                    }
+                    $.ajax({
+                        url: '/distribution_manage/edit_distribution_level',
+                        type: 'post',
+                        dataType: 'json',
+                        data: {id:did,level_id:$('[name="mark_dis_level"]').val()},
+                        success: function (res) {
+                            if (res.code === 0) {
+                                layer.msg(res.message,{time:1000});
+                                setTimeout(function () {
+                                    location.reload();
+                                },1000);
+                            }
+                        }
+                    })
+                },
+                btn2: function () {
+                    layer.msg('已取消');
+                }
+            });
+        });
+    }
+    function cancelDist(did) {
+        layer.msg('确认取消此分销商资格吗?',{btn:['确定','取消'],yes:function () {
+                $.ajax({
+                    url: '/distribution_manage/cancel_dist',
+                    type: 'post',
+                    dataType: 'json',
+                    data: {id:did},
+                    success: function (res) {
+                        if (res.code === 0) {
+                            layer.msg(res.message,{time:1000});
+                            setTimeout(function () {
+                                location.reload();
+                            },1000);
+                        }
+                    }
+                })
+            },btn2:function () {
+                layer.msg('取消操作',{time:2000});
+            }})
+    }
+    // 冻结/解冻
+    function frozen(did,status) {
+        var data = [];
+        if (did === undefined) {
+            var checked = $('.chk:checked');
+            if (checked.length > 0) {
+                $.each(checked,function (i,o) {
+                    data.push({distribution_id:$(o).val(),status:($(o).attr('data-status') == 1?0:1)});
+                })
+            } else {
+                layer.msg('请选择操作项',{time:2000});
+                return false;
+            }
+        } else {
+            data.push({distribution_id:did,status:(status == 1?0:1)});
+        }
+        layer.msg("确定"+(status == undefined ? "反向设置" : (status?"冻结":"解冻"))+"选择的分销商吗?",{time:2000,btn:['确定','取消'],yes:function () {
+            $.ajax({
+                url: '/distribution_manage/distribution_frozen',
+                type: 'post',
+                dataType: 'json',
+                data: {data:data},
+                success: function (res) {
+                    if (res.code == 0) {
+                        layer.msg(res.message,{time:1000});
+                        setTimeout(function () {
+                            location.reload();
+                        },1000);
+                    }
+                }
+            })
+        },btn2: function () {
+            layer.msg('已取消');
+        }});
+
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

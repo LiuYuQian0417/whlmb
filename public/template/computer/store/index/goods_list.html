@@ -1,0 +1,380 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/shopClassification/shopClassification.css">
+{/block}
+
+{block name="content"}
+<!--右侧浮动框-->
+{include file="public/store_right" /}
+<style>
+    body{
+        background: #fff;
+    }
+    .search-box input{
+        text-indent: 10px;
+    }
+    .goods-emtry {
+        text-align: center;
+        color: #9EA3A9;
+        font-size: 14px;
+        height: 500px;
+        box-sizing: border-box;
+        padding-top: 150px;
+    }
+</style>
+
+<div class="shop-classification-top">
+    <div class="shop-detail">
+        <div class="shop-box-tit-center">
+
+            <div class="title-right">
+                <a class="shop-name" href="javascript:;">{$result.store_name}
+                    <span class="pf primary-color">{$result.store_percent.self_score}</span>
+                    <img src="__RES__/imgs/goodsdetail/zz.png" alt="">
+                    {if condition="config('user.one_more') eq 1"}
+                    <span class="mark primary-color border-color">{switch name="$result.shop"}{case value="0"}自营{/case}{case value="1"}个人{/case}{case value="2"}公司{/case}{/switch}</span>
+                    {/if}
+                </a>
+                {if INI_CONFIG['IS_CUSTOMER'] ==1}
+                <a href="javascript:;" onclick="jump_service({store_id:'{$result.store_id}',diversion_id:'1002'})">
+                    <img src="__RES__/imgs/goodsdetail/shopinfo.png" alt="">
+                    联系客服
+                </a>
+                {/if}
+                {notempty name='$result.state'}
+                <a href="javascript:;" onclick="goods_collect_store(this,{'store_id':'{$result.store_id}','type':'2'})">
+                    <img src="__RES__/imgs/start_on.png" alt="">
+                    <span>取消关注</span>
+                </a>
+                {else/}
+                <a href="javascript:;" onclick="goods_collect_store(this,{'store_id':'{$result.store_id}','type':'1'})">
+                    <img src="__RES__/imgs/start_off.png" alt="">
+                    <span>关注店铺</span>
+                </a>
+                {/notempty}
+            </div>
+        </div>
+    </div>
+    <!--d大图-->
+    <a class="top-img" href="javascript:;">
+        <img src="{$result.pc_head_back_image}" alt="">
+    </a>
+
+</div>
+<!--菜单-->
+<div class="menu primary-background-color">
+    <div class="menu-center">
+        <a href="{:url('/pc2.0/store/index')}?store_id={$result.store_id}">首页</a>
+        <div class="all">全部商品分类
+            <img src="__RES__/imgs/xx.png" alt="">
+            <div class="menu-silder">
+                <ul>
+                    {volist name="$result.classify" id="item"}
+                    <li>
+                        <a class="menu-list" href="javascript:main.jump({'url':'/pc2.0/store/goods_list?store_id={$result.store_id}&classify_id={$item.store_goods_classify_id}'})">{$item.title}</a>
+                        <div class="menu-view">
+                            <div class="menu-list">
+                                <div class="menu-item">
+                                    <div class="cate">
+                                        {volist name="$item.subset" id="item1"}
+                                        <span onclick="main.jump({'url':'/pc2.0/store/goods_list?store_id={$result.store_id}&classify_id={$item.store_goods_classify_id}'})">{$item1.title}</span>
+                                        {/volist}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+        {volist name="$result.top_classify" id="item3" length="8"}
+        <a href="{:url('/pc2.0/store/goods_list')}?store_id={$result.store_id}&classify_id={$item3.store_goods_classify_id}">{$item3.title}</a>
+        {/volist}
+
+        <div class="search-box">
+            <input type="text"  name="keyword1" maxlength="60"  value="{:input('keyword1')}"  data_type="keyword1">
+            <a href="JavaScript:;" class="search-data">
+                <img src="__RES__/imgs/shopClassification/search-shop.png" alt="">
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="shop-content">
+    <div class="shop-left">
+        <div class="goods-rank">
+            <div class="rank-tit">
+                排行榜
+            </div>
+            <div class="goods">
+                <ul>
+                    {volist name="$result.ranking" id="item"}
+                    <li>
+                        <a href="javascript:jump_goods('{$item.goods_id}')">
+                            <span class="ranking primary-background-color">{$key+1}</span>
+                            <div class="img-box">
+                                <img src="{$item.file}" alt="">
+                            </div>
+                            <p class="goods-name">
+                                {$item.goods_name}
+                            </p>
+                            <p class="pic primary-color">
+                                ￥{$item.shop_price}
+                            </p>
+                        </a>
+                    </li>
+                    {/volist}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="shop-right">
+        <div class="top-right">
+            <div class="top-search">
+                <form action="">
+                    <input class="search-txt" name="keyword1" maxlength="60" id="keyword1" value="{:input('keyword1')}" type="text">
+                    <div class="pic-txt">
+                        ￥<input class="first-pic" name="start_price" id="start_price" value="{:input('start_price')}" type="text">
+                    </div>
+                    -
+                    <div class="pic-txt">
+                        ￥
+                        <input class="last-pic " name="end_price" id="end_price"  value="{:input('end_price')}" type="text">
+                    </div>
+                    <input type="hidden" id="store_id" name="store_id" value="{$result.store_id}">
+                    <input type="hidden" id="classify_id" name="classify_id" value="{:input('classify_id')}">
+                    <input type="submit"  class="submit primary-background-color" value="搜索">
+
+                    <!--<span>热门搜索：</span>-->
+                    <!--<a href="" class="primary-color">半熟芝士 , </a>-->
+                    <!--<a href="" class="primary-color">空气 ，</a>-->
+                    <!--<a href="" class="primary-color">花漾甜心</a>-->
+                </form>
+
+            </div>
+            <!--筛选-->
+            <div class="top-filtrate">
+                <a href="javascript:;" class="block {:input('active_type',0)?'':'active'} array">
+                    <img  src="__RES__/imgs/shopClassification/block.png" alt="">
+                    <img class="active-img" src="__RES__/imgs/shopClassification/active-block.png" alt="">
+                </a>
+                <a href="javascript:;" class="list {:input('active_type',0)?'active':''} array">
+                    <img src="__RES__/imgs/shopClassification/list.png" alt="">
+                    <img class="active-img"  src="__RES__/imgs/shopClassification/active-list.png" alt="">
+                </a>
+
+                <div class="filtrate-box">
+                    <a href="javascript:;" class="filtrate-list{eq name=":input('parameter')" value=""} primary-background-color filtrate-avtive {/eq}" data-type="" >推荐</a>
+                    <a href="javascript:;" class="filtrate-list{eq name=":input('parameter')" value="sales_volume"} primary-background-color filtrate-avtive {/eq}" data-type="sales_volume" >销量</a>
+                    <a href="javascript:;" class="filtrate-list{eq name=":input('parameter')" value="create_time"} primary-background-color filtrate-avtive {/eq}" data-type="create_time" >新品</a>
+                    <a href="javascript:;" class="filtrate-list{eq name=":input('parameter')" value="shop_price"} primary-background-color filtrate-avtive {/eq}" data-type="shop_price"    {eq name=":input('rank')" value="desc"} data_label="xiangxia" {else/} data_label="xiangshang" {/eq} >价格
+                    {eq name=":input('rank')" value="desc"}
+                    <img src="__RES__/imgs/shopClassification/xiangxia.png" alt="">
+                    {else/}<img src="__RES__/imgs/shopClassification/xiangshang.png" alt="">{/eq}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="goods-list">
+            <ul>
+                {empty name="$result.goods"}
+                <!--如果商品为空时-->
+                <div class="goods-emtry" >
+                    <img src="__RES__/imgs/my/emtry.png" alt="">
+                    <p>暂无数据</p>
+                </div>
+                {/empty}
+                {volist name="$result.goods" id="val"}
+                <li class="{:input('active_type',0)?'the-list':''}">
+                    <a href="javascript:jump_goods('{$val.goods_id}')" class="goods-img">
+                        <img src="{$val.file}" onerror="this.src='/template/computer/resource/imgs/zwt.png'" alt="" class="goods-imgs">
+                    <div class="silder">
+                        <span  class="prive op">
+                            <span></span>
+                        </span>
+                        <span class="next">
+                            <span></span>
+                        </span>
+                        <div class="silder-box">
+                            <div class="silder-con">
+                                {volist name="$val.multiple_file" id="file"}
+                                <div class="silder-list {eq name='$key' value='0'} border-color {/eq}">
+                                    <img src="{$file}" alt="">
+                                </div>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="javascript:jump_goods('{$val.goods_id}');" class="goods-name">
+                        {$val.goods_name}
+                    </a>
+                    <p class="pic primary-color">
+                        ￥{$val.shop_price}
+                    </p>
+                    <div class="sales">
+                        销量 <span class="primary-color">{$val.sales_volume}</span>
+                    </div>
+                    </a>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+
+        <!--分页-->
+        <div id="page-container" style="width: auto" class="pageContainer">{$result.goods|raw}</div>
+    </div>
+</div>
+
+{/block}
+{block name="js"}
+<script>
+    // 列表轮播图
+    //商品图片展示
+    $('.silder-box .silder-con .silder-list').mouseenter(function () {
+        $(this).addClass('border-color').siblings().removeClass('border-color');
+        var src = $(this).find('img').attr('src');
+        $(this).parents('li').find('.goods-imgs').attr('src',src)
+        // $('.goods-img img').attr('src',src)
+    })
+    var look_img =0;
+    $('.goods-list ul li').each(function () {
+        var This= $(this)[0];
+        This.num = 0;
+    });
+    $('.goods-list ul li').mouseenter(function () {
+        look_img= $(this).find('.silder-box .silder-con .silder-list').length;
+    });
+
+    $('.silder .prive').click(function () {
+        var This = $(this).parents('li')[0];
+        var look_num=This.num;
+        console.log(look_num)
+        if(look_img>5){
+            if(This.num<=0){
+                This.num==0;
+                $(this).addClass('op')
+            }else{
+                This.num--;
+                $(this).siblings('.next').removeClass('op')
+                $(this).siblings('.silder-box').find('.silder-con').animate({'left':-This.num*31+'px'},300)
+                $(this).removeClass('op')
+                if(This.num==0){
+                    $(this).addClass('op')
+                }
+            }
+        }
+    })
+    $('.silder .next').click(function () {
+        var This = $(this).parents('li')[0];
+        var look_num=This.num;
+        console.log(This.num)
+        if(look_img>5){
+            if(This.num>=look_img-5){
+                This.num==look_img-5;
+                $(this).addClass('op')
+            }else{
+                This.num++;
+                $(this).siblings('.prive').removeClass('op')
+                $(this).siblings('.silder-box').find('.silder-con').animate({'left':-This.num*31+'px'},300)
+                $(this).removeClass('op')
+                if(This.num==look_img-5){
+                    $(this).addClass('op')
+                }
+            }
+        }
+    })
+    //列表轮播图结束
+
+
+    //网格列表切换
+    $('.top-filtrate .array ').click(function () {
+        if($(this).hasClass('block')){
+            $(this).addClass('active').siblings('.array').removeClass('active');
+            $('.goods-list ul li').removeClass('the-list')
+        }else{
+            $(this).addClass('active').siblings('.array').removeClass('active')
+            $('.goods-list ul li').addClass('the-list')
+        }
+    })
+
+    // 手风琴
+    // $('.goods-classify .class-con li .list-tit').click(function () {
+    //     if( $(this).hasClass('active')){
+    //         $(this).siblings('.list-con').stop().slideUp();
+    //         $(this).removeClass('active');
+    //         $(this).find('span').html('+')
+    //     }else{
+    //         $(this).siblings('.list-con').stop().slideDown();
+    //         $(this).addClass('active');
+    //         $(this).find('span').html('-')
+    //     }
+    // })
+
+
+    //搜索
+    $('.submit').click(function () {
+        var keyword1 = $('#keyword1').val();
+        var start_price = $('#start_price').val();
+        var end_price = $('#end_price').val();
+        var store_id = $('#store_id').val();
+        var classify_id = $('#classify_id').val();
+        main.jump({'url':'/pc2.0/store/goods_list?store_id='+store_id+'&classify_id='+classify_id+'&keyword1='+keyword1+'&start_price='+start_price+'&end_price='+end_price});
+    })
+
+    //分类栏上搜索
+    $('.search-data').click(function () {
+        var keyword1 = $(this).prev('input[name="keyword1"]').val();
+        var store_id = $('#store_id').val();
+        var classify_id = $('#classify_id').val();
+        main.jump({'url':'/pc2.0/store/goods_list?store_id='+store_id+'&classify_id='+classify_id+'&keyword1='+keyword1});
+
+    })
+
+
+    //排序
+    $('.filtrate-box a').click(function () {
+        var rank ="desc";
+        var parameter = $(this).attr('data-type');
+        //价格
+        if ($(this).hasClass('primary-background-color filtrate-avtive')){
+            var param = $(this).attr('data_label');
+            if (param === 'xiangxia'){
+                rank ="asc"
+            }else{
+                rank ="desc"
+            }
+        }
+        $(this).addClass(' primary-background-color filtrate-avtive').siblings().removeClass(' primary-background-color filtrate-avtive')
+        var keyword1 = $('#keyword1').val();
+        var start_price = $('#start_price').val();
+        var end_price = $('#end_price').val();
+        var store_id = $('#store_id').val();
+        var classify_id = $('#classify_id').val();
+
+
+        var url = '/pc2.0/store/goods_list?store_id='+store_id+'&classify_id='+classify_id;
+
+        if(keyword1){
+            url += '&keyword1='+keyword1;
+        }
+        if(start_price){
+            url += '&start_price='+start_price;
+        }
+        if(end_price){
+            url += '&end_price='+end_price;
+        }
+        // console.log(parameter);
+        if (parameter){
+            url += '&rank='+rank+'&parameter='+parameter;
+        }
+        url += '&active_type=' + $('.top-filtrate>.active').index();
+        main.jump({'url':url})
+    })
+</script>
+{/block}

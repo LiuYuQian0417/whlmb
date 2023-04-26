@@ -1,0 +1,282 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .layui-input {
+        display: inline-block;
+        width: 200px
+    }
+
+    .add-btn {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-left: 15px;
+
+    }
+
+    .add-btn img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .subtract-btn {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-left: 15px;
+
+    }
+
+    .subtract-btn img {
+        width: 20px;
+        height: 20px;
+    }
+
+    .zw {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        margin-left: 15px;
+    }
+
+    .list-con {
+        margin-bottom: 10px;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、设置店铺在平台的使用费用；</li>
+                <li>2、使用费用按照营业额收取；</li>
+                <li>3、商家结算时扣除使用费用；</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+
+<!--列表-->
+<form class="layui-form" action="">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>主营类目名称</th>
+            <th>费用设置</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr class="list">
+            <td width="35%">{$item.title}</td>
+            <td>
+                <input type="hidden" name="store_classify_id" value="{$item.store_classify_id}">
+                {empty name='$item.store_costs'}
+                <div class="list-con">
+                    <span>营业额超过</span>
+                    <input type="number" name="turnover" maxlength="10" autocomplete="off" placeholder="请输入营业额" value=""
+                           class="layui-input">
+                    元，收取
+                    <input type="text" name="percent" value="" class="layui-input">
+                    % 的平台使用费
+                    <a href="javascript:;" class="add-btn">
+                        <img src="__RES__/image/common/add-btn.png" alt="">
+                    </a>
+                </div>
+                {else/}
+                {volist name="$item.store_costs" id="store_costs"}
+                <div class="list-con">
+                    <input type="hidden" name="store_costs_id" value="{$store_costs.store_costs_id}">
+                    <span>营业额超过</span>
+                    <input type="number" name="turnover" id="turnover" maxlength="10" autocomplete="off"
+                           placeholder="请输入营业额" value="{$store_costs.turnover}" class="layui-input">
+                    元，收取
+                    <input type="text" name="percent" id="percent" value="{$store_costs.percent}" class="layui-input">
+                    % 的平台使用费
+                    <a href="javascript:;" class="subtract-btn">
+                        <img src="__RES__/image/common/subtract.png" alt="">
+                    </a>
+                </div>
+                {/volist}
+                <div class="list-con">
+                    <span>营业额超过</span>
+                    <input type="text" name="turnover" maxlength="10" autocomplete="off" placeholder="请输入营业额" value=""
+                           class="layui-input">
+                    元，收取
+                    <input type="text" name="percent" value="" class="layui-input">
+                    % 的平台使用费
+                    <a href="javascript:;" class="add-btn">
+                        <img src="__RES__/image/common/add-btn.png" alt="">
+                    </a>
+                </div>
+                {/empty}
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+    <div class="right">{:$data->render()}</div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{
+        selector: 'switch(status)', callback: function (data) {
+            main.ajax({type: 'post', url: '/store_classify/auditing', data: {'id': data.value}})
+        }
+    }]);
+
+    $('.list').on('click', '.add-btn', function () {
+        var turnover = $(this).parents().find('input[name="turnover"]').val();
+        var percent = $(this).parents().find('input[name="percent"]').val();
+        var store_classify_id = $(this).parents().find('input[name="store_classify_id"]').val();
+        var that = $(this);
+        if (turnover == '') {
+            layer.msg('请输入营业额');
+            return false;
+        }
+        if (percent == '') {
+            layer.msg('请输入使用费百分比');
+            return false;
+        }
+        if (percent > 100) {
+            layer.msg('使用费百分比小于100');
+            return false;
+        }
+        main.ajax({
+            type: 'post',
+            url: '/store/add_costs',
+            data: {'turnover': turnover, percent: percent, store_classify_id: store_classify_id},
+            callback: function (res) {
+                if (res.code == 0) {
+                    var html = ' <div class="list-con">\n' +
+                        '            <input type="hidden" name="store_costs_id" value="' + res.id + '">\n'+
+                        '            <span>营业额超过</span>\n' +
+                        '            <input type="number" name="turnover" maxlength="10" autocomplete="off" placeholder="请输入营业额值" value="" class="layui-input">\n' +
+                        '            元，收取\n' +
+                        '            <input type="text"  class="layui-input" name="percent">\n' +
+                        '            % 的平台使用费\n' +
+                        '            <a href="javascript:;" class="add-btn">\n' +
+                        '                <img src="__RES__/image/common/add-btn.png" alt="">\n' +
+                        '            </a>\n' +
+                        '        </div>';
+
+                    that.parents('td').append(html);
+                    that.addClass('zw');
+                    that.removeClass('add-btn').addClass('subtract-btn').find('img').attr('src', '__RES__/image/common/subtract.png');
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    })
+
+    $('.list').on('click', '.subtract-btn', function () {
+        var store_costs_id = $(this).parents().find('input[name="store_costs_id"]').val();
+        var that = $(this);
+        if (store_costs_id == '') {
+            layer.msg('费用信息错误');
+            return false;
+        }
+        main.ajax({
+            type: 'post', url: '/store/subtract_costs', data: {store_costs_id: store_costs_id},
+            callback: function (res) {
+                if (res.code == 0) {
+                    that.parents('div').remove();
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    })
+
+    $('.list').on('change', '#turnover', function () {
+        console.log(2233);
+        var turnover = $(this).parents().find('input[name="turnover"]').val();
+        var store_classify_id = $(this).parents().find('input[name="store_classify_id"]').val();
+        var store_costs_id = $(this).parents().find('input[name="store_costs_id"]').val();
+        if (turnover == '') {
+            layer.msg('请输入营业额');
+            return false;
+        }
+        if (store_costs_id == '') {
+            return false;
+        }
+        main.ajax({
+            type: 'post',
+            url: '/store/edit_costs',
+            data: {turnover: turnover, store_classify_id: store_classify_id, store_costs_id: store_costs_id},
+            callback: function (res) {
+                if (res.code == 0) {
+                    layer.msg(res.message);
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    })
+
+    $('.list').on('change', '#percent', function () {
+        console.log(2233);
+        var percent = $(this).parents().find('input[name="percent"]').val();
+        var store_classify_id = $(this).parents().find('input[name="store_classify_id"]').val();
+        var store_costs_id = $(this).parents().find('input[name="store_costs_id"]').val();
+        if (percent == '') {
+            layer.msg('请输入使用费百分比');
+            return false;
+        }
+        if (percent > 100) {
+            layer.msg('使用费百分比小于100');
+            return false;
+        }
+        if (store_costs_id == '') {
+            return false;
+        }
+        main.ajax({
+            type: 'post',
+            url: '/store/edit_costs',
+            data: {percent: percent, store_classify_id: store_classify_id, store_costs_id: store_costs_id},
+            callback: function (res) {
+                if (res.code == 0) {
+                    layer.msg(res.message);
+                } else {
+                    layer.msg(res.message);
+                }
+            }
+        });
+    })
+
+    $(function () {
+        // 监听输入
+        $('body').on('blur', 'input[name="turnover"]', function () {
+            var $th = $(this),
+                $th_val = parseInt($(this).val()),
+                prev = $th.parents('.list-con').prev('.list-con');
+
+            // 如果 前一个 不存在
+            if (prev.length <= 0){
+                return;
+            }
+
+            var prev_val = parseInt(prev.children('input').val());
+
+            if ($th_val <= prev_val) {
+                $th.val(prev_val + 0.01)
+            }
+        })
+    })
+</script>
+{/block}
+{block name='highSearch'}{/block}

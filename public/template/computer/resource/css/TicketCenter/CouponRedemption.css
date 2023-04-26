@@ -1,0 +1,340 @@
+body{
+    background-color: #f6f6f6;
+    user-select: none;
+}
+
+.head-container{
+    background-color: #fff;
+    /*border-bottom:2px solid;*/
+}
+.container-tab{
+    /*width: 1200px;*/
+    padding-top:58px;
+    background: #fff;
+    border-bottom: 2px solid #fff;
+    margin-bottom: 30px;
+
+}
+.container-tab ul {
+    width: 1200px;
+    display: flex;
+    margin: 0px auto ;
+}
+.container-tab ul li{
+    flex:1;
+    height: 38px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    cursor: pointer;
+    color: #333;
+}
+.activeClassName{
+    color: #fff!important;
+}
+.container-tab ul li > .activeClassNameIcon{
+    background-color: #fff;
+}
+.container-tab ul li img{
+    margin-left: 5px;
+}
+.ticket-center{
+    margin: 0 auto;
+    width: 1200px;
+}
+.ticket-center-view{
+    display: flex;
+    justify-content: space-between;
+    height: 363px;
+}
+.ticket-center-swiper{
+    width: 743px;
+}
+.ticket-center-broker{
+    position: relative;
+    width: calc(1200px - 743px);
+    background: url("../../../resource/imgs/ticket/market_bg.png");
+}
+.swiper-container{
+    height: 100%;
+}
+.swiper-slide a{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.swiper-pagination-bullet{
+    width: 16px!important;
+    height: 16px!important;
+    background: rgba(255,255,255,.7)!important;
+}
+.swiper-pagination-bullet-active{
+    background: #fff!important;
+}
+.go-shop{
+    position: absolute;
+    bottom: 60px;
+    left: 33px;
+    width: 125px;
+    height: 40px;
+    box-sizing: border-box;
+    border:1px solid #fff;
+    border-radius: 20px;
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+}
+.ticket-view-list{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: absolute;
+    right: 11px;
+    top:11px;
+    width: 254px;
+    height: 342px;
+}
+.ticket-view-item{
+    padding: 18px 15px 12px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    /*width: 100%;*/
+    height: 110px;
+    background: url("../../../resource/imgs/ticket/jifen_bg.png");
+}
+.ticket-view-item >div:nth-child(1){
+    display: flex;
+    font-size: 18px;
+}
+.ticket-view-item >div:nth-child(1) span{
+    display: block;
+    font-size: 12px;
+    padding-top: 2px;
+}
+.ticket-view-item >div:nth-child(2){
+    width: 75px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    background-color: #fff4ec;
+    font-size: 12px;
+    margin-top: 11px;
+}
+.ticket-view-item >div:nth-child(3){
+    width:150px;
+    text-overflow: ellipsis;
+    height: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-size: 12px;
+    color: #333;
+    margin-top: 12px;
+}
+.jxhq{
+    display: block;
+    margin: 37px auto;
+}
+.get-coupon{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 1230px;
+    margin: 0 auto;
+}
+.get-coupon-item{
+    position: relative;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    width: 381px;
+    height: 152px;
+}
+.get-coupon-item a{
+    display: block;
+}
+.get-coupon-item-pos{
+    display: flex;
+    padding: 20px;
+    box-sizing: border-box;
+    position: absolute;
+    left: 0;
+    top:0;
+    width: 87%;
+}
+.get-coupon-item-pos>img{
+    width: 106px;
+    height: 106px;
+    display: inherit;
+}
+.get-coupon-item-pos .ticket-view-item{
+    padding: 0;
+    background: none;
+    margin-left: 15px;
+}
+.progress-bar{
+    position: relative;
+    width: 100px!important;
+    height: 8px!important;
+    border-radius: 20px;
+    background-color: #eee;
+    margin: 0 0 0 5px!important;
+}
+.progress-bar div{
+    position: absolute;
+    left: 0;
+    top:0;
+    /*width: 64px;*/
+    height: 8px!important;
+    border-radius: 20px;
+}
+.progress{
+    display: flex;
+    font-size: 12px;
+    align-items: center;
+    margin-top:12px;
+}
+.progress span{
+    color: #333;
+}
+.gray-color{
+    color: #d3d3d3!important;
+}
+.gray-bg-color {
+    background-color: #f9f9f9!important;
+}
+.count-down{
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #fa123e;
+    margin-top: 12px;
+}
+.count-down-time div{
+    background: #fa123e;
+    color: #fff;
+    width: 16px!important;
+    height: 15px!important;
+    text-align: center;
+    line-height: 15px;
+    font-size: 12px;
+    border-radius: 3px;
+    margin:0 3px;
+}
+.count-down-time{
+    display: flex;
+    align-items: center;
+}
+.count-down>span{
+    margin-right: 5px;
+}
+.handle-next-category{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 120px;
+    height: 90px;
+    font-size: 12px;
+    margin: 40px auto 0;
+    color: #969696;
+    cursor: pointer;
+}
+.handle-next-category span{
+    margin: 5px 0;
+}
+.handle-next-category img:first-child{
+    width: 30px;
+    height: 30px;
+}
+.handle-next-category img:last-child{
+    width: 14px;
+    height: 14px;
+}
+
+.to-top{
+    z-index: 999;
+    width: 77px;
+    height: 77px;
+    position: fixed;
+    right: 255px;
+    top:550px;
+    background-color: #fff;
+    border:1px solid #ddd;
+}
+.top-view{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 13px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-bottom:1px solid #ddd;
+    cursor: pointer;
+}
+.top-view span{
+    margin-top: 10px;
+    font-size: 12px;
+}
+.discount-coupon{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 71px;
+    border-bottom: 1px solid #ddd;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+}
+.discount-coupon img{
+    margin-bottom: 7px;
+}
+.back-top{
+    height: 70px;
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.back-top img{
+    margin-bottom: 10px;
+}
+.all{
+    position: relative;
+}
+
+.show-block{
+    display: none;
+    position: absolute;
+    top:38px;
+    right: 0;
+    width: 494px;
+    height: 152px;
+    z-index: 999;
+    padding: 17px 15px;
+    box-sizing: border-box;
+    background: url("../../../resource/imgs/ticket/14.png");
+}
+.show-block div{
+    float: left;
+    color: #666;
+    width: 80px;
+    height: 32px;
+    text-align: center;
+    display: block;
+    line-height: 32px;
+    margin:5px 10px;
+    font-size: 15px;
+    box-sizing: border-box;
+    border-radius: 18px;
+}
+.act{
+    border:1px solid;
+    width: 80px!important;
+    height: 32px!important;
+    box-sizing: border-box;
+}

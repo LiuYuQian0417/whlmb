@@ -1,0 +1,104 @@
+
+
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyRedPacket.css" />
+<style type="text/css">
+	.red-packet-con{
+		display: none;
+	}
+	.un-used{
+		display: block;
+	}
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+			<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+			<!--我的页面左侧公共部分结束-->
+
+
+			<div class="index-right">
+				<!-- 我的右侧 -->
+				<div class="my-red-packet">
+				    <h5 class="title">
+				      红包
+				    </h5>
+
+				    <div class="red-packet">
+				      <div class="tit">
+				        <a {eq name=":input('status',3)" value="3"} class="primary-color border-color" {/eq}  href="{:url('pc2.0/member_packet/index')}?status=3">
+				          未使用({$statistics.unused})
+				        </a>
+				        <a {eq name=":input('status')" value="1"} class="primary-color border-color" {/eq} href="{:url('pc2.0/member_packet/index')}?status=1">
+				          使用记录({$statistics.been_used})
+				        </a>
+				        <a {eq name=":input('status')" value="2"} class="primary-color border-color" {/eq} href="{:url('pc2.0/member_packet/index')}?status=2">
+				          已过期({$statistics.have_expired})
+				        </a>
+				      </div>
+
+					<!--未使用-->
+				      <div class="red-packet-con un-used">
+						  {empty name="result"}
+						  <!--如果红包为空-->
+						  <div class="red-packet-enty">
+                            <p>您暂无可用红包</p>
+                            <!--<a href="" class="primary-background-color">去逛逛</a>-->
+                          </div>
+						  {/empty}
+
+
+						  {volist name="result" id="item"}
+
+							<div  {eq name=":input('status',3)"  value="3"} class="list unused" {/eq} {eq name=":input('status')" value="1"} class="list used" {/eq} {eq name=":input('status')" value="2"} class="list overdue" {/eq} >
+							  <div class="circle">
+								<!--<img  src="__RES__/imgs/my/redPacket/redlogo.png" alt="">-->
+								<img src="__RES__/imgs/my/redPacket/gqlogo.png" alt="">
+							  </div>
+							  <div class="money">
+								{$item.actual_price}<span>元</span>
+							  </div>
+							  <div class="time">
+								  {:date("Y-m-d",strtotime($item.start_time))} - {:date('Y-m-d',strtotime($item.end_time))}
+							  </div>
+							  <div class="limit">
+								  <span class="limit-condition">
+								  限品类：
+								  </span>
+								<p>
+								  全网通用
+								</p>
+							  </div>
+								  {switch name=":input('status',3)"}
+								  {case value="3"}
+								  <!--立即使用-->
+								  <a class="now" href="javascript:main.jump({'url':'/pc2.0/index/index'})" >立即使用</a>
+								  {/case}
+								  {case value="1"}<img class="coupon-used-img" src="__RES__/imgs/my/used.png" alt="">{/case}
+								  {case value="2"}<img class="coupon-overdue-img" src="__RES__/imgs/my/overdue.png" alt="">{/case}
+								  {/switch}
+							</div>
+						  {/volist}
+
+				      </div>
+
+				    </div>
+				    <!--分页-->
+				<!--分页-->
+				<div class="pageContainer" style="width: auto;">{$result|raw}</div>
+
+				  </div>
+			</div>
+		</div>
+
+{/block}
+

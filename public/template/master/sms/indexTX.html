@@ -1,0 +1,133 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>短信设置中选择腾讯云短信，在此页面查看短信配置模板。<li>
+            <li>模板需服务商审核通过后才会生效。<li>
+            <li>刷新页面获取最新审核状态。<li>
+            <li><a href="https://console.cloud.tencent.com/sms" target="_blank"><i class="fa fa-send-o"></i> 腾讯云短信控制台</a><li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="if ('{:count($diff)}' == 0){layer.msg('该类型模板使用场景已全部设置,无需添加');return false;} main.jumpFour('sms/createTX')">
+                <div class="fbutton">
+                    <div class="add" title="添加模板"><span><i class="fa fa-plus"></i> 添加模板</span></div>
+                </div>
+            </a>
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('sms/countTX')">
+                <div class="fbutton">
+                    <div title="查看统计"><span><i class="fa fa-bar-chart-o"></i> 查看统计</span></div>
+                </div>
+            </a>
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据"  onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="inquire marri10">
+                    <input type="text" name="date" class="inquire_text nofocus" placeholder="选择查询的时间区间"
+                           value="{:input('get.date','')}" id="searchDate"
+                           autocomplete="off" readonly>
+                </div>
+                <div class="imitate_select" style="width: 120px;">
+                    <select name="type" class="ps-container cite" title="全部场景">
+                        <option value="-1">全部使用场景</option>
+                        {foreach name='$type' item='v'}
+                        <option value="{$key}" {eq name=":input('get.type','-1')" value="$key"}selected{/eq}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="本地ID/服务商ID/模板内容"
+                           value="{:input('get.keyword')}" style="width: 160px;"
+                           autocomplete="off">
+                    <!--<input type="submit" class="btn" value="">-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+
+</form>
+<!--列表-->
+<div class="layui-form" >
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>本地ID</th>
+            <th>服务商ID</th>
+            <th>使用场景</th>
+            <th>模板内容</th>
+            <th>审核状态</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr  class='emptyTable'><td colspan="100" style="font-size: 25px;">暂无数据</td></tr>
+        {/empty}
+        {foreach name='data' item='v'}
+        <tr>
+            <td><input type="checkbox" value="{$v.sms_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>{$v.sms_id}</td>
+            <td>{$v.temp_id?:'暂无'}</td>
+            <td>{$v.sceneText}</td>
+            <td>{$v.content}</td>
+            <td>
+                {switch name='$v.status'}
+                {case value='0'}<em>正在审核中</em>{/case}
+                {case value='1'}<em>审核已通过</em>{/case}
+                {case value='2'}<em><a onclick="msg('{$v.error}')" href="javascript:void(0);" title="查看未通过原因">审核未通过</a></em>{/case}
+                {/switch}
+            </td>
+            <td>{$v.create_time}</td>
+            <td>
+                <a class="btn_edit" onclick="main.jumpFour('sms/editTX?id={$v.sms_id}')"><i class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" onclick="main.destroy('/sms/destroyTX','{$v.sms_id}')"><i class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/manage/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.laydate([{
+        elem: '#searchDate',
+        type: 'date',
+        range: true
+    }]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

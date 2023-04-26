@@ -1,0 +1,354 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<style>
+    .text_time .text{width: 300px;background: none!important;}
+
+    .pc_head_back_image .imageUpload{
+        width: auto!important;
+            max-width:unset;
+    }
+    .layui-btn-new {
+        display: inline-block;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 12px;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        background-color: #cc3300;
+    }
+    .layui-btn-new:hover img{
+        display: block !important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="main-content" id="mainContent">
+
+<!--    <div class="content">-->
+<!--        <div class="explanation" id="explanation">-->
+<!--            <div class="ex_tit">-->
+<!--                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>-->
+<!--            </div>-->
+<!--            <ul>-->
+<!--                <li><span>温馨提示：提交操作将会重新审核，请慎重提交确定。</span></li>-->
+<!--                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+
+    <div class="ecsc-form-goods">
+        <form action="" method="post" name="theForm" enctype="multipart/form-data" id="bonus_form" class="layui-form">
+            <div class="wrapper-list border1">
+
+                <dl>
+                    <dt>是否开启快递邮寄</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input
+                                        type="radio"
+                                        name="is_delivery"
+                                        value="1"
+                                        class="ui-radio"
+                                        id="is_delivery_1"
+                                        {eq name="store.is_delivery" value="1"} checked="checked" {/eq}
+                                />
+                                <label for="is_delivery_1" class="ui-radio-label">是</label>
+                            </div>
+                            <div class="checkbox_item">
+                                <input
+                                        type="radio"
+                                        name="is_delivery"
+                                        value="0"
+                                        id="is_delivery_0"
+                                        class="ui-radio"
+                                        {eq name="store.is_delivery" value="0"} checked="checked" {/eq}
+                                />
+                                <label for="is_delivery_0" class="ui-radio-label">否</label>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+
+
+                {if $Think.INI_CONFIG['IS_CITY']}
+                <dl>
+                    <dt>是否开启同城配送</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input
+                                        type="radio"
+                                        name="is_city"
+                                        value="1"
+                                        class="ui-radio"
+                                        id="is_city_1"
+                                        {eq name="store.is_city" value="1"} checked="checked" {/eq}
+                                />
+                                <label for="is_city_1" class="ui-radio-label">是</label>
+                            </div>
+                            <div class="checkbox_item">
+                                <input
+                                        type="radio"
+                                        name="is_city"
+                                        value="0"
+                                        id="is_city_0"
+                                        class="ui-radio"
+                                        {eq name="store.is_city" value="0"} checked="checked" {/eq}
+                                />
+                                <label for="is_city_0" class="ui-radio-label">否</label>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                {else/}
+                <input type="hidden" name="is_city" value="0">
+                {/if}
+                <!--<dl>-->
+                    <!--<dt>是否开启货到付款</dt>-->
+                    <!--<dd>-->
+                        <!--<div class="checkbox_items">-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_pay_delivery"-->
+                                        <!--value="1"-->
+                                        <!--class="ui-radio"-->
+                                        <!--id="is_pay_delivery_1"-->
+                                        <!--{eq name="store.is_pay_delivery" value="1"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_pay_delivery_1" class="ui-radio-label">是</label>-->
+                            <!--</div>-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_pay_delivery"-->
+                                        <!--value="0"-->
+                                        <!--id="is_pay_delivery_0"-->
+                                        <!--class="ui-radio"-->
+                                        <!--{eq name="store.is_pay_delivery" value="0"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_pay_delivery_0" class="ui-radio-label">否</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                {if $Think.INI_CONFIG['IS_SHOP']}
+                <dl>
+                    <dt>是否开启门店自提</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input
+                                        type="radio"
+                                        name="is_shop"
+                                        value="1"
+                                        class="ui-radio"
+                                        id="is_shop_1"
+                                        {eq name="store.is_shop" value="1"} checked="checked" {/eq}
+                                />
+                                <label for="is_shop_1" class="ui-radio-label">是</label>
+                            </div>
+                            <div class="checkbox_item">
+                                <input
+                                        type="radio"
+                                        name="is_shop"
+                                        value="0"
+                                        id="is_shop_0"
+                                        class="ui-radio"
+                                        {eq name="store.is_shop" value="0"} checked="checked" {/eq}
+                                />
+                                <label for="is_shop_0" class="ui-radio-label">否</label>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+                {else/}
+                <input type="hidden" name="is_shop" value="0">
+                {/if}
+                <!--<dl>-->
+                    <!--<dt>是否支持开具增值税专用发票</dt>-->
+                    <!--<dd>-->
+                        <!--<div class="checkbox_items">-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_added_value_tax"-->
+                                        <!--value="1"-->
+                                        <!--class="ui-radio"-->
+                                        <!--id="is_added_value_tax_1"-->
+                                        <!--{eq name="store.is_added_value_tax" value="1"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_added_value_tax_1" class="ui-radio-label">是</label>-->
+                            <!--</div>-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_added_value_tax"-->
+                                        <!--value="0"-->
+                                        <!--id="is_added_value_tax_0"-->
+                                        <!--class="ui-radio"-->
+                                        <!--{eq name="store.is_added_value_tax" value="0"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_added_value_tax_0" class="ui-radio-label">否</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                <!--<dl>-->
+                    <!--<dt>是否开启全国包邮</dt>-->
+                    <!--<dd>-->
+                        <!--<div class="checkbox_items">-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_express"-->
+                                        <!--value="1"-->
+                                        <!--class="ui-radio"-->
+                                        <!--id="is_express_1"-->
+                                        <!--{eq name="store.is_express" value="1"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_express_1" class="ui-radio-label">是</label>-->
+                            <!--</div>-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_express"-->
+                                        <!--value="0"-->
+                                        <!--id="is_express_0"-->
+                                        <!--class="ui-radio"-->
+                                        <!--{eq name="store.is_express" value="0"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_express_0" class="ui-radio-label">否</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                <dl>
+                    <dt>品牌甄选展示图<br>[684*304]</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div
+                                class="imageUpload"
+                                default="{$store.brand_image|default=''}"
+                                width="680"
+                                height="304"
+                                file-mime="image/gif,image/jpeg,image/png"
+                                name="brand_image"
+                                dir="store_image_brand_image"
+                                value="{$store.brand_image_data|default=''}"
+                            >
+                            </div>
+                        </div>
+                        <div class="layui-btn-new" style="margin-left: 20px;position: relative;">显示预览
+                            <img src="__RES__/image/hover/store_brand.png" alt="" style="width: 647px;height: 383px; position: absolute;top: -160px;left: 80px;z-index: 999;display: none;">
+                        </div>
+                    </dd>
+                </dl>
+                <!--<dl>-->
+                    <!--<dt>发现好店</dt>-->
+                    <!--<dd>-->
+                        <!--<div class="checkbox_items">-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_good"-->
+                                        <!--value="1"-->
+                                        <!--class="ui-radio"-->
+                                        <!--id="is_good_1"-->
+                                        <!--{eq name="store.is_good" value="1"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_good_1" class="ui-radio-label">是</label>-->
+                            <!--</div>-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input-->
+                                        <!--type="radio"-->
+                                        <!--name="is_good"-->
+                                        <!--value="0"-->
+                                        <!--id="is_good_0"-->
+                                        <!--class="ui-radio"-->
+                                        <!--{eq name="store.is_good" value="0"} checked="checked" {/eq}-->
+                                <!--/>-->
+                                <!--<label for="is_good_0" class="ui-radio-label">否</label>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                <!--<dl>-->
+                    <!--<dt>发现好店展示图<br>400x400</dt>-->
+                    <!--<dd>-->
+                        <!--<div>-->
+                            <!--<div-->
+                                    <!--class="imageUpload"-->
+                                    <!--default="{$store.good_image|default=''}"-->
+                                    <!--width="400"-->
+                                    <!--height="400"-->
+                                    <!--file-mime="image/gif,image/jpeg,image/png"-->
+                                    <!--name="good_image"-->
+                                    <!--dir="store_image_good_image"-->
+                                    <!--value="{$store.good_image_data|default=''}"-->
+                            <!--&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+                {eq name="$pc" value="1"}
+                <dl>
+                    <dt>店铺公共头部图片<br>[1920*111]</dt>
+                    <dd>
+                        <div class="pc_head_back_image">
+                            <div
+                                    class="imageUpload"
+                                    default="{$store.pc_head_back_image|default=''}"
+                                    width="1920"
+                                    height="111"
+                                    file-mime="image/gif,image/jpeg,image/png"
+                                    name="pc_head_back_image"
+                                    dir="store_image_pc_head_back_image"
+                                    value="{$store.pc_head_back_image_data|default=''}"
+                            >
+                            </div>
+                        </div>
+                        <div class="layui-btn-new" style="margin: 20px 0;position: relative;">显示预览
+                            <img src="__RES__/image/hover/store_head_bg.png" alt="" style="width: 675px;height: 220px; position: absolute;top: -160px;left: 80px;z-index: 999;display: none;">
+                        </div>
+                    </dd>
+                </dl>
+                {/eq}
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="submit"
+                               value=" 保存 "
+                               class="sc-btn sc-blueBg-btn btn35"
+                               id="submitBtn"/>
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript">
+    main.valid('.layui-form');
+</script>
+{/block}

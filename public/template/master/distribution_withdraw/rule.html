@@ -1,0 +1,125 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+<style>
+    .order_item .layui-form-label{
+        width: 170px!important;
+    }
+</style>
+{__block__}
+<!--表单-->
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+        <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、可设置提现规则与提现方式，供分销商提现使用；</span></li>
+            <li><span>2、提现规则用来约束分销商时间段内提现次数；</span></li>
+            <li><span>3、如果设置满0元可以提现，则代表提现无限额要求；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tab" style="margin-top: 15px;">
+    <ul>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现规则</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/index')">提现审核</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/getList')">提现管理</a></li>
+    </ul>
+</div>
+<form class="layui-form" action="/distribution_withdraw/editVal" method="post">
+    <div class="contentShell">
+        <div class="layui-form-item order_item">
+            <label class="layui-form-label">提现方式：</label>
+            <div class="layui-input-block">
+                <input type="checkbox" name="distribution_withdraw_type[]" {in name="1" value=":env('distribution_withdraw_type',1)"} checked{/in} value="1"  lay-filter="check" lay-skin="primary" class="chk" title="余额">
+                <input type="checkbox" name="distribution_withdraw_type[]" {in name="2" value=":env('distribution_withdraw_type',1)"} checked{/in} value="2"  lay-filter="check" lay-skin="primary" class="chk" title="微信">
+                <input type="checkbox" name="distribution_withdraw_type[]" {in name="3" value=":env('distribution_withdraw_type',1)"} checked{/in} value="3"  lay-filter="check" lay-skin="primary" class="chk" title="银行卡">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">提现规则：</label>
+            <div class="layui-input-block">
+                <input type="hidden" style="width: 30%;float: left;" name="distribution_withdraw_day" value="{:env('distribution_withdraw_day','')}"
+                       maxlength="10" autocomplete="off"
+                       placeholder="请输入天数"
+                       class="layui-input"> <span style="float: left;margin: 6px;">每天可提现</span>
+
+                <input type="number" style="width: 30%;float: left" name="distribution_withdraw_time" value="{:env('distribution_withdraw_time','')}"
+                       maxlength="10" autocomplete="off"
+                       placeholder="请输入可提现次数"
+                       class="layui-input"> <span style="float: left;margin: 6px;">次</span>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">满足金额可提现：</label>
+            <div class="layui-input-block">
+                <input type="number" style="width: 30%;float: left;" name="distribution_withdraw_price" value="{:env('distribution_withdraw_price','')}"
+                       maxlength="10" autocomplete="off"
+                       placeholder="请输入满足金额"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">提现手续费：</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" name="distribution_withdraw_cost" autocomplete="off" min="0.01" value="{:env('distribution_withdraw_cost',0)}" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="radio" name="distribution_withdraw_cost_type" value="0" title="现金(元)" {:env('distribution_withdraw_cost_type',0) == 0?'checked':''}>
+                <input type="radio" name="distribution_withdraw_cost_type" value="1" title="百分比" {:env('distribution_withdraw_cost_type',0) == 1?'checked':''}>
+            </div>
+            <div class="layui-form-mid layui-word-aux">余额提现不收取手续费</div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#start_time',
+        type: 'datetime'
+    },{
+        elem: '#end_time',
+        type: 'datetime'
+    },{
+        elem: '#receive_start_time',
+        type: 'datetime'
+    },{
+        elem: '#receive_end_time',
+        type: 'datetime'
+    }]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

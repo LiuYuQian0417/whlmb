@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{block name='title'}{:env('title')}{/block}</title>
+    <!--网站图标-->
+    <link rel="shortcut icon" href="/template/master/resource/image/common/favicon_48.ico" />
+    <link rel="bookmark" href="/template/master/resource/image/common/favicon_64.ico" type="image/x-icon" />
+    <!--公共底部css-->
+    <link rel="stylesheet" href="__RES__/css/public/PublicBottom.css">
+    <!--公共头部css-->
+    <link rel="stylesheet" href="__RES__/css/color.css">
+    <link rel="stylesheet" href="__RES__/css/public/PublicHeader.css">
+    <!--公共搜索css-->
+    <link rel="stylesheet" href="__RES__/css/public/indexHeader.css">
+    <!--密码支付css-->
+    <link rel="stylesheet" href="__RES__/layui/css/layui.css">
+    <link rel="stylesheet" href="__RES__/css/confirmorder/passwordpay.css">
+    <!--公共JQ库-->
+    <script src="__RES__/js/jquery-1.8.3.min.js"></script>
+    <script src="__RES__/layui/layui.js"></script>
+    <script src="__RES__/layui/lay/modules/layer.js"></script>
+    <script src="__RES__/js/jquery-validate.js"></script>
+    <script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+    {notempty name=':session("member_info")'}
+    {//当前用户是否登录标签}
+    <is_valid></is_valid>
+    {/notempty}
+</head>
+
+<body>
+<!--公共头部-->
+<div class="public-header">
+    <div class="header-center">
+
+        <div class="header-left">
+            <a class="primary-color-hover" href="{:url('/pc2.0/index/index')}">
+                <img class="img-color" src="__RES__/imgs/del/home.png" alt="">商城首页
+            </a>
+            <span class="partition">|</span>
+            <a class="primary-color-hover" href="javascript:position()">
+                <img class="img-color" src="__RES__/imgs/del/location.png" alt=""><span id="city_info">定位中</span>
+                <img src="__RES__/imgs/del/bottom.png" alt="">
+            </a>
+        </div>
+        <div class="header-right">
+            {empty name=":session('member_info')['member_id']"}
+            <!--未登录-->
+            <a class="primary-color-hover" href="javascript:;"
+               onclick="main.jump({'url':'/pc2.0/login/index','return_url': ObjectOrJson({'use_url':'order/balance_pay','return_url':window.location.href})})">
+                登录用户,
+            </a>
+            <a class="primary-color-hover" style="color: rgb(234,84,19)" href="javascript:;"
+               onclick="main.jump({'url':'/pc2.0/register/one','return_url': ObjectOrJson({'use_url':'order/balance_pay','return_url':window.location.href})})">
+                注册有礼
+            </a>
+            {else/}
+            <!--已登录-->
+            <a href="javascript:main.jump({'url':'/pc2.0/setting/index'})">
+                {$member_info.nickname}
+            </a>
+            <a class="primary-color-hover" href="JavaScript:main.loginOut(1);">【退出】</a>
+            <span class="partition">|</span>
+            <a class="primary-color-hover" href="{:url('pc2.0/order/order_list')}">我的订单</a>
+            <span class="partition">|</span>
+            <div class="service">
+                <div class="customer-service">
+
+                    <a class="primary-color-hover" href="/pc2.0/my/index">我的<img src="__RES__/imgs/del/bottom.png"
+                                                                                 alt=""></a>
+                </div>
+                <div class="secondary-menu">
+                    <a class="primary-color-hover" href="{:url('/pc2.0/message/index')}?type=1">
+                        消息
+                    </a>
+                    <a class="primary-color-hover" href="{:url('/pc2.0/goods/collect_goods_list')}">
+                        我的关注
+                    </a>
+                    <a class="primary-color-hover" href="{:url('/pc2.0/record_goods/index')}">
+                        浏览记录
+                    </a>
+                </div>
+            </div>
+            <span class="partition">|</span>
+            <a class="primary-color-hover" href="javascript:;"
+               onclick="main.jump({'url':'/pc2.0/rank/index'})">会员</a>
+            {/empty}
+            <span class="partition">|</span>
+            <a class="primary-color-hover" href="javascript:;" onclick="create_store()">商家入驻</a>
+            <span class="partition">|</span>
+            <div class="service">
+                <div class="customer-service">
+
+                    <a class="primary-color-hover" href="">客户服务<img src="__RES__/imgs/del/bottom.png" alt=""></a>
+                </div>
+                <div class="secondary-menu">
+                    <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/setting/help_center'})">
+                        帮助中心
+                    </a>
+                    <!--<a class="primary-color-hover" href="">-->
+                    <!--在线客服-->
+                    <!--</a>-->
+                    <!--<a class="primary-color-hover" href="">
+                        电话客服
+                    </a>-->
+                    <a class="primary-color-hover"
+                       href="javascript:main.jump({'url':'/pc2.0/setting/help_center?status=feedback'})">
+                        问题反馈
+                    </a>
+                </div>
+            </div>
+            <!--<span class="partition">|</span>-->
+            <!--<a class="primary-color-hover" href="javascript:;">手机商城</a>-->
+        </div>
+    </div>
+</div>
+<!--公共头部结束-->
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="logo" >
+            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <span>余额支付</span>
+        </div>
+        <div class="order-process">
+            <ul>
+                <li><span>1</span>
+                    <p>确认订单</p></li>
+                <li><span>2</span>
+                    <p>付款</p></li>
+                <li class="order-process-gray"><span>3</span>
+                    <p>支付成功</p></li>
+            </ul>
+            <div class="barline">
+                <div w="75" style="width: 25%;" class="charts"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--密码支付开始-->
+<div class="wechatpay-top">
+    订单提交成功，请尽快付款！订单号：{$order_number}<span class="wechatpay-top-amount">应付金额  <span
+        class="primary-color">{$total_price}</span> 元</span>
+</div>
+<div class="passwordpay-content">
+    <div class="passwordpay-content-top">
+        钱包余额支付
+    </div>
+    <form action="/pc2.0/balance/exec" method="post" name="payPassword" id="form_paypsw" onsubmit="return pay_submit()">
+        <div id="payPassword_container" class="alieditContainer clearfix" data-busy="0">
+            <label class="i-block">支付密码：</label>
+            <div class="i-block" data-error="i_error">
+                <div class="i-block six-password">
+                    <input class="i-text sixDigitPassword" id="payPassword_rsainput" type="password" autocomplete="off"
+                           required="required" value="" name="payPassword_rsainput" data-role="sixDigitPassword"
+                           tabindex="" maxlength="6" minlength="6" aria-required="true">
+                    <div tabindex="0" class="sixDigitPassword-box" style="width: 237px;">
+                        <i style="width: 38px; border-color: transparent;" class=""><b style="visibility: hidden;"></b></i>
+                        <i style="width: 38px;"><b style="visibility: hidden;"></b></i>
+                        <i style="width: 38px;"><b style="visibility: hidden;"></b></i>
+                        <i style="width: 38px;"><b style="visibility: hidden;"></b></i>
+                        <i style="width: 38px;"><b style="visibility: hidden;"></b></i>
+                        <i style="width: 38px;"><b style="visibility: hidden;"></b></i>
+                        <span style="width: 29px; left: 0px; visibility: hidden;" id="cardwrap"
+                              data-role="cardwrap"></span>
+                    </div>
+                </div>
+                <span>
+                    {eq name="$status" value="1"}
+                    <a href="javascript:;"
+                         onclick="main.jump({'url':'/pc2.0/setting/forget_pay_password','return_url': ObjectOrJson({'use_url':'setting/forget_pay_password','return_url':window.location.href})})"
+                         class="forgot-password">忘记支付密码？</a>
+                    {else/}
+                    <a href="javascript:;"
+                         onclick="main.jump({'url':'/pc2.0/setting/set_pay_password','return_url':ObjectOrJson({'use_url':'setting/set_pay_password','return_url':window.location.href})})"
+                       class="forgot-password">设置支付密码</a>
+                    {/eq}
+                </span>
+            </div>
+        </div>
+        <input type="submit" id="submit" class="immediate-payment primary-background-color border-color" value="立即支付">
+    </form>
+    <a href="javascript:;" class="other-way"
+       onclick="main.jump({'url':'/pc2.0/order/pay_type?order_data={:input(\'order_data\')}'})"><span><img
+            src="__RES__/imgs/wechatpay/zuojiantou.png"> </span>其他方式支付</a>
+</div>
+<!--密码支付结束-->
+<!--微信支付底部结束-->
+<!--<div class="wechat-pay-bottom">-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持 | 哈尔滨龙采科技集团</p>-->
+    <!--<p>技术支持：哈尔滨龙采科技集团 | 技术支持：哈尔滨龙采科技集团技术支持</p>-->
+    <!--<p>版权所有：黑龙江龙采科技</p>-->
+<!--</div>-->
+<!--微信支付底部结束-->
+<!--侧边栏-->
+{include file="public/store_right" /}
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<script>
+    $(function () {
+        if (!localStorage.lat || localStorage.lat === '0' || !localStorage.lng || localStorage.lng === '0' || !localStorage.get_city) {
+            position();
+        } else {
+            $('#city_info').text(localStorage.get_city);
+        }
+    });
+
+    function position() {
+        $('#city_info').text('定位中');
+        mapObj = new AMap.Map('container');
+        mapObj.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                timeout: 1000,          //超过10秒后停止定位，默认：无穷大
+                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                showButton: false,        //显示定位按钮，默认：true
+                buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+            });
+            mapObj.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+            //解析定位结果
+            function onComplete(data) {
+                localStorage.lat = data.position.lat;
+                localStorage.lng = data.position.lng;
+                window.sessionStorage.setItem('lat', data.position.lat);
+                window.sessionStorage.setItem('lng', data.position.lng);
+                var cityinfo = get_city(data.addressComponent);
+                localStorage.get_city = cityinfo;
+                $('#city_info').text(cityinfo);
+            }
+
+            //解析定位错误信息
+            function onError() {
+                localStorage.lat = 0;
+                localStorage.lng = 0;
+                $('#city_info').text('定位失败');
+            }
+        });
+    }
+
+    //获得城市信息
+    function get_city(data) {
+        if (data.city.length != 0) {
+            return data.city;
+        }
+        if (data.district.indexOf('市') != -1) {
+            return data.district;
+        }
+        return data.province;
+    }
+
+    //商家入驻
+    function create_store() {
+        switch ('{$member_info.store_status|default=-1}'.toString()) {
+            case '-1':
+            case '0':
+                main.jump({'url': '/pc2.0/my/create_store'});
+                break;
+            case '1':
+                layer.msg('入驻申请通过,请登录后台填写认证信息', function () {
+                    main.jump({'url': '/client/login/index','is_open':true});
+                });
+                break;
+            case '2':
+                layer.msg('入驻申请未通过,请重新申请', function () {
+                    main.jump({'url': '/pc2.0/my/create_store'});
+                });
+                break;
+            case '3':
+                layer.msg('入驻认证正在审核中', function () {
+                    main.jump({'url': '/client/login/index','is_open':true});
+                });
+                break;
+            case '4':
+                main.jump({'url': '/client/login/index','is_open':true});
+                break;
+            case '5':
+                layer.msg('入驻认证未通过,请重新新填写认真信息', function () {
+                    main.jump({'url': '/client/login/index','is_open':true});
+                });
+                break;
+        }
+    }
+    //进度条
+    function animate() {
+        $(".charts").each(function (i, item) {
+            var a = parseInt($(item).attr("w"));
+            $(item).animate({
+                width: a + "%"
+            }, 1000);
+        });
+    };
+    animate();
+
+
+    animate();
+    var payPassword = $("#payPassword_container"),
+        _this = payPassword.find('i'),
+        k = 0, j = 0,
+        password = '',
+        _cardwrap = $('#cardwrap');
+    //点击隐藏的input密码框,在6个显示的密码框的第一个框显示光标
+    payPassword.on('focus', "input[name='payPassword_rsainput']", function () {
+
+        var _this = payPassword.find('i');
+        if (payPassword.attr('data-busy') === '0') {
+            //在第一个密码框中添加光标样式
+            _this.eq(k).addClass("active");
+            _cardwrap.css('visibility', 'visible');
+            payPassword.attr('data-busy', '1');
+            _cardwrap.css('height', '38px');
+            _cardwrap.css('width', '39px');
+        }
+        console.log(1);
+
+    });
+    //change时去除输入框的高亮，用户再次输入密码时需再次点击
+    payPassword.on('change', "input[name='payPassword_rsainput']", function () {
+        console.log(2);
+        _cardwrap.css('visibility', 'hidden');
+        _this.eq(k).removeClass("active");
+        payPassword.attr('data-busy', '0');
+        _cardwrap.css('height', '38px');
+        _cardwrap.css('width', '39px');
+    }).on('blur', "input[name='payPassword_rsainput']", function () {
+        _cardwrap.css('visibility', 'hidden');
+        _this.eq(k).removeClass("active");
+        payPassword.attr('data-busy', '0');
+        _cardwrap.css('height', '38px');
+        _cardwrap.css('width', '39px');
+
+    });
+
+    //使用keyup事件，绑定键盘上的数字按键和backspace按键
+    payPassword.on('keyup', "input[name='payPassword_rsainput']", function (e) {
+
+        var e = (e) ? e : window.event;
+
+        //键盘上的数字键按下才可以输入
+        if (e.keyCode == 8 || (e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 0 && e.keyCode <= 105)) {
+            k = this.value.length;//输入框里面的密码长度
+            l = _this.size();//6
+
+            for (; l--;) {
+
+                //输入到第几个密码框，第几个密码框就显示高亮和光标（在输入框内有2个数字密码，第三个密码框要显示高亮和光标，之前的显示黑点后面的显示空白，输入和删除都一样）
+                if (l === k) {
+                    _this.eq(l).addClass("active");
+                    _this.eq(l).find('b').css('visibility', 'hidden');
+
+                } else {
+                    _this.eq(l).removeClass("active");
+                    _this.eq(l).find('b').css('visibility', l < k ? 'visible' : 'hidden');
+
+                }
+
+                if (k === 6) {
+                    j = 5;
+                } else {
+                    j = k;
+                }
+                $('#cardwrap').css('left', j * 39 + 'px');
+
+            }
+        } else {
+            //输入其他字符，直接清空
+            var _val = this.value;
+            this.value = _val.replace();
+        }
+    });
+
+    function pay_submit() {
+        //检查订单有效性
+        main.ajax({
+            'url':'/v2.0/order/getOrderState',
+            not_load:true,
+            data:{number:'{$order_number}',price:'{$total_price}',type:'{$type}'},
+            callback:function(res){
+                if(res.code==0){
+                    pay_order()
+                }else{
+                    layer.msg(res.message,function(){
+                        window.location.reload();
+                    });
+                };
+            }});
+        return false;
+    }
+    function pay_order(){
+        main.ajax({
+            'url': '/pc2.0/balance/exec',
+            'data': {
+                'pay_password': $("input[name='payPassword_rsainput']").val(),
+                'out_trade_no': '{$order_number}',
+                'pay_type': '{$pay_type}'
+            },
+            'callback': function (res) {
+                if (res.code != 0) {
+                    if(res.message == '请设置支付密码'){
+                        layer.msg(res.message,{time: 2000}, function(){
+                              window.location.href="/pc2.0/setting/set_pay_password";
+                            });
+                    }else{
+                        layer.msg(res.message);
+                    }
+                    
+
+                } else {
+                    layer.msg('支付成功', {
+                        time: 1000, end: function () {
+                            var return_url = '';
+                            switch ('{$pay_type}') {
+                                case 'pay':
+                                    return_url = '/pc2.0/order/pay_success?total_price={$total_price}';
+                                    break;
+                                case 'exchange':
+                                    return_url = '/pc2.0/integral/conversion_record';
+                                    break;
+                            }
+                            window.location.href = return_url;
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请设置合适的广告位名称和图片尺寸。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 广告位置名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="50" autocomplete="off" placeholder="请输入广告位置名称"
+                       value="{$item.title|default=''}"
+                       datatype="*"
+                       nullmsg="请输入广告位置名称" errormsg="请输入广告位置名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 图片适用类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" value="1" title="多图展示"
+                       {eq name="item.type|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="type" value="0" title="单图展示"
+                       {eq name="item.type|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><font color="red">*</font> 投放端</label>
+                <div class="layui-input-block">
+                    <select name="parent_id"
+                            lay-search=""
+                            datatype="*"
+                            nullmsg="请选择投放端" errormsg="请选择投放端"
+                    >
+                        <option value="">请选择</option>
+                        {volist name='classify_list' id='classify_list'}
+                        <option
+                                {eq name=":input('get.classify_id')" value="$classify_list.adv_position_id" }selected{/eq}
+                                {eq name="item.parent_id|default=''" value="$classify_list.adv_position_id" }selected{/eq}
+                                value="{$classify_list.adv_position_id}"
+                        >{$classify_list.title}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 广告宽度</label>
+            <div class="layui-input-block">
+                <input type="text" name="width" value="{$item.width|default=''}" maxlength="4" autocomplete="off" placeholder="请输入广告宽度"
+                       datatype="*"
+                       nullmsg="请输入广告宽度" errormsg="请输入广告宽度"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 广告高度</label>
+            <div class="layui-input-block">
+                <input type="text" name="height" value="{$item.height|default=''}" maxlength="4" autocomplete="off" placeholder="请输入广告高度"
+                       datatype="*"
+                       nullmsg="请输入广告高度" errormsg="请输入广告高度"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入描述" name="describe" maxlength="100" class="layui-textarea">{$item.describe|default=''}</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.adv_position_id"}
+                <input type="hidden" name="adv_position_id" value="{$item.adv_position_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.file();
+</script>
+{/block}
+{block name='highSearch'}{/block}

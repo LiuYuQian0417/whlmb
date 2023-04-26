@@ -1,0 +1,71 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>测试</span></li>
+            <li><span>测试</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.sitMap('/site_map/create')">
+                <div class="fbutton">
+                    <div class="add" title="添加砍价商品"><span><i class="fa fa-plus"></i> 获取最新站点地图</span></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="150">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>地址</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="data" id="vo"}
+        <tr>
+            <td>{$vo.name}</td>
+            <td><a href="{$vo.url}" target="view_window">{$vo.url}</a></td>
+        </tr>
+        {/volist}
+        </tbody>
+    </table>
+</div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+
+</script>
+{/block}

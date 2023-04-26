@@ -1,0 +1,84 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>选择短信类型，并到对应类型栏目下进行设参。<li>
+            <li>相应短信参数和统计到对应类型栏目下查阅。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form" action="saveConfig" method="post"  enctype="multipart/form-data">
+<div class="common-head">
+    <div class="fl">
+        <a href="javascript:void();" class="left" id="submit">
+            <div class="fbutton">
+                <div class="add" title="保存设置"><span><i class="fa fa-floppy-o"></i> 保存设置</span></div>
+            </div>
+        </a>
+        <div class="refresh">
+            <div class="refresh_tit" title="刷新数据"  onclick="location.reload();"><i class="fa fa-refresh"></i></div>
+        </div>
+    </div>
+</div>
+<hr class="layui-bg-gray">
+<div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label">短信类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="base_type" value="1" title="阿里云短信" {eq name="$config.BASE_TYPE" value="1"}checked{/eq} >
+                <input type="radio" name="base_type" value="2" title="腾讯云短信" {eq name="$config.BASE_TYPE" value="2"}checked{/eq} >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户注册成功后（客户）</label>
+            <div class="layui-input-block">
+                <input type="radio" name="base_reg" value="1" title="发短信" {$config.BASE_REG?'checked':''}>
+                <input type="radio" name="base_reg" value="0" title="不发短信" {$config.BASE_REG?'':'checked'}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品降价时（客户）</label>
+            <div class="layui-input-block">
+                <input type="radio" name="base_changePrice" value="1" title="发短信" {$config.BASE_CHANGEPRICE?'checked':''}>
+                <input type="radio" name="base_changePrice" value="0" title="不发短信" {$config.BASE_CHANGEPRICE?'':'checked'}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户下订单时（商家）</label>
+            <div class="layui-input-block">
+                <input type="radio" name="base_underOrder" value="1" title="发短信" {$config.BASE_UNDERORDER?'checked':''}>
+                <input type="radio" name="base_underOrder" value="0" title="不发短信" {$config.BASE_UNDERORDER?'':'checked'}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">客户付款时（商家）</label>
+            <div class="layui-input-block">
+                <input type="radio" name="base_pay" value="1" title="发短信" {$config.BASE_PAY?'checked':''}>
+                <input type="radio" name="base_pay" value="0" title="不发短信" {$config.BASE_PAY?'':'checked'}>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商家发货时（客户）</label>
+            <div class="layui-input-block">
+                <input type="radio" name="base_deliver" value="1" title="发短信" {$config.BASE_DELIVER?'checked':''}>
+                <input type="radio" name="base_deliver" value="0" title="不发短信" {$config.BASE_DELIVER?'':'checked'}>
+            </div>
+        </div>
+</div>
+</form>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

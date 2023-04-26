@@ -1,0 +1,250 @@
+.childrenBody {
+    padding: 25px 30px 50px;
+    background: #fff;
+    box-sizing: content-box;
+    color:#707070
+}
+
+[v-cloak] {
+    display: none;
+}
+
+#placeholder{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    line-height: 100px;
+    transform: translate(-50%,-50%);
+    font-size: 20px;
+}
+
+#app {
+    min-width: 950px;
+}
+
+.bottom-control {
+    padding: 15px 0 15px 31%;
+    margin-top: 30px;
+}
+
+.el-table {
+    border-radius: 13px;
+}
+
+/*面包屑*/
+.ecsc-path{
+    font-size: 16px;
+    line-height: 24px;
+    background-color: #FFF;
+    color: #555;
+    padding: 0 0 10px 0;
+    border-bottom: solid 1px #e5e5e5;
+    margin: 0 auto 20px;
+}
+.ecsc-path span{
+    padding-left:16px;
+    display:block;
+    border-left:5px solid #f98a10;
+    color:#666;
+}
+
+cite{position: relative;padding-right: 10px;font-style: normal;}
+cite::after{width:1px;height: 12px;background: #999;transform: rotate(15deg);content: '';position: absolute;top:50%;margin-top: -5px;right:2px;}
+cite:last-child{padding-right: 0}
+cite:last-child::after{display: none}
+
+.empty-area {
+    text-align: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 440px;
+}
+
+.el-table__row .el-table_1_column_1 > .cell > div {
+    width: 100%;
+    display: flex;
+}
+
+.el-table__row .el-table_1_column_1 > .cell > div > div {
+    width: 65px;
+}
+
+.el-table__row .el-table_1_column_1 > .cell > div > span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 28px;
+}
+
+.el-table__row .el-table_1_column_1 > .cell > div > div .el-button + .el-button {
+    margin-left: 0;
+}
+
+.area_list {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.area_list > .el-col {
+    border-right: 1px solid #ccc;
+    padding: 5px;
+}
+
+.area_list > .el-col:last-child {
+    border-right: none;
+}
+
+.area_list > .el-col > div {
+    width: 100%;
+    display: flex;
+    margin-bottom: 5px;
+}
+
+.area_list > .el-col > .el-tree {
+    display: block;
+}
+
+.area_list > .el-col > div > label {
+    padding-right: 10px;
+}
+
+.area_list > .el-col > div > span {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.area_list > .el-col > div > .el-button {
+    padding: 0 0 0 5px;
+}
+
+.area_list > .el-col {
+    overflow-y: auto;
+    height: 450px;
+}
+
+.area_list > .el-col::-webkit-scrollbar { /*滚动条整体样式*/
+    width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+}
+
+.area_list > .el-col::-webkit-scrollbar-thumb { /*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.area_list > .el-col::-webkit-scrollbar-track { /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.el-form-item {
+    display: flex;
+    align-items: flex-start;
+    margin: 0 !important;
+    padding: 15px 0;
+    border-bottom: 1px dashed #f2f2f2;
+}
+.el-form-item:hover{
+    background: #fbfbfb;
+}
+.el-form-item__label {
+    width: 25%;
+    text-align: right !important;
+    padding: 0 !important;
+    line-height: 30px !important;
+    color:#707070;
+}
+
+.el-form-item__content {
+    width: 69%;
+    margin-left: 1%
+}
+.el-input__inner{
+    height: 30px;
+    line-height: 30px;
+    border: 1px solid #e5e5e5;
+    background: #fff;
+    border-radius: 3px;
+    max-width: 300px;
+    padding: 0 10px;
+    float: left;
+    font-size: 12px;
+    transition: all 0.2s ease!important;
+}
+.el-input__inner:focus{
+    border: 1px solid #f98a10;
+}
+.el-radio__input.is-checked .el-radio__inner{
+    background: #f98a10!important;
+    border-color: #f98a10!important;
+}
+.bottom-control .el-button--primary,.bottom-control .el-button--default{
+    background: #f98a10;
+    border-color: #f98a10;
+    padding: 0 20px;
+    height: 33px;
+    line-height: 33px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    color:#fff
+}
+ .el-button--primary:hover{
+    background: #f98a10;
+    border-color: #f98a10;
+}
+.el-button--default:hover{
+    background: #fff;
+    color: #f98a10;
+    border-color: #f98a10;
+}
+.bottom-control .el-button--default{
+    background: #fff;
+    color: #f98a10;
+}
+.el-input--mini .el-input__inner{
+    margin-top: 3px;
+}
+.el-button--text,.el-button--text:hover{
+    color: #f98a10!important;
+}
+.el-radio__input.is-checked+.el-radio__label{
+    color: #666!important;
+}
+.el-radio__inner:hover{
+    border-color:#f98a10;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background: #f98a10!important;
+    border-color: #f98a10!important;
+}
+.el-button--primary{
+    background: #f98a10!important;
+    border-color: #f98a10!important;
+    color: #fff!important;
+}
+.el-checkbox__inner:hover{
+    border-color:#f98a10!important;
+}
+.el-table__body tr.current-row>td{
+    background: #fbfbfb;
+}
+.el-message-box__headerbtn:hover .el-message-box__close{
+    color: #f98a10!important;
+}
+.el-radio__inner{
+    width: 12px!important;
+    height: 12px!important;
+}

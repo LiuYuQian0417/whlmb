@@ -1,0 +1,62 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+
+<!--导航-->
+<form class="layui-form" action="" method="get">
+    <div class="common-head">
+        <div class="fl">
+            <div class="inquire_search">
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="店铺名称"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                    <input type="submit" class="btn" name="secrch_btn" value="">
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+<!--列表-->
+<table class="layui-table">
+    <thead>
+    <tr>
+        <th>店铺编号</th>
+        <th>店铺名称</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {empty name='data'}
+    <tr class='emptyTable'>
+        <td colspan="100" style="font-size: 25px;">暂无数据</td>
+    </tr>
+    {/empty}
+    {volist name='data' id='item'}
+    <tr>
+        <td>{$item.store_id}</td>
+        <td>{$item.store_name}</td>
+        <td>
+            <button class="layui-btn" type="submit" id="submit" onclick="elect('{$item.store_id}');">选择</button>
+        </td>
+    </tr>
+    {/volist}
+    </tbody>
+</table>
+<div class="right">
+    {:$data->render()}
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    function elect(id) {
+        $('#content', parent.document).val(id);
+        $('#content', parent.document).attr("readonly","readonly");
+        parent.layer.close(parent.layer.getFrameIndex(window.name));
+
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

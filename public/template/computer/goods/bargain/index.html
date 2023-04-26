@@ -1,0 +1,64 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/bargaining/bargaining.css">
+{/block}
+
+{block name="content"}
+<div class="bargain-banner">
+    <a href="javascript:main.adv_jump('{$adv_info.type}','{$adv_info.content}')">
+        <img width="1067" height="222" src="{$adv_info.file}" alt="">
+    </a>
+</div>
+<style>
+    .bargain-list{
+        position: relative;
+        z-index: 999;
+    }
+</style>
+<div class="bargain-list">
+    {volist name="$result" id="item"}
+    <div class="bargain-con">
+        <a href="javascript:jump_goods('{$item.goods_id}')">
+            <div class="img">
+                <img src={$item.goods.file} alt="">
+            </div>
+            <div class="right">
+                <p class="goods-name">
+                    {$item.goods.goods_name}
+                </p>
+                <p class="time">
+                    砍价时间：{$item.up_shelf_time}至{$item.down_shelf_time}
+                </p>
+
+                <div class="bot">
+                    <div class="pic">
+                        <p class="primary-color">底价￥<span>{$item.goods.cut_price}</span></p>
+                        <del>原价￥{$item.goods.shop_price}</del>
+                    </div>
+                    <div class="btn primary-background-color">
+                        立即砍价
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {/volist}
+
+
+    <!--分页-->
+    <div class="pageContainer">{$result|raw}</div>
+
+
+</div>
+{/block}
+
+{block name="js"}
+<script>
+
+
+
+
+
+</script>
+{/block}

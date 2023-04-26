@@ -1,0 +1,325 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/map.css" rel="stylesheet" type="text/css"/>
+<style>
+    .layui-input{font-size: 12px;line-height: 30px;height: 30px}
+    .layui-form-checked[lay-skin=primary] i{background: #f98a10;border-color:#f98a10}
+    .layui-form-checked[lay-skin=primary]:hover i{border-color:#f98a10}
+    .layui-form-radio{margin-top: 0!important;}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--TAB切换-->
+<!--TAB切换-->
+<div class="ecsc-form-goods">
+    <form class="layui-form" method="post" action="" enctype="multipart/form-data">
+        <div class="wrapper-list">
+            <!--联系人-->
+            <dl>
+                <dt><font color="red">*</font>联系人：</dt>
+                <dd>
+                    <input type="text" name="contact_name" value="{$item.contact_name|default=''}"
+                           placeholder="请输入联系人" datatype="*" size="40" nullmsg="请输入联系人"
+                           errormsg="请输入联系人" class="text"/>
+                </dd>
+            </dl>
+            <!--联系电话-->
+            <dl>
+                <dt><font color="red">*</font>联系电话：</dt>
+                <dd style="line-height:30px">
+                    <input type="text" name="phone_number" value="{$item.phone_number|default=''}"
+                           placeholder="请输入联系电话" class="text"
+                           datatype="n11-11" maxlength="11"
+                           nullmsg="请输入联系电话"
+                           errormsg="联系电话只能为11位数字"/></dd>
+            </dl>
+
+            <!--座机-->
+            <dl>
+                <dt>座机：</dt>
+                <dd style="line-height:30px">
+                    <input
+                            name="telephone[]"
+                            style="width:60px;margin-right: 8px"
+                            placeholder="请填写区号" class="text"
+                            value="{$item.telephone_for_edit[0]|default=''}"
+                    >
+                    <input
+                            name="telephone[]"
+                            style="width:100px;margin-right: 8px"
+                            placeholder="请填写座机号" class="text"
+                            value="{$item.telephone_for_edit[1]|default=''}"
+                    >
+                    <input
+                            name="telephone[]"
+                            style="width:80px"
+                            placeholder="分机号(选填)" class="text"
+                            value="{$item.telephone_for_edit[2]|default=''}"
+                    >
+                    <span style="font-size: 12px; color: rgb(153,153,153);">&nbsp;优先显示座机号码</span>
+                </dd>
+            </dl>
+
+            <!--所在省份-->
+            <dl>
+                <dt><font color="red">*</font>所在地区：</dt>
+                <dd class="area_dd">
+
+                    <div class="layui-input-inline" style="width: 200px">
+                        <select name="province" class="state" lay-filter="state" lay-search="">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px">
+                        <select name="city" class="state" lay-filter="state">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 200px">
+                        <select name="area" class="state" lay-filter="state">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </dd>
+            </dl>
+            <!--详细地址-->
+            <dl>
+                <dt><font color="red">*</font>详细地址：</dt>
+                <dd>
+                    <input type="text" id="tipinput" name="address" value="{$item.address_location_text|default=''}"
+                           maxlength="200" class="text" autocomplete="off" style="width: 450px;"
+                           placeholder="请输入店铺详细地址"/>
+                </dd>
+            </dl>
+            <dl>
+                <dd style="margin-left: 31%">
+                    <div id="container" style="width: 470px;height: 270px; " tabindex="0">
+                        <div id="interaction"></div>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>经度（Y）：</dt>
+                <dd>
+                    <input type="text" id="lng" name="lng" value="{$item.address_lng|default=''}" class="text"
+                           autocomplete="off" placeholder="请根据地图获取经度" datatype="*" size="40" nullmsg="请根据地图获取经度"
+                           errormsg="请根据地图获取经度"
+                           readonly/>
+                </dd>
+            </dl>
+            <dl>
+                <dt><font color="red">*</font>纬度（X）：</dt>
+                <dd>
+                    <input type="text" id="lat" name="lat" value="{$item.address_lat|default=''}"
+                           autocomplete="off" class="text" placeholder="请根据地图获取纬度" datatype="*" size="40"
+                           nullmsg="请根据地图获取纬度" errormsg="请根据地图获取纬度"
+                           readonly/>
+                </dd>
+            </dl>
+
+            <!--地址类型-->
+            <dl>
+                <dt><font color="red">*</font>地址类型：</dt>
+                <dd>
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+                            <input type="checkbox" lay-skin="primary" name="return_address" value="1" class="ui-checkbox"
+                                   id="return_address" title="退货地址"
+                                   {eq name="item.return_address|default='2'" value="1" }checked{/eq}/ >
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="checkbox" lay-skin="primary" name="shipping_address" value="1" class="ui-checkbox"
+                                   id="shipping_address" title="发货地址"
+                                   {eq name="item.shipping_address|default='2'" value="1" }checked{/eq}/>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+
+            <!--设为默认退货地址-->
+            <dl>
+                <dt><font color="red">*</font>设为默认退货地址：</dt>
+                <dd>
+                    <div class="checkbox_items">
+                        <div class="checkbox_item">
+
+                            <input type="radio" name="default_return_address" value="1" class="ui-radio"
+                                   id="default_return_address_1" title="是"
+                                   {eq name="item.default_return_address|default='2'" value="1" }checked{/eq}/>
+                        </div>
+                        <div class="checkbox_item">
+                            <input type="radio" name="default_return_address" value="2" class="ui-radio"
+                                   id="default_return_address_2" title="否"
+                                   {eq name="item.default_return_address|default='2'" value="2" }checked{/eq}/>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+        </div>
+        <dl class="button_info">
+            <dt>&nbsp;</dt>
+            <dd>
+                <input type="hidden" name="store_address_id" value="{$item.store_address_id|default=''}">
+                {eq name="Request.action" value="create"}
+                    <input type="submit" class="sc-btn sc-blueBg-btn btn35" value="创建" id="submitBtn"/>
+                {else\}
+                    <input type="submit" class="sc-btn sc-blueBg-btn btn35" value="保存" id="submitBtn"/>
+                {/eq}
+            </dd>
+        </dl>
+
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/uploadPreview.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script>
+    main.form();
+
+    // 地图
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+
+        var map = new AMap.Map('container', {
+            zoom: 17,
+            center:['{$item.address_lng|default='116.4'}','{$item.address_lat|default='39.9'}'],
+            resizeEnable: true,
+            scrollWheel: false
+        });
+
+        // 定位
+        map.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                buttonOffset: new AMap.Pixel(0, 10),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                buttonPosition: 'RB'
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+        });
+
+        //解析定位结果
+        function onComplete(data) {
+
+        }
+
+        //解析定位错误信息
+        function onError(data) {
+
+        }
+
+        // 表单提交
+        main.valid('.layui-form');
+
+        //输入提示
+        var autoOptions = {
+            input: "tipinput",
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });
+        //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',
+            map: map
+        });
+
+        positionPicker.on('success', function (positionResult) {
+            // $('#topTwo').html('');
+            var adds = '';
+            var addsLen = positionResult.regeocode.pois;
+            var addres = '';
+            $('#interaction').html('<a class="submit" onclick="interaction(\'' + positionResult.address + '\',' + positionResult.position.lng + ',' + positionResult.position.lat + ')">设为地址</a>');
+            addsLen.forEach(function (data) {
+                addres = '<div class="weui-media-box weui-media-box_text box_text" onclick="interaction(\'' + data.address + '\',' + data.location.lng + ',' + data.location.lat + ')" style="padding:8px 3% 0 40px;" data-id="' + data.id + '" data-name="' + data.name + '">'
+                addres += '<h4 class="weui-media-box__title" font-size: 12px;line-height: 24px;color: #999;><i class="iconfont icon-icon1460191833045"></i>' + data.name + '</h4>'
+                addres += '<p class="weui-media-box__desc" style="border-bottom: 1px solid #e5e5e5;font-size: 12px;line-height: 24px;padding-bottom:5px;color: #999;">' + data.address + '</p>'
+                addres += '</div>'
+                adds += addres;
+            });
+            $('#topTwo').html(adds);
+
+        });
+        positionPicker.on('fail', function (positionResult) {
+            console.log(positionResult)
+
+        });
+
+        positionPicker.start();
+        map.panBy(0, 1);
+
+        map.addControl(new AMap.ToolBar({
+            liteStyle: true
+        }));
+    });
+
+    function interaction(address, lng, lat) {
+        $('#tipinput').val(address);
+        $('#lng').val(lng);
+        $('#lat').val(lat);
+    }
+
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+
+
+        var url = '/member_address/area';                       //数据请求地址
+        var province = "{$item.province|default=''}";           //编辑需要的省
+        var city = "{$item.city|default=''}";                   //编辑需要的市
+        var district = "{$item.area|default=''}";               //编辑需要的县/区
+        getJSON(url, $("select[name='province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            var urls = url + "?id=" + data.value;
+            getJSON(urls, $that.closest("div").next());
+        });
+
+        function getJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("name");
+                var select = "<select name=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (province == this.area_name || city == this.area_name || district == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                console.log(select)
+                var nextName = even.next().find("select").attr("name");
+                even.next().html("<select name=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    getJSON(url + "?id=" + pid, even.next());
+                }
+            });
+        }
+    });
+</script>
+{/block}
+

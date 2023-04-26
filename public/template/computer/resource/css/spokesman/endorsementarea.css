@@ -1,0 +1,94 @@
+.endorsementarea{
+	width:100%;
+	background:url(../../imgs/spokesman/daiyanbeijing.jpg) #f8f8f8 top center no-repeat;
+	padding-bottom: 40px;
+	}
+.endorsementarea-list{
+	width:1200px;
+	margin:0 auto;
+	padding-top:150px;
+	}
+.endorsementarea-list li{
+	width:292.5px;
+	height:410px;
+	background:#fff;
+	margin-right:10px;
+	float:left;
+	position:relative;
+	}
+.endorsementarea-list li:nth-child(4n){
+	margin-right:0;
+	margin-bottom:10px;
+	}
+.endorsementarea-hot{
+	position:absolute;
+	right:10px;
+	top:10px;
+	background: url(../../imgs/spokesman/hot.png) center center no-repeat;
+	text-align: center;
+	color: #fff;
+	width: 65px;
+	padding: 16px 0 5px ;
+	font-size: 14px;
+	}
+
+.endorsementarea-list li a{
+	color:#fff;
+}
+.endorsementarea-list .endorsementarea-content a{
+	color:#333!important;
+}
+.clear{
+	clear:both;
+	height:0;
+	overflow:hidden;
+	width:100%;
+}
+.endorsementarea-content{
+	width:254px;
+    margin:0 auto;
+	font-size: 14px;
+	color: #333;
+	line-height: 20px;
+	margin-bottom: 15px;
+}
+.endorsementarea-price{
+	float: left;
+	width:140px;
+	font-size: 22px;
+	color: #fd4600;
+	overflow: hidden;
+	margin-left: 20px;
+}
+.endorsementarea-price i{
+	font-size: 16px;
+	font-style:normal
+}
+.endorsementarea-price span{
+	display: block;
+	font-size: 12px;
+	color: #666;
+}
+.endorsementarea-purchase{
+	float: right;
+	display: block;
+	width:88px;
+	height:38px;
+	line-height: 38px;
+	text-align: center;
+	float: right;
+	margin-right: 10px;
+	background: linear-gradient(270deg,#fd4701,#fe7d0c);
+	-moz-box-shadow:2px 2px 5px #EA5514;
+	-webkit-box-shadow:2px 2px 5px #EA5514;
+	box-shadow:2px 2px 5px #EA5514;
+	border-radius: 5px;
+	font-size: 14px;
+	color: #fff;
+}
+.border-color-top{
+	border-top:1px solid;
+}
+.public-bottom-box{
+	margin-top: 0;
+}

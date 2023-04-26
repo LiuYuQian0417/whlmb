@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{:env('title')}</title>
+    <!--网站图标-->
+    <link rel="shortcut icon" href="/template/master/resource/image/common/favicon_48.ico" />
+    <link rel="bookmark" href="/template/master/resource/image/common/favicon_64.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/login/login.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/color.css"/>
+    <link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css"/>
+    <script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/Validform_v5.3.2_ncr_min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/js/jquery.from.js" type="text/javascript" charset="utf-8"></script>
+    <script src="__RES__/layui/layui.js"></script>
+    <script src="__RES__/layui/lay/modules/layer.js"></script>
+    <script src="__RES__/js/public/main.js" type="text/javascript" charset="utf-8"></script>
+    <!--<link rel="stylesheet" href="__RES__/css/wx_login_css.css">-->
+</head>
+<body>
+<div class="login">
+    <div class="top">
+        <div class="top-center">
+            <a href="{:url('/pc2.0/index/index')}">
+                <img src="__RES__/imgs/logo-color.png" alt="">
+            </a>
+            <span>欢迎登录</span>
+        </div>
+    </div>
+    <div class="content">
+        <div class="content-center">
+            <div class="login-bor">
+                <div class="login-box">
+                    <div class="table">
+                        <a class="primary-color-hover primary-color " href="javascript:;">
+                            绑定手机号
+                        </a>
+                    </div>
+                    <!--账号登录-->
+                    <div class="input-group login-table account-number-box">
+                        <form action="/pc2.0/login/info" class="layui-form">
+                            <!--账号-->
+                            <input type="hidden" name="unionId" value="{$unionId}">
+                            <div class="account input">
+                            <span></span>
+                            <input type="text" name="phone" datatype="*" id="sms_phone" nullmsg="手机号不能为空"
+                                   placeholder="手机号码">
+                        </div>
+                            <div class="password input" style="display: flex">
+                                <span style="background: #F4F4F4 url('__RES__/imgs/msgLogin/1.png') no-repeat center"></span>
+
+                                <input type="password" name="code" datatype="*" nullmsg="验证码不能为空" placeholder="验证码"
+                                       autocomplete="new-password" style="width: 166px;">
+                                <div onclick="sms_send(this)" id="sms_send"
+                                     style="background-color: #eeeeee;width: 100px;text-align: center;line-height: 38px;color: #666;cursor:pointer;border-left: 1px solid #BDBDBD">
+                                    获取验证码
+                                </div>
+                            </div>
+                            <a id="submit" class="btn primary-background-color" href="javascript:;">
+                                绑定账号
+                            </a>
+                        </form>
+                    </div>
+                    <!--账号登录结束-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    main.valid('.layui-form');
+    //发送验证码
+    function sms_send() {
+        if (sms_send_time === 60) {
+            sms_send_count_down();
+            return;
+        }
+        if (sms_send_time === 0) {
+            var phone = $('#sms_phone').val();
+            if (!(/^1[34578]\d{9}$/.test(phone))) {
+                main.msg("手机号码有误，请重填");
+                return false;
+            }
+            sms_send_time = 60;
+            main.ajax({
+                'url': '/v2.0/sms/send',
+                'data': {
+                    'type': 10,
+                    'phone': phone,
+                },
+                'callback': function (res) {
+                    if (res.code === 0) {
+                        sms_send_count_down();
+                    }
+                    main.msg(res.message);
+                },
+            });
+            return;
+        }
+    }
+
+    var sms_send_time = 0;
+
+    function sms_send_count_down() {
+        if (sms_send_time === 0) {
+            $('#sms_send').text('获取验证码');
+        } else {
+            $('#sms_send').text(--sms_send_time + '秒');
+            setTimeout(sms_send_count_down, 1000);
+        }
+    }
+</script>
+</body>
+</html>

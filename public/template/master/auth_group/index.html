@@ -1,0 +1,109 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>该页面展示了所有角色信息列表。<li>
+            <li>角色为管理员下级的管理角色统称。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="common-head">
+    <div class="fl">
+        <a href="javascript:void(0);" class="left" onClick="main.jumpFour('auth_group/create')">
+            <div class="fbutton">
+                <div class="add" title="添加权限组"><span><i class="fa fa-plus"></i>添加权限组</span></div>
+            </div>
+        </a>
+        <div class="refresh">
+            <div class="refresh_tit" title="刷新数据"  onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+            <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+        </div>
+    </div>
+</div>
+<hr class="layui-bg-gray">
+<!--列表-->
+<div class="layui-form" >
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>ID</th>
+            <th>名称</th>
+            <th>使用状态</th>
+            <th>权限状态</th>
+            <th>更新时间</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr  class='emptyTable'><td colspan="100" style="font-size: 25px;">暂无数据</td></tr>
+        {/empty}
+        {foreach name='data' item='v'}
+        {if $v['auth_group_id'] === 1}
+        <tr>
+            <td><input type="checkbox" value="{$v.auth_group_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>{$v.auth_group_id}</td>
+            <td>{$v.title}</td>
+            <td>启用</td>
+            <td>全部</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+        </tr>
+        {else/}
+        <tr>
+            <td><input type="checkbox" value="{$v.auth_group_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>{$v.auth_group_id}</td>
+            <td>{$v.title}</td>
+            <td><input type="checkbox" lay-filter="status" lay-skin="switch" title="权限组状态" value="{$v.auth_group_id}" {$v.status?'checked':''} lay-text="启用|禁用"></td>
+            <td>{$v.rules==0?'全部':'部分'}</td>
+            <td>{$v.update_time}</td>
+            <td>{$v.create_time}</td>
+            <td>
+                <a class="btn_see" onclick="main.jumpFour('auth_group/authEdit?auth_group_id={$v.auth_group_id}')"><i class="fa fa-eye"></i>查看权限</a>
+                {neq name="v.auth_group_id" value="1"}
+                <a class="btn_edit" onclick="main.jumpFour('auth_group/edit?id={$v.auth_group_id}')"><i class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" onclick="main.destroy('/auth_group/destroy','{$v.auth_group_id}')"><i class="fa fa-trash-o"></i>删除</a>
+                {/neq}
+            </td>
+        </tr>
+        {/if}
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/auth_group/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{selector:'switch(status)',callback:function (data) {
+        main.ajax({type:'post',url:'/auth_group/changeStatus',data:{'id': data.value}});
+    }}]);
+</script>
+{/block}
+{block name='form'}{/block}
+{block name='highSearch'}{/block}

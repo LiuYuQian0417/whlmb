@@ -1,0 +1,77 @@
+{extend name='public/common' /}
+{block name="header_css"}
+<!--我的 头部css-->
+<link rel="stylesheet" href="__RES__/css/my/my.css" />
+{/block}
+
+{block name="page_head"}
+<!--我的页面公共头部-->
+<div class="my-box">
+    <div class="my primary-background-color">
+        <div class="my-center">
+            <!-- logo -->
+            <a class="logo left" href="javascript:main.jump({'url':'/pc2.0/index/index'})">
+                <img src="__RES__/imgs/logo.png" alt="">
+            </a>
+            <!--菜单左侧 -->
+            <div class="my-top-menu left" id="a">
+
+                <div class="my-top-menu-left">
+                    <!--trilateral 选中的class名-->
+                    <a class='pub left mar' href="javascript:main.jump({'url':'/pc2.0/my/index'})" active-class=''>
+                        首页
+                    </a>
+                    <!--<a class=""  href="" >-->
+                    <div class="pub left mar account-box ">
+                        <a class="left a-box" href="javascript:main.jump({'url':'/pc2.0/setting/index'})">
+                            账户设置
+                        </a>
+                        <div class="secondary-menu left ">
+                            <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/setting/index'})">
+                                个人信息
+                            </a>
+                            <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/address/index'})">
+                                收货地址
+                            </a>
+                            <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/setting/safety'})">
+                                账户安全
+                            </a>
+                            <a class="primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/setting/relevance'})">
+                                账户关联
+                            </a>
+                        </div>
+                    </div>
+                    <!--</a>-->
+                    <a class='left pub' href="javascript:main.jump({'url':'/pc2.0/message/index?type=1'})" active-class='trilateral'>
+                        消息
+                    </a>
+                </div>
+
+            </div>
+            <!-- 菜单右侧 -->
+            <div class="my-top-menu-right">
+                <!-- 搜索框 -->
+                <!--<div class="search-box">-->
+                    <!--<input class="txt" placeholder="" type="text">-->
+                    <!--<input class="btn" type="button" value="搜索">-->
+                <!--</div>-->
+                <!-- 我的购物车 -->
+                <div class="car-box {if ($member_info['cart_count']??0)>0}have-goods{/if}">
+                    <div class="num" style="display: none;">{$member_info['cart_count']??0}</div>
+                    <a href="javascript:jump_cart();">
+                        <img class="car" src="__RES__/imgs/del/buyCar.png" alt="">
+                        <span >我的购物车</span>
+                        <!--<img src="__RES__/imgs/del/bottom.png" alt="">-->
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--我的页面公共头部结束-->
+{/block}
+{block name="header_js"}
+<script>
+    // main.pitch_on_style('.my-top-menu-left a.left','trilateral');
+</script>
+{/block}

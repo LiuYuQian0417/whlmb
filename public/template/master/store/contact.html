@@ -1,0 +1,955 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/map.css" rel="stylesheet" type="text/css"/>
+<style>
+    .picShow>.pic{display: none}
+    .picShow>.pic:first-child{display: block}
+    .picShow>.pic a{position: relative;width: 150px;}
+    .picShow>.pic img{width: 150px;display: block;}
+    #tooltip{position:absolute;width:300px;border:1px solid #f4f4f4;background:#fff;color:#fff;display: none}
+    #tooltip img{width: 100%}
+
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+
+    <div class="tabs_info" id="tabs">
+        <ul>
+            <li class="curr"><a href="javascript:void(0);" {if condition="$store_id eq 0"}onclick="main.jumpFour('store/create?store_id={$store_id}')"{else/}onclick="main.jumpFour('store/edit?store_id={$store_id}')"{/if}>店铺信息</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('store/storeAuth?store_id={$store_id}')">认证信息</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('store/fitment?store_id={$store_id}')">店铺装修</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请先选择商城已注册会员进行添加店铺操作。</span></li>
+                <li><span>请根据提示信息准确无误填写店铺信息。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+                <li><span>入驻店铺需认证，自营无需认证。</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tabs_info" id="tabs1" style="margin-top: 15px;">
+        <ul>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('store/edit?store_id={$store_id}')">基本信息</a></li>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('store/contact?store_id={$store_id}')">联系我们</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('store/images?store_id={$store_id}')">图片信息</a></li>
+            <li class="curr" style="display: none"><a href="javascript:void(0);">认证信息</a></li>
+            <li class="curr" style="display: none"><a href="javascript:void(0);">店铺装修</a></li>
+        </ul>
+    </div>
+
+    <!--店铺基本信息-->
+    <div class="contentShell" style="display:none">
+        <!--会员名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 会员账户</label>
+            <div class="layui-input-inline" id="member">
+                <input type="text" value="{present name='$item.store_id'}{$item.member_name|default=''}{/present}"
+                       maxlength="20" autocomplete="off"
+                       placeholder="请选择会员" id="phone"
+                       readonly
+                       class="layui-input">
+                <input type="hidden" name="member_id"
+                       datatype="*"
+                       value="{$item.member_id|default=''}"
+                       nullmsg="请选择会员" errormsg="请选择会员"
+                >
+            </div>
+            {empty name='item.store_id'}
+            <a class="layui-btn" onclick="elect('/store/member_search','会员列表');">选择会员</a>
+            {/empty}
+        </div>
+
+        <!--主营项目-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 主营项目</label>
+            <div class="layui-input-block">
+                <select name="category"
+                        datatype="*"
+                        nullmsg="请选择主营项目" errormsg="请选择主营项目"
+                        lay-search=""
+                >
+                    <option value=""></option>
+                    {volist name='classify_list' id='classify_list'}
+                    <option
+                            {eq name="$item.category|default=''" value="$classify_list.store_classify_id" }selected{/eq}
+                    value="{$classify_list.store_classify_id}">{$classify_list.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <!--店铺名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 店铺名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="store_name" maxlength="120" autocomplete="off" placeholder="请输入店铺名称"
+                       datatype="*"
+                       value="{$item.store_name|default=''}"
+                       nullmsg="请输入店铺名称" errormsg="请输入店铺名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--店铺类型-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="shop" value="1" title="个人店铺" lay-filter="shop"
+                       {eq name="item.shop|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="shop" value="2" title="公司店铺" lay-filter="shop"
+                       {eq name="item.shop|default=''" value="2" }checked{/eq}
+                >
+                <input type="radio" name="shop" value="0" title="自营店铺" lay-filter="shop"
+                       {eq name="item.shop|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--公司店铺分类-->
+        <div class="layui-form-item" id="shop" {neq name="item.shop|default=''" value="1" }hidden{/neq}>
+            <label class="layui-form-label">公司店铺分类</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" value="0" title="普通店"
+                       {eq name="item.type|default='0'" value="0" }checked{/eq}
+                >
+                <input type="radio" name="type" value="1" title="旗舰店"
+                       {eq name="item.type|default=''" value="1" }checked{/eq}
+                >
+                <input type="radio" name="type" value="2" title="专卖店"
+                       {eq name="item.type|default=''" value="2" }checked{/eq}
+                >
+                <input type="radio" name="type" value="3" title="直营店"
+                       {eq name="item.type|default=''" value="3" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--店铺审核状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺审核状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="0" title="不通过"
+                       {eq name="item.status|default='0'" value="0" }checked{/eq}
+                >
+                <input type="radio" name="status" value="1" title="通过"
+                       {eq name="item.status|default=''" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="2" title="审核中"
+                       {eq name="item.status|default=''" value="2" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--同城配送-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>是否开启同城配送</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_city" value="1" title="是"
+                       {eq name="item.is_city|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_city" value="0" title="否"
+                       {eq name="item.is_city|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--门店自提-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>是否开启门店自提</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_shop" value="1" title="是"
+                       {eq name="item.is_shop|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_shop" value="0" title="否"
+                       {eq name="item.is_shop|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--是否开启全国包邮-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>是否开启全国包邮</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_express" value="1" title="是"
+                       {eq name="item.is_express|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_express" value="0" title="否"
+                       {eq name="item.is_express|default=''" value="0" }checked{/eq}
+                >
+            </div>
+
+        </div>
+
+        <!--店铺推荐-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>店铺推荐</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_recommend" value="1" title="是"
+                       {eq name="item.is_recommend|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_recommend" value="0" title="否"
+                       {eq name="item.is_recommend|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--是否参加发现好店-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>是否参加发现好店</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_good" value="1" title="是"
+                       {eq name="item.is_good|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_good" value="0" title="否"
+                       {eq name="item.is_good|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <!--联系我们-->
+    <div class="contentShell">
+        <!--店铺客服电话-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 店铺客服电话</label>
+            <div class="layui-input-block">
+                <input type="number" name="phone" value="{$item.phone|default=''}" maxlength="11"
+                       autocomplete="off"
+                       placeholder="请输入店铺客服电话"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+    <!--图片信息-->
+    <div class="contentShell" style="display:none">
+        <!--店铺logo-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺logo</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev">
+                        <img id="imgShow" src="{$item.logo|default=''}" class="uploadImg"
+                             onerror="this.src='__RES__/image/common/imageError.png'" alt="店铺logo"/>
+                    </div>
+                    <div class="uploader white">
+                        <input type="text" class="filename" id="localPath" value="{$item.logo|default=''}" readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img" name="image"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--店铺背景图-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺背景图[720*235]</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev4">
+                        <img id="imgShow4" src="{$item.back_image|default=''}" class="uploadImg"
+                             style="width: 360px;height:118px;"
+                             onerror="this.src='__RES__/image/common/imageError235.png'" alt="店铺背景图"/>
+                    </div>
+                    <div class="uploader white">
+                        <input type="text" class="filename" id="localPath4" value="{$item.back_image|default=''}"
+                               readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img4" name="back_images"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--店铺品牌甄选展示图-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺品牌甄选展示图[684*304]</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev6">
+                        <img id="imgShow6" src="{$item.brand_image|default=''}" class="uploadImg"
+                             style="width: 360px;height:118px;"
+                             onerror="this.src='__RES__/image/common/imageError235.png'" alt="店铺发现好店展示图"/>
+                    </div>
+                    <div class="uploader white">
+                        <input type="text" class="filename" id="localPath6" value="{$item.brand_image|default=''}"
+                               readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img6" name="brand_images"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--店铺发现好店展示图-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺发现好店展示图[400*400]</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev5">
+                        <img id="imgShow5" src="{$item.good_image|default=''}" class="uploadImg"
+                             style="width: 360px;height:118px;"
+                             onerror="this.src='__RES__/image/common/imageError235.png'" alt="店铺发现好店展示图"/>
+                    </div>
+                    <div class="uploader white">
+                        <input type="text" class="filename" id="localPath5" value="{$item.good_image|default=''}"
+                               readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img5" name="good_images"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--认证信息-->
+    <div class="contentShell contentShell_1" style="display:none">
+
+        <!--认证类型-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">认证类型</label>
+            <div class="layui-input-block">
+                <div onclick="typeChange(1)">
+                    <input type="radio" name="type" value="1" title="个人" lay-filter="integral"
+                           {eq name="item.type|default='1'" value="1" }checked{/eq}
+                    >
+                </div>
+                <div onclick="typeChange(2)">
+                    <input type="radio" name="type" onclick="typeChange(2)" value="2" title="企业个体" lay-filter="integral"
+                           {eq name="item.type|default='1'" value="2" }checked{/eq}
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!--姓名-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" id="Name">真实姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="auth_name" value="{$item.auth.auth_name|default=''}" maxlength="30"
+                       autocomplete="off"
+                       placeholder="请输入姓名"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--身份证号-->
+        <div class="layui-form-item">
+            <label class="layui-form-label" id="ID">身份证号码</label>
+            <div class="layui-input-block">
+                <input type="text" name="auth_number" value="{$item.auth.auth_number|default=''}" maxlength="18"
+                       autocomplete="off"
+                       placeholder="请输入身份证号码"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--身份证正面照-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证正面照</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev1">
+                        <img id="imgShow1" src="{$item.auth.ID_front_file|default=''}" class="uploadImg"
+                             onerror="this.src='__RES__/image/common/imageError.png'" alt="证件正面照"/>
+                    </div>
+                    <div class="uploader white">
+                        <input type="text" class="filename" id="localPath1" value="{$item.auth.ID_front_file|default=''}"
+                               readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img1" name="ID_front_file"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--身份证反面照-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份证反面照</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev_3">
+                        <img id="imgShow_3" src="{$item.auth.ID_back_file|default=''}" class="uploadImg"
+                             onerror="this.src='__RES__/image/common/imageError.png'" alt="证件反面照"/>
+                    </div>
+                    <div class="uploader white">
+                        <input type="text" class="filename" id="localPath_3" value="{$item.auth.ID_back_file|default=''}"
+                               readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img_3" name="ID_back_file"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--个人不同处-->
+        <div id="userSelf">
+            <!--身份证类型-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">身份证类型</label>
+                <div class="layui-input-inline">
+                    <select name="ID_type" lay-search="" datatype="*"
+                            nullmsg="身份证类型" errormsg="请选择身份证类型">
+                        <option value="1" {eq name="item.ID_type|default='1'" value="1" } selected {/eq}>中国大陆</option>
+                        <option value="2" {eq name="item.ID_type|default='1'" value='2' } selected {/eq}>香港</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--手持身份证照片-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">手持身份证照片</label>
+                <div class="layui-input-block">
+                    <div>
+                        <div id="imgPrev2">
+                            <img id="imgShow2" src="{$item.auth.file|default=''}" class="uploadImg"
+                                 onerror="this.src='__RES__/image/common/imageError.png'" alt="手持身份证照片"/>
+                        </div>
+                        <div class="uploader white">
+                            <input type="text" class="filename" id="localPath2" value="{$item.auth.file|default=''}"
+                                   readonly/>
+                            <input type="button" class="button" value="上传..."/>
+                            <input type="file" id="up_img2" name="file_image"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--联系电话-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">联系电话</label>
+                <div class="layui-input-block">
+                    <input type="text" name="tel" value="{$item.auth.tel|default=''}" maxlength="30"
+                           autocomplete="off"
+                           placeholder="请输入联系电话"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <!--企业不同处-->
+        <div id="company" hidden>
+            <!--企业名称-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">企业名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="company_name" value="{$item.auth.company_name|default=''}" maxlength="100"
+                           autocomplete="off"
+                           placeholder="请输入企业名称"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <!--营业执照号-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">营业执照号码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="company_number" value="{$item.auth.company_number|default=''}" maxlength="100"
+                           autocomplete="off"
+                           placeholder="请输入营业执照号码"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <!--营业执照-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">营业执照</label>
+                <div class="layui-input-block">
+                    <div>
+                        <div id="imgPrev3">
+                            <img id="imgShow3" src="{$item.auth.file1|default=''}" class="uploadImg"
+                                 onerror="this.src='__RES__/image/common/imageError.png'" alt="手持身份证照片"/>
+                        </div>
+                        <div class="uploader white">
+                            <input type="text" class="filename" id="localPath3" value="{$item.auth.file1|default=''}"
+                                   readonly/>
+                            <input type="button" class="button" value="上传..."/>
+                            <input type="file" id="up_img3" name="file1_image"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--银行开户证明-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">银行开户证明</label>
+                <div class="layui-input-block">
+                    <div>
+                        <div id="imgPrev_4">
+                            <img id="imgShow_4" src="{$item.auth.bank_file|default=''}" class="uploadImg"
+                                 onerror="this.src='__RES__/image/common/imageError.png'" alt="银行开户证明"/>
+                        </div>
+                        <div class="uploader white">
+                            <input type="text" class="filename" id="localPath_4" value="{$item.auth.bank_file|default=''}"
+                                   readonly/>
+                            <input type="button" class="button" value="上传..."/>
+                            <input type="file" id="up_img_4" name="bank_file"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--行政许可-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">行政许可</label>
+                <div class="layui-input-block">
+                    <div>
+                        <div id="imgPrev_5">
+                            <img id="imgShow_5" src="{$item.auth.licence_file|default=''}" class="uploadImg"
+                                 onerror="this.src='__RES__/image/common/imageError.png'" alt="行政许可"/>
+                        </div>
+                        <div class="uploader white">
+                            <input type="text" class="filename" id="localPath_5" value="{$item.auth.licence_file|default=''}"
+                                   readonly/>
+                            <input type="button" class="button" value="上传..."/>
+                            <input type="file" id="up_img_5" name="licence_file"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--资质-->
+            <div class="layui-form-item">
+                <label class="layui-form-label">资质</label>
+                <div class="layui-input-block">
+                    <div>
+                        <div id="imgPrev_6">
+                            <img id="imgShow_6" src="{$item.auth.qualification_file|default=''}" class="uploadImg"
+                                 onerror="this.src='__RES__/image/common/imageError.png'" alt="资质"/>
+                        </div>
+                        <div class="uploader white">
+                            <input type="text" class="filename" id="localPath_6" value="{$item.auth.qualification_file|default=''}"
+                                   readonly/>
+                            <input type="button" class="button" value="上传..."/>
+                            <input type="file" id="up_img_6" name="qualification_file"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <label class="layui-form-label stepTips bank_type"><i class="fa fa-dot-circle-o"></i> 对私账户信息</label>
+        <input type="hidden" name="bank_type" id="bank_type" value="">
+
+        <!--开户省市区-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">开户省市</label>
+            <div class="layui-input-inline" style="width: 140px">
+                <select name="bank_province" class="state" lay-filter="state" lay-search="">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 140px">
+                <select name="bank_city" class="state" lay-filter="state">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 140px">
+                <select name="bank_area" class="state" lay-filter="state">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+
+        <!--开户名-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">开户名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="account_name" value="{$item.auth.account_name|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入开户名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--开户行-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">开户行</label>
+            <div class="layui-input-block">
+                <input type="text" name="account_bank_name" value="{$item.auth.account_bank_name|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入开户行"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--开户支行-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">开户支行</label>
+            <div class="layui-input-block">
+                <input type="text" name="account_sub_branch" value="{$item.auth.account_sub_branch|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入开户支行"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--银行账号-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">银行账号</label>
+            <div class="layui-input-block">
+                <input type="text" name="bank_number" value="{$item.auth.bank_number|default=''}" maxlength="100"
+                       autocomplete="off"
+                       placeholder="请输入银行账号"
+                       class="layui-input">
+            </div>
+        </div>
+
+    </div>
+
+    <!--店铺装修-->
+    <div class="contentShell contentShell_1" style="display:none">
+        <!--店铺模式切换-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>店铺模式切换</label>
+            <div class="layui-input-block goods_style">
+                <input type="radio" name="goods_style" id="0" value="0" title="正常样式" lay-filter="goods_style"
+                       {eq name="item.goods_style|default='0'" value="0" }checked{/eq}
+                >
+                <input type="radio" name="goods_style" id="1" value="1" title="新零售样式" lay-filter="goods_style"
+                       {eq name="item.goods_style|default=''" value="1"}checked{/eq}
+                >
+            </div>
+            <div class="layui-input-block picShow">
+                <div class="pic pic1">
+                    <a href="__RES__/image/common/shop2.png" class="tooltip">
+                        <img src="__RES__/image/common/shop2.png" alt="Picture 1" />
+                    </a>
+                    <!--<img src="__RES__/image/common/shop2.png" alt="">-->
+                </div>
+                <div class="pic pic2">
+                    <a href="__RES__/image/common/shop1.png" class="tooltip">
+                        <img src="__RES__/image/common/shop1.png" alt="Picture 1" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.store_id"}
+                <input type="hidden" name="store_id" value="{$item.store_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('element');
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#time'
+    }]);
+
+    function typeChange(flg) {
+        if (flg == 1) {
+            $('#userSelf').show()
+            $('#company').hide()
+            $('#Name').html('真实姓名')
+            $('#ID').html('身份证号')
+            $('.bank_type').html('<i class="fa fa-dot-circle-o"></i> 对私账户信息')
+            $('#bank_type').val(2);
+        } else {
+            $('#userSelf').hide()
+            $('#company').show()
+            $('#Name').html('法人姓名')
+            $('#ID').html('法人身份证号')
+            $('.bank_type').html('<i class="fa fa-dot-circle-o"></i> 对公账户信息');
+            $('#bank_type').val(1);
+        }
+    }
+
+    // 联动
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+
+        form.on('radio(shop)', function (data) {
+            var shop = $('#shop');
+            if (data.value == 0) {
+                shop.prop('hidden', false);
+            }
+            if (data.value == 1) {
+                shop.prop('hidden', true);
+            }
+            if (data.value == 2) {
+                shop.prop('hidden', false);
+            }
+        });
+        form.on('radio(goods_style)', function (data) {
+            console.log(data.value);
+            if (data.value == 0) {
+                $('.pic1').show();
+                $('.pic2').hide();
+            }
+            if (data.value == 1) {
+                $('.pic1').hide()
+                $('.pic2').show()
+            }
+
+        });
+
+        var url = '/member_address/area';            //数据请求地址
+
+        var province = "{$item.province|default=''}";           //编辑需要的省
+        var city = "{$item.city|default=''}";                   //编辑需要的市
+        var district = "{$item.area|default=''}";               //编辑需要的县/区
+
+        // 开户行三级联动
+        var bank_province = "{$item.auth.bank_province|default=''}";           //编辑需要的省
+        var bank_city = "{$item.auth.bank_city|default=''}";                   //编辑需要的市
+        var bank_district = "{$item.auth.bank_area|default=''}";               //编辑需要的县/区
+
+        getJSON(url, $("select[name='province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            if (!data.value) {
+                $.each($that.closest("div").nextAll(),function (i,o) {
+                    $(o).children('select').empty();
+                });
+                form.render();
+            }else{
+                var urls = url + "?id=" + data.value;
+                getJSON(urls, $that.closest("div").next());
+            }
+        });
+
+        function getJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("name");
+                var select = "<select name=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (province == this.area_name || city == this.area_name || district == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                var nextName = even.next().find("select").attr("name");
+                    $("select[name='"+nextName+"']").html("<select name=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    getJSON(url + "?id=" + pid, even.next());
+                }
+            });
+        }
+
+        openJSON(url, $("select[name='bank_province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            if (!data.value) {
+                $.each($that.closest("div").nextAll(),function (i,o) {
+                    $(o).children('select').empty();
+                });
+                form.render();
+            }else{
+                var urls = url + "?id=" + data.value;
+                openJSON(urls, $that.closest("div").next());
+            }
+        });
+        function openJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("name");
+                var select = "<select name=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (bank_province == this.area_name || bank_city == this.area_name || bank_district == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                var nextName = even.next().find("select").attr("name");
+                $("select[name='"+nextName+"']").html("<select name=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    openJSON(url + "?id=" + pid, even.next());
+                }
+            });
+        }
+    });
+
+    //内容页切换
+    $('#tabs1 li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    })
+
+    // 模式选择
+    $(function () {
+        var showId = $(".goods_style").find("input:checked").attr('id');
+        $('.picShow .pic').eq(showId).show().siblings().hide();
+
+        var x = 10;
+        var y = 20;
+        $("a.tooltip").mouseover(function (e) {
+            var tooltip = "<div id='tooltip'><img src='" + this.href + "' alt='预览图'/><\/div>"; //创建 div 元素
+            $("body").append(tooltip);	//把它追加到文档中
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                }).show("fast");	  //设置x坐标和y坐标，并且显示
+        }).mouseout(function () {
+
+            $("#tooltip").remove();	 //移除
+        }).mousemove(function (e) {
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                });
+        });
+
+
+    })
+    // 地图
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+
+        var map = new AMap.Map('container', {
+            zoom: 17,
+            resizeEnable: true,
+            scrollWheel: false
+        })
+
+        // 定位
+        map.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                buttonOffset: new AMap.Pixel(0, 10),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                buttonPosition: 'RB'
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+        });
+
+        //解析定位结果
+        function onComplete(data) {
+
+        }
+
+        //解析定位错误信息
+        function onError(data) {
+
+        }
+
+
+        //输入提示
+        var autoOptions = {
+            input: "tipinput",
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });  //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',
+            map: map
+        });
+
+        positionPicker.on('success', function (positionResult) {
+            // $('#topTwo').html('');
+            var adds = '';
+            var addsLen = positionResult.regeocode.pois;
+            var addres = '';
+            $('#interaction').html('<a class="submit" onclick="interaction(\'' + positionResult.address + '\',' + positionResult.position.lng + ',' + positionResult.position.lat + ')">定位坐标</a>');
+            addsLen.forEach(function (data) {
+                addres = '<div class="weui-media-box weui-media-box_text box_text" onclick="interaction(\'' + data.address + '\',' + data.location.lng + ',' + data.location.lat + ')" style="padding:8px 3% 0 40px;" data-id="' + data.id + '" data-name="' + data.name + '">'
+                addres += '<h4 class="weui-media-box__title" font-size: 12px;line-height: 24px;color: #999;><i class="iconfont icon-icon1460191833045"></i>' + data.name + '</h4>'
+                addres += '<p class="weui-media-box__desc" style="border-bottom: 1px solid #e5e5e5;font-size: 12px;line-height: 24px;padding-bottom:5px;color: #999;">' + data.address + '</p>'
+                addres += '</div>'
+                adds += addres;
+            });
+            $('#topTwo').html(adds);
+
+        });
+        positionPicker.on('fail', function (positionResult) {
+            console.log(positionResult)
+
+        });
+
+        positionPicker.start();
+        map.panBy(0, 1);
+
+        map.addControl(new AMap.ToolBar({
+            liteStyle: true
+        }));
+    });
+
+    function interaction(address, lng, lat) {
+        $('#lng').val(lng);
+        $('#lat').val(lat);
+    }
+
+    // 选择
+    function elect(url, title) {
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['800px', '600px'],
+            content: [url, 'yes']
+        });
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

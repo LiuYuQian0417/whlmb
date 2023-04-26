@@ -1,0 +1,187 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>可从管理平台手动添加一名新会员，并填写相关信息。</span></li>
+                <li><span>新增会员后可从会员列表中找到该条数据，并再次进行编辑操作，但该会员手机号不可变。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form  class="layui-form" id="layui-form" action="" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">会员手机号（账号）：</label>
+            <div class="layui-form-mid">{$item.phone}</div>
+        </div>
+
+        {if $Think.INI_CONFIG['IS_BALANCE']}
+        <div class="layui-form-item">
+            <label class="layui-form-label">资金情况：</label>
+            <div class="layui-form-mid">可用资金 <font color="red"><b>{$item.usable_money}</b></font>
+                <!--<br>冻结资金 <font color="red"><b>{$item.frozen_money}</b></font>-->
+                <input type="text" name="add_money" maxlength="20" autocomplete="off" placeholder="请输入增加的余额"
+                       value=""
+                       oninput="this.value=this.value.replace(/\D/g,'');verify_max(this);" max_number="{:abs($item.usable_money-99999999.99)}" message="最大可增加余额" oninput="" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                       class="layui-input">
+                <input type="hidden" name="max_add_money" value="{:abs($item.usable_money-99999999.99)}">
+            </div>
+        </div>
+        {/if}
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">积分情况：</label>
+            <div class="layui-form-mid"><font color="#6495ed"><b>{$item.pay_points}</b></font>
+                <input type="text" name="add_integral" maxlength="9" autocomplete="off" placeholder="请输入增加的积分"
+                       value=""
+                       oninput="this.value=this.value.replace(/\D/g,'');verify_max(this);" max_number="{:abs($item.pay_points-4294967295)}" message="最大可增加积分" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+                       class="layui-input">
+                <input type="hidden" name="max_add_integral" value="90000000">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">新密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="password" id="password" autocomplete="new-password" maxlength="20"  placeholder="请输入登录密码(6-20位数字+字母)"
+                       value=""
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">确认密码</label>
+            <div class="layui-input-block">
+                <input type="password" name="confirm_password" id="confirm_password" autocomplete="new-password"  maxlength="20"  placeholder="请输入确认密码(6-20位数字+字母)"
+                       value=""
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="1" title="男"
+                       {eq name="item.sex|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="sex" value="0" title="女"
+                       {eq name="item.sex|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="开通"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="禁用"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.member_id"}
+                <input type="hidden" name="member_id" value="{$item.member_id}">
+                <input type="hidden" name="usable_money" value="{$item.usable_money}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+
+    $(function () {
+        var options = {
+            type: "post",
+            dataType: "json",
+            resetForm: false,
+            ind: 0,
+            beforeSend: function (request, from) {
+                // 禁用按钮防止重复提交
+                $(".layui-btn").attr("disabled", "disabled");
+            },
+            success: function (data) {
+                if (data.code == 0) {
+                    layer.msg(data.message, {offset: '300px', time: 2000});
+                    setTimeout('window.location.href = "/member/index"',1000)
+                } else {
+                    layer.msg(data.message, {offset: '300px', time: 2000});
+                }
+            },
+            complete: function () {
+                $(".layui-btn").removeAttr("disabled");
+            }
+        };
+        $.Tipmsg.r = null;
+        $.Tipmsg.c = null;
+        $.Tipmsg.p = null;
+
+        $(".layui-form").Validform({
+            btnSubmit: '#submit',
+            tipSweep: true,
+            tiptype: function (msg) {
+                layer.msg(msg, {offset: '300px', time: 2000});
+            },
+            ignoreHidden: true,
+            ajaxPost: true,
+            beforeSubmit:function(){
+                var password = $("input[name=password]").val();
+                var confirm_password = $("input[name=confirm_password]").val();
+                if (password != '' && '{$Request.action}' == 'view' && /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,20}$/.test(password) == false) {
+                    layer.msg('密码为长度为6到20位数字+字母');
+                    return false;
+                }
+
+                if (password != confirm_password && '{$Request.action}' == 'view') {
+                    layer.msg('两次密码不一致');
+                    return false;
+                }
+                $('.layui-form').ajaxSubmit(options);
+                return false;
+            },
+            usePlugin: {}
+        });
+    })
+
+    //验证输入数据大小
+    function verify_max(e){
+        var max_price=parseFloat($(e).attr('max_number'));
+        console.log(max_price);
+        var input_price=parseFloat($(e).val());
+        var message=$(e).attr('message');
+        if(input_price>max_price){
+            $(e).val(max_price);
+            $(e).focus();
+            layer.msg(message+max_price);
+            return false;
+        }
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

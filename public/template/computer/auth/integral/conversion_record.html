@@ -1,0 +1,243 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<link rel="stylesheet" href="__RES__/css/MyBargain/MyBargain.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+<style>
+    .my-integration .title {
+        height: 55px;
+        background: #fff;
+        line-height: 55px;
+        font-size: 14px;
+        padding-left: 20px;
+        border-bottom: 1px solid #F0F3EF;
+    }
+    .my-integration .title a {
+        border-bottom: 1px solid transparent;
+        padding-bottom: 5px;
+        margin-right: 50px;
+        color: #000;
+    }
+    .my-integration .title .title-right {
+        float: right;
+        padding-right: 15px;
+    }
+    .my-integration .title .title-right a {
+        margin-right: 0px;
+        font-weight: 400;
+        color: #4184E8;
+    }
+    .my-integration .title .title-right img {
+        position: relative;
+        top: 1px;
+        margin-left: 5px;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    {include file="public/my_left" /}
+
+    <div class="index-right">
+        <div class="my-integration">
+            <h5 class="title">
+                <a class="" href="{:url('/pc2.0/integral/my')}">
+                    我的积分
+                </a>
+                <a class="" href="{:url('/pc2.0/integral/detail')}">
+                    积分明细
+                </a>
+                <a class="primary-color border-color" href="{:url('/pc2.0/integral/conversion_record')}">
+                    兑换记录
+                </a>
+                <div class="title-right">
+                    <a href="javascript:main.jump({'url':'/pc2.0/integral/index'})">兑换商城，给你不一样的优惠惊喜</a>
+                    <img src="__RES__/imgs/my/right.png" alt="">
+                </div>
+            </h5>
+        </div>
+
+        <div class="indent-content">
+            <!--title开始-->
+            <div class="indent-tit">
+                <!--时间选择-->
+                <div class="time-filtrate ">
+                    <a class="now-time" href="javascript:;">
+                        <span>时间</span>
+                        <!--<img src="__RES__/imgs/xs.png" alt="">-->
+                    </a>
+
+                    <!--<div class="time-list">-->
+                        <!--<a class="now-time primary-color-hover" href="javascript:;">-->
+                            <!--今年内订单-->
+                        <!--</a>-->
+                        <!--<a class="now-time primary-color-hover" href="javascript:;">-->
+                            <!--2018年订单-->
+                        <!--</a>-->
+                        <!--<a class="now-time primary-color-hover" href="javascript:;">-->
+                            <!--2019年订单-->
+                        <!--</a>-->
+                        <!--<a class="now-time primary-color-hover" href="javascript:;">-->
+                            <!--2020年订单-->
+                        <!--</a>-->
+                    <!--</div>-->
+                </div>
+                <div class="indent">
+                    订单详情
+                </div>
+                <div class="consignee-title">
+                    收货人
+                </div>
+                <div class="figure-title">
+                    金额
+                </div>
+                <div class="state">
+                    <a class="now-state" href="javascript:;">
+                        <span>全部状态</span>
+                        <img src="__RES__/imgs/xs.png" alt="">
+                    </a>
+
+                    <div class="state-list">
+                        <a class=" primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/integral/conversion_record?status=0'});">
+                            待发货
+                        </a>
+                        <a class=" primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/integral/conversion_record?status=1'});">
+                            已发货
+                        </a>
+                        <a class=" primary-color-hover" href="javascript:main.jump({'url':'/pc2.0/integral/conversion_record?status=2'});">
+                            已完成
+                        </a>
+                    </div>
+                </div>
+
+                <div class="operation-title">
+                    操作
+                </div>
+            </div>
+            <!--title结束-->
+
+            {empty name="$result"}
+            <!--订单为空-->
+            <div class="indent-box indent-box-emty">
+                <img src="__RES__/imgs/orderemty.png" alt="">
+                <p>暂无数据</p>
+                <span>“暂无数据，忙里偷闲下一单吧”</span>
+            </div>
+            {/empty}
+
+            <!--订单内容开始-->
+            <div class="indent-box">
+                {volist name="$result" id="item"}
+                <div class="indent-list">
+                    <!--头部信息-->
+                    <div class="list-title">
+                        <span>
+                            下单时间：{$item.create_time}
+                        </span>
+                        <span>
+                            订单号：{$item.order_number}
+                        </span>
+                    </div>
+                    <!--头部信息结束-->
+                    <!--商品开始-->
+                    <div class="goods-box">
+                        <div class="goods-left">
+                            <div class="goods-list">
+                                <a href="JavaScript:;">
+                                    <img src="{$item.file}" alt="">
+                                    <p class="goods-name">
+                                        {$item.integral_name}
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="purchaser">
+                            <div class="name">
+                                {$item.name}
+                                <img src="__RES__/imgs/my/fans/user.png" alt="">
+                                <div class="purchaser-detail">
+                                    <div class="top">
+                                        <span class="name">
+                                             {$item.name}
+                                        </span>
+                                        <span class="iphone">
+                                            {$item.phone}
+                                        </span>
+                                    </div>
+                                    <div class="address">
+                                        {$item.province}{$item.city}{$item.area}{$item.street}{$item.address}
+                                    </div>
+
+                                    <span class="triangle"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="money-box" style="width: 150px;">
+                            <span >{$item.integral}+&yen;{$item.price}</span>
+                            <p>在线支付</p>
+                        </div>
+
+                        <div class="indent-state">
+                            {switch name="$item.status"}
+                            {case value="0"} <span class="primary-color">待发货</span> {/case}
+                            {case value="1"} <span class="primary-color">已发货</span> {/case}
+                            {case value="2"} <span class="primary-color">已完成</span> {/case}
+                            {case value="3"} <span class="primary-color">未支付</span> {/case}
+                            {/switch}
+                            <a href="javascript:;" onclick="main.jump({'url':'/pc2.0/integral/conversion_view?integral_order_id={$item.integral_order_id}'})">兑换详情</a>
+
+                        </div>
+
+                        <div class="indent-operation">
+                            {eq name="$item.status" value="1"}
+                            <a class="pl border-color primary-color" href="javascript:main.ajax({'url': '/pc2.0/integral/confirm_receipt', data: {'integral_order_id': '{$item.integral_order_id}'},'confirm_text': '是否确认收货',})">确定收货</a>
+                            {/eq}
+                            {in name="$item.status" value="1,2"}
+                            <a class="pl border-color primary-color" href="javascript:main.express_view({'express_value':'{$item.express_value}','express_number':'{$item.express_number}','type':'integral','order_id':'{$item.integral_order_id}'})">查看物流</a>
+                            {/in}
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <!--分页-->
+            <div class="pageContainer" style="width: auto">{$result|raw}</div>
+        </div>
+        <!--订单内容结束-->
+    </div>
+    <!--右侧内容结束-->
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    function commit(obj) {
+        $('input[name="goods_id"]').val(obj.attr('data_goods_id'));
+        $('input[name="price"]').val(obj.attr('data_price'));
+        $('input[name="store_id"]').val(obj.attr('data_store_id'));
+        $('input[name="products_id"]').val(obj.attr('data_products_id'));
+
+        var form = document.getElementById('cut_order');
+
+        form.submit();
+    }
+
+
+    function search() {
+        var keyword = $('input[name="keyword"]').val();
+        if (keyword == ''){
+            layer.msg('请填写商品名称',{time:500});
+        }else{
+            main.jump({'url': '/pc2.0/bargain/my_cut?keyword=' + keyword})
+        }
+    }
+
+
+</script>
+{/block}

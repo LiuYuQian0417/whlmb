@@ -1,0 +1,425 @@
+body {
+    font-family: "微软雅黑";
+}
+
+.head-container-center {
+    width: 1200px;
+    padding-bottom: 0;
+}
+
+.my-grade {
+    display: flex;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+}
+
+.my-grade a {
+    font-size: 16px;
+    width: 90px;
+    margin-left: 10px;
+    height: 78px;
+    line-height: 78px;
+    text-align: center;
+    color: #333;
+}
+
+.border-color-bottom {
+    border-bottom: 2px solid;
+}
+
+.spokesperson-center {
+    display: flex;
+    -webkit-justify-content: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.spokesperson-center p {
+    width: 125px;
+    border-left: 1px solid #f0f3ef;
+    text-align: center;
+    height: 25px;
+    line-height: 25px;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+.head-container {
+    box-shadow: 0 15px 15px #e7e7e7;
+}
+
+.cndorsementcentre-content {
+    background: #f6f6f6;
+    margin-top: 15px;
+    box-shadow: 0 -15px 15px #f6f6f6;
+    padding-bottom: 40px;
+}
+
+.public-bottom-box {
+    margin-top: 0;
+}
+
+.statistics {
+    width: 1200px;
+    margin: 45px auto 60px auto;
+    height: 510px;
+    background: #2e3244;
+    box-shadow: 0px 40px 60px #dcdcdc;
+    position: relative;
+    box-shadow: 0 45px 50px #b5b5b5;
+}
+
+.cndorsementcentre-title {
+    position: absolute;
+    background: url(../../imgs/spokesman/neirongbeijing.png) right top no-repeat;
+    width: 1190px;
+    height: 281px;
+    right: -11px;
+    top: -35px;
+    display: flex;
+}
+
+.clear {
+    clear: both;
+    overflow: hidden;
+    height: 0;
+    width: 100%;
+}
+
+.cndorsementcentre-data {
+    display: flex;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    padding: 65px 94px 0 27px;
+    width: 577px;
+}
+
+.cndorsementcentre-record {
+    display: block;
+    border-radius: 25px;
+    width: 120px;
+    height: 26px;
+    border: 2px solid #96723a;
+    color: #96723a;
+    text-align: center;
+    line-height: 26px;
+    margin-top: 28px;
+}
+
+.cndorsementcentre-data p img {
+    border-radius: 50%;
+    height: 76px;
+
+}
+
+.cndorsementcentre-data p {
+    display: flex;
+    line-height: 76px;
+}
+
+.cndorsementcentre-data p span {
+    padding-left: 20px;
+    font-size: 18px;
+    color: #fff;
+}
+
+.vip-style p {
+    width: 55px;
+    height: 28px;
+    border-radius: 25px;
+    background: #96723a;
+    text-align: center;
+    line-height: 28px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.vip-grade {
+    position: relative;
+    width: 591px;
+    padding: 30px 61px 0 27px;
+}
+
+.vip-style {
+    position: absolute;
+    left: 27px;
+    width: 615px;
+    text-align: center;
+    display: flex;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+    color: #fff;
+}
+
+vip-grade-style {
+    width: 85px;
+    text-align: center;
+}
+
+.vip-grade-style p {
+    background: #fff;
+    color: #d6af7a;
+}
+
+.vip-grade .vip-speed {
+    display: flex;
+    -webkit-justify-content: center;
+    justify-content: center;
+    width: 552px;
+    padding: 12px 19px 9px;
+}
+
+.vip-speed li {
+    width: 92px;
+    height: 7px;
+    background: #96723a;
+}
+
+.vip-speed .vip-speed-color {
+    background: #fff;
+}
+
+.vip-speed-border {
+    border-radius: 2px 2px 0 0;
+}
+
+.vip-upgrade {
+    width: 482px;
+    margin-right: 10px;
+    display: flex;
+}
+
+.vip-upgrade-content {
+    width: 194px;
+    font-size: 16px;
+    color: #2e3244;
+    padding: 80px 0 0 63px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.vip-upgrade-content p {
+    font-size: 20px;
+    line-height: 35px;
+}
+
+.vip-invitation {
+    display: block;
+    margin: 45px auto;
+    width: 122px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    background: #2e3244;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 25px;
+}
+
+.statistics-title {
+    font-size: 30px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: linear-gradient(to right, #d0aa70, #e5a65c);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.statistics-height {
+    height: 264px;
+}
+
+.statistics-money {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.layui-progress {
+    background: #e7cc99;
+    width: 518px;
+}
+
+.statistics-money-progress {
+    position: relative;
+    background: #d0aa70;
+}
+
+.statistics-money-progress-display {
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    line-height: 35px;
+    background: url(../../imgs/spokesman/datatitlt.png) center center no-repeat;
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    color: #d0aa70;
+}
+
+.statistics-money-order {
+    width: 518px;
+}
+
+.statistics-order-money {
+    font-size: 18px;
+    color: #e9cf9c;
+    line-height: 40px;
+    margin-bottom: 40px;
+}
+
+.statistics-money-section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.statistics-money-section span {
+    color: #d0aa70;
+    font-size: 18px;
+}
+
+.statistics-money-content {
+    display: flex;
+    justify-content: space-between;
+    width: 1100px;
+    margin: 0 auto;
+}
+
+.lifting-rules {
+    width: 1200px;
+    margin: 30px auto 0;
+    background: url(../../imgs/spokesman/shengjiangguize.jpg) center center no-repeat;
+    height: 615px;
+    padding-top: 125px;
+}
+
+.lifting-rules-content {
+    width: 1100px;
+    margin: 0 auto;
+    height: 555px;
+    background: #fff;
+}
+
+.lifting-rules-detailed li {
+    line-height: 45px;
+    font-size: 16px;
+    color: #666;
+    padding: 0 50px;
+}
+
+.lifting-rules-detailed li:nth-child(1) {
+    line-height: 60px;
+    font-size: 22px;
+    color: #666;
+    padding: 20px 40px 0;
+}
+
+.lifting-rules-detailed li:nth-child(4) {
+    line-height: 60px;
+    font-size: 22px;
+    color: #666;
+    padding: 20px 40px 0;
+}
+
+.lifting-rules-detailed li:nth-child(7) {
+    line-height: 60px;
+    font-size: 22px;
+    color: #666;
+    padding: 20px 40px 0;
+}
+
+.lifting-rules-detailed li img {
+    display: block;
+    width: 35px;
+    height: 35px;
+    float: left;
+    padding: 12px 15px 0 0;
+}
+
+.lifting-rules-detailed li span {
+    float: left;;
+}
+
+.lifting-rules1 {
+    width: 100% !important;
+    margin: 0 !important;
+    background: url(../../imgs/spokesman/shengjiangbiaoti.jpg) #d2ad74 center no-repeat;
+}
+
+.lifting-rules-content1 {
+    padding: 55px 80px 60px 90px;
+    box-sizing: border-box;
+
+
+}
+
+.lifting-rules-content1-con {
+    overflow: auto;
+    height: 100%;
+}
+
+.lifting-rules-content1-con::-webkit-scrollbar {
+    display: none;
+    opacity: 0;
+}
+
+.lifting-rules-content-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 23px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #f6f6f6;
+}
+
+.life-left {
+    display: flex;
+    align-items: center;
+}
+
+.life-right {
+    margin-bottom: 60px;
+
+    color: #666;
+}
+
+.life-left img {
+    margin-right: 20px;
+}
+
+.life-title {
+    color: #886820;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 18px;
+}
+
+.life-desc {
+    font-size: 14px;
+    color: #666;
+}
+
+.empty {
+    padding-top: 72px;
+    text-align: center;
+}
+
+.empty p {
+    color: #666666;
+    font-size: 18px;
+    margin: 30px 0px;
+}
+
+.empty .empty-btn {
+    display: inline-block;
+    width: 190px;
+    height: 40px;
+    border-radius: 20px;
+    background: -moz-linear-gradient(left, #D0AA72, #E8CD9A);
+    background: -o-linear-gradient(left, #D0AA72, #E8CD9A);
+    background: -ms-linear-gradient(left, #D0AA72, #E8CD9A);
+    background: -webkit-linear-gradient(left, #D0AA72, #E8CD9A);
+    color: #fff;
+    text-align: center;
+    line-height: 40px;
+}

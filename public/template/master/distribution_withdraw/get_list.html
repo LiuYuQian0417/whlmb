@@ -1,0 +1,227 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+<style>
+    .calculate span {
+        margin-right: 20px;
+    }
+    .layui-laydate{
+        margin-top: 35px;
+    }
+</style>
+{__block__}
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css"/>
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+            <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>1、根据分销商查看提现汇总与提现明细；</span></li>
+            </ul>
+        </div>
+    </div>
+    <!--操作提示end-->
+    <div class="tabs_info" id="tab" style="margin-top: 15px;">
+        <ul>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现规则</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/index')">提现审核</a></li>
+            <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/getList')">提现管理</a></li>
+        </ul>
+    </div>
+    <!--起止时间开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">成为分销商日期：</label>
+        <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <input type="text" name="start_date" id="start_date" lay-verify="datetime" placeholder="不限" value="{:input('start_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="end_date" id="end_date" lay-verify="datetime" placeholder="至今" value="{:input('end_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--起止时间结束-->
+
+    <!--关键词开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">关键词：</label>
+        <div class="layui-input-block">
+            <input type="text" name="keywords" value="{:input('keywords','')}" autocomplete="off" placeholder="分销商昵称/手机号" class="layui-input">
+            <button class="layui-btn" lay-submit="">搜索</button>
+        </div>
+    </div>
+    <!--关键词结束-->
+
+    <div class="calculate">
+        <span>分销商数量：{$disCount|default=0}</span>
+        <span>申请提现总金额：{$count|default=0}</span>
+        <span>到账总金额：{$total|default=0}</span>
+        <span>手续费用：{$service_charge|default=0}</span>
+    </div>
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th>分销商</th>
+                <th>电话</th>
+                <th>分销商等级</th>
+                <th>申请提现总金额</th>
+                <th>手续费用</th>
+                <th>提现笔数</th>
+                <th>实际到账金额</th>
+                <th>提现记录</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>
+                    <a rel="{$item.avatar}" class="preview">
+                    <img src="{$item.avatar?:'?'}" class="avatar" alt="头像" onerror="this.src='__RES__/image/common/imageError.png'" />
+                    </a>{$item.nickname|default=''}
+                </td>
+                <td>{$item.phone|default=''}</td>
+                <td>{$item.level_title|default=''}</td>
+                <td>{$item.price|default=''}</td>
+                <td>{$item.service_charge|default=''}</td>
+                <td>{$item.withdrawCount|default=''}</td>
+                <td>{$item.getTotal|default=''}</td>
+                <td>
+                    <a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/details?distribution_id={$item.distribution_id}')" class="btn_see"><i class="fa fa-eye"></i>详情</a>
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('.layui-form');
+    function checkTransfer() {
+
+        var checked = $('tbody .chk:checked');
+        if (checked.length === 0) {
+            layer.msg('请选择操作数据', {offset: '400px', time: 2000});
+            return false;
+        }
+        var distribution_withdraw_id = [];
+        checked.each(function (i, o) {
+            distribution_withdraw_id.push($(o).val());
+        });
+        if (distribution_withdraw_id.length > 0) distribution_withdraw_id = distribution_withdraw_id.join(',');
+
+        layer.msg('确定转账吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {distribution_withdraw_id:distribution_withdraw_id}, url: '/distribution_withdraw/checkTransfer', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function stopTransfer() {
+
+        var checked = $('tbody .chk:checked');
+        if (checked.length === 0) {
+            layer.msg('请选择操作数据', {offset: '400px', time: 2000});
+            return false;
+        }
+        var distribution_withdraw_id = [];
+        checked.each(function (i, o) {
+            distribution_withdraw_id.push($(o).val());
+        });
+        if (distribution_withdraw_id.length > 0) distribution_withdraw_id = distribution_withdraw_id.join(',');
+
+        layer.msg('确定暂停转账吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {distribution_withdraw_id:distribution_withdraw_id}, url: '/distribution_withdraw/stopTransfer', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+
+    main.laydate([{
+        elem: '#start_date',
+        type: 'datetime'
+    },{
+        elem: '#end_date',
+        type: 'datetime'
+    }]);
+</script>
+{/block}

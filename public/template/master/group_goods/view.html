@@ -1,0 +1,282 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>前台可在拼团频道页看到该参团活动的商品。</span></li>
+            <li><span>根据要求填写相关拼团信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示over-->
+<!--表单开始-->
+<form class="layui-form" action="" method="post">
+    <div class="contentShell65">
+        <!--商品名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>拼团商品</label>
+            <div class="layui-input-inline">
+                <input type="text" name="group_goods_name" value="{$item.goods_name|default=''}" title readonly
+                       datatype="*" disabled
+                       nullmsg="请选择拼团商品" errormsg="请选择拼团商品"
+                       autocomplete="off" placeholder="请选择拼团商品" class="layui-input">
+            </div>
+        </div>
+        <!--商品原价-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>商品原价</label>
+            <div class="layui-input-inline">
+                <input type="number" name="group_goods_price" value="{$item.shop_price|default=''}" title readonly
+                       datatype="*"
+                       nullmsg="请选择拼团商品" errormsg="请选择拼团商品"
+                       autocomplete="off" placeholder="请选择拼团商品" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>拼团商品分类</label>
+            <div class="layui-input-inline">
+                <select name="group_classify_id" lay-search="" datatype="*" disabled
+                        nullmsg="请选择拼团商品分类" errormsg="请选择拼团商品分类">
+                    <option value="">商品分类</option>
+                    {notempty name="$classify_list"}
+                    {volist name='classify_list' id='storeClassify' key="fi"}
+                    <option
+                            {eq name="item.group_classify_id|default=''" value="$storeClassify.group_classify_id" }selected{/eq}
+                    {if condition="isset($classify_list[$fi]) && $storeClassify['level'] < $classify_list[$fi]['level']"}disabled="disabled"{/if}
+                    value="{$storeClassify['group_classify_id']}">{for start="1" end="$storeClassify.level" }&nbsp;&nbsp;&nbsp;{/for}{$storeClassify['title']}
+                    </option>
+                    {/volist}
+                    {/notempty}
+                </select>
+            </div>
+        </div>
+        <input  type="hidden" name="goods_id" value="{$item.goods_id|default=''}" title/>
+        <!--拼团默认价格-->
+        <div class="layui-form-item" id="goods_default">
+            <label class="layui-form-label"><em class="require">* </em>拼团默认价格</label>
+            <div class="layui-input-inline">
+                <input type="number" name="group_price" value="{$item.group_price|default=''}"
+                       datatype="*" disabled
+                       nullmsg="请输入拼团默认价格" errormsg="请输入拼团默认价格"
+                       autocomplete="off" placeholder="请输入拼团默认价格" class="layui-input">
+            </div>
+        </div>
+        <!--商品属性拼团价格-->
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">设置属性拼团价</label>
+            <div class="layui-input-block">
+                <div class="layui-form">
+                    <table class="layui-table spec_table">
+                        <thead>
+                        <tr>
+                            <th>规格</th>
+                            <th>属性原价</th>
+                            <th>属性拼团价
+                                <div class="batch">
+                                    <b onclick="$('.batch-input').not($(this).next('.batch-input')).hide();$(this).next('.batch-input').toggle();$('.batch_set').focus();" class="fa fa-edit" title="批量设置此列"></b>
+                                    <div class="batch-input" style="display: none;">
+                                        <h6>批量设置属性拼团价：</h6>
+                                        <a href="javascript:void(0)" class="close" onclick="$(this).parent('.batch-input').hide();">
+                                            <div class="fa fa-close (alias)"></div></a>
+                                        <input type="text" title class="text price batch_set">
+                                        <a href="javascript:void(0)" class="ncsc-btn-mini" onclick="batchSetTxt($(this))">设置</a>
+                                        <span class="arrow"></span>
+                                    </div></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--拼团持续时 间-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>拼团持续时间（小时）</label>
+            <div class="layui-input-inline">
+                <input type="number" name="continue_time"
+                       value="{$item.continue_time|default=''}"
+                       datatype="zNum" disabled
+                       nullmsg="请输入拼团持续时间" errormsg="请输入拼团持续时间"
+                       autocomplete="off" placeholder="请输入拼团持续时间" class="layui-input">
+            </div>
+        </div>
+        <!--累计购买上限-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>累计购买上限</label>
+            <div class="layui-input-inline">
+                <input type="number" name="buy_cum_limit" value="{$item.buy_cum_limit|default=''}"
+                       datatype="zZero" disabled
+                       nullmsg="请输入累计购买上限" errormsg="请输入累计购买上限"
+                       autocomplete="off" placeholder="请输入累计购买上限，填0为无上限" class="layui-input">
+            </div>
+        </div>
+        <!--拼团人数上限-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>拼团人数上限</label>
+            <div class="layui-input-inline">
+                <input type="number" name="group_num" value="{$item.group_num|default=''}"
+                       datatype="zNum" disabled
+                       nullmsg="请输入拼团人数上限" errormsg="请输入拼团人数上限"
+                       autocomplete="off" placeholder="请输入拼团人数上限" class="layui-input">
+            </div>
+        </div>
+        <!--开始时间-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>上架时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="up_shelf_time" id="start_time" disabled
+                       value="{$item.up_shelf_time|default=''}" autocomplete="off" placeholder="请选择上架时间"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--结束时间-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>下架时间</label>
+            <div class="layui-input-inline">
+                <input type="text" name="down_shelf_time" id="end_time" disabled
+                       value="{$item.down_shelf_time|default=''}" autocomplete="off" placeholder="请选择下架时间"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--上架状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>审核状态</label>
+            <div class="layui-input-block">
+                <div class="checkbox_items radio_status" onclick="showunit()">
+                    <input type="radio" name="status" value="1" title="已通过" disabled
+                           {eq name="item.status|default='1'" value="1" }checked{/eq}{eq name="item.status|default='1'" value="2" }checked{/eq}
+                    >
+                    <input type="radio" name="status" value="0" title="未通过" disabled
+                           {eq name="item.status|default='1'" value="0" }checked{/eq}
+                    >
+                </div>
+            </div>
+        </div>
+        <!--精选状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>是否精选</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_best" value="1" title="是" disabled
+                       {eq name="item.is_best|default='0'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_best" value="0" title="否" disabled
+                       {eq name="item.is_best|default='0'" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+        <!--精选状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>到期自动成团</label>
+            <div class="layui-input-block">
+                <input type="radio" name="is_auto" value="1" title="是" disabled
+                       {eq name="item.is_auto|default='0'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="is_auto" value="0" title="否" disabled
+                       {eq name="item.is_auto|default='0'" value="0" }checked{/eq}
+                >
+                <div style="overflow: hidden">
+                    <span class="remarks" style="float: left">选择是即使活动结束没有拼团成功，系统将自动设置拼团成功</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div class="contentShellBtn">-->
+        <!--<div class="layui-form-item">-->
+            <!--<div class="layui-input-block">-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+</form>
+<!--表单结束-->
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    $.Datatype.zZero = /^[0-9]\d*$/;
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#start_time',
+        type: 'date'
+    },{
+        elem: '#end_time',
+        type: 'date'
+    }]);
+    $(function () {
+        getProducts('{$item.goods_id?:\'\'}');
+    });
+    var option = {
+        columnDefs: [
+            {orderable: false,targets: [1, -1] }
+        ],
+        bLengthChange: false,
+        language: {
+            "url": "__RES__/js/DataTables-1.10.15/media/chinese.json"
+        }
+    };
+    // 获取规格
+    function getProducts(id) {
+        if (id === '') return;
+        // main.ajax({data: {id:id,type:1},url: '/goods/getProducts',callback: function (res) {
+        //     if (res.code != 0){
+        //         layer.msg(res.message);
+        //         return false;
+        //     }
+        //     if (res.data !== ''){
+        //         $('.spec_table tbody').html(res.data).parents('.layui-form-item').show();
+        //         $('.spec_table').dataTable(option);
+        //     }
+        // }});
+        $.ajax({
+            url: "/goods/getProducts",
+            type: 'post',
+            async: false,
+            dateType: 'json',
+            data: {'id': id, 'type': 1},
+            success: function (res) {
+                if (res.code != 0){
+                    layer.msg(res.message);
+                    return false;
+                }
+                if (res.data !== ''){
+                    $('.spec_table tbody').html(res.data).parents('.layui-form-item').show();
+                    $('.spec_table').dataTable(option);
+                }
+            }
+        });
+    }
+    // 批量设置
+    function batchSetTxt(jq) {
+        var dt = {},
+            txt = jq.prev('.batch_set').val(),
+            index = jq.parents('th').index();
+        if ($.fn.dataTable.isDataTable('.spec_table')){
+            dt = $('.spec_table').dataTable().api();
+        }else {
+            dt = $('.spec_table').dataTable(option).api();
+        }
+        jq.parent('.batch-input').hide();
+        dt.$('.batch-'+index).val(txt);
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,222 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>营销快捷入口。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+    <div>
+        <div>
+            <!--<div class="title">· 营销概况 ·</div>-->
+<!--            <div>-->
+<!--                <div class="sub-title">客服系统</div>-->
+<!--                <div class="operation-wrap">-->
+<!--                    <a href="javascript:void(0);" onClick="main.jumpFour('customer_group/index')">-->
+<!--                        <img class="operation-img" src="__RES__/image/marketing/p1.png"/>-->
+<!--                        <div>-->
+<!--                            <div class="operation-bg">-->
+<!--                                <div class="operation-title">客服系统 (商家专用)</div>-->
+<!--                                <div class="operation-desc">无缝沟通、精准营销</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </a>-->
+<!--                </div>-->
+<!--            </div>-->
+            <div>
+                <div class="sub-title">营销玩法</div>
+                <div class="operation-wrap">
+                    {if $Think.INI_CONFIG['IS_COUPON']}
+                    <a href="javascript:void(0);" onClick="main.jumpFour('coupon/index')">
+                        <img class="operation-img" src="__RES__/image/marketing/p4.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">优惠券</div>
+                                <div class="operation-desc">向用户发放用户券</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/if}
+                    {if $Think.INI_CONFIG['IS_RED_PACKET']}
+                    <a href="javascript:void(0);" onClick="main.jumpFour('red_packet/index')">
+                        <img class="operation-img" src="__RES__/image/marketing/p5.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">红包</div>
+                                <div class="operation-desc">发红包大礼</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/if}
+                    {if $Think.INI_CONFIG['IS_GROUP']}
+                    <a href="javascript:void(0);" onClick="main.jumpFour('group_activity/index')">
+                        <img class="operation-img" src="__RES__/image/marketing/p6.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">拼团</div>
+                                <div class="operation-desc">多人拼团、低价购买</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/if}
+                    {if $Think.INI_CONFIG['IS_CUT']}
+                    <a href="javascript:void(0);" onClick="main.jumpFour('cut/index')">
+                        <img class="operation-img" src="__RES__/image/marketing/p7.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">砍价</div>
+                                <div class="operation-desc">邀请好友砍价低价购买</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/if}
+                    {if $Think.INI_CONFIG['IS_LIMIT']}
+                    <a href="javascript:void(0);" onClick="main.jumpFour('limit/index')">
+                        <img class="operation-img" src="__RES__/image/marketing/p8.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">限时抢购</div>
+                                <div class="operation-desc">限时打折促销</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/if}
+                    {if $Think.INI_CONFIG['IS_INTEGRAL_MALL']}
+                    <a href="javascript:void(0);" onClick="main.jumpFour('integral_order/index')">
+                        <img class="operation-img" src="__RES__/image/marketing/p2.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">积分商城</div>
+                                <div class="operation-desc">积分兑换商品</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/if}
+                    <a href="javascript:void(0);" onClick="main.jumpFour('lottery/order_list')">
+                        <img class="operation-img" src="__RES__/image/marketing/p3.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">积分抽奖</div>
+                                <div class="operation-desc">积分抽取好礼品</div>
+                            </div>
+                        </div>
+                    </a>
+                    {if condition="env('is_live', 0)"}
+                    <a href="javascript:void(0);" onClick="clear_live()">
+                        <img class="operation-img" src="__RES__/image/marketing/p3.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">直播间</div>
+                                <div class="operation-desc">刷新更新列表</div>
+                            </div>
+                        </div>
+                    </a>
+                    {/if}
+                </div>
+            </div>
+            {if $Think.INI_CONFIG['IS_DISTRIBUTION']}
+            <div>
+                <div class="sub-title">分销应用</div>
+                <div class="operation-wrap">
+                    <a href="javascript:void(0);" onClick="main.jumpFour('distribution_switch/index')">
+                        <img class="operation-img" src="__RES__/image/marketing/p9.png"/>
+                        <div>
+                            <div class="operation-bg">
+                                <div class="operation-title">全民分销</div>
+                                <div class="operation-desc">全员分销、多级返佣</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            {/if}
+        </div>
+    </div>
+
+<style>
+
+    body{
+        background: #f6f6f6;
+    }
+
+    .childrenBody > div:first-child{
+        background: #f6f6f6!important;
+    }
+    .title{
+        font-size: 16px;
+        color: #8d8d8d;
+        margin: 30px auto;
+        text-align: center;
+    }
+
+    .sub-title{
+        font-size: 16px;
+        padding: 20px 0;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap{
+        overflow: hidden;
+    }
+
+    .operation-wrap > a{
+        float: left;
+        width: 22%;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        margin-right:3% ;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 2px 2px 2px #f2f5f6;
+
+        cursor: pointer;
+    }
+
+    .operation-wrap > a:nth-child(n + 5){
+        margin-top: 24px;
+    }
+
+    .operation-wrap > a .operation-img{
+        margin-left: 24px;
+    }
+
+    .operation-wrap > a .operation-bg{
+        margin-left: 30px;
+    }
+
+    .operation-wrap > a .operation-title{
+        font-size: 15px;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap > a .operation-desc{
+        font-size: 14px;
+        color: #8d8d8d;
+        margin-top: 10px;
+    }
+</style>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    function clear_live() {
+        $.ajax({
+            url:'/live/clear_list',
+            success:function (data) {
+                layer.msg(data.message, {time: 1000, icon: 6});
+            }
+        })
+    }
+</script>
+{/block}

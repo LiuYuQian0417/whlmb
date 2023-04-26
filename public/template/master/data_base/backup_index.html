@@ -1,0 +1,94 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请查看备份过的数据表。</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form">
+    <div class="common-head">
+        <div class="fl">
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i
+                        class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$total}条记录&nbsp;&nbsp;
+                    <!--每页<font>  </font>条-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <!--<th><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>-->
+            <th>文件名</th>
+            <th>文件尺寸</th>
+            <th>创建时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach name='data' item='v'}
+        <tr>
+            <!--<td><input type="checkbox" value="" class="chk" lay-filter="chk" title="" lay-skin="primary"/>-->
+            </td>
+            <td>{$v.url}</td>
+            <td>{$v.size}</td>
+            <td>{:everyStrToChinaTime($v.lastModified)}</td>
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="databaseDownload('{$v.url}')"><i class="fa fa-cloud-download"></i>下载</a>
+                <a class="btn_trash" onclick="main.destroy('/data_base/destroy','{$v.url}')"><i class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <!--<tr>-->
+            <!--<td colspan="100">-->
+                        <!--<span>-->
+                            <!--<a class="btn_trash" onclick="main.destroy('/data_base/destroy')"><i class="fa fa-trash-o"></i>多选删除</a>-->
+                        <!--</span>-->
+                <!--<span style="float:right;"></span>-->
+            <!--</td>-->
+        <!--</tr>-->
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    function databaseDownload (fileName) {
+        //下载数据
+        main.ajax({
+            type: 'post', url: '/data_base/download', data: {'fileName' : fileName}, callback: function (res) {
+                var elemIF = document.createElement("iframe");
+                elemIF.src = res.url;
+                elemIF.style.display = "none";
+                document.body.appendChild(elemIF);
+                layer.msg(res.message);
+            }
+        });
+    }
+</script>
+{/block}

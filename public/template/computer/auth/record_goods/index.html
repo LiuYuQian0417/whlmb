@@ -1,0 +1,307 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+<link rel="stylesheet" href="__RES__/css/BrowsingHistory/BrowsingHistory.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+
+
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div class="browsing-history">
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="javascript:;">
+                        浏览记录
+                    </a>
+
+                    <div class="tit-right">
+                        <div class="bulk-operation">
+                            <input class="operation-btn"  type="button" value="批量操作" />
+
+                            <div class="all-check" style="display: none;">
+                                <a href="javascript:;" class="allcheck uncheck" >
+                                    <img src="__RES__/imgs/my/sc.png" alt="">全选</a>
+                                <a href="javascript:;" class="disqualification">
+                                    <img src="__RES__/imgs/my/del_brow.png" alt=""> 清除
+                                </a>
+                                <input class="success" type="button"  value="完成">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+                <div class="browsing-history-box">
+                    <div class="browsing">
+                        <!--线-->
+
+                        {empty name="$result.data"}
+                        <div class="indent-box indent-box-emty">
+                            <img src="__RES__/imgs/my/zwlljl.png" alt="">
+                            <p>暂无浏览</p>
+                            <!--<span>“暂无订单，忙里偷闲下一单吧”</span>-->
+                        </div>
+                        {else/}
+                        <div class="line">
+                            <div class="color primary-background-color"></div>
+                        </div>
+                        {/empty}
+                        {volist name="result.data" id="day"}
+                        <!--每天的浏览记录-->
+                        <div class="browsing-list">
+                            <div class="date">
+                                <!--圆-->
+                                <div class="circle primary-background-color"></div>
+                                <div class="date-box">
+                                    <!--<span>今天</span>-->
+                                    <span class="year">{$day.date}</span>
+                                    <a class="day_delete" href="javascript:;">
+                                        删除
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="browsing-box">
+                                {volist name="$day.list" id="item"}
+                                <!--每个商品开始-->
+                                <div class="goods-list  border-color-hover" >
+                                    <div class="delete-individual">
+                                        <img src="__RES__/imgs/my/del_all.png" alt="">
+                                    </div>
+                                    <a href="javascript:jump_goods('{$item.goods_id}')">
+                                        <img class="goods-imgs" src="{$item.file}" alt="">
+                                        <p class="name">{$item.goods_name}</p>
+                                        <p class="pic primary-color">￥{$item.shop_price}</p>
+                                    </a>
+                                    <!--遮罩-->
+                                    <!--选中效果-->
+                                    <div class="cover"  >
+                                        <label style="display: block;">
+                                            <input type="checkbox" hidden  name="record_goods_id" id="record_goods_id" value="{$item.record_goods_id}"/>
+                                            <div >
+                                                <img src="__RES__/imgs/my/checked.png" alt="">
+                                            </div>
+                                        </label>
+                                    </div>
+
+                                </div>
+                                <!--每个商品结束-->
+                                {/volist}
+                            </div>
+                        </div>
+                        <!--每天的浏览记录结束-->
+                        {/volist}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!--右侧内容结束-->
+</div>
+
+
+
+<!--遮罩层-->
+<div class="depreciate-cover" style="display: none;">
+
+    <!--取消收藏-->
+    <div class="collect-box" style="display: none;">
+        <div class="tit">
+            清除浏览记录
+            <div class="right" >
+                <img src="__RES__/imgs/my/close.png" alt="">
+            </div>
+        </div>
+
+        <div class="eminder">
+            <img src="__RES__/imgs/my/question-mark.png" alt="">
+            清除所选浏览记录，确定吗？
+        </div>
+
+        <div class="btn-group">
+            <a href="javascript:;" class="sure" >
+                确定
+            </a>
+            <a href="javascript:;" class="countermand">
+                取消
+            </a>
+        </div>
+    </div>
+
+
+
+</div>
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    //			关闭通知
+    $('.depreciate-cover .right img').click(function(){
+        $('.depreciate-box').hide();
+        $('.depreciate-cover').hide()
+    })
+    //			关闭通知
+    $('.depreciate-cover .depreciate-box .sure').click(function(){
+        $('.depreciate-box').hide();
+        $('.depreciate-cover').hide()
+    })
+
+    //			显示全选
+    $('.bulk-operation .operation-btn').click(function(){
+        $(this).hide().siblings('.all-check').show()
+        $('.cover').show()
+    })
+    //			关闭全选
+    $('.success').click(function(){
+        $('.bulk-operation .operation-btn').show()
+        $('.all-check').hide()
+        $('.cover').hide()
+        $('.allcheck').removeClass('check').addClass('uncheck')
+        $('.goods-list').each(function(){
+            $(this).removeClass('active').find('input').removeAttr('checked')
+        })
+    })
+
+    //			提交
+    $('.disqualification').click(function(){
+        var record_goods_id ='';
+        $('.browsing .browsing-list input[name="record_goods_id"]:checked').each(function () {
+            record_goods_id += $(this).val()+',';;
+        })
+
+        if (record_goods_id == ''){
+            layer.msg('请选择要删除的浏览记录',{time:800})
+        }else{
+            $('.depreciate-cover').show();
+            $('.collect-box').show();
+        }
+
+    })
+
+
+    // 单个删除
+    $('.delete-individual').click(function () {
+        var record_goods_id  = $(this).parent().find('input[name="record_goods_id"]').val();
+        console.log(record_goods_id);
+        main.ajax({'url':'{:url(\'pc2.0/record_goods/delete\')}','data':{'record_goods_id': record_goods_id},callback:function (t) {
+                if (t.code != 0) {
+                    layer.msg(t.message);
+                } else {
+                    layer.msg(t.message, {time: 500},function () {
+                        location.reload();
+                    });
+                }
+            }})
+    })
+
+    $('.day_delete').click(function () {
+        var record_goods_id ='';
+        $(this).parents('.browsing-list').find('.browsing-box input[name="record_goods_id"]').each(function () {
+            record_goods_id += $(this).val()+',';;
+        });
+        main.ajax({
+            'url':"{:url('pc2.0/record_goods/delete')}",
+            'data':{'record_goods_id': record_goods_id},
+            'confirm_text':'是否删除当天浏览记录',
+            callback:function (t) {
+                if (t.code != 0) {
+                    layer.msg(t.message);
+                } else {
+                    layer.msg(t.message, {time: 500},function () {
+                        location.reload();
+                    });
+                }
+            }})
+
+    })
+
+    //	多个删除		确定取消收藏
+    $('.depreciate-cover .collect-box .sure').click(function(){
+
+        var record_goods_id ='';
+        $('.browsing .browsing-list input[name="record_goods_id"]:checked').each(function () {
+            record_goods_id += $(this).val()+',';;
+        })
+        main.ajax({'url':'{:url(\'pc2.0/record_goods/delete\')}','data':{'record_goods_id': record_goods_id},callback:function (t) {
+                if (t.code != 0) {
+                    layer.msg(t.message);
+                    $('.collect-box').hide();
+                    $('.depreciate-cover').hide();
+                } else {
+                    $('.collect-box').hide();
+                    $('.depreciate-cover').hide();
+                    layer.msg(t.message, {time: 500},function () {
+                        location.reload();
+                    });
+                }
+            }})
+    })
+    //			取消
+    $('.depreciate-cover .collect-box .countermand').click(function(){
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide();
+
+    })
+
+
+    $('.cover label div').click(function(e){
+        if($(this).parents('.goods-list').hasClass('active')){
+            $(this).parents('.goods-list').removeClass('active')
+//					$(this).parents('.goods-list').find('input').attr('checked',false)
+        }else{
+            $(this).parents('.goods-list').addClass('active')
+        }
+        var len = $('.goods-list').length;
+        var num =$('.browsing  .active').length
+        if(num<len){
+            $('.allcheck').removeClass('check').addClass('uncheck')
+        }else{
+            $('.allcheck').removeClass('uncheck').addClass('check')
+        }
+
+        e.stopPropagation();
+    })
+
+    //			全选
+    $('.allcheck').click(function(){
+        if($(this).hasClass('uncheck')){
+            $(this).removeClass('uncheck').addClass('check')
+            $('.goods-list').each(function(){
+                $(this).addClass('active').find('input').attr('checked',true)
+                $(this).addClass('active').find('input').prop('checked',true)
+            })
+        }else{
+            $(this).removeClass('check').addClass('uncheck')
+            $('.goods-list').each(function(){
+                $(this).removeClass('active').find('input').attr('checked',false)
+                $(this).removeClass('active').find('input').prop('checked',false)
+            })
+        }
+
+    })
+
+
+    $(window).scroll(function () {
+        var scroll_top = $(window).scrollTop()
+        $('.color').stop().animate({'height':scroll_top+276+'px'},500)
+    })
+
+</script>
+{/block}
+

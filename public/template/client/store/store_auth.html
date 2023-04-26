@@ -1,0 +1,434 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/map.css" rel="stylesheet" type="text/css"/>
+<link href="__PUBLIC_RES__/step/step.css" rel="stylesheet" type="text/css"/>
+<style>
+    #tooltip {
+        position: absolute;
+        width: 300px;
+        border: 1px solid #f4f4f4;
+        background: #fff;
+        color: #fff;
+        display: none
+    }
+
+    #tooltip img {
+        width: 100%
+    }
+
+    .step > li{
+        width: 50%;
+    }
+
+    .step > li:not(.active) > .stepLabel:hover:before {
+        background: #fff;
+        color: rgb(51, 51, 51);
+    }
+
+    .step > li:not(.active) > .stepLabel:hover:after {
+        background: rgb(235, 235, 235);
+        color: rgb(51, 51, 51);
+    }
+
+    .step-round > li.active > a:before, .step-round > li.active > a:hover:before, .step-round > li.active > a:focus:before, .step-round > li.active > a:after, .step-round > li.active > a:hover:after, .step-round > li.active > a:focus:after {
+        background-color: #f98a10;
+    }
+
+    .step-round > li.active > a, .step-round > li.active > a:hover, .step-round > li.active > a:focus {
+        color: #f98a10;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>请根据提示信息准确无误填写店铺认证信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+
+<ul class="nav nav-pills nav-justified step step-round">
+    <li class="step1 active">
+        <a class="stepLabel">店铺信息</a>
+    </li>
+    <li class="step2 active">
+        <a class="stepLabel">认证信息</a>
+    </li>
+</ul>
+
+<div class="ecsc-form-goods">
+    <form class="layui-form" method="post" action="" enctype="multipart/form-data">
+        <div class="wrapper-list">
+            <!--认证类型-->
+            <dl>
+                <dt><font color="red">*</font> 认证类型：</dt>
+                <dd>
+                    <div class="checkbox_items">
+                        <div class="checkbox_item" onclick="typeChange(1)">
+                            <input type="radio" name="type" value="1" {eq name="item.type|default=1" value="1" }checked{/eq} title="个人店铺" class="ui-radio"/>
+                        </div>
+                        <div class="checkbox_item" onclick="typeChange(2)">
+                            <input type="radio" name="type" value="2" {eq name="item.type|default=1" value="2" }checked{/eq} title="企业店铺" class="ui-radio"/>
+                        </div>
+                    </div>
+                </dd>
+            </dl>
+
+            <!--真实姓名-->
+            <dl>
+                <dt><font color="red">*</font> <span id="name">{eq name="item.type|default=1" value="1"}真实姓名{else/}法人姓名{/eq}：</span></dt>
+                <dd>
+                    <input type="text" name="auth_name" value="{$item.auth_name|default=''}" maxlength="6"
+                           class="text" autocomplete="off"
+                           placeholder="请输入姓名"/>
+                </dd>
+            </dl>
+
+            <!--身份证号码-->
+            <dl>
+                <dt><font color="red">*</font> <span id="id-card">{eq name="item.type|default=1" value="1"}身份证号码{else/}法人身份证号码{/eq}：</span></dt>
+                <dd>
+                    <input type="text" name="auth_number" value="{$item.auth_number|default=''}" maxlength="18"
+                           class="text" autocomplete="off"
+                           placeholder="请输入身份证号码"/>
+                </dd>
+            </dl>
+
+            <!--身份证正面照片-->
+            <dl>
+                <dt><font color="red">*</font> 身份证正面照片：</dt>
+                <dd>
+                    <div
+                            class="imageUpload"
+                            placeholder="/static/img/placeholder/id_front.png"
+                            default="{$item.ID_front_file|default=''}"
+                            width="320"
+                            file-mime="image/gif,image/jpeg,image/png"
+                            name="ID_front_file"
+                            dir="store_auth_id_card"
+                            value="{$item.ID_front_file_data|default=''}"
+                    >
+                    </div>
+                </dd>
+            </dl>
+
+            <!--身份证反面照片-->
+            <dl>
+                <dt><font color="red">*</font> 身份证反面照片：</dt>
+                <dd>
+                    <div
+                            class="imageUpload"
+                            placeholder="/static/img/placeholder/id_back.png"
+                            default="{$item.ID_back_file|default=''}"
+                            file-mime="image/gif,image/jpeg,image/png"
+                            name="ID_back_file"
+                            width="320"
+                            dir="store_auth_id_card"
+                            value="{$item.ID_back_file_data|default=''}"
+                    >
+                    </div>
+                </dd>
+            </dl>
+
+            <!--营业执照号-->
+            <dl>
+                <dt><font color="red">*</font> 营业执照号：</dt>
+                <dd>
+                    <input type="text"
+                           name="company_number"
+                           value="{$item.company_number|default=''}"
+                           maxlength="100"
+                           class="text"
+                           autocomplete="off"
+                           placeholder="请输入营业执照号码"
+                    />
+                </dd>
+            </dl>
+
+            <!--营业执照-->
+            <dl>
+                <dt><font color="red">*</font> 营业执照：</dt>
+                <dd>
+                    <div
+                            class="imageUpload"
+                            placeholder="/static/img/placeholder/business_license.png"
+                            default="{$item.file1|default=''}"
+                            file-mime="image/gif,image/jpeg,image/png"
+                            name="file1"
+                            dir="store_auth_license"
+                            value="{$item.file1_data|default=''}"
+                    >
+                    </div>
+                </dd>
+            </dl>
+
+            <!--个人店铺-->
+            <div id="personal" style="{neq name="item.type|default=1" value="1" }display:none{/neq}">
+                <!--身份证类型-->
+                <dl>
+                    <dt><font color="red">*</font> 身份证类型：</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input type="radio" name="ID_type" {eq name="item.ID_type|default=1" value="1" }checked="checked"{/eq} value="1" title="中国大陆" class="ui-radio"/>
+                            </div>
+                            <div class="checkbox_item">
+                                <input type="radio" name="ID_type" {eq name="item.ID_type|default=1" value="2" }checked="checked"{/eq} value="2" title="香港" class="ui-radio"/>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+
+                <!--营业执照-->
+                <dl>
+                    <dt><font color="red">*</font> 手持身份证照片：</dt>
+                    <dd>
+                        <div
+                                class="imageUpload"
+                                placeholder="/static/img/placeholder/id_card_in_hand.png"
+                                default="{$item.file|default=''}"
+                                file-mime="image/gif,image/jpeg,image/png"
+                                name="file"
+                                dir="store_auth_id_card_in_hand"
+                                value="{$item.file_data|default=''}"
+                        >
+                        </div>
+                    </dd>
+                </dl>
+
+                <!--联系电话-->
+                <dl>
+                    <dt><font color="red">*</font> 联系电话：</dt>
+                    <dd>
+                        <input type="text"
+                               name="tel"
+                               value="{$item.tel|default=''}"
+                               maxlength="11"
+                               class="text"
+                               autocomplete="off"
+                               placeholder="请输入联系电话"/>
+                    </dd>
+                </dl>
+            </div>
+
+            <div id="company" style="{neq name="item.type|default=1" value="2" }display:none{/neq}">
+
+                <!--企业名称-->
+                <dl>
+                    <dt><font color="red">*</font> 企业名称：</dt>
+                    <dd>
+                        <input type="text"
+                               name="company_name"
+                               value="{$item.company_name|default=''}"
+                               maxlength="100"
+                               class="text"
+                               autocomplete="off"
+                               placeholder="请输入企业名称"
+                        />
+                    </dd>
+                </dl>
+
+                <!--银行开户证明-->
+                <dl>
+                    <dt><font color="red">*</font> 银行开户证明：</dt>
+                    <dd>
+                        <div
+                                class="imageUpload"
+                                placeholder="/static/img/placeholder/other.png"
+                                default="{$item.bank_file|default=''}"
+                                file-mime="image/gif,image/jpeg,image/png"
+                                name="bank_file"
+                                dir="store_auth_bank_account"
+                                value="{$item.bank_file_data|default=''}"
+                        >
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+
+            <label class="layui-form-label stepTips bank_type"><i class="fa fa-dot-circle-o"></i> <span id="store-type">{eq name="item.type|default=1" value="1"}对私账户信息 {else/}对公账户信息 {/eq}</span></label>
+
+
+            <!--开户省市-->
+            <dl>
+                <dt><font color="red">*</font> 开户省市：</dt>
+                <dd>
+                    <div class="layui-input-inline" style="width: 140px;float: left">
+                        <select name="bank_province" class="state" lay-filter="area">
+                            <option value="">请选择</option>
+                            {volist name="areas.province" id="province"}
+                            <option value="{$province.area_id}" {eq name="province.area_id" value="$item.bank_province" }selected="selected" {/eq}>{$province.area_name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 140px;float: left;margin: 0 10px">
+                        <select name="bank_city" class="state" lay-filter="area">
+                            <option value="">请选择</option>
+                            {volist name="areas.city" id="city"}
+                            <option value="{$city.area_id}" {eq name="city.area_id" value="$item.bank_city" }selected="selected" {/eq}>{$city.area_name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    <div class="layui-input-inline" style="width: 140px;float: left">
+                        <select name="bank_area" class="state" lay-filter="area">
+                            <option value="">请选择</option>
+                            {volist name="areas.area" id="area"}
+                            <option value="{$area.area_id}" {eq name="area.area_id" value="$item.bank_area" }selected="selected" {/eq}>{$area.area_name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </dd>
+            </dl>
+
+            <!--开户名称-->
+            <dl>
+                <dt><font color="red">*</font> 开户名称：</dt>
+                <dd>
+                    <input type="text"
+                           name="account_name"
+                           value="{$item.account_name|default=''}"
+                           maxlength="100"
+                           class="text"
+                           autocomplete="off"
+                           placeholder="请输入开户名称"/>
+                </dd>
+            </dl>
+
+            <!--开户行-->
+            <dl>
+                <dt><font color="red">*</font> 开户行：</dt>
+                <dd>
+                    <input type="text"
+                           name="account_bank_name"
+                           value="{$item.account_bank_name|default=''}"
+                           maxlength="100"
+                           class="text"
+                           autocomplete="off"
+                           placeholder="请输入开户行"/>
+                </dd>
+            </dl>
+
+            <!--开户支行-->
+            <dl>
+                <dt><font color="red">*</font> 开户支行：</dt>
+                <dd>
+                    <input type="text"
+                           name="account_sub_branch"
+                           value="{$item.account_sub_branch|default=''}"
+                           maxlength="100"
+                           class="text"
+                           autocomplete="off"
+                           placeholder="请输入开户支行"/>
+                </dd>
+            </dl>
+
+            <!--银行账号-->
+            <dl>
+                <dt><font color="red">*</font> 银行账号：</dt>
+                <dd>
+                    <input type="text"
+                           name="bank_number"
+                           value="{$item.bank_number|default=''}"
+                           maxlength="100"
+                           class="text"
+                           autocomplete="off"
+                           placeholder="请输入银行账号"/>
+                </dd>
+            </dl>
+
+            <dl class="button_info">
+            <dt>&nbsp;</dt>
+            <dd>
+                <input type="button" class="sc-btn btn35" value="返回上一步" onclick="main.jumpFour('client/store/index')"/>
+                <input type="submit" class="sc-btn sc-blueBg-btn btn35" value="保存"/>
+            </dd>
+            </dl>
+
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form()
+    // 表单提交
+    // 跳转时间
+    extra.options.ajaxJumpTimeOut = 2000
+    main.valid('.layui-form');
+
+    function typeChange(flag) {
+        if(flag === 1){
+            $('#name').html('真实姓名：');
+            $('#id-card').html('身份证号码：');
+            $('#store-type').html('对私账户信息');
+            $('#personal').show();
+            $('#company').hide()
+        }else{
+            $('#name').html('法人姓名：');
+            $('#id-card').html('法人身份证号码：');
+            $('#store-type').html('对公账户信息');
+            $('#company').show();
+            $('#personal').hide()
+        }
+    }
+
+
+    // 开户联动
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+
+        var url = '/member_address/area';            //数据请求地址
+
+        // 开户行三级联动
+        var bank_province = "{$item.bank_province|default=''}";           //编辑需要的省
+        var bank_city = "{$item.bank_city|default=''}";                   //编辑需要的市
+        var bank_district = "{$item.bank_area|default=''}";               //编辑需要的县/区
+
+        // openJSON(url, $("select[name='bank_province']").closest("div"));
+        form.on('select(area)', function (data) {
+            console.log(1)
+            var $that = $(data.elem);
+            var urls = url + "?id=" + data.value;
+            openJSON(urls, $that.closest("div").next());
+        });
+
+        function openJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("name");
+                var select = "<select name=\"" + name + "\" lay-filter=\"area\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (bank_province == this.area_name || bank_city == this.area_name || bank_district == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                var nextName = even.next().find("select").attr("name");
+                $("select[name='"+nextName+"']").html("<select name=\"" + nextName + "\" lay-filter=\"area\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    openJSON(url + "?id=" + pid, even.next());
+                }
+            });
+        }
+    });
+
+</script>
+{/block}
+

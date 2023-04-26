@@ -1,0 +1,38 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<style>
+    .submit {
+        font-size: 0;
+        width: 30px;
+        height: 30px;
+        border: 0;
+        background: url(/template/client/resource/images/admin-icon.png) -115px -325px #e0e0e0 no-repeat;
+        border-radius: 0 5px 5px 0;
+        cursor: pointer;
+    }
+    .search-key{
+        margin-left: 37%;
+        margin-top: 20%;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="{:url('offline_payment_info')}" autocomplete="off"  method="get">
+    <div class="search-key">
+        <input type="text"  id="payment_code" name="payment_code"  class="text text_2" value="" placeholder="或手动输入付款码数字">
+        <input type="submit" value=" 查询 " class="submit">
+    </div>
+</form>
+{/block}
+{block name='js'}
+<script src="__RES__/js/jquery-1.9.1.min.js"></script>
+<script>
+    $('#payment_code').focus();
+    $('#payment_code').blur(function(){
+        $('#payment_code').focus();
+    });
+</script>
+{/block}

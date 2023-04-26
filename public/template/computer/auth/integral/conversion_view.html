@@ -1,0 +1,312 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<link rel="stylesheet" href="__RES__/css/Indent/OrderDetailObligation.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<style>
+    .index-right .obligation-box .obligation-top .obligation-list .progress .step .bor span{
+    width:0%;
+    }
+    .index-right .obligation-box .obligation-top .obligation-list .progress .active .bor span{
+        width:100%;
+    }
+    .index-right .obligation-box .obligation-top .obligation-list .progress .half .bor span{
+        width:50%;
+    }
+.shop-tit div{
+  flex: 1;
+}
+    .shop-list>div{
+        flex: 1;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+    <!--右侧内容开始-->
+    <div class="index-right">
+        <h5 class="title">
+            订单详情
+        </h5>
+        <div class="obligation-box border-color-top">
+            <div class="obligation-top">
+                <div class="obligation">
+                    <div class="indent-number">订单号：{$result.order_number}</div>
+                    <!--当前订单状态-->
+                    <p class="tit primary-color">
+                        {switch name='$result.status'}
+                        {case 0}待发货{/case}
+                        {case 1}待收货{/case}
+                        {case 2}已完成{/case}
+                        {/switch}
+                    </p>
+                    <!--订单操作-->
+                    {eq name="$result.status" value='1'}
+                        <a href="javascript:confirm_receipt('{$result.integral_order_id}');" class="payment-btn primary-color border-color">确认收货</a>
+                    {/eq}
+                </div>
+                <div class="obligation-list">
+                    <div class="progress" style="text-align: center">
+                            <div class="step active">
+                                <div class="progress-box">
+                                  <span class="first">
+                                      <img src="__RES__/imgs/del/indent.png" alt="">
+                                  </span>
+                                    <p class=""> 提交订单 </p>
+                                    <p class="time">{$result.create_time}</p>
+                                </div>
+                                <div class="bor">
+                                    <span  class="primary-background-color"></span>
+                                </div>
+                            </div>
+                            <div class="step finish">
+                                <div class="progress-box">
+                                  <span class="first">
+                                     <img src="__RES__/imgs/del/active-wc.png" alt="">
+                                  </span>
+                                  <p>完成</p>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+            <div class="obligation-bottom">
+                <div class="obligation-left">
+                    <div class="goods">
+                        <img onclick="main.jump({'url':'/pc2.0/integral/view?integral_id={$result.integral_id}'})" src="{$result.file|default=''}" alt="">
+                        <div class="state">
+                            <p>配送方式：快递邮寄</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="obligation-right">
+                    {notempty name="$result.deal_time"}
+                    <div class="progress">
+                        <!--收货时间-->
+                        <div class="progress-box">
+                            <!--时间-->
+                            <div class="time">
+                                <p>{:date('m-d',strtotime($result.deal_time))}</p>
+                                <span>{:date('H:i',strtotime($result.deal_time))}</span>
+                            </div>
+                            <!--分割线-->
+                            <div class="line-box">
+                                <img src="__RES__/imgs/del/active-gx.png" alt="">
+                                <div class="line">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <!--信息-->
+                            <div class="info">
+                                <p>已收货</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/notempty}
+                    {notempty name="$express_info.data"}
+                    {volist name="$express_info.data" id="express_info_data"}
+                    <div class="progress">
+                        <!--待付款-->
+                        <div class="progress-box">
+                            <!--时间-->
+                            <div class="time">
+                                <p>{:date('m-d',strtotime($express_info_data.time))}</p>
+                                <span>{:date('H:i',strtotime($express_info_data.time))}</span>
+                            </div>
+                            <!--分割线-->
+                            <div class="line-box">
+                                <img src="__RES__/imgs/del/active-gx.png" alt="">
+                                <div class="line">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <!--信息-->
+                            <div class="info">
+                                <p>
+                                    {switch name="$express_info.state"}
+                                        {case 0}在途中{/case}
+                                        {case 1}已揽收{/case}
+                                        {case 2}疑难{/case}
+                                        {case 3}已签收{/case}
+                                        {case 4}退签{/case}
+                                        {case 5}同城派送中{/case}
+                                        {case 6}退回{/case}
+                                        {case 7}转单{/case}
+                                        {/default} 其他
+                                    {/switch}
+                                </p>
+                                <p>{$express_info_data.context}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                    {/notempty}
+                    <div class="progress">
+                        <!--待付款-->
+                        <div class="progress-box">
+                            <!--时间-->
+                            <div class="time">
+                                <p>{:date('m-d',strtotime($result.create_time))}</p>
+                                <span>{:date('H:i',strtotime($result.create_time))}</span>
+                            </div>
+                            <!--分割线-->
+                            <div class="line-box">
+                                <img src="__RES__/imgs/del/yxd.png" alt="">
+                                <div class="line">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <!--信息-->
+                            <div class="info">
+                                <p>已下单</p>
+                                <p>商家正在处理您的订单</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--订单详情-->
+        <div class="indent-detail">
+            <!--收货人信息-->
+            <div class="consignee-information indent-detail-box">
+                <div class="tit">
+                    收货人信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            收货人：
+                        </div>
+                        <div class="info-con">
+                            {$result.name}
+                        </div>
+                    </div>
+
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            地址：
+                        </div>
+                        <div class="info-con">
+                            {$result.province}{$result.city}{$result.area}{$result.street}
+                        </div>
+                    </div>
+
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            手机号码：
+                        </div>
+                        <div class="info-con">
+                            {$result.phone}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--配送信息-->
+            <div class="consignee-information indent-detail-box">
+                <div class="tit">
+                    配送信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            配送方式：
+                        </div>
+                        <div class="info-con">
+                            快递邮寄
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--付款信息-->
+            <div class="consignee-information indent-detail-box">
+                <div class="tit">
+                    付款信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            付款方式：
+                        </div>
+                        <div class="info-con">
+                            在线支付
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-tit">
+                            应支付金额：
+                        </div>
+                        <div class="info-con">
+                            {$result.integral}积分{neq name='result.price' value='0'}+￥{$result.price}{/neq}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shop">
+            <div class="shop-con">
+                <div class="shop-tit">
+                    <div class="goods-name">商品</div>
+                    <div class="goods-tit">商品价格</div>
+                    <div class="goods-tit">商品数量</div>
+                </div>
+                <div class="shop-list">
+                    <div class="goods">
+                        <img src="{$result.file}" onclick="main.jump({'url':'/pc2.0/integral/view?integral_id={$result.integral_id}'})" alt="">
+                        <div class="goods-name">
+                            {$result.integral_name}
+                        </div>
+                    </div>
+                    <!--商品价格-->
+                    <div class="goods-list-con">
+                        {$result.integral}积分{neq name='result.price' value='0'}+￥{$result.price}{/neq}
+                    </div>
+                    <!--商品数量-->
+                    <div class="goods-list-con">
+                        1
+                    </div>
+                </div>
+            </div>
+            <!--总计-->
+            <div class="aggregate">
+                <div class="aggregate-box">
+                    <!--<p>-->
+                        <!--<span class="aggregate-tit">商品总额</span>:-->
+                        <!--<span class="aggregate-con">￥1111</span>-->
+                    <!--</p>-->
+                    <p>
+                        <span class="aggregate-tit primary-color">应付总额:</span>
+                        <span class="aggregate-con primary-color money">{$result.integral}积分{neq name='result.price' value='0'}+￥{$result.price}{/neq}</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+    function confirm_receipt(integral_order_id){
+        main.ajax({
+            'url': '/pc2.0/integral/confirm_receipt',
+            'data': {'integral_order_id': integral_order_id},
+            'confirm_text': '是否确认收货',
+        });
+    }
+</script>
+{/block}

@@ -1,0 +1,192 @@
+{extend name="public/index_header"}
+{block name="content_css"}
+    <!--发现好店css-->
+    <link rel="stylesheet" href="__RES__/css/findGoodShop/findGoodShop.css">
+    <link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+
+    <script src="__RES__/js/public/jquery.min.js"></script>
+    <script src="__RES__/js/swiper.min.js"></script>
+    <link rel="stylesheet" href="__RES__/css/swiper.min.css">
+<style>
+
+    .head-container .logo span{
+        font-size: 14px;
+    }
+    .goods-category>ul>li span{
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .swiper-button-next.swiper-button-disabled, .swiper-button-prev.swiper-button-disabled{
+        opacity: 1 !important;
+    }
+</style>
+{/block}
+
+{block name="content"}
+
+<!--发现好店-->
+<img src="__RES__/imgs/findshop/3.png" alt="" style="display:block;width: 100%;">
+
+<!--轮播-->
+<!--<img class="btm-bg" src="__RES__/imgs/findshop/10.png" alt="">-->
+<div class="studio">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            {volist name="topData" id="item"}
+            <div class="swiper-slide">
+                <a href="{:url('/pc2.0/store/goods_list')}?store_id={$item.store_id}">
+                    <img class="shop-img" src="{$item.good_image}" alt="">
+                    <img class="find-icon" src="{$item.logo}" width="49" height="49" alt="">
+                    <span>{$item.store_name}</span>
+                </a>
+            </div>
+            {/volist}
+        </div>
+
+        <!-- Add Arrows -->
+        <div class="swiper-button-next">
+            <span></span>
+        </div>
+        <div class="swiper-button-prev">
+            <span></span>
+        </div>
+    </div>
+</div>
+<!--轮播结束-->
+
+<!--商品分类-->
+<div class="goods-category">
+    <!--active primary-background-color 高亮-->
+    <ul>
+        {volist name="classify" id="cate"  length='9'}
+        <li  class=" category {eq name="$cate.store_classify_id" value=":input('category',$category)"} active primary-background-color {/eq}  primary-background-color-hover " data_id="{$cate.store_classify_id}">
+            <a href="{:url('/pc2.0/store/find_store')}?category={$cate.store_classify_id}">
+                <div>
+                    <span>{$cate.title}</span>
+                </div>
+            </a>
+        </li>
+        {/volist}
+        {gt name="$num" value="8"}
+        <li class="all-menu primary-background-color-hover">
+            <a href="javasctipy:;">
+                <div>
+                    <span>全部分类</span>
+                    <img src="__RES__/imgs/findshop/20.png" alt="">
+                </div>
+            </a>
+        </li>
+        {/gt}
+
+    </ul>
+    <ul {elt name="$num" value="8"}class="second-menu"{/elt}>
+        {volist name="classify" id="cate" offset="9"}
+        <li class=" category {eq name="$cate.store_classify_id" value=":input('category',$category)"} active primary-background-color {/eq} primary-background-color-hover" data_id="{$cate.store_classify_id}">
+            <a href="{:url('/pc2.0/store/find_store')}?category={$cate.store_classify_id}">
+                <div>
+                    <span>{$cate.title}</span>
+                </div>
+            </a>
+        </li>
+        {/volist}
+    </ul>
+</div>
+<!--商品分类结束-->
+
+<!--分类商品-->
+<div class="cate-goods-view">
+    <ul>
+        {volist name="result" id="val"}
+        <li>
+            <div class="cate-top">
+                <div class="cate-top-left">
+                    <img src="{$val.logo}" width="41" height="41" alt="">
+                    <div class="cate-top-left-info">
+                        <p>{$val.store_name}</p>
+                        {if condition="config('user.one_more') eq 1"}
+                        <div class="border-color primary-color">{switch name="$val.shop"} {case value="0"}自营 {/case}{case value="1"}个人 {/case}{case value="2"}公司 {/case}{/switch}</div>
+                        {/if}
+                    </div>
+                </div>
+                <div class="cate-top-right primary-background-color" onclick="jump_store({'store_id':'{$val.store_id}'})">进入好店</div>
+            </div>
+            <div class="cate-btm">
+
+                {volist name="$val.shop_goods" id="vo" key="k" }
+                {eq name="$k" value="1"}
+                <a href="javascript:jump_goods('{$vo.goods_id}')">
+                    <img class="big-pic" width="245" height="234" src="{$vo.file}" alt="">
+                </a>
+                {/eq}
+                {/volist}
+                <div>
+                {volist name="$val.shop_goods" id="goods" offset="1"  }
+                <a href="javascript:jump_goods('{$vo.goods_id}')">
+                    <img class="small-top-pic" width="117" height="113" src="{$goods.file}" alt="">
+                </a>
+                {/volist}
+                </div>
+
+            </div>
+        </li>
+        {/volist}
+    </ul>
+</div>
+
+<!--此处加分页-->
+<div id="page-container" class="pageContainer">{$result|raw}</div>
+<div class="find-next-cate primary-background-color" onclick="jump_page()">查看下一分类 ></div>
+<!--分类商品结束-->
+
+<!--置顶-->
+<div class="back-top">
+    <img src="__RES__/imgs/findshop/top.png" alt="">
+    <span>返回顶部</span>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    //查看下一分类
+    function jump_page() {
+        var category_id = '{:input("category")}' ?'{:input("category")}' : '{$category}' ;
+        var array = [];
+        $('.goods-category .category').each(function () {
+            array.push($(this).attr('data_id'));
+        })
+        var select_category_id = array[array.indexOf(category_id)+1];
+        if (typeof(select_category_id)=="undefined" ) {
+            select_category_id = '{$category}';
+        }
+        main.jump({'url':'/pc2.0/store/find_store?category='+select_category_id});
+    }
+
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView:6,
+        spaceBetween: 12,
+        slidesPerGroup: 1,
+        // loop: true,
+        loopFillGroupWithBlank: true,
+
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+
+
+    $('.all-menu').mouseenter(function () {
+        $('.second-menu').show()
+    })
+
+    $('.goods-category').mouseleave(function () {
+        $('.second-menu').hide()
+    })
+</script>
+{/block}

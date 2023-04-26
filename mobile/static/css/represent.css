@@ -1,0 +1,1186 @@
+.recordMain{
+  width: 94%;
+  margin: 0 auto;
+  padding: 10px 0 0;
+}
+.recordMain .time{
+  background: #e3e1e1;
+  border-radius: 20px;
+  font-size: 12px;
+  line-height: 26px;
+  color: #fff;
+  text-align: center;
+  width: 124px;
+  margin: 0 auto;
+}
+.recordMain .con{
+  background: #fff;
+  border-radius: 4px;
+  padding: 10px;
+  margin-top: 10px;
+}
+.recordMain .title{
+  font-size: 18px;
+  line-height: 30px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  color: #202224;
+}
+.recordMain .textCon{
+  display: flex;
+  align-items: center;
+}
+.recordMain .textCon img{
+  display: block;
+  width: 46px;
+  height: 46px;
+  margin-right: 10px;
+}
+.recordMain .textCon .text{
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 14px;
+  line-height: 20px;
+  color: #202224;
+}
+
+
+.contentRepresent {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - 48px);
+  top: 48px;
+  left: 0;
+  background: #f6f6f6;
+}
+
+.white:after {
+  background: #fff;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  content: '';
+}
+
+.withdrawCon{
+  position: relative;
+  padding: 30px 0 100px;
+  color: #fff;
+}
+.withdrawCon .title{
+  text-align: center;
+  font-size: 34px;
+  line-height: 50px;
+}
+.withdrawCon .tips{
+  text-align: center;
+  font-size: 14px;
+  line-height: 2;
+
+}
+.withdrawCon .pic{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top:0;
+  display: block;
+}
+.withdrawCon .icon{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom:0;
+  display: block;
+}
+.successIcon{
+  width: 18.8%;
+  margin: 0 auto;
+  border: 5px solid transparent;
+  border-radius: 100%;
+  position: absolute;
+  left: 40.6%;
+  bottom: 6px;
+  z-index: 5;
+
+}
+.successIcon img{
+  display: block;
+}
+.recordBtn{
+  width: 76%;
+  margin: 70px auto 0;
+  text-align: center;
+  font-size: 18px;
+  line-height: 52px;
+  border-radius: 4px;
+}
+.recordBtn a{
+  display: block;
+  color: #fff;
+  /*background: linear-gradient();*/
+}
+
+
+/*提现记录*/
+.withdrawList li{
+  background: #fff;
+  position: relative;
+  padding: 10px 3%;
+}
+.withdrawList li::after{
+  width: 94%;
+  height: 1px;
+  left: 3%;
+  bottom: 0;
+  position: absolute;
+  background: #eeeeee;
+  content: '';
+}
+.withdrawList li .first{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.withdrawList li  .number{
+  font-size: 14px;
+  line-height: 28px;
+  color: #202224;
+}
+.withdrawList li  .state{
+  display: flex;
+  align-items: center;
+}
+.withdrawList li  .state .icon{
+  width: 24px;
+  display: block;
+  margin-right: 5px;
+}
+.withdrawList li  .state div{
+  font-size: 14px;
+  line-height: 20px;
+}
+.withdrawList li  .state .now{
+  color: #9ea3a9;
+}
+.withdrawList li  .state .success{
+  color: #04ae04;
+}
+.withdrawList li  .state .fail{
+  color: #f23030;
+}
+.withdrawList li .time{
+  font-size: 12px;
+  color: #6e7479;
+  line-height: 24px;
+}
+.withdrawList li .value{
+  font-size: 20px;
+  color: #f23030;
+  line-height: 24px;
+}
+.withdrawText{
+  width: 94%;
+  margin: 15px auto 0;
+  border-radius: 6px;
+  box-shadow:0 0 15px rgba(0, 0, 0, .3);
+  background: #fff;
+  padding: 10px;
+}
+.withdrawText .tips{
+  font-size: 14px;
+  line-height: 28px;
+  color: #202224;
+  position: relative;
+  z-index: 2;
+}
+.withdrawText .number{
+  display: flex;
+  align-items: center;
+  font-size: 28px;
+  line-height: 30px;
+  color: #202224;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+  position: relative;
+  z-index: 2;
+}
+.withdrawText .number input{
+  flex: 1;
+  display: block;
+  font-size: 28px;
+  line-height: 30px;
+  background: none;
+  width: 100%;
+}
+.withdrawText .det{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  font-size: 14px;
+  line-height: 24px;
+  color: #828282;
+  position: relative;
+  z-index: 2;
+}
+.withdrawText .det a{
+  color: #4679c0;
+  display: block;
+}
+.withdrawWay{
+  width: 92%;
+  margin: 5px auto 0;
+}
+.withdrawWay .title{
+  padding: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  border-bottom: 1px dashed #e8e8e8;
+}
+.withdrawWay .pay_list{
+  padding-left: 0;
+}
+.withdrawNotice{
+  width: 92%;
+  margin: 20px auto 0;
+}
+
+.withdrawNotice .title{
+  font-size: 14px;
+  line-height: 24px;
+  color: #6e7479;
+}
+.withdrawNotice .note div{
+  font-size: 12px;
+  line-height: 20px;
+  color: #9ea3a9;
+}
+.goWithdraw{
+  width: 92%;
+  margin: 30px auto 0;
+  font-size: 16px;
+  line-height: 46px;
+  text-align: center;
+  /*background: #f23030;*/
+  color: #fff;
+  border-radius: 4px;
+}
+.profitCon{
+  padding-bottom: 20px;
+}
+.profitCon .detail{
+  position: relative;
+}
+.profitCon .detail .pic{
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: 0;
+  z-index: 0;
+}
+.profitCon .tips,.profitCon .number input,.profitCon .det,.profitCon .det a{
+  color: #fff;
+}
+.profitCon .number{
+  border-bottom: none;
+}
+.profitCon .det a{
+  border:1px solid white;
+  border-radius: 4px;
+  padding: 3px 10px;
+}
+.profitCon .tips{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.profitCon .icon{
+  width: 24px;
+  display: block;
+}
+.profitCon .con{
+  width: 94%;
+  margin: 15px auto 0;
+  border-radius: 6px;
+  box-shadow:0 0 15px rgba(0, 0, 0, .1);
+  background: #fff;
+}
+.profitCon .con .title{
+  padding: 0 10px;
+  font-size: 14px;
+  line-height: 40px;
+  color: #202224;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.profitCon .con .title::after{
+  width: 200%;
+  height: 1px;
+  background: #f4f4f4;
+  content: '';
+  position: absolute;
+  transform: scale(0.5);
+  bottom: 0;
+  left: -50%;
+}
+.profitCon .con .title .icon{
+  display: block;
+  margin-right: 8px;
+  width: 20px;
+}
+.profitCon .con .title .text{
+  font-weight: bold;
+}
+.profitCon .con .list{
+  height: 100px;
+  display: flex;
+  align-items: center;
+}
+.profitCon .con .list li{
+  width: 50%;
+  text-align: center;
+}
+.profitCon .con .list li .num{
+  font-size: 24px;
+  line-height: 36px;
+}
+.profitCon .con .list li .state{
+  font-size: 12px;
+  line-height: 24px;
+  color: #8b8b8b;
+}
+.orange{
+  color: #fb8a14;
+}
+.blue{
+  color: #0897ff;
+}
+#myChart{
+  height:200px;
+}
+/*申请代言*/
+
+.applying .state{
+  position: relative;
+  padding-top: 20px;
+}
+.applying .state .stateIcon{
+  position: absolute;
+  width:14%;
+  left: 43%;
+  top:21%;
+}
+.applying .state .icon{
+  display: block;
+  margin: 0 auto;
+  width: 28%;
+}
+.applying .state .wave{
+  display: block;
+  margin-top: 20px;
+}
+.applying  .title{
+  font-size: 16px;
+  line-height: 20px;
+  padding: 20px 0;
+  color: #202224;
+  font-weight: bold;
+  text-align: center;
+}
+.applying .tips{
+  font-size: 14px;
+  line-height: 22px;
+  color: #666;
+  text-align: center;
+}
+.applying .go{
+  width: 50%;
+  margin: 30px auto 0;
+  border-radius: 30px;
+  font-size: 16px;
+  line-height: 44px;
+  text-align: center;
+}
+.applying .go a{
+  color: #fff;
+  display: block;
+}
+
+/*收益记录*/
+.incomeCon{
+  width: 94%;
+  margin: 0 auto;
+}
+.incomeCon .totalAll{
+  font-size: 14px;
+  line-height: 24px;
+  color: #202020;
+  margin-top: 5px;
+}
+.incomeCon .totalAll span{
+  margin-left: 30px;
+}
+.incomeCon .dayCon .time{
+  font-size: 14px;
+  line-height: 40px;
+  color: #202224;
+}
+.incomeCon .dayCon .time span{
+  margin-left: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.incomeCon .listGroup li{
+  margin-top: 15px;
+  background: #fff;
+  border-radius: 4px;
+}
+.incomeCon .listGroup li:first-child{
+  margin-top: 0;
+}
+.incomeCon .listGroup li .info{
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.incomeCon .listGroup li .info .user{
+  width: 28px;
+  height: 28px;
+  border-radius: 20px;
+  display: block;
+}
+.incomeCon .listGroup li .info .name{
+  flex: 1;
+  margin: 0 10px;
+  font-size: 14px;
+  line-height: 24px;
+  color: #6e7479;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.incomeCon .listGroup li .info::after{
+  width: 200%;
+  height: 1px;
+  background: #f4f4f4;
+  content: '';
+  position: absolute;
+  transform: scale(0.5);
+  bottom: 0;
+  left: -50%;
+}
+.incomeCon .listGroup li .det{
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.incomeCon .listGroup li .det .pic{
+  display: block;
+  width: 62px;
+  height: 62px;
+  margin-right: 10px;
+}
+.incomeCon .listGroup li .text{
+  flex: 1;
+}
+.incomeCon .listGroup li .det .title{
+  font-size: 14px;
+  line-height: 20px;
+  color: #202224;overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  height: 40px;
+}
+.incomeCon .listGroup li .data{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  line-height: 22px;
+}
+.incomeCon .listGroup li .data .number{
+  font-size: 14px;
+  color: #202224;
+}
+.incomeCon .listGroup li .data .date{
+  color: #9ea3a9;
+}
+
+
+/*我的等级*/
+.levelCon{
+  background: #fcfcfc;
+  position: absolute;
+  width: 100%;
+  max-width: 720px;
+  left: 0;
+  top:0;
+  height: 100%;
+  padding-top: 48px;
+
+}
+.levelDet {
+  width: 96%;
+  margin: 0 auto;
+  position: relative;
+}
+.levelDet .con{
+  position: absolute;
+  top: 5%;
+  left: 3.5%;
+  width: 93%;
+  height: 83%;
+  display: flex;
+}
+.levelDet .con>div{
+  width: 90%;
+  margin: 0 auto;
+}
+.levelDet .con .title{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 5%;
+}
+.levelDet .con .info{
+  width: 16%;
+}
+.levelDet .con .info .user{
+  width:100%;
+  display: block;
+  border-radius: 30px;
+  margin-right: 10px;
+}
+.levelDet .con  .name{
+  flex: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 16px;
+  line-height: 2;
+  color: #fff;
+}
+.levelDet .con .level{
+  width: 100%;
+}
+
+.levelDet .con .record{
+  font-size: 13px;
+  line-height: 2;
+  border: 1px solid #8e6830;
+  border-radius: 20px;
+  text-align: center;
+  padding: 0 10px;
+}
+.levelDet .con .record a{
+  display: block;
+  color: #8e6830;
+}
+.level{
+  display: flex;
+  align-items: center;
+  margin-top: 4%;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  overflow: hidden;
+  height: 42px;
+}
+.level li{
+  position: relative;
+  z-index: 1;
+  /*width: 25%;*/
+}
+.level li .number{
+  width: 9vw;
+  display: block;
+  margin: 0 auto;
+  background: #96723a;
+  border-radius: 15px;
+  padding: 3px 0;
+  position: relative;
+  font-size: 3vw;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+
+}
+.level li .number img{
+  width: 24px;
+  display: block;
+  margin: 0 auto;
+}
+/*.level li .number img.current{*/
+   /*display: none;*/
+ /*}*/
+/*.level li.active .number img.current{*/
+  /*display: block;*/
+/*}*/
+/*.level li.active .number img.primary{*/
+  /*display: none;*/
+/*}*/
+.level li .level_title{
+  font-size: 12px;
+  color: #96723a;
+  line-height: 24px;
+  text-align: center;
+}
+
+.level li .number:after{
+  content: '';
+  position: absolute;
+  width: 14vw;
+  height: 3px;
+  background: #96723a;
+  left: 100%;
+  top:50%;
+  margin-top: -1.5px;
+  z-index: 2;
+}
+.level li:last-child .number::after{
+  display: none;
+}
+.level li:last-child.active .number::before{
+  display: none;
+}
+.level li.active .number{
+  background: #fff;
+  color: #96723a;
+
+}
+.level li.active .level_title{
+  color: #fff;
+}
+.level li.active .number::before{
+  content: '';
+  position: absolute;
+  width: 14vw;
+  height: 3px;
+  background: #fff;
+  left: 100%;
+  top:50%;
+  margin-top: -1.5px;
+  z-index: 3;
+}
+.level li.next:not(.active) .number::before{
+  content: '';
+  position: absolute;
+  width: 7vw;
+  height: 3px;
+  background: #96723a;
+  right: 8vw;
+  top:50%;
+  margin-top: -1.5px;
+  z-index: 3;
+}
+.level li:first-child:last-child .number::before{
+  display: none;
+}
+.representNum{
+  width: 89%;
+  margin: 0 0 0 6%;
+}
+.representNum .con,.representNum .det{
+  background: #fff;
+  border-radius: 10px;
+  box-shadow:0px 0px 10px rgba(0,0,0,0.1);
+  padding:3% 4%;
+  margin-top: 15px;
+}
+.representNum .title{
+  padding: 0 5px;
+  font-size: 18px;
+  line-height: 1;
+  color: #202224;
+}
+.representNum .title span{
+  font-size: 12px;
+  color: #666;
+}
+.representNum .con  .numberList{
+
+}
+.representNum .con  .list{
+  position: relative;
+}
+.representNum .con   .list::after{
+  background: #f9f9fa;
+  content: '';
+  width: 200%;
+  height: 1px;
+  position: absolute;
+  left: -50%;
+  bottom: 0;
+  transform: scale(0.5);
+}
+.representNum .con  .list:last-child::after{
+  display: none;
+}
+.representNum .con  .numberList .list  .tit{
+  font-size: 14px;
+  line-height: 30px;
+  color: #202224;
+}
+.representNum .con  .numberList .list  .progress{
+  width: 100%;
+  height: 5px;
+  background: #b58f3e;
+  position: relative;
+  border-radius: 5px;
+  margin-top: 18px;
+}
+.representNum .con  .numberList .list  .progress .mark{
+  position: absolute;
+  height: 100%;
+  border-radius: 5px;
+  left: 0;
+  top:0;
+  background: #8b6d27;
+}
+.representNum .con  .numberList .list  .progress .mark .num{
+  position:absolute;
+  top:-12px;
+  left: calc(100% - 6px);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #e1c786;
+}
+.representNum .con  .numberList .list  .progress .mark .num div{
+  font-size: 12px;
+  line-height: 18px;
+  color: #846620;
+  position: absolute;
+  top:-26px;
+  left: 50%;
+  margin-left: -20px;
+  width: auto;
+  min-width: 40px;
+  padding: 0 5px;
+  border: 1px solid #e1c786;
+  border-radius: 4px;
+  text-align: center;
+  background: #efd89a;
+}
+.representNum .con  .numberList .list  .progress .mark .num::after{
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #efd89a;
+  position: absolute;
+  left: -6px;
+  top:-7px;
+  content: '';
+}
+.representNum .con  .numberList .list .numArea{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #a67f2d;
+  font-size: 12px;
+  line-height: 30px;
+}
+
+.upCon{
+  margin-top: 20px;
+}
+.upCon .con{
+  padding: 0 4%;
+}
+.upCon .con .list{
+  padding: 4% 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  line-height: 24px;
+  color: #202224;
+}
+.upCon .con .list .tips{
+  flex: 1;
+  margin-right: 20px;
+}
+.upCon .con .list .ope{
+  width: 88px;
+  line-height: 32px;
+  text-align: center;
+  background: linear-gradient(to right,#d0aa71,#e9ce9b);
+  border-radius: 20px;
+  color: #fff;
+}
+.upCon .con .list .ope a{
+  color: #fff;
+  display: block;
+}
+.representNum .det .tit{
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 20px;
+  color: #8b6c26;
+  margin-bottom: 10px;
+}
+.representNum .det .tit .icon{
+  width: 40px;
+  display: block;
+  margin-right: 10px;
+}
+.representNum .det .levelRule{
+  display: flex;
+  align-items:flex-start;
+}
+.representNum .det .levelRule .icon{
+  width: 20px;
+  height: 20px;
+  display: block;
+  margin-right: 10px;
+}
+.representNum .det .levelRule .text{
+  font-size: 12px;
+  line-height: 22px;
+  color: #6e7479;
+}
+
+/*代言*/
+.spokeCon{
+  width: 94%;
+  margin: 10px auto 0;
+}
+.spokeCon .title{
+  font-size: 16px;
+  line-height: 2;
+  display: flex;
+  align-items: center;
+  color: #202224;
+}
+.spokeCon .title div{
+  width: 8px;
+  height: 8px;
+  background: #f23030;
+  border-radius: 6px;
+  margin-right: 10px;
+}
+.spokeCon .det{
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+  margin-top: 6px;
+  padding: 3%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.spokeCon .det .text{
+  flex: 1;
+}
+.spokeCon .det .button{
+  margin-left: 8%;
+  width: 82px;
+  line-height: 32px;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+}
+.spokeCon .det .button a{
+  color: #fff;
+  display: block;
+}
+.spokeCon .det .tit{
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.spokeCon .det .article{
+  color: #848484;
+  font-size: 14px;
+  line-height: 22px;
+  margin-top: 3px;
+}
+.spokeTip{
+  padding: 0 6%;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+/*申请代言人*/
+.applyCon{
+  background: #f6f6f6;
+  position: fixed;
+  width: 100%;
+  max-width: 720px;
+  left: 0;
+  top:0;
+  height: 100%;
+  padding-top: 48px;
+  overflow: auto;
+}
+
+
+.applyList{
+  background: #fff;
+  width: 100%;
+  margin-top: 8px;
+}
+.applyList li{
+  padding: 0 3%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.applyList li::after{
+  width: 200%;
+  height: 1px;
+  background: #eeeeee;
+  content: '';
+  position: absolute;
+  transform: scale(0.5);
+  bottom: 0;
+  left: -50%;
+}
+.applyList li .text{
+  width: 80px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 24px;
+  padding: 10px 0;
+}
+.applyList li .info{
+  flex: 1;
+}
+.applyList li .info input{
+  display: block;
+  width: 100%;
+  font-size: 14px;
+  line-height: 24px;
+  padding: 10px 0;
+}
+.applyList li .det{
+  display: flex;
+  align-items: center;
+}
+.applyList li .det input{
+  flex: 1;
+}
+.applyList li .det .more{
+  width: 6px;
+  display: block;
+  margin-left: 5px;
+}
+.applyBtn{
+  width: 94%;
+  position: absolute;
+  bottom:20px;
+  left: 3%;
+  /*background: #f23030;*/
+  color: #fff;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 12px 0;
+  background: #d8d8d8;
+}
+.list_tab{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-bottom: 1px solid #eeeeee;
+  background: #fff;
+}
+.list_tab li{
+  width: 33.3%;
+  font-size: 14px;
+  line-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.list_tab li div{
+  border-bottom: 2px solid transparent;
+}
+.list_tab li.active{
+  color: #f23030;
+}
+.list_tab li.active div{
+  border-bottom: 2px solid #f23030;
+}
+.fanCon{
+  background: #f6f6f6;
+  position: absolute;
+  width: 100%;
+  max-width: 720px;
+  left: 0;
+  top:0;
+  height: 100%;
+  padding-top: 48px;
+}
+.caret{
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 2px;
+  vertical-align: middle;
+  border-top: 4px solid #666;
+  border-right: 4px solid transparent;
+  border-left: 4px solid transparent;
+}
+.condition{
+  display: flex;
+  align-items: center;
+  background: #fafafa;
+}
+.condition .list{
+  width: 80%;
+  display: flex;
+  align-items: center;
+}
+.condition .number{
+  width: 20%;
+  text-align: center;
+  font-size: 14px;
+  line-height: 40px;
+  color: #f23030;
+  position: relative;
+}
+.condition .number::before{
+  width: 1px;
+  height: 100%;
+  content: '';
+  position: absolute;
+  background: #eeeeee;
+  left: 0;
+  top:0;
+  z-index: 2;
+}
+.condition .list li{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 33.3%;
+  font-size: 14px;
+  line-height: 40px;
+}
+.condition .list li .title{
+  font-size: 14px;
+  line-height: 40px;
+  color: #202224;
+}
+.condition .list li div {
+  width: 10px;
+}
+
+.condition .list li .caret {
+  margin-left: 6px;
+}
+
+.condition .list li .up {
+  transform: rotate(180deg);
+  margin-bottom: 2px;
+}
+
+.condition .list li .caret {
+  float: left;
+}
+.fansList{
+  width: 94%;
+  margin: 0 auto;
+}
+.fansList li{
+  margin: 10px auto 0;
+  padding: 3.5% 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  justify-content: space-between;
+}
+.fansList li::after{
+  width: calc(100% - 24px);
+  content: '';
+  position: absolute;
+  left: 12px;
+  top:0;
+  background: #fff;
+  border-radius: 8px;
+  z-index: 1;
+  height: 100%;
+}
+.fansList li>div{
+  position: relative;
+  z-index: 2;
+
+}
+.fansList .info{
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+.fansList li .user{
+  width: 50px;
+  height: 50px;
+  border-radius: 30px;
+  display: block;
+  margin-right: 15px;
+  position: relative;
+  z-index: 2;
+}
+.fansList li .text{
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+.fansList li .text>div{
+  display: flex;
+  align-items: center;
+  /*justify-content: space-between;*/
+}
+.fansList li  .name{
+  font-size: 14px;
+  line-height: 22px;
+  color: #202224;
+  flex: 1;
+}
+.fansList li  .price{
+  margin-right: 20px;
+  font-size: 12px;
+  ;line-height: 20px;
+}
+.fansList li  .time{
+  color:#9ea3a9;
+  font-size: 12px;
+  line-height: 22px;
+}
+.fansList li  .number{
+  font-size: 10px;
+  line-height: 20px;
+  background: #f23030;
+  border-radius: 4px;
+  padding: 1px 6px;
+  color: #fff;
+  float: right;
+}
+.fansList li  .number span{
+  font-size: 14px;
+}
+.fansList li  .number  img{
+  width: 11px;
+  display: block;
+  margin-right: 5px;
+}
+

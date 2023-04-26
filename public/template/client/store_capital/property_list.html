@@ -1,0 +1,284 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .goods-desc .name {
+        height: auto !important;
+    }
+
+    .tabmenu .tab {
+        height: auto !important;
+    }
+
+    .tabmenu .tab p {
+        margin-left: 30px;
+    }
+
+    .collect_display td {
+        border: hidden !important;
+    }
+
+    .childTable td {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+
+    .childTable tr:nth-child(2) td {
+        color: #0BB20C !important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" class="layui-form" method="post">
+    <div class="main-content" id="mainContent">
+        <!--<div class="tabmenu">-->
+            <!--<ul class="tab">-->
+                <!--温馨提示 </br>-->
+                <!--<p></p>-->
+                <!--<p>账单计算公式：商家结算金额=商家订单实际收款金额+平台优惠券+平台红包-运费-分销返佣-平台使用费-退款；</p>-->
+                <!--<p>账单处理流程：系统自动出账 > 账单对账>商家提现>平台审核>线下转账>提现成功；</p>-->
+                <!--<p>账单出账时间：当周期内的所有订单都已经确认收货，并不在发生退款退货时，即可出账，例如：订单在1号确认收货，商城设置“申请售后期限：为7天，那么此笔订单会在8号出账；</p>-->
+                <!--<p>平台承担活动款：是指由拼平台发起的活动所产生的金额，此金额是由平台承担，例如平台方红包、平台优惠券；</p></br>-->
+
+            <!--</ul>-->
+
+        <!--</div>-->
+        <div class="order_stats_top_button">
+            <div class="order_stats_items">
+                <div class="order_stats_item order_stats_item2">
+                    <i class="icon"><img src="__RES__/images/icon2.png"/></i>
+                    <div class="desc">
+                        <span class="tit">进账金额</span>
+                        <span class="value"><em>¥</em>{$income}</span>
+                    </div>
+                </div>
+                <div class="order_stats_item order_stats_item4">
+                    <i class="icon"><img src="__RES__/images/icon4.png"/></i>
+                    <div class="desc">
+                        <span class="tit">出账金额</span>
+                        <span class="value"><em>¥</em>{$charge_off.charge_off|default=0}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="explanation" id="explanation">
+                <div class="ex_tit">
+                    <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                </div>
+                <ul>
+                    <li><span>每个商家都有自己的结算周期，每个结算周期都会生成一个结算账单，周期内所有订单出账后，商家可发起提现，提现到对公账户或个人账户；</span></li>
+                    <li><span>账单计算公式：商家结算金额=商家订单实际收款金额+平台优惠券+平台红包-运费-分销返佣-平台使用费-退款；</span></li>
+                    <li><span>账单处理流程：系统自动出账 > 账单对账>商家提现>平台审核>线下转账>提现成功；</span></li>
+                    <li><span>账单出账时间：当周期内的所有订单都已经确认收货，并不在发生退款退货时，即可出账，例如：订单在1号确认收货，商城设置“申请售后期限：为7天，那么此笔订单会在8号出账；</span></li>
+                    <li><span>平台承担活动款：是指由拼平台发起的活动所产生的金额，此金额是由平台承担，例如平台方红包、平台优惠券；</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="btn-info" {empty name='data'} hidden {/empty}>
+            <a class="sc-btn sc-blue-btn" href="javascript:dc()"><i class="icon-download-alt"></i>下载订单</a>
+        </div>
+        <div class="order_stats">
+            <div class="order_stats_search clearfix">
+                <form action="javascript:searchGeneral()" name="searchForm" class="layui-form">
+                    <!--<div class="screeItme mt10">-->
+                    <!--<div class="bf100 fl mt5">-->
+                    <!--<strong class="fl lh mr10">金额区间：</strong>-->
+                    <!--<input name="min" value="" type="number" placeholder="" class="text text_2 mr10"  autocomplete="off" />-->
+                    <!--<span class="bolang">&nbsp;&nbsp;至&nbsp;&nbsp;</span>-->
+                    <!--<input name="max" value="" type="number" placeholder="" class="text text_2 mr10"  autocomplete="off" />-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="screeItme mt10">-->
+                    <!--<div class="bf100 fl mt5">-->
+                    <!--<strong class="fl lh mr10">关 键 词 ：</strong>-->
+                    <!--<input name="cat_name" value="" type="text" placeholder="流水号/订单号" class="text text_2 mr10"  autocomplete="off" />-->
+                    <!--<input type="submit" name="query_by_date" value="查询" class="sc-btn sc-blueBg-btn btn30" />-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </form>
+            </div>
+            <!--列表-->
+        </div>
+        <div class="list-div">
+            <form method="POST" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                    <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                        <tr>
+                            <th width="10%" rowspan="2">订单总量</th>
+                            <th width="30%" colspan="6">应收金额</th>
+                            <th width="10%" rowspan="2">本期应结</th>
+                            <th width="10%" rowspan="2">结算状态</th>
+                            <th width="10%" rowspan="2">账单日期</th>
+                            <th width="10%" rowspan="2">操作</th>
+                        </tr>
+                        <tr>
+                            <th>收款金额</th>
+                            <th>活动款项</th>
+                            <th>运费</th>
+                            <th>退款金额</th>
+                            <th>分销返佣</th>
+                            <th>平台服务费</th>
+                        </tr>
+                        {if $data->isEmpty()}
+                        {empty name='today_data'}
+                        <tr>
+                            <td class="no-records" colspan="11">没有找到任何记录</td>
+                        </tr>
+                        {/empty}
+                        {/if}
+                        {eq name=":input('page',1)" value="1"}
+                        {notempty name='$today_data'}
+                        <tr>
+                            <td>{$today_data.order_number|default=0}</td>
+                            <td>{$today_data.sum_pay_price|default=0}</td>
+                            <td>{$today_data.sum_activity_price|default=0}</td>
+                            <td>{$today_data.sum_freight_price|default=0}</td>
+                            <td>{$today_data.sum_refund_price|default=0}</td>
+                            <td>{$today_data.sum_brokerage_price|default=0}</td>
+                            <td>{$today_data.costs|default=0}</td>
+                            <td>{$today_data.should_be_price|default=0}</td>
+                            <td>未出账</td>
+                            <td>{$today_data.time}</td>
+                            <td>
+                                <p><a href="javascript:void(0);"
+                                      onclick="main.jumpFour('client/store_capital/property_examine?check_order_id={$today_data.check_order_id|default=0}&check_status={$item.check_status|default=0}&order_number={$item.order_number|default=0}&should_be_price={$item.should_be_price|default=0}&time={$item.time|default=date(\'Y-m-d\')}')"
+                                      class="btn_see" style="margin-bottom: 3px;padding: 0px 7px"> 查看 </a></p>
+                                <a href="javascript:void(0);" class="btn_see" style="padding: 0px 7px"
+                                   onclick="collect_display({$today_data.check_order_id|default=0})"> 支付汇总 </a>
+                            </td>
+                        </tr>
+                        <tr style="display: none;" class="collect_display"
+                            id="collect_display_{$today_data.check_order_id|default=0}">
+                            <td colspan="6">
+                                <table width="100%" style="border: hidden" class="childTable">
+                                    <tr>
+                                        <td>支付宝支付</td>
+                                        <td>微信支付</td>
+                                        <td>银联支付</td>
+                                        <td>余额支付</td>
+                                        <td>货到付款</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{$today_data.alipay_price|default=0}</td>
+                                        <td>{$today_data.wechat_price|default=0}</td>
+                                        <td>{$today_data.unionpay_price|default=0}</td>
+                                        <td>{$today_data.balance_price|default=0}</td>
+                                        <td>{$today_data.offline_price|default=0}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {/notempty}
+                        {/eq}
+                        {volist name="data" id="item"}
+                        <tr>
+                            <td>{$item.order_number|default=0}</td>
+                            <td>{$item.sum_pay_price|default=0}</td>
+                            <td>{$item.sum_activity_price|default=0}</td>
+                            <td>{$item.sum_freight_price|default=0}</td>
+                            <td>{$item.sum_refund_price|default=0}</td>
+                            <td>{$item.sum_brokerage_price|default=0}</td>
+                            <td>{$item.costs|default=0}</td>
+                            <td>{$item.should_be_price|default=0}</td>
+                            <td>{eq name="item.check_status" value="1"}未出账{else/}<span
+                                    style="color: #0BB20C">已出账，已转入余额</span>{/eq}
+                            </td>
+                            <td>{$item.time}</td>
+                            <td>
+                                <p><a href="javascript:void(0);"
+                                      onclick="main.jumpFour('client/store_capital/property_examine?check_order_id={$item.check_order_id|default=0}&check_status={$item.check_status|default=0}&order_number={$item.order_number|default=0}&should_be_price={$item.should_be_price|default=0}&time={$item.time|default=date(\'Y-m-d\')}')"
+                                      class="btn_see" style="margin-bottom: 3px;padding: 0px 7px"> 查看 </a></p>
+                                <a href="javascript:void(0);" class="btn_see" style="padding: 0px 7px"
+                                   onclick="collect_display({$item.check_order_id})"> 支付汇总 </a>
+                            </td>
+                        </tr>
+                        <tr style="display: none;" class="collect_display" id="collect_display_{$item.check_order_id}">
+                            <td colspan="6">
+                                <table width="100%" style="border: hidden" class="childTable">
+                                    <tr>
+                                        <td>支付宝支付</td>
+                                        <td>微信支付</td>
+                                        <td>银联支付</td>
+                                        <td>余额支付</td>
+                                        <td>线下付款</td>
+                                        <td>货到付款</td>
+                                    </tr>
+                                    <tr>
+                                        <td>{$item.alipay_price|default=0}</td>
+                                        <td>{$item.wechat_price|default=0}</td>
+                                        <td>{$item.unionpay_price|default=0}</td>
+                                        <td>{$item.balance_price|default=0}</td>
+                                        <td>{$item.offline_price|default=0}</td>
+                                        <td>{$item.pay_on_delivery|default=0}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        {/volist}
+
+                        {notempty name="render"}
+                        <tfoot>
+                        <tr>
+                            <td>
+                                {:$data->render()}
+                            </td>
+                        </tr>
+                        </tfoot>
+                        {/notempty}
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+
+    //显示隐藏支付汇总
+    function collect_display(id) {
+        $('#collect_display_' + id).toggle('5');
+    }
+    function dc() {
+        window.location.href = '/client/store_capital/propertyList?dc';
+    }
+</script>
+<script type="text/javascript">
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId': 'start_time',//时间写入对象的id
+        'triggerId': ['start_time'],//触发事件的对象id
+        'alignId': 'text_time1',//日历对齐对象
+        'format': '-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    }, opts2 = {
+        'targetId': 'end_time',
+        'triggerId': ['end_time'],
+        'alignId': 'text_time2',
+        'format': '-'
+    }
+
+    xvDate(opts1);
+    xvDate(opts2);
+    //日期选择插件调用end sunle
+</script>
+{/block}

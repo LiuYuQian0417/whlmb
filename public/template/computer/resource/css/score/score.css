@@ -1,0 +1,254 @@
+body{
+    background-color: #f6f6f6;
+}
+
+
+.logo span{
+    margin-left: 10px;
+    font-size: 20px;
+    color: #666;
+}
+.head-container{
+    background-color: #fff;
+    padding-bottom: 20px;
+}
+.back-top{
+    position: fixed;
+    right: 260px;
+    top:842px;
+    width: 78px;
+    height: 69px;
+    background-color: #fff;
+    border:1px solid #ededed;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.back-top span{
+    font-size: 14px;
+    margin-top: 5px;
+}
+.nav{
+    height: 39px;
+    background-color: #f6f6f6;
+    border-bottom: 1px solid;
+}
+.nav-view{
+    display: flex;
+    align-items: center;
+    width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+}
+.nav-view li{
+    padding: 10px 40px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.nav-view li a{
+    color: #000;
+}
+.score-view{
+    position: relative;
+    height: 479px;
+}
+.score-view .bg{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.score-container{
+    width: 1200px;
+    margin: 0 auto;
+    height: 100%;
+}
+.my-score {
+    position: relative;
+    z-index: 2;
+    width: 317px;
+    height: 100%;
+    padding: 35px 18px 0 22px;
+    background-color: #fff;
+    box-sizing: border-box;
+}
+.my-score-view{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: relative;
+    width: 277px;
+    height: 252px;
+    border:1px solid #fce5db;
+    border-radius: 5px;
+    color: #eb591a;
+}
+.my-score-text{
+    position: absolute;
+    top:-14px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 125px;
+    text-align: center;
+    background-color: #fff;
+    font-size: 20px;
+}
+.score-img{
+    margin-top: 68px;
+}
+.score-detail{
+    width: 100px;
+    height: 26px;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 26px;
+    box-sizing: border-box;
+    border: 1px solid;
+    margin-top: 58px;
+    cursor: pointer;
+}
+.vip{
+    display: flex;
+    align-items: center;
+    margin-top: 53px;
+}
+.avatar{
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    background-color: #eaebee;
+}
+.vip-info{
+    margin-left:15px;
+}
+.vip-info p{
+    color: #666;
+    margin: 8px 0;
+    font-size: 14px;
+}
+.score-conversion{
+    width: 1200px;
+    height: 111px;
+    margin: 60px auto 0;
+    background-color: #fff;
+}
+.score-conversion-item{
+    display: flex;
+    align-items: center;
+    height: 55px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e5e5e5;
+}
+.score-conversion-item li{
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.score-conversion-item li a{
+    color: #000;
+}
+.score-conversion-item li + li{
+    margin-left: 24px;
+}
+.actives{
+    border-radius: 25px;
+    color: #fff;
+}
+.actives a{
+    color: #fff!important;
+}
+.goods-list{
+    width: 1200px;
+    margin: 20px auto;
+}
+.goods-list ul{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+.goods-list ul li{
+    position: relative;
+    width: 224px;
+    height: 306px;
+    background-color: #fff;
+    margin-bottom: 20px;
+    margin-left: 20px;
+}
+.goods-list ul li:nth-of-type(5n + 1){
+    margin-left: 0;
+}
+.goods-list ul li a{
+    display: block;
+    padding-top: 30px;
+    box-sizing: border-box;
+}
+.goods-list ul li:hover .buy{
+    display: block;
+}
+.score-goods{
+    width: 148px;
+    height: 148px;
+    display: block;
+    margin: 0 auto;
+}
+.score-info{
+    font-size: 12px;
+    padding: 18px 20px 0;
+    box-sizing: border-box;
+    margin-top: 32px;
+    border-top: 1px solid #eee;
+}
+.info-txt{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 184px;
+    height: 16px;
+    color: #000;
+}
+.info-score{
+    margin-top: 12px;
+    text-align: center;
+}
+.info-score span{
+    font-size: 14px;
+}
+.add-score{
+    color: #ff9800;
+}
+.buy{
+    display: none;
+    position: absolute;
+    top:180px;
+    width: 100%;
+    height: 44px;
+    color: #fff;
+    text-align: center;
+    line-height: 44px;
+    background-color: #ff403e;
+}
+.pageContainer{
+    width: 1200px;
+    margin:  10px auto 0;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+}
+.page li{
+    background-color: #fff!important;
+}
+.page li.act{
+    background-color: #f6f6f6!important;
+}
+
+

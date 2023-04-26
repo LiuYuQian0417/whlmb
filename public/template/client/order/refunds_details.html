@@ -1,0 +1,294 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .layui-form-radio{margin: 0;}
+    .layui-form-radio *{font-size: 12px;}
+    .ui-radio-label{padding-left: 0}
+    .layui-checkbox-disbaled:hover i{
+        color: #5FB878!important;
+    }
+</style>
+
+<div class="main-content" id="mainContent">
+
+
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>温馨提示：提交操作将会重新审核，请慎重提交确定。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="ecsc-form-goods">
+        <form action="" method="post" name="theForm" enctype="multipart/form-data" id="bonus_form" class="layui-form">
+            <div class="wrapper-list border1">
+                <table class="ecsc-default-table">
+                    <thead>
+                    <tr>
+                        <th>商品信息</th>
+                        <th>商品缩略图</th>
+                        <th>买家信息</th>
+                        <th>商品规格</th>
+                        <th>购买数量</th>
+                        <th>单品价格</th>
+                        <th>运费金额</th>
+                        <th>用户申请金额</th>
+                        <th>
+                            {switch name="$item.status"}
+                            {case value="5.1|4.2"}退款{/case}
+                            {case value="5.2|4.3|5.4"}退货{/case}
+                            {default/}错误
+                            {/switch}原因
+                        </th>
+                        {if condition="$item.status eq 5.1 or $item.status eq 5.2"}
+                        <th>用户收货状态</th>
+                        {/if}
+                        <th>{switch name="$item.status"}
+                            {case value="5.1|4.2"}退款{/case}
+                            {case value="5.2|4.3|5.4"}退货退款{/case}
+                            {default/}错误
+                            {/switch}组图
+                        </th>
+                        {notempty name="$item['orderGoodsRefund']['return_multiple_file']"}
+                        <th>物流凭证</th>
+                        {/notempty}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>{$item.goods_name}</td>
+                        <td>
+                            <img src="{$item.file}" class="thumb-img" style="width: 50px;height: 50px;"
+                                 onerror="this.src='/template/master/resource/image/common/imageError.png'"/>
+                        </td>
+                        <td>{$item.nickname}</td>
+                        <td>{$item.attr|default='无属性'}</td>
+                        <td>{$item.quantity}</td>
+                        <td>{$item.single_price}</td>
+                        <td>{$item.sub_freight_price}</td>
+                        <td>{$item.orderGoodsRefund.origin_refund_amount}</td>
+                        <td>{$item.orderGoodsRefund.reason}</td>
+                        {if condition="$item.status eq 5.1 or $item.status eq 5.2"}
+                        <td>
+                            {if condition="$item.orderGoodsRefund.is_get_goods eq 1"}
+                            未收到货
+                            {else/}
+                            已收到货
+                            {/if}
+                        </td>
+                        {/if}
+                        <td>
+                            {volist name="$item.orderGoodsRefund.multiple_file" id="multiple_file"}
+                            <a href="javascript:void(0);"><img src="{$multiple_file|default=''}" style="width: 50px;height: 50px;" onerror=this.src="/template/master/resource/image/common/imageError.png" onmouseover="toolTip('<img src={$multiple_file}>')" onmouseout="toolTip()"></a>
+                            {/volist}
+                        </td>
+                        {notempty name="$item['orderGoodsRefund']['return_multiple_file']"}
+                        <td>
+                            {volist name="$item['orderGoodsRefund']['return_multiple_file']" id="return_multiple_file"}
+                            <a href="javascript:void(0);"><img src="{$return_multiple_file|default=''}" style="width: 50px;height: 50px;" onerror=this.src="/template/master/resource/image/common/imageError.png" onmouseover="toolTip('<img src={$return_multiple_file}>')" onmouseout="toolTip()"></a>
+                            {/volist}
+                        </td>
+                        {/notempty}
+                    </tr>
+                    </tbody>
+                </table>
+
+                <dl>
+                    <dt><font color="red">*</font> 用户已开发票</dt>
+                    <dd>
+                        {notempty name="$invoiceArr"}
+                        <input type="checkbox" disabled  checked><font class="red">（建议您验证发票后再进行退款操作，请慎重）</font>
+                        {else/}
+                        <span style="display: block;margin-top: 5px;">无</span>
+                        {/notempty}
+                    </dd>
+                </dl>
+
+                {neq name="$item.status" value="5.4"}
+                <!--退款金额-->
+                <dl id="Price">
+                    <dt><span class="require-field">*</span>&nbsp;退款金额：</dt>
+                    <dd>
+                        <input type="text" name="price" size="20" class="text" readonly
+                               value="{$item.orderGoodsRefund.refund_amount}"
+                               placeholder="请输入金额，最多两位小数" autocomplete="off" maxlength="10" datatype="d" nullmsg="请输入金额！" errormsg="金额为两位小数！"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--是否审核状态-->
+                <dl>
+                    <dt>状态：</dt>
+                    <dd>
+                        <div class="checkbox_items radio_status" onclick="showunit()">
+                            <input type="radio" {if condition="$item.status eq 4.2 or $item.status eq 4.3"} disabled {/if} name="status" value="1" title="同意" checked>
+                            <input type="radio" {if condition="$item.status eq 4.2 or $item.status eq 4.3"} disabled {/if} name="status" value="2" title="拒绝" style="margin-left: 10px;" id="refuse">
+                        </div>
+                    </dd>
+                </dl>
+                {/neq}
+                <!--原因-->
+                <dl id="refuse_reason" style="display: none">
+                    <dt><span class="require-field">*</span>&nbsp;拒绝原因：</dt>
+                    <dd>
+                        <input type="text" name="refuse_reason" value="" size="20" class="text"
+                               placeholder="请输拒绝原因" autocomplete="off" maxlength="100" datatype="*" nullmsg="请输拒绝原因！" errormsg="请输拒绝原因！"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                {eq name="$item.status" value="5.4"}
+                {notempty name="$item['orderGoodsRefund']['express_name']"}
+                <dl>
+                    <dt>物流公司：</dt>
+                    <dd style="line-height: 30px">{$item['orderGoodsRefund']['express_name']}</dd>
+                </dl>
+                {/notempty}
+                {notempty name="$item['orderGoodsRefund']['express_name']"}
+                <dl>
+                    <dt>快递单号：</dt>
+                    <dd style="line-height: 30px">{$item['orderGoodsRefund']['express_number']}</dd>
+                </dl>
+                {/notempty}
+                <!--是否审核状态-->
+                <dl>
+                    <dt>收到货状态：</dt>
+                    <dd>
+                        <div class="checkbox_items radio_is_get_goods">
+                            <input type="radio"  name="is_get_goods" value="1" title="未收到" checked>
+                            <input type="radio"  name="is_get_goods" value="2" title="已收到" style="margin-left: 10px;" id="refuse">
+                        </div>
+                    </dd>
+                </dl>
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="hidden" name="order_goods_id" value="{$item.order_goods_id}">
+                        <a class="layui-btn" href="javascript:void(0);" onclick="chooseIt1()">立即提交</a>
+                    </dd>
+                </dl>
+                {/eq}
+                {if condition="$item.status eq 5.1 or $item.status eq 5.2"}
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="hidden" name="order_goods_id" value="{$item.order_goods_id}">
+                        <a class="layui-btn" href="javascript:void(0);" onclick="chooseIt()">立即提交</a>
+                    </dd>
+                </dl>
+                {/if}
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    main.valid('.layui-form');
+    main.form('.layui-form');
+
+    function chooseIt() {
+        var status = $('.radio_status .layui-form-radioed').prev().val();
+        var id = $("input[name='order_goods_id']").val();
+        var refuse_reason = $("input[name='refuse_reason']").val();
+        var price = $("input[name='price']").val();
+        var patrn = /^\d+(\.\d{1,2})?$/;
+
+        if (status == 1) {
+            if (patrn.exec(price) == null) {
+                layer.msg('退款价格格式错误,最多两位小数');
+                return false;
+            }
+            if (price == '') {
+                layer.msg('请输入退款价格');
+                return false;
+            }
+        } else {
+            if (refuse_reason == '') {
+                layer.msg('请输入拒绝原因');
+                return false;
+            }
+        }
+
+        layer.msg('确定处理该售后订单吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({type:'post',url:'/client/order/refunds_details',data:{'order_goods_id': id,status:status,'refuse_reason':refuse_reason,'price':price},
+                    callback: function (res){
+                        if (res.code == 0){
+                            layer.msg('操作成功');
+                            layer.close(index);
+                            parent.layer.closeAll();
+                            parent.parent.location.reload();
+                        }else {
+                            layer.msg(res.message);
+                        }
+                    }});
+            }
+        });
+    }
+
+    function chooseIt1() {
+        layer.msg('确定处理收货状态吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                var id = $("input[name='order_goods_id']").val();
+                var is_get_goods = $('.radio_is_get_goods .layui-form-radioed').prev().val();
+                // var is_get_goods = $("input[name='is_get_goods']").val();
+                main.ajax({type:'post',url:'/client/order/refunds_details',data:{'order_goods_id': id,'is_get_goods':is_get_goods},
+                    callback: function (res){
+                        if (res.code == 0){
+                            layer.msg('操作成功');
+                            layer.close(index);
+                            parent.layer.closeAll()
+                            parent.parent.location.reload();
+                        }else {
+                            layer.msg(res.message);
+                        }
+                    }});
+               ;
+
+
+            }
+        });
+    }
+</script>
+<script type="text/javascript">
+    // 切换单选
+    function showunit() {
+        var get_value = $("input[name='status']:checked").val();
+        if (get_value == 1) {
+            $('#refuse_reason').hide()
+            $('#Price').show();
+        } else {
+            $('#refuse_reason').show();
+            $('#Price').hide();
+        }
+    }
+
+</script>
+{/block}
+

@@ -1,0 +1,149 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请根据提示正确的填写商家等级信息。</span></li>
+                <li><span>请上传合适的等级标志图片。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="contentShell">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 等级名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" maxlength="50" autocomplete="off" placeholder="请输入等级名称"
+                       value="{$item.name|default=''}"
+                       datatype="*"
+                       nullmsg="请输入等级名称" errormsg="请输入等级名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">等级标志</label>
+            <div class="layui-input-block">
+                <div>
+                    <div id="imgPrev" style="float: left;margin-right: 10px;">
+                        <img id="imgShow" src="{$item.file?:''}" width="32" height="32"
+                             onerror="this.src='__RES__/image/common/imageError.png'" alt="等级标志"/>
+                    </div>
+                    <div class="uploader white" style="margin: 0">
+                        <input type="text" class="filename" id="localPath" value="{$item.file?:''}" readonly/>
+                        <input type="button" class="button" value="上传..."/>
+                        <input type="file" id="up_img" name="image"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 发布商品数量</label>
+            <div class="layui-input-block">
+                <input type="text" name="goods_number" value="{$item.goods_number|default='0'}" maxlength="5"
+                       autocomplete="off"
+                       placeholder="请输入发布商品数量"
+                       datatype="n"
+                       nullmsg="请输入发布商品数量" errormsg="只能输入数字"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 选择模板数量</label>
+            <div class="layui-input-block">
+                <input type="text" name="template_number" value="{$item.template_number|default='0'}" maxlength="5"
+                       autocomplete="off"
+                       placeholder="请输入模板数量"
+                       datatype="n"
+                       nullmsg="请输入模板数量" errormsg="只能输入数字"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 等级费用</label>
+            <div class="layui-input-block">
+                <input type="text" name="price" value="{$item.price|default='0'}" maxlength="8" autocomplete="off"
+                       placeholder="请输入等级费用"
+                       datatype="*"
+                       nullmsg="请输入等级费用" errormsg="请输入等级费用"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">等级描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入等级描述" name="describe" maxlength="200" class="layui-textarea">{$item.describe|default=''}</textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">默认状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="default_state" value="1" title="是"
+                       {eq name="item.default_state|default=''" value="1" }checked{/eq}
+                >
+                <input type="radio" name="default_state" value="0" title="否"
+                       {eq name="item.default_state|default='0'" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="是"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="否"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.store_grade_id"}
+                <input type="hidden" name="store_grade_id" value="{$item.store_grade_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    new uploadPreview({UpBtn: "up_img", DivShow: "imgPrev", ImgShow: "imgShow", localPath: 'localPath'});
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

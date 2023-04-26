@@ -1,0 +1,359 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/map.css" rel="stylesheet" type="text/css"/>
+<style>
+    .area_dd{
+        width: 15% !important; margin-top: 0.5% !important;
+    }
+    .layui-form-checkbox {  position: relative;  height: 30px;  line-height: 30px;  margin-right: 10px;  padding-right: 30px;  cursor: pointer;  font-size: 0;  -webkit-transition: .1s linear;  transition: .1s linear;  box-sizing: border-box;  display: inline-block;  }
+    .layui-form-checkbox i{color: #c2c2c2}
+    .layui-form-checked i, .layui-form-checked:hover i{color:#5FB878;}
+    .layui-form-radio{
+        margin: 0!important;
+    }
+    .layui-input, .layui-select, .layui-textarea{height: 30px;}
+    .layui-form-checked[lay-skin=primary] i{background: #f98a10;border-color:#f98a10}
+    .layui-form-checked[lay-skin=primary]:hover i{border-color:#f98a10}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="main-content">
+    <div class="explanation clear">
+        <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>
+        <ul>
+            <li>温馨提示：提交操作将会重新审核，请慎重提交确定。</li>
+        </ul>
+    </div>
+    <div class="ecsc-form-goods">
+        <form action="" method="post" class="layui-form">
+            <div class="wrapper-list border1">
+
+                <!--自提点名称-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;自提点名称：</dt>
+                    <dd>
+                        <input type='text' name='take_name' maxlength="20" value="{$item.take_name|default=''}" size='20'
+                               class="text" autocomplete="off"
+                               placeholder="请输入自提点名称"
+                               datatype="*"
+                               nullmsg="请输入自提点名称" errormsg="请输入自提点名称"/>
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--自提点名称-->
+
+                <!--联系人姓名-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;联系人姓名：</dt>
+                    <dd>
+                        <input type="text" name="contacts_name" value="{$item.contacts_name|default=''}" size="20" class="text"
+                               placeholder="请输入联系人姓名" autocomplete="off" maxlength="10"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--联系人姓名-->
+
+                <!--联系人手机号-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;联系人手机号：</dt>
+                    <dd>
+                        <input name="contacts_phone" type="text" id="contacts_phone" value="{$item.contacts_phone|default=''}"
+                               size="11" class="text"
+                               maxlength="11" autocomplete="off"
+                               placeholder="请输入联系人手机号"
+                               onkeyup="this.value=this.value.replace(/[^\d]/g,'');"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--联系人手机号-->
+
+                <!--自提点所在省份-->
+
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;自提点所在地：</dt>
+                    <dd>
+                        <div class="layui-input-inline" style="width: 140px">
+                            <select id="province" class="state" lay-filter="state" lay-search="">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width: 140px">
+                            <select id="city" class="state" lay-filter="state" >
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width: 140px">
+                            <select id="area" class="state" lay-filter="state">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                        <input type="hidden" name="province" value="{$item.province|default=''}" datatype="*">
+                        <input type="hidden" name="city" value="{$item.city|default=''}" datatype="*" >
+                        <input type="hidden" name="area" value="{$item.area|default=''}" datatype="*">
+                        <input type="hidden" name="street" value="{$item.street|default=''}" datatype="*">
+                    </dd>
+                </dl>
+                <!-- 营业时间 -->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;营业时间：</dt>
+                    <dd>
+                        <div class="layui-input-inline">
+                            <!-- 开始时间 -->
+                            <input type="text" class="layui-input" id="work_time" name="work_time" readonly value="{$item.start_hours|default='00:00'} - {$item.end_hours|default='23:59'}">
+                        </div>
+                        <br>
+                        <br>
+                        {volist name="week" id="vo"}
+                        <!--<input type="checkbox" class="layui-form-checkbox"-->
+                                <!--name="week[]" lay-filter="week" title="{$vo}"-->
+                                <!--value="{$vo}"-->
+                                <!--{eq name=":in_array($vo,$selectedWeek)" value="true"}checked{/eq}-->
+                        <!--&gt;-->
+                        <!--<div class="layui-unselect layui-form-checkbox" style="padding: 2px 2px;margin-bottom:3px;">-->
+                            <!--<span>{$vo}</span><i class="layui-icon layui-icon-ok"></i>-->
+                        <!--</div>-->
+                        <input type="checkbox" name="week[]" lay-filter="week" title="{$vo}" value="{$vo}" lay-skin="primary"
+                               {eq name=":in_array($vo,$selectedWeek)" value="true"}checked{/eq}>
+                        {/volist}
+                    </dd>
+                </dl>
+
+                <!--详细地址-->
+                <dl>
+                    <dt>详细地址：</dt>
+                    <dd>
+                        <input type="text" id="tipinput" name="address" value="{$item.address|default=''}"
+                               maxlength="200" class="text" autocomplete="off"
+                               placeholder="请输入店铺详细地址"/>
+                        <div class="form_prompt" style="color: red;">注：请输入您的地址并选择或根据地图来设置您的地址</div>
+                    </dd>
+                </dl>
+                <!--详细地址-->
+                <dl>
+                    <dd style="margin-left: 31%">
+                        <div id="container" style="width: 470px;height: 270px; " tabindex="0">
+                            <div id="interaction"></div>
+                        </div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>经度（Y）：</dt>
+                    <dd>
+                        <input type="text" id="lng" name="lng" value="{$item.lng|default=''}" class="text"
+                               autocomplete="off" placeholder="请根据地图获取经度"
+                               readonly/>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>纬度（X）：</dt>
+                    <dd>
+                        <input type="text" id="lat" name="lat" value="{$item.lat|default=''}"
+                               autocomplete="off" class="text" placeholder="请根据地图获取纬度"
+                               readonly/>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt>启用状态：</dt>
+                    <dd>
+                        <!--<input type="radio" name="status" value="1" style="display: block"-->
+                               <!--{eq name="item.status|default='1'" value="1" }checked{/eq} />-->
+                        <!--<label>是</label>-->
+                        <input type="radio" lay-skin="primary" name="status" value="1" class="ui-checkbox"
+                               title="是"
+                               {eq name="item.status|default='1'" value="1" }checked{/eq} / >
+                        <!--<input type="radio" name="status" value="0" style="display: block"-->
+                               <!--{eq name="item.status|default='0'" value="0" }checked{/eq} />-->
+                        <!--<label>否</label>-->
+                        <input type="radio" lay-skin="primary" name="status" value="0" class="ui-checkbox"
+                               title="否"
+                               {eq name="item.status|default='0'" value="0" }checked{/eq} / >
+                    </dd>
+                </dl>
+
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <button type="submit" class="sc-btn sc-blueBg-btn btn35 layui-btn-disabled" id="submit" disabled="disabled">确定</button>
+                        <button type="reset" class="sc-btn btn35 sc-blue-btn">重置</button>
+
+                        {present name="$item.take_id"}
+                        <input type="hidden" name="take_id" value="{$item.take_id}">
+                        {/present}
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script type="text/javascript">
+    // jq页面加载载入
+    main.valid('.layui-form');
+
+    main.form([{
+        selector: 'checkbox(week)'
+    }]);
+
+    // 地图
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+
+        var map = new AMap.Map('container', {
+            center: ['{$item.lng|default="0"}', '{$item.lat|default="0"}'],
+            zoom: 17,
+            resizeEnable: true,
+            scrollWheel: false
+        })
+
+        {empty name="$item.take_id"}
+        // 定位
+        map.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                buttonOffset: new AMap.Pixel(0, 10),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+                buttonPosition: 'RB'
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+        });
+
+        {/empty}
+
+
+        //输入提示
+        var autoOptions = {
+            input: "tipinput",
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });  //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',
+            map: map
+        });
+
+        positionPicker.on('success', function (positionResult) {
+            // $('#topTwo').html('');
+            var adds = '';
+            var addsLen = positionResult.regeocode.pois;
+            var addres = '';
+            $('#interaction').html('<a class="submit" onclick="interaction(\'' + positionResult.address + '\',' + positionResult.position.lng + ',' + positionResult.position.lat + ')">定位坐标</a>');
+            addsLen.forEach(function (data) {
+                addres = '<div class="weui-media-box weui-media-box_text box_text" onclick="interaction(\'' + data.address + '\',' + data.location.lng + ',' + data.location.lat + ')" style="padding:8px 3% 0 40px;" data-id="' + data.id + '" data-name="' + data.name + '">'
+                addres += '<h4 class="weui-media-box__title" font-size: 12px;line-height: 24px;color: #999;><i class="iconfont icon-icon1460191833045"></i>' + data.name + '</h4>'
+                addres += '<p class="weui-media-box__desc" style="border-bottom: 1px solid #e5e5e5;font-size: 12px;line-height: 24px;padding-bottom:5px;color: #999;">' + data.address + '</p>'
+                addres += '</div>'
+                adds += addres;
+            });
+            $('#topTwo').html(adds);
+
+        });
+        positionPicker.on('fail', function (positionResult) {
+            // console.log(positionResult)
+
+        });
+
+        positionPicker.start();
+        map.panBy(0, 1);
+
+        map.addControl(new AMap.ToolBar({
+            liteStyle: true
+        }));
+    });
+
+    // $(function () {
+        $('#area').on('change',function () {
+            $(this).removeClass('layui-btn-disabled')
+            $(this).removeAttr('disabled')
+            $(this).off('change')
+        })
+    // })
+
+    function interaction(address, lng, lat) {
+        // $('#tipinput').val(address);
+        $('#lng').val(lng);
+        $('#lat').val(lat);
+    }
+
+    // 联动
+    layui.use(['form','laydate'], function () {
+        var $ = layui.jquery,
+            form = layui.form,
+            laydate = layui.laydate;
+        var url = '/member_address/area';                       //数据请求地址
+        var province = "{$item.province|default=''}";           //编辑需要的省
+        var city = "{$item.city|default=''}";                   //编辑需要的市
+        var district = "{$item.area|default=''}";               //编辑需要的县/区
+
+        getJSON(url, $("select[id='province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            var nameThat = $that.attr('id');
+            // $(namenameThat).val($that.find("option:selected").text());
+            $('input[name="'+nameThat+'"]').val($that.find("option:selected").val());
+            var urls = url + "?id=" + data.value;
+            getJSON(urls, $that.closest("div").next());
+        });
+
+        function getJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("id");
+                var select = "<select id=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (province == this.area_name || city == this.area_name || district == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                $('input[name="'+even.children('select').attr('id')+'"]').val(pid);
+                var nextName = even.next().find("select").attr("id");
+                even.next().html("<select id=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    getJSON(url + "?id=" + pid, even.next());
+                }
+                if ($(even).find('select').attr('id') == 'area'){
+                    $('#submit').removeClass('layui-btn-disabled').removeAttr('disabled');
+                }
+            });
+        }
+        laydate.render({
+            elem: '#work_time',
+            type: 'time',
+            format: 'HH:mm',
+            range: true
+        });
+    });
+
+
+
+</script>
+{/block}

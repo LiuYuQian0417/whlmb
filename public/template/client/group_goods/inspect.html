@@ -1,0 +1,341 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<!--<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .layui-input, .layui-select {
+        height: 30px !important;
+        width: 300px;
+    }
+
+    .goods_search_div {
+        margin-left: 10%;
+    }
+    .sc-blueBg-btn{
+        margin-left: 10px;
+    }
+    .layui-form-item{
+        width: 65%;
+        margin: 0px auto;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form class="layui-form" action="" method="post">
+    <div class="main-content" id="mainContent">
+        <div class="ecsc-form-goods">
+            <div class="wrapper-list border1">
+                <!--拼团商品名称-->
+                <dl>
+                    <input type="hidden" name="goods_id" value="{$item.goods_id|default=''}" title/>
+                    <dt><span class="require-field">*</span>&nbsp;拼团商品：</dt>
+                    <dd>
+                        <input type='text' name='group_goods_name' maxlength="20"
+                               value="{$item.Goods.goods_name|default=''}" size='20'
+                               class="text" autocomplete="off"
+                               placeholder="请选择拼团商品" title disabled
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--商品原价-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;商品原价：</dt>
+                    <dd>
+                        <input type="*" name="group_goods_price" value="{$item.Goods.shop_price|default=''}"
+                               size="20" class="text" maxlength="8"
+                               placeholder="请输入商品原价" autocomplete="off" title disabled />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--商品分类-->
+                <dl>
+                    <dt><span class="require-field">*</span>拼团商品分类：</dt>
+                    <dd>
+                        <div class="layui-input-inline">
+                            <select name="group_classify_id" lay-search="" datatype="*" nullmsg="请选择拼团商品分类" disabled
+                                    errormsg="请选择拼团商品分类">
+                                <option value="">商品分类</option>
+                                {notempty name="$classify_list"}
+                                {volist name='classify_list' id='storeClassify' key="fi"}
+                                <option
+                                        {eq name="item.group_classify_id|default=''" value="$storeClassify.group_classify_id" }selected{/eq}
+                                {if condition="isset($classify_list[$fi]) && $storeClassify['level'] < $classify_list[$fi]['level']"}disabled="disabled"{/if}
+                                value="{$storeClassify['group_classify_id']}">{for start="1" end="$storeClassify.level" }&nbsp;&nbsp;&nbsp;{/for}{$storeClassify['title']}
+                                </option>
+                                {/volist}
+                                {/notempty}
+                            </select>
+                        </div>
+                    </dd>
+                </dl>
+
+                <!--拼团默认价格-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;拼团默认价格 ：</dt>
+                    <dd>
+                        <input type="*" name="group_price" value="{$item.Goods.group_price|default=''}" disabled placeholder="请输入拼团默认价格(正整数或两位数字)" size="20"
+                               class="text" autocomplete="off" maxlength="8"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--商品属性拼团价格-->
+                <div class="layui-form-item" style="display:none;">
+                    <label class="layui-form-label">设置属性拼团价</label>
+                    <div class="layui-input-block">
+                        <div class="layui-form">
+                            <table class="layui-table spec_table">
+                                <thead>
+                                <tr>
+                                    <th>规格</th>
+                                    <th>属性原价</th>
+                                    <th>属性拼团价
+                                        <div class="batch">
+                                            <b onclick="$('.batch-input').not($(this).next('.batch-input')).hide();$(this).next('.batch-input').toggle();$('.batch_set').focus();"
+                                               class="icon icon-edit" title="批量设置此列"></b>
+                                            <div class="batch-input" style="display: none;">
+                                                <h6>批量设置属性拼团价价格：</h6>
+                                                <a href="javascript:void(0)" class="close"
+                                                   onclick="$(this).parent('.batch-input').hide();">
+                                                    <div class="fa fa-close (alias)"></div>
+                                                </a>
+                                                <input type="text" title class="text price batch_set">
+                                                <a href="javascript:void(0)" class="ncsc-btn-mini"
+                                                   onclick="batchSetTxt($(this))">设置</a>
+                                                <span class="arrow"></span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!--上架时间-->
+                <dl id="qizhi">
+                    <dt><span class="require-field">*</span>&nbsp;生效日期：</dt>
+                    <dd>
+                        <div id="text_time1">
+                            <input name="up_shelf_time" type="text" class="text" id="send_start_date" placeholder="请选择生效日期" disabled
+                                   size="22" value="{$item.up_shelf_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+                <!--下架时间-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;失效日期：</dt>
+                    <dd>
+                        <div id="text_time2">
+                            <input name="down_shelf_time" type="text" class="text" id="send_end_date" placeholder="请选择失效日期" disabled
+                                   size="22" value="{$item.down_shelf_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+
+                <!--拼团持续 时间（小时）-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;拼团持续时间（小时）：</dt>
+                    <dd>
+                        <input type="*" name="continue_time" value="{$item.continue_time|default=''}" size="20" disabled
+                               class="text"
+                               maxlength="2"
+                               autocomplete="off"
+                               placeholder="请输入拼团持续时间"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--累计购买上限-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;售卖上限：</dt>
+                    <dd>
+                        <input name="buy_cum_limit" type="*" id="single_cut_min"
+                               value="{$item.buy_cum_limit|default=''}"
+                               size="20" class="text" maxlength="8"
+                               autocomplete="off" disabled
+                               placeholder="请输入售卖上限，填0为无上限"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                    <span style="line-height: 40px;color: #c3c3c3;padding-left: 18px">拼团活动中销售最多数量</span>
+                </dl>
+
+                <!--拼团人数上限-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;拼团人数上限：</dt>
+                    <dd>
+                        <input name="group_num" type="*" id="single_cut_max" value="{$item.group_num|default=''}" disabled
+                               size="20" class="text" maxlength="2"
+                               autocomplete="off"
+                               placeholder="请输入拼团人数上限"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--<dl>-->
+                    <!--<dt>是否精选：</dt>-->
+                    <!--<dd>-->
+                        <!--<div class="checkbox_items">-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input type="radio" class="ui-radio" name="is_best" value="1" title="是"-->
+                                       <!--{eq name="item.is_best|default='1'" value="1" }checked{/eq}-->
+                                <!--&gt;-->
+
+                            <!--</div>-->
+                            <!--<div class="checkbox_item">-->
+                                <!--<input type="radio" class="ui-radio" name="is_best" value="0" title="否"-->
+                                       <!--{eq name="item.is_best|default='1'" value="0" }checked{/eq}-->
+                                <!--&gt;-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</dd>-->
+                <!--</dl>-->
+
+                <dl>
+                    <dt>到期自动成团：</dt>
+                    <dd>
+                        <div class="checkbox_items">
+                            <div class="checkbox_item">
+                                <input type="radio" class="ui-radio" name="is_auto" value="1" title="是" disabled
+                                       {eq name="item.is_auto|default='1'" value="1" }checked{/eq}
+                                >
+
+                            </div>
+                            <div class="checkbox_item">
+                                <input type="radio" class="ui-radio" name="is_auto" value="0" title="否" disabled
+                                       {eq name="item.is_auto|default=''" value="0" }checked{/eq}
+                                >
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <a type="reset" class="sc-btn btn35 sc-blue-btn"  href="/client/group_goods/index">返回</a>
+                    </dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+
+    function openGoods(obj, type) {
+        var param = 'cateId='
+            + '&brandId='
+            + '&keyword=' + '&type=' + type;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0,
+            shadeClose: true,
+            area: ['80%', '700px'],
+            btn: obj.btn,
+            content: '/client/goods/searchGoods?' + param
+        });
+    }
+
+    main.form();
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+    main.laydate([
+        {
+            elem: '#up_shelf_time'
+        },
+        {
+            elem: '#down_shelf_time'
+        }
+    ]);
+    $(function () {
+        getProducts('{$item.goods_id?:\'\'}');
+    });
+    var option = {
+        columnDefs: [
+            {orderable: false, targets: [1, -1]}
+        ],
+        //解决从新加载表格内容问题
+        destroy:true,
+        retrieve:true,
+        bLengthChange: false,
+        language: {
+            "url": "__RES__/js/DataTables-1.10.15/media/chinese.json"
+        }
+    };
+
+    // 获取规格
+    function getProducts(id) {
+        if (id === '') return;
+        main.ajax({
+            data: {id: id, type: 1}, url: '/client/goods/getProducts', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                if (res.data == ''){
+                    $('.spec_table tbody').parents('.layui-form-item').hide();
+                } else{
+                    $('.spec_table tbody').children().remove();
+                    $('.spec_table').dataTable().fnClearTable();    //清空数据
+                    $('.spec_table').dataTable().fnDestroy();       // 销毁
+                    $('.spec_table tbody').html(res.data).parents('.layui-form-item').show()
+                    $('.spec_table').dataTable(option);
+                }
+            }
+        });
+    }
+
+    // 批量设置
+    function batchSetTxt(jq) {
+        var dt = {},
+            txt = jq.prev('.batch_set').val(),
+            index = jq.parents('th').index();
+        if ($.fn.dataTable.isDataTable('.spec_table')) {
+            dt = $('.spec_table').dataTable().api();
+        } else {
+            dt = $('.spec_table').dataTable(option).api();
+        }
+        jq.parent('.batch-input').hide();
+        dt.$('.batch-' + index).val(txt);
+    }
+    // 日期插件
+    main.laydate([{
+        elem: '#send_start_date'
+        , type: 'date'
+    }, {
+        elem: '#send_end_date'
+        , type: 'date'
+    }
+    ])
+</script>
+{/block}

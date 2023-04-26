@@ -1,0 +1,434 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<link href="__RES__/css/common/formSelects-v4.css" rel="stylesheet" type="text/css"/>
+<style>
+    .layui-input, .layui-select {
+        height: 30px !important;
+        width: 300px;
+    }
+
+    .goods_search_div {
+        margin-left: 10%;
+    }
+
+    .text_time .text {
+        width: 300px;
+        background: none !important;
+    }
+    .xm-select-parent dd > .xm-cz-group{
+        overflow: initial!important;
+    }
+    .xm-select-tips{
+        overflow: initial!important;
+    }
+    .sc-blueBg-btn{
+        margin-left: 10px;
+    }
+    .layui-form-item{
+        width: 65%;
+        margin: 0px auto;
+    }
+    .xm-select-title {
+        margin-left: 17px !important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form class="layui-form" action="" method="post">
+    <div class="main-content" id="mainContent">
+        <div class="tabmenu">
+            <ul class="tab">
+                <li class="active"><a href="javascript:;" onclick="main.jumpFour('client/goods/activity_limit?goods_id={$goods_id}')">限时抢购</a></li>
+                {if $Think.INI_CONFIG['IS_GROUP']}
+                <li ><a href="javascript:;" onclick="main.jumpFour('client/goods/activity_group?goods_id={$goods_id}')">拼团</a></li>
+                {/if}
+                {if $Think.INI_CONFIG['IS_CUT']}
+                <li><a href="javascript:;" onclick="main.jumpFour('client/goods/activity_cut?goods_id={$goods_id}')">砍价</a></li>
+                {/if}
+            </ul>
+        </div>
+        <div class="explanation clear" id="explanation">
+            <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、根据不同活动设置商品信息；</li>
+                <li>2、活动包括限时抢购、拼团、砍价；</li>
+            </ul>
+        </div>
+
+        <div class="ecsc-form-goods">
+            <div class="wrapper-list border1">
+                <input type="hidden" name="goods_id" value="{$goods_id|default=''}" title/>
+                {eq name="$activity_status.status" value="1"}
+                <dl>
+                    <dt><img style="width: 20px;height: 20px;" src="/template/master/resource/image/common/warning-master.png"></dt>
+                    <dd class="layui-input-block">
+                        <span style="color: red;">{$activity_status.message}</span>
+                    </dd>
+                </dl>
+                {/eq}
+                <!--商品名称-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;商品名称：</dt>
+                    <dd>
+                        <input type='text' name='group_goods_name' maxlength="20"
+                               value="{$goods.goods_name|default=''}" size='20'
+                               class="text" autocomplete="off" disabled
+                        />
+                    </dd>
+                </dl>
+                <!--商品原价-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;商品原价：</dt>
+                    <dd>
+                        <input type="text" name="group_goods_price" value="{$goods.shop_price|default=''}"
+                               size="20" class="text" title disabled
+                               placeholder="请输入商品原价" autocomplete="off" maxlength="8"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <dl class="layui-form-item">
+                    <dt><span class="require-field">*</span> 所属场次：</dt>
+                    <div class="layui-input-inline">
+                        <select name="interval_id" xm-select="store">
+                            <option value="">所属场次</option>
+                            {volist name="classify_list" id="classify"}
+                            <option value="{$classify.limit_interval_id}" {present name="$item.interval_id"}
+                                    {in name="$classify.limit_interval_id" value="$item.interval_id"}selected="selected"{/in}{/present}>{$classify.interval_name}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </dl>
+
+                <!--抢购默认价格-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;抢购默认价格：</dt>
+                    <dd>
+                        <input name="limit_price" type="text" id="limit_price"
+                               value="{$item.Goods.time_limit_price|default=''}"
+                               size="20" class="text"
+                               maxlength="8" autocomplete="off"
+                               placeholder="请输入抢购默认价格"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--可售数量-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;售卖上限：</dt>
+                    <dd>
+                        <input type="hidden" name="goods_number" value="{$goods.goods_number|default=0}" id="goods_number">
+                        <input  name="available_sale" type="text"
+                               id="single_cut_min" value="{$item.available_sale|default=''}"
+                               size="20" class="text"
+                               maxlength="8" autocomplete="off"
+                               placeholder="请输入可售数量"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                    <span style="line-height: 40px;color: #c3c3c3;padding-left: 18px">限时抢购中可兑换最多商品数量</span>
+                </dl>
+
+
+                <!--每人限购数量-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;活动价格限购数量：</dt>
+                    <dd>
+                        <input name="limit_purchase" type="text" id="single_cut_max"
+                               value="{$item.limit_purchase|default=''}"
+                               size="20" class="text"
+                               maxlength="3" autocomplete="off"
+                               placeholder="请输入活动价格限购数量"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+
+                <!--商品属性砍价价格-->
+                <div class="layui-form-item" style="display:none;">
+                    <label class="layui-form-label">设置属性砍价价</label>
+                    <div class="layui-input-block">
+                        <div class="layui-form">
+                            <table class="layui-table spec_table">
+                                <thead>
+                                <tr>
+                                    <th>规格</th>
+                                    <th>属性原价</th>
+                                    <th>属性限时抢购价
+                                        <div class="batch">
+                                            <b onclick="$('.batch-input').not($(this).next('.batch-input')).hide();$(this).next('.batch-input').toggle();$('.limit_set').focus();"
+                                               class="icon icon-edit" title="批量设置此列"></b>
+                                            <div class="batch-input" style="display: none;">
+                                                <h6>批量设置属性限时抢购价：</h6>
+                                                <a href="javascript:void(0)" class="close"
+                                                   onclick="$(this).parent('.batch-input').hide();">
+                                                    <div class="fa fa-close (alias)"></div>
+                                                </a>
+                                                <input type="text" title class="text price limit_set">
+                                                <a href="javascript:void(0)" class="ncsc-btn-mini"
+                                                   onclick="batchSetTxt($(this))">设置</a>
+                                                <span class="arrow"></span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <th>属性库存</th>
+                                    <th>限时抢购库存
+                                        <div class="batch">
+                                            <b onclick="$('.batch-input').not($(this).next('.batch-input')).hide();$(this).next('.batch-input').toggle();$('.batch_set').focus();"
+                                               class="icon icon-edit" title="批量设置此列"></b>
+                                            <div class="batch-input" style="display: none;">
+                                                <h6>批量设置抢购库存：</h6>
+                                                <a href="javascript:void(0)" class="close"
+                                                   onclick="$(this).parent('.batch-input').hide();">
+                                                    <div class="fa fa-close (alias)"></div>
+                                                </a>
+                                                <input type="text" title class="text price batch_set">
+                                                <a href="javascript:void(0)" class="ncsc-btn-mini"
+                                                   onclick="batchSetTxt($(this))">设置</a>
+                                                <span class="arrow"></span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!--上架时间-->
+                <dl id="qizhi">
+                    <dt><span class="require-field">*</span>&nbsp;生效日期：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time1">
+                            <input name="up_shelf_time" type="text" class="text" id="send_start_date" placeholder="请选择生效日期"
+                                   size="22" value="{$item.up_shelf_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+                <!--下架时间-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;失效日期：</dt>
+                    <dd>
+                        <div class="text_time" id="text_time2">
+                            <input name="down_shelf_time" type="text" class="text" id="send_end_date" placeholder="请选择失效日期"
+                                   size="22" value="{$item.down_shelf_time|default=''}" readonly="readonly"/>
+                        </div>
+                    </dd>
+                </dl>
+
+                {eq name="$item.status|default=2" value="0"}
+                <dl>
+                    <dt>未通过原因：</dt>
+                    <dd>
+                        <textarea name="" maxlength="100" class="textarea" disabled>{$item.reason|default=''}</textarea>
+                    </dd>
+                </dl>
+                {/eq}
+
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="hidden" name="cut_goods_id" value="{$item.cut_goods_id|default=''}">
+                        {eq name="$activity_status.status" value="1"}
+                        <a type="reset" class="sc-btn btn35 sc-blue-btn"  href="/client/goods/index">返回</a>
+                        {else/}
+                        <a type="reset" class="sc-btn btn35 sc-blue-btn"  href="/client/goods/index">返回</a>
+                        <button class="sc-btn sc-blueBg-btn btn35" type="submit" id="submit">提交</button>
+                        {/eq}
+                        <input type="hidden" name="status" value="2">
+                        <input type="hidden" name="limit_id" value="{$item.limit_id|default=''}">
+                    </dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/formSelects-v4.js"></script>
+<script type="text/javascript">
+
+    //检查设置库存是否满足已有库存
+    function check_arrt_number(e, number) {
+        var _number = parseInt($(e).val());
+        var attr_number = parseInt(number);
+        if (_number > attr_number) {
+            $(e).val(attr_number);
+            layer.msg('所设置属性库存不足');
+            return;
+        }
+        $(e).val(isNaN(_number)?0:_number);
+    }
+    //检查设置可售数量是否满足已有库存
+    function check_vendibility_number(e) {
+        var number = parseInt($(e).val());
+        var attr_number = parseInt($(e).attr('goods_number'));
+        if (number > attr_number) {
+            $(e).val(attr_number);
+            layer.msg('所设置库存大于总库存');
+            return;
+        }
+        $(e).val(isNaN(number)?0:number);
+    }
+
+    function openGoods(obj, type) {
+        var param = 'cateId='
+            + '&brandId='
+            + '&keyword=' + '&type=' + type;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0,
+            shadeClose: true,
+            area: ['80%', '700px'],
+            btn: obj.btn,
+            content: '/client/goods/searchGoods?' + param
+        });
+    }
+
+    main.form();
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#send_start_date'
+        , type: 'date'
+    }, {
+        elem: '#send_end_date'
+        , type: 'date'
+    }
+    ])
+    $(function () {
+        getProducts('{$item.goods_id?:\'\'}');
+    });
+    var option = {
+        columnDefs: [
+            {orderable: false, targets: [1, -1]}
+        ],
+        //解决从新加载表格内容问题
+        destroy:true,
+        retrieve:true,
+        bLengthChange: false,
+        language: {
+            "url": "__RES__/js/DataTables-1.10.15/media/chinese.json"
+        }
+    };
+
+    // 获取规格
+    function getProducts(id) {
+        if (id === '') return;
+        main.ajax({
+            data: {id: id, type: 3}, url: '/client/goods/getProducts', callback: function (res) {
+                if (res.code != 0) {
+                    layer.msg(res.message);
+                    return false;
+                }
+                //商品库存
+                $('#single_cut_min').attr('goods_number', res.goods_number);
+                $('#goods_number').val(res.goods_number);
+                if (res.data == ''){
+                    $('.spec_table tbody').parents('.layui-form-item').hide();
+                } else{
+                    $('.spec_table tbody').children().remove();
+                    $('.spec_table').dataTable().fnClearTable();    //清空数据
+                    $('.spec_table').dataTable().fnDestroy();       // 销毁
+                    $('.spec_table tbody').html(res.data).parents('.layui-form-item').show()
+                    $('.spec_table').dataTable(option);
+                }
+            }
+        });
+    }
+
+    // 批量设置
+    function batchSetTxt(jq) {
+        // console.log(jq);
+        var dt = {},
+            txt = jq.prev('.batch_set').val(),
+            limit = jq.prev('.limit_set').val(),
+            index = jq.parents('th').index();
+        // console.log(txt);
+        // console.log(limit);
+        console.log(index);
+        if ($.fn.dataTable.isDataTable('.spec_table')) {
+            dt = $('.spec_table').dataTable().api();
+        } else {
+            dt = $('.spec_table').dataTable(option).api();
+        }
+        jq.parent('.batch-input').hide();
+        switch (index) {
+            case 2:
+                dt.$('.batch-' + index).val(limit);
+                break;
+            case 4:
+                var is_number=false;
+                dt.$('.batch1-' + index).each(function(k,v){
+                    var number=parseInt($(v).attr('number'));
+                    var _txt=txt;
+                    if(_txt>number){
+                        is_number=true;
+                        _txt=number;
+                    }
+                    $(v).val(_txt);
+                });
+                if(is_number) {
+                    layer.msg('部分属性库存不足，已默认填入最大值');
+                }
+                break;
+        }
+    }
+
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId': 'send_start_date',//时间写入对象的id
+        'triggerId': ['send_start_date'],//触发事件的对象id
+        'alignId': 'text_time1',//日历对齐对象
+        'format': '-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    }, opts2 = {
+        'targetId': 'send_end_date',
+        'triggerId': ['send_end_date'],
+        'alignId': 'text_time2',
+        'format': '-'
+    }, opts3 = {
+        'targetId': 'use_start_date',
+        'triggerId': ['use_start_date'],
+        'alignId': 'text_time3',
+        'format': '-'
+    }, opts4 = {
+        'targetId': 'use_end_date',
+        'triggerId': ['use_end_date'],
+        'alignId': 'text_time4',
+        'format': '-'
+    }
+    xvDate(opts1);
+    xvDate(opts2);
+    xvDate(opts3);
+    xvDate(opts4);
+    //日期选择插件调用end sunle
+</script>
+{/block}

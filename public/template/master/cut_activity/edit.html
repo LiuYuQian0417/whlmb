@@ -1,0 +1,78 @@
+<link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css" media="all"/>
+<style>
+    .name {
+        padding: 4.5px 0;
+    }
+    .order_goods-info .goods-img {
+        width: 110px;
+    }
+    .order_goods-info .goods-desc {
+        margin-left: 10px;
+    }
+</style>
+<hr class="layui-bg-gray">
+<div class="main-content" id="mainContent">
+    <div class="tabCon">
+        <form action="" method="post" name="theForm" enctype="multipart/form-data" id="bonus_form" class="layui-form">
+
+            <table class="layui-table goods-list">
+                <thead>
+                <tr>
+                    <th>砍价人</th>
+                    <th>砍掉金额</th>
+                    <th>时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="data" id="item"}
+                <tr>
+                    <td>
+                        <div class="order_goods-info">
+                            <div class="preview"><a href="javascript:void(0);" target="_blank"><img
+                                    src="{$item.avatar}" class="avatar"
+                                    onerror=this.src="/template/master/resource/image/common/imageError.png"></a></div>
+                            <div class="goods-desc">
+                                <div class="name">
+                                    <font class="orange">{$item.nickname|default=''}</font>
+                                </div>
+                                <div class="name">
+                                    <font class="orange">{$item.phone|default=''}</font>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>{$item.cut_price|default=''}元</td>
+                    <td>{$item.create_time|default=''}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="__RES__/js/common/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/common/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/common/jquery.picTip.js"></script>
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    main.valid('.layui-form');
+    main.form('.layui-form');
+</script>
+<script type="text/javascript">
+    // 切换单选
+    function showunit() {
+        var get_value = $("input[name='status']:checked").val();
+        if (get_value == 1) {
+            $('#refuse_reason').hide()
+            $('#Price').show();
+        } else {
+            $('#refuse_reason').show();
+            $('#Price').hide();
+        }
+    }
+
+</script>
+
+

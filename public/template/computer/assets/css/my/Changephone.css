@@ -1,0 +1,110 @@
+.change-iphone {
+  height: 550px;
+  background: #fff;
+}
+.change-iphone .title {
+  height: 40px;
+  background: #F9F9F9;
+  padding-left: 20px;
+  font-size: 14px;
+  font-weight: bolder;
+  color: #4B4B4B;
+  line-height: 40px;
+}
+.change-iphone .change-iphone-box {
+  padding: 40px 200px 0px;
+}
+.change-iphone .change-iphone-box .tit {
+  display: flex;
+  justify-content: space-between;
+}
+.change-iphone .change-iphone-box .tit .tit-list {
+  width: 292px;
+  height: 80px;
+}
+.change-iphone .change-iphone-box .tit .tit-list .progress {
+  position: relative;
+  height: 5px;
+  background: #DFDFDF;
+}
+.change-iphone .change-iphone-box .tit .tit-list .progress span {
+  border-radius: 50%;
+  background: #DFDFDF;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  line-height: 20px;
+  color: #fff;
+  font-size: 14px;
+}
+.change-iphone .change-iphone-box .tit .tit-list .caption {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #A5A5A5;
+}
+.change-iphone .change-iphone-box .tit .current .progress {
+  background: #FFB401;
+}
+.change-iphone .change-iphone-box .tit .current .progress span {
+  background: #FFB401;
+}
+.change-iphone .change-iphone-box .tit .current .caption {
+  color: #FFB401;
+}
+.change-iphone .change-iphone-box .iphone-box {
+  text-align: center;
+  margin-top: 20px;
+}
+.change-iphone .change-iphone-box .iphone-box .input-box {
+  height: 45px;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+.change-iphone .change-iphone-box .iphone-box .input-box span {
+  color: #5E5E5E;
+  display: inline-block;
+  text-align: right;
+  width: 100px;
+}
+.change-iphone .change-iphone-box .iphone-box .input-box input {
+  width: 218px;
+  height: 28px;
+  border: 1px solid #E6E6E6;
+  text-indent: 5px;
+}
+.change-iphone .change-iphone-box .iphone-box .input-box .code {
+  width: 125px;
+  height: 28px;
+  border: 1px solid #E6E6E6;
+  text-indent: 5px;
+}
+.change-iphone .change-iphone-box .iphone-box .input-box a {
+  font-size: 13px;
+  display: inline-block;
+  width: 80px;
+  height: 28px;
+  background: #F5F5F5;
+  border: 1px solid #E6E6E6;
+  color: #5E5E5E;
+  line-height: 30px;
+  position: relative;
+  top: 2px;
+  left: 5px;
+}
+.change-iphone .change-iphone-box .iphone-box .btn {
+  width: 150px;
+  height: 45px;
+  line-height: 45px;
+  text-align: center;
+  border-radius: 5px;
+  color: #fff;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  outline: none;
+}

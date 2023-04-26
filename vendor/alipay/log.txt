@@ -1,0 +1,227 @@
+2018-01-03 12:49:57  {"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|463|104","subject":"喜利在线支付","total_amount":"0.01","out_trade_no":"20180103124953470568298993309463"}
+2018-01-03 12:49:57  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|463|104","subject":"喜利在线支付","total_amount":"0.01","out_trade_no":"20180103124953470568298993309463"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2017121000511702\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.page.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2018-01-03 12:49:57\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'http://jiaxinongye.cn/index.php/interfaces/Alipay/notifyurl\'/><input type=\'hidden\' name=\'return_url\' value=\'http://jiaxinongye.cn/index.php/shop//member_order/index\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'e8xWU3vjb+IDkXnA0DRNy8QN7Ktc1ageFZ9FEdpd8qhC9Rqyeliva9PLQaZon55vkFklV5GgDylnb89NupvUwvrlFSrodjjX4BYhERHy8autXKd7NtjtoKekZyA8a3RZet4IS+UZcybzxVd4P0W6eiZKsz9u6K/a1s4sEeSx+HwzMFqi4baohtb1b0rqnJEb2zwyscK6HkTKmbfLi+N8TenoYE3srS/RyIowpi28ojvdLWMMT3B+FnotlQX+oRdv9cv0BbW8VLJn3pIbRvUj8DouedMlYqImeZ6O82DE8ktNxZ8Dv+CpRJIAHwoTrP1RdvzZI5DTgseQFd3wVLVr6g==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'
+2018-01-03 12:50:46  支付宝回调开始：======================
+2018-01-03 12:50:46  1
+2018-01-03 12:50:46  pay|463|104
+2018-01-03 12:50:46  成功8
+2018-01-03 12:50:46  成功9
+2018-01-03 12:51:20  支付宝回调开始：======================
+2018-01-03 12:51:20  1
+2018-01-03 12:51:20  pay|463|104
+2018-01-03 12:52:09  支付宝回调开始：======================
+2018-01-03 12:52:09  1
+2018-01-03 12:52:09  pay|463|104
+2018-01-03 12:52:09  成功8
+2018-01-03 12:52:09  成功9
+2018-01-03 12:54:42  支付宝回调开始：======================
+2018-01-03 12:54:42  1
+2018-01-03 12:54:42  pay|463|104
+2018-01-03 12:58:59  {"productCode":"QUICK_WAP_PAY","body":"pay|463|104","subject":"嘉喜农业","out_trade_no":"20180103125856390568299536703098","total_amount":"0.01","timeout_express":"1m"}
+2018-01-03 12:58:59  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"productCode":"QUICK_WAP_PAY","body":"pay|463|104","subject":"嘉喜农业","out_trade_no":"20180103125856390568299536703098","total_amount":"0.01","timeout_express":"1m"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2017121000511702\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.wap.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2018-01-03 12:58:59\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'http://jiaxinongye.cn/index.php/interfaces/Alipay/notifyurl\'/><input type=\'hidden\' name=\'return_url\' value=\'http://jiaxinongye.cn/index.php/mobile//user_info/member_order\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'f6OsDoSNvz39ZEUYqF2RW73ofe/+fl2J2DwDQ5HSJIIhpCHAVVrigvOuDBOrCLonBGsJMaGUCRrOHoEZ2nc6PZ+oKzsh9eqUl47Ovywh4hc2ohPEnW1TCXvRFUR7xHZYpohxVlOld7zHjLFORabgMqsLJdCnBVDixlHfc5u7ZaokCiMcKbHdou0cB30D7f7AJaIfWzLeVbKEdkY06cv6OzIXJBuyIO68pUVyLmfUmCJatcjS7Blkl9f4TxkGRErv3Z2qcO3TANr7TaHMOl67NDGnX/Le2F9Y6DwueXARtN6OKAa7el3ITUBfTw0+QQVX8aFZkF6ZxX5btghRFXkdHA==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'
+2018-01-03 13:02:11  支付宝回调开始：======================
+2018-01-03 13:02:11  1
+2018-01-03 13:02:11  pay|463|104
+2018-01-03 13:12:15  支付宝回调开始：======================
+2018-01-03 13:12:15  1
+2018-01-03 13:12:15  pay|463|104
+2018-01-03 13:12:15  成功8
+2018-01-03 13:12:15  成功9
+2018-01-03 13:26:42  支付宝回调开始：======================
+2018-01-03 13:26:42  1
+2018-01-03 13:26:42  pay|352|null
+2018-01-03 13:26:42  成功8
+2018-01-03 13:26:42  成功9
+2018-01-03 13:30:38  支付宝回调开始：======================
+2018-01-03 13:30:38  1
+2018-01-03 13:30:38  pay|352|null
+2018-01-03 15:12:30  支付宝回调开始：======================
+2018-01-03 15:12:30  1
+2018-01-03 15:12:30  pay|463|104
+2018-01-03 15:34:57  支付宝回调开始：======================
+2018-01-03 15:34:57  1
+2018-01-03 15:34:57  pay|353|103
+2018-01-03 15:34:57  成功8
+2018-01-03 15:34:57  成功9
+2018-01-03 15:38:36  支付宝回调开始：======================
+2018-01-03 15:38:36  1
+2018-01-03 15:38:36  pay|353|103
+2018-01-03 16:35:55  支付宝回调开始：======================
+2018-01-03 16:35:55  1
+2018-01-03 16:35:55  pay|353|104
+2018-01-03 16:35:55  成功8
+2018-01-03 16:35:55  成功9
+2018-01-03 16:39:41  支付宝回调开始：======================
+2018-01-03 16:39:41  1
+2018-01-03 16:39:41  pay|353|104
+2018-01-03 17:59:26  支付宝回调开始：======================
+2018-01-03 17:59:26  1
+2018-01-03 17:59:26  pay|353|104
+2018-01-03 17:59:26  成功8
+2018-01-03 17:59:26  成功9
+2018-01-03 18:01:36  支付宝回调开始：======================
+2018-01-03 18:01:36  1
+2018-01-03 18:01:36  pay|352|null
+2018-01-03 18:01:36  成功8
+2018-01-03 18:01:36  成功9
+2018-01-11 09:11:34  {"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|493|484","subject":"嘉喜农业","total_amount":"865.00","out_trade_no":"20180111091130540568977090031493"}
+2018-01-11 09:11:34  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|493|484","subject":"嘉喜农业","total_amount":"865.00","out_trade_no":"20180111091130540568977090031493"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2017121000511702\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.page.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2018-01-11 09:11:34\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'http://www.jiaxinongye.cn/index.php/interfaces/Alipay/notifyurl\'/><input type=\'hidden\' name=\'return_url\' value=\'http://www.jiaxinongye.cn/index.php/shop//member_order/index\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'ctFBFoOLqSSbK90mPOcHkLbpZn2fhg22r2n32uGio3OkVFIJb0hPQ5xUGrt7PdUInTyKomnpSUUCxlUY/w3qhCjPA989vV3dbnp/Cy8f92NoaFlXiGufL8asDtBoiirYtBt+FsrmgbSUsXVqfwC3IG6QWNaC17DntvbHEiYsEmi2CE3a1Tu+Tq7ff0em4vetERBtZwFPkXRNA5Ol22fXIOpBCtZFCipoDo0m5MdX4Wm7kv1BroatZMrTkWpeb6r1R2kSBUQmkWpjIRwFRkcc1PDnM0N9JqZpikvZZjqSzpFOUGRUpel4fJ+Cf/smN0jEvnbalMctJhfEnNRk+x0PTQ==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'
+2018-01-11 16:24:53  {"productCode":"QUICK_WAP_PAY","body":"pay|494|563","subject":"嘉喜农业","out_trade_no":"20180111162451470569003091355140","total_amount":"0.02","timeout_express":"1m"}
+2018-01-11 16:24:53  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"productCode":"QUICK_WAP_PAY","body":"pay|494|563","subject":"嘉喜农业","out_trade_no":"20180111162451470569003091355140","total_amount":"0.02","timeout_express":"1m"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2017121000511702\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.wap.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2018-01-11 16:24:53\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'http://jiaxinongye.cn/index.php/interfaces/Alipay/notifyurl\'/><input type=\'hidden\' name=\'return_url\' value=\'http://jiaxinongye.cn/index.php/mobile//user_info/member_order\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'Ri5eG7rPTReoqo7H5lJ181bBWkLfUU+YYlfyXz4vJD7r+w6s5WAOCFGKWo4ncv5r2Aspaaqk7hNE6VvBRDAUzKoJBZy4mya4J0lKUNR121Xd7SBT7X//DSUkZDpSnYCe9fdW+ys5iaRaSPmW5yCPMAIn3tszoUSXY/xv3pBJA0ISaoaya6pHrch+5r+xkAgNsxe0yqyVUieof8h52izaAtM3xdl5E91sR3t1HJzcThbsJuK0Lgdd0VlduqcEV3eP/rvx66paSsCFY6j5ePEwHkfALmh6elgPGLsi6lIxeEzshspMGuTv1vxbZSAdMNpgUU/jySssGqh0tTPdMGtX4A==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'
+2018-01-11 16:25:08  支付宝回调开始：======================
+2018-01-11 16:25:08  1
+2018-01-11 16:25:08  pay|494|563
+2018-01-11 16:25:09  支付成功
+2018-01-11 16:29:21  支付宝回调开始：======================
+2018-01-11 16:29:21  1
+2018-01-11 16:29:21  pay|494|563
+2018-01-22 16:31:30  {"product_code":"FAST_INSTANT_TRADE_PAY","body":"recharge|509","subject":"嘉喜农业","total_amount":"1","out_trade_no":"201801221631301438334440"}
+2018-01-22 16:31:30  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"product_code":"FAST_INSTANT_TRADE_PAY","body":"recharge|509","subject":"嘉喜农业","total_amount":"1","out_trade_no":"201801221631301438334440"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2017121000511702\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.page.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2018-01-22 16:31:30\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'http://www.jiaxinongye.cn/index.php/interfaces/Alipay/recharge\'/><input type=\'hidden\' name=\'return_url\' value=\'http://www.jiaxinongye.cn/index.php/shop//member_wallet/index\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'PezXDn54qwm7aoqvYe1UXi42Ct+40TfUVUUkI4bc6WMyY3+mqG9QPY9J/YaogpEYYKnBwQ4MsvoOyfeqRwXLzt3NZp3vfviyp4ToCi7nJkZHSpSuINM/hYIzU7hfukXdFX/Ut/c9ATgwPaAfFXaieHLbChbzRpAMk6xSvu57gn8t41rHyWoPiOiLgCD1qFPpSzDgF0E+hZO9CyGLWXObDJX8FLBv7yEX9spxH6dfqwZo144YJYT7X0lWK+D30qlH7zGzZ11GWhxNtu5ker4/Ra16Nwd/L4X8ZVjOJVHnIGzGHTn4JukBO87hXJl4siBDyLu+QbpbqkIDLLDjaUSgHw==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'
+2018-01-24 16:44:53  {"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|494|491","subject":"嘉喜农业","total_amount":"14.80","out_trade_no":"20180124164449460570127489941494"}
+2018-01-24 16:44:53  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|494|491","subject":"嘉喜农业","total_amount":"14.80","out_trade_no":"20180124164449460570127489941494"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2017121000511702\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.page.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2018-01-24 16:44:53\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'http://jiaxinongye.cn/index.php/interfaces/Alipay/notifyurl\'/><input type=\'hidden\' name=\'return_url\' value=\'http://jiaxinongye.cn/index.php/shop//member_order/index\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'FS8QV9m6QvhwkE2QXF1KwLgzKmE6INjKThCYyX0NVwxntfSGUIUQFkrgsHNPQdog9kppFSrYefaXwgf+SS62eXH+a42lLBzf3KtK3YDLGFsQFuGyMSXc3/rfEERBooKIc0o8hZzc2Wq435bHsCvH5TgVAmaaUOhGHR+lXC0WG/6vK+WZgRGI5IWmxd6Foq7m7at5QJ3L8nzgCdiirXW71FJ0O9gnYGIlsyoM7PJ4rsEXugP06TsLeWdOwB1J07XBJf180ndpiEpM2NAr5FyLHC5qYlHcFzItOCkQlAgzgJS9WVsPiJe88c9jRTDWi6/V/4dw+TceTNjXLIooQr+OWg==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'
+2018-01-29 15:44:31  支付宝回调开始：======================
+2018-01-29 15:44:31  1
+2018-01-29 15:44:31  pay|554|null
+2018-01-29 15:44:32  支付成功
+2018-01-29 15:48:10  支付宝回调开始：======================
+2018-01-29 15:48:10  1
+2018-01-29 15:48:10  pay|554|null
+2018-02-01 02:01:12  支付宝回调开始：======================
+2018-02-01 02:01:12  1
+2018-02-01 02:01:12  pay|554|null
+2018-02-01 02:01:12  支付成功
+2018-02-01 02:05:45  支付宝回调开始：======================
+2018-02-01 02:05:45  1
+2018-02-01 02:05:45  pay|554|null
+2018-02-03 05:26:35  支付宝回调开始：======================
+2018-02-03 05:26:35  1
+2018-02-03 05:26:35  pay|554|null
+2018-02-03 05:26:35  支付成功
+2018-02-03 05:30:16  支付宝回调开始：======================
+2018-02-03 05:30:16  1
+2018-02-03 05:30:16  pay|554|null
+2018-02-03 09:10:49  支付宝回调开始：======================
+2018-02-03 09:10:49  1
+2018-02-03 09:10:49  pay|554|null
+2018-02-03 09:10:49  支付成功
+2018-02-03 09:14:35  支付宝回调开始：======================
+2018-02-03 09:14:35  1
+2018-02-03 09:14:35  pay|554|null
+2018-02-07 10:05:13  支付宝回调开始：======================
+2018-02-07 10:05:13  1
+2018-02-07 10:05:13  pay|494|491
+2018-02-07 10:05:13  支付成功
+2018-02-07 10:09:06  支付宝回调开始：======================
+2018-02-07 10:09:06  1
+2018-02-07 10:09:06  pay|494|491
+2018-02-07 10:29:03  支付宝回调开始：======================
+2018-02-07 10:29:03  1
+2018-02-07 10:29:03  pay|494|491
+2018-02-07 10:29:03  支付成功
+2018-02-07 10:33:35  支付宝回调开始：======================
+2018-02-07 10:33:35  1
+2018-02-07 10:33:35  pay|494|491
+2018-02-07 10:49:17  支付宝回调开始：======================
+2018-02-07 10:49:17  1
+2018-02-07 10:49:17  pay|494|489
+2018-02-07 10:49:17  支付成功
+2018-02-07 10:53:43  支付宝回调开始：======================
+2018-02-07 10:53:43  1
+2018-02-07 10:53:43  pay|494|489
+2019-10-09 15:13:03  {"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|3","subject":"订单支付","out_trade_no":"201910091512493743502428","total_amount":"0.01"}
+2019-10-09 15:13:04  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|3","subject":"订单支付","out_trade_no":"201910091512493743502428","total_amount":"0.01"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2018070960522704\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.page.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2019-10-09 15:13:03\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'https://kuaixiao.zihaiwangluo.com/v2.0/ali/notifyurl\'/><input type=\'hidden\' name=\'return_url\' value=\'https://kuaixiao.zihaiwangluo.com/pc2.0/order/order_list\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'GhjqWLLrdmq3RlJymtnCstWSq4wOuCe9PxIYpxjwiR59wvovcxD05uTGbrG3PbXAxaGuyqktKIReDM2Ue18TCVq2rFHvYFKzLpYXXRm8W5oDaHc9kFtRB9eTZMDvCEiA7JRWqZSuk5zFvN1e16KkFXKFjedNvpb9D04SkOGkpaPPw3H88RoxvmuJvzqxdZSfBw1fzLpapkzCuqo5wdD/dHnOtRySmvsLtl2UMsKe6c50hEvlWHdCesQQSD9oPQVZ7nFgDiF/dJrOfl54EImbXMTdNUBSSNxjuwsibB7IqkD/EBTltrUlztPzZKov59atequIYase+529sgrtwOvw9Q==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'
+2019-10-09 15:13:34  ======================支付宝回调开始======================
+2019-10-09 15:13:34  array (
+  'gmt_create' => '2019-10-09 15:13:28',
+  'charset' => 'UTF-8',
+  'gmt_payment' => '2019-10-09 15:13:33',
+  'notify_time' => '2019-10-09 15:13:33',
+  'subject' => '订单支付',
+  'sign' => 'Ywz5illeTssDzucl2RBPr3xTUXFcy4AAa9j2JjS6k756QkCzKM0mbrYAqeQF815BOUPPWU2EEIpBL7v3402QLlTgwSDC/TVWJmqJ1h5VVpxtlEA2DvdlU9VgRZYfGXcrYYZ3vtmW9j6btvFfQitQ7uSMK6vfI8SclV3LnwfOa9NEwMWNPIMIfOS5JjaDh8ZQGwQRC0fUCNMKNsVzx3iAi5sxCyYCdPm7akhPfesef3YLXcvXZK5VBU1Kc03Hd30xCt9jEAT14oRqQNwjpE1CSCWwvggTQGfrj7R8ShVZAYwFUR90dZqe8k2I4arHGkCWGXYVKwNbEI2SLfyBPXs0Lw==',
+  'buyer_id' => '2088722155138068',
+  'body' => 'pay|3',
+  'invoice_amount' => '0.01',
+  'version' => '1.0',
+  'notify_id' => '2019100900222151333038060585198172',
+  'fund_bill_list' => '[{"amount":"0.01","fundChannel":"PCREDIT"}]',
+  'notify_type' => 'trade_status_sync',
+  'out_trade_no' => '201910091512493743502428',
+  'total_amount' => '0.01',
+  'trade_status' => 'TRADE_SUCCESS',
+  'trade_no' => '2019100922001438060504408132',
+  'auth_app_id' => '2018070960522704',
+  'receipt_amount' => '0.01',
+  'point_amount' => '0.00',
+  'buyer_pay_amount' => '0.01',
+  'app_id' => '2018070960522704',
+  'sign_type' => 'RSA2',
+  'seller_id' => '2088131842753187',
+)
+2019-10-09 15:13:34  TRADE_SUCCESS
+2019-10-09 15:13:34  201910091512493743502428
+2019-10-09 15:13:34  ======================支付成功======================
+2019-10-18 10:55:25  ======================支付宝回调开始======================
+2019-10-18 10:55:25  array (
+  'gmt_create' => '2019-10-18 10:55:22',
+  'charset' => 'utf-8',
+  'seller_email' => '15146233333@163.com',
+  'subject' => '支付订单',
+  'sign' => 'pYfKD4CoM6KE4uFax4ojkXzON/5Q+9jMmb2/rjEj57JuEmGTlBliBJp1+As62riTQl6CWLLlAILfZpmGkUsZmtaU9ot4C/YTkTIzWzYGWZKiefbQk054lNMYeeR6DlqLP48cCLcQwP6i/0o7XMy3nGV0xaeOOw51STTW1918rcZ6O32XPx5yEemituiCCyOUEohfep9NH7tn8Juz7LXOnXUCqVdHMrMYtj3/hd8i0F6HadnCsQo+sFlOhaRyjGm57KcSpXeTKFWqeCSy1BqF4SNaomyPWBaqjUe7vV/2OwNQC43WiR0WqSoTXQWomkOVGevXvisxwvVGYv8zaWV82w==',
+  'body' => 'pay|1',
+  'buyer_id' => '2088312605186444',
+  'invoice_amount' => '0.10',
+  'notify_id' => '2019101800222105522086440573592907',
+  'fund_bill_list' => '[{"amount":"0.10","fundChannel":"PCREDIT"}]',
+  'notify_type' => 'trade_status_sync',
+  'trade_status' => 'TRADE_SUCCESS',
+  'receipt_amount' => '0.10',
+  'app_id' => '2019100868135802',
+  'buyer_pay_amount' => '0.10',
+  'sign_type' => 'RSA2',
+  'seller_id' => '2088631288518262',
+  'gmt_payment' => '2019-10-18 10:55:22',
+  'notify_time' => '2019-10-18 10:55:23',
+  'version' => '1.0',
+  'out_trade_no' => '201910181055159931219621',
+  'total_amount' => '0.10',
+  'trade_no' => '2019101822001486440545378934',
+  'auth_app_id' => '2019100868135802',
+  'buyer_logon_id' => '186****6290',
+  'point_amount' => '0.00',
+)
+2019-10-18 10:55:25  TRADE_SUCCESS
+2019-10-18 10:55:25  201910181055159931219621
+2019-10-18 10:55:25  ======================支付成功======================
+2019-10-18 11:00:37  ======================支付宝回调开始======================
+2019-10-18 11:00:37  array (
+  'gmt_create' => '2019-10-18 11:00:36',
+  'charset' => 'utf-8',
+  'seller_email' => '15146233333@163.com',
+  'subject' => '支付订单',
+  'sign' => 'FG6xNG+YHY8LVm9d5uwTA5u1Rbcb8QC01gFThg6LPSHyzt0FYQgA0uUS4XKxLQxx7gOAsncc3Apgm+ucaOcEOTGIEAsHzswoMT9Be0RA/ivz1Tn2bC9FUcfYBmY1vnMpVvHjBCu08agOElZyuKPsSslA8nnlgKfqahLcbErsZx3eO/w1E2T0EHq6MX0z4+xBi0BTCaSk+B90N9bCefAz1OAjhU2y1K8q1Eym3ioBkac4j2O/49UF7Mc8bkiScM4bFesIIZkIeWM9jJimIPiCUhGuJ3eBxZquffotSXJty9v4LijCs6e9m5u8LbAmpW7xhR5K7VXhmC9/BrnkJzFmcA==',
+  'body' => 'pay|1',
+  'buyer_id' => '2088312605186444',
+  'invoice_amount' => '1.01',
+  'notify_id' => '2019101800222110036086440573548632',
+  'fund_bill_list' => '[{"amount":"1.01","fundChannel":"PCREDIT"}]',
+  'notify_type' => 'trade_status_sync',
+  'trade_status' => 'TRADE_SUCCESS',
+  'receipt_amount' => '1.01',
+  'app_id' => '2019100868135802',
+  'buyer_pay_amount' => '1.01',
+  'sign_type' => 'RSA2',
+  'seller_id' => '2088631288518262',
+  'gmt_payment' => '2019-10-18 11:00:36',
+  'notify_time' => '2019-10-18 11:00:37',
+  'version' => '1.0',
+  'out_trade_no' => '201910181100212361919438',
+  'total_amount' => '1.01',
+  'trade_no' => '2019101822001486440545332706',
+  'auth_app_id' => '2019100868135802',
+  'buyer_logon_id' => '186****6290',
+  'point_amount' => '0.00',
+)
+2019-10-18 11:00:37  TRADE_SUCCESS
+2019-10-18 11:00:37  201910181100212361919438
+2019-10-18 11:00:38  ======================支付成功======================
+2019-10-18 11:30:40  {"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|3","subject":"订单支付","out_trade_no":"201910181127443901344134","total_amount":"0.01"}
+2019-10-18 11:30:40  response: '<form id=\'alipaysubmit\' name=\'alipaysubmit\' action=\'https://openapi.alipay.com/gateway.do?charset=UTF-8\' method=\'POST\'><input type=\'hidden\' name=\'biz_content\' value=\'{"product_code":"FAST_INSTANT_TRADE_PAY","body":"pay|3","subject":"订单支付","out_trade_no":"201910181127443901344134","total_amount":"0.01"}\'/><input type=\'hidden\' name=\'app_id\' value=\'2019100868135802\'/><input type=\'hidden\' name=\'version\' value=\'1.0\'/><input type=\'hidden\' name=\'format\' value=\'json\'/><input type=\'hidden\' name=\'sign_type\' value=\'RSA2\'/><input type=\'hidden\' name=\'method\' value=\'alipay.trade.page.pay\'/><input type=\'hidden\' name=\'timestamp\' value=\'2019-10-18 11:30:40\'/><input type=\'hidden\' name=\'alipay_sdk\' value=\'alipay-sdk-php-20161101\'/><input type=\'hidden\' name=\'notify_url\' value=\'https://kuaixiao.zihaiwangluo.com/v2.0/ali/notifyurl\'/><input type=\'hidden\' name=\'return_url\' value=\'https://kuaixiao.zihaiwangluo.com/pc2.0/order/order_list\'/><input type=\'hidden\' name=\'charset\' value=\'UTF-8\'/><input type=\'hidden\' name=\'sign\' value=\'Lbl11HRqnVdaGaIPg9nEo0i7s3AbOf7Xguf+FnHrQLpyi+u/raKe8Zlz0D6Do1XI8g1QxU7aPOdF6AVmWdlM6QtByTasGkNOkWSr4Lxfmt/vN0lWjLh0Hxot9P1VfNr/xaujQSwHQEiO5P2+TO5sf5Sn5+zTq0k/GcYNxYQhsEq7BJWeiFpksuASWY10EdhR99NNYSTbRUofnY6+iStgpXOEruDjnOZxFT41B0cfXFnwQJd108x6ccc+QHJVZ3jDUqIop9Fc+ImSXa9SqquMwtl3vCJFfzmFQufdAA5cIaRlqVdNEiIJoQWvKjQf8096kuc/3FUcomw3pmyppMW7Sw==\'/><input type=\'submit\' value=\'ok\' style=\'display:none;\'\'></form><script>document.forms[\'alipaysubmit\'].submit();</script>'

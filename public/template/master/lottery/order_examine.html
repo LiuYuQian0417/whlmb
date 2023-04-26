@@ -1,0 +1,150 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+</style>
+<form action="" method="post" class="layui-form">
+    <!--订单信息-->
+    <div class="wrapper-list">
+        <div class="tabCon">
+            <div class="dash_line"></div>
+            <div class="title">
+                <span>用户信息：</span>
+            </div>
+            <div class="title" style="display: flex;align-items: center;padding-top: 0!important;">
+                <div style="width: 26%">用户ID：{$item.member.member_id|default=''}</div>
+                <div style="width: 26%">用户账号：{$item.member.phone|default=''}</div>
+                <div style="width: 26%">用户昵称：{$item.member.nickname|default=''}</div>
+            </div>
+            <div class="dash_line"></div>
+            <div class="title">
+                <span>订单信息：</span>
+            </div>
+            <div class="title" style="display: flex;align-items: center;padding: 0!important;">
+                <div style="width: 22%">中奖时间：{$item.create_time|default=''}</div>
+                <div style="width: 22%">奖品类别：
+                    {switch $item.goods_type}
+                    {case 1 }实物{/case}
+                    {case 2 }积分商品{/case}
+                    {case 3 }优惠券商品{/case}
+                    {/switch}
+                </div>
+                <!--<div style="width: 26%">发货时间：{$item.deliver_time|default=''}</div>-->
+            </div>
+            <div class="dash_line"></div>
+        </div>
+
+        <div class="layui-form">
+            <table class="layui-table goods-list">
+                <thead>
+                <tr>
+                    <th>奖品名称</th>
+                    <th>缩略图</th>
+                    <!--<th>状态</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        {$item.prize_title}
+                    </td>
+                    <td>
+                        <div class="info_img" style="width: 100px;margin: 0 auto">
+                            <img src="{$item.file}" class="thumb-img" onerror="this.src='/template/master/resource/image/common/imageError.png'" style="height: 100px;display: block;margin: 0 auto">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+        <div class="tabCon">
+            <div class="dash_line"></div>
+            <div class="title">
+                <span>收货信息：</span>
+            </div>
+            <div class="title" style="display: flex;align-items: center;padding-top: 0!important;">
+                <div style="width: 26%">收货人名称：{$item.member.nickname|default=''}</div>
+                <div style="width: 26%">联系电话：{$item.member.phone|default=''}</div>
+                <div style="width: 26%">收货地址：{$item.province|default=''} {$item.city|default=''} {$item.area|default=''} {$item.street|default=''} {$item.address|default=''}</div>
+                <div style="width: 26%">奖励状态：
+                    {switch name="$item.status|default=''"}
+                    {case value="0"}待领取{/case}
+                    {case value="1"}待发货{/case}
+                    {case value="2"}待收货{/case}
+                    {case value="3"}已完成{/case}
+                    {default /}出错啦
+                    {/switch}
+                </div>
+            </div>
+            <div class="dash_line"></div>
+        </div>
+        {eq name="$item.goods_type|default=0" value="1"}
+        <!--待发货情况-->
+        <div class="tabCon">
+            <div class="title">
+                <span>发货信息：</span>
+            </div>
+            <div class="list-div">
+                <div class="contentShell80">
+                    <div class="layui-form-item layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label"><font color="red">*</font>快递公司名称</label>
+                            <div class="layui-input-inline">
+                                <select name="time_type" lay-filter="time" lay-search {neq name="$item.status|default=0" value="1"}disabled{/neq}>
+                                    {volist name="express" id="vo"}
+                                    <option value="{$vo.code}" {eq name="item.express_value|default=''" value="$vo.code" }selected{/eq}>{$vo.name}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <input type="text" readonly title style="opacity: 0;" name="express_value" value="{$vo.code}" datatype="*" nullmsg="请选择快递公司名称" errormsg="请选择快递公司名称" />
+                        </div>
+                        <div style="height:38px;padding-top: 20px">
+                            <label class="layui-form-label"><font color="red">*</font> 快递单号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="express_number" maxlength="50" autocomplete="off" placeholder="请输入快递单号"  {neq name="$item.status|default=0" value="1"}disabled{/neq}
+                                       value="{$item.express_number|default=''}"
+                                       datatype="*" nullmsg="请输入快递单号" errormsg="请输入快递单号" class="layui-input">
+                            </div>
+                            <a href=""></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {/eq}
+        <!--待发货情况-->
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {eq name="item.status" value="1"}
+                <input type="hidden" name="id" value="{$item.lottery_order_id}">
+                <button class="layui-btn" type="submit" id="submit">发货</button>
+                {/eq}
+            </div>
+        </div>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    //模块切换
+    $('.layui-tab-title li').click(function () {
+        var index = $(this).index();
+        console.log(index);
+        $(this).addClass("active").siblings().removeClass("active");
+        $(".wrapper-list").eq(index).show().siblings(".wrapper-list").hide();
+    });
+    main.form('.layui-form');
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+</script>
+{/block}

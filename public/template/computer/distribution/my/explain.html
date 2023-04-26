@@ -1,0 +1,162 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+<link rel="stylesheet" href="__RES__/css/distribution/explain.css">
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    {include file="public/my_left"}
+
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div>
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="javascript:;">
+                        代言说明
+                    </a>
+                </div>
+            </div>
+            <div class="advocacy">
+                <img src="__RES__/imgs/yield/bg.png" alt="">
+                <div class="bg-tit-view">
+                    <div class="bg-tit">
+                        <img src="__RES__/imgs/yield/tit-bg.png" alt="">
+                        <div class="explain primary-color">收益说明</div>
+                    </div>
+                    <p class="tit-text primary-color">{$data.income_explain|raw}</p>
+                </div>
+
+                <div class="bg-tit-view bg-tit-view2">
+                    <div class="bg-tit">
+                        <img src="__RES__/imgs/yield/tit-bg.png" alt="">
+                        <div class="explain primary-color">关于收益</div>
+                    </div>
+                    <p class="tit-text primary-color">{$data.about_income|raw}</p>
+                </div>
+                <div class="bg-tit" style="margin: 170px 0 0 343px;">
+                    <img src="__RES__/imgs/yield/tit-bg.png" alt="">
+                    <div class="explain primary-color">名词解释</div>
+                </div>
+                <div class="text-info">
+                    <p class="text primary-color">{$data.noun_explain|raw}</p>
+                </div>
+                <div class="bg-tit" style="margin: 60px 0 0 343px;">
+                    <img src="__RES__/imgs/yield/tit-bg.png" alt="">
+                    <div class="explain primary-color">收益策略</div>
+                </div>
+                <div class="text-info">
+                    <p class="text primary-color">{$data.income_strategy|raw}</p>
+                </div>
+            </div>
+        </div>
+
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    //			显示全选
+    $('.bulk-operation .operation-btn').click(function(){
+        $(this).hide().siblings('.all-check').show()
+        $('.content-list').removeClass('content-list-hover border-color-hover')
+        $('.cover').show()
+    })
+    //			关闭全选
+    $('.success').click(function(){
+        $('.bulk-operation .operation-btn').show()
+        $('.all-check').hide()
+        $('.cover').hide()
+        $('.allcheck').removeClass('check').addClass('uncheck')
+        $('.content-list').addClass('content-list-hover border-color-hover')
+        $('.content-list').each(function(){
+            $(this).removeClass('active').find('input').removeAttr('checked')
+        })
+    })
+
+
+    //			关闭通知
+    $('.depreciate-cover .right img').click(function(){
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide()
+    })
+    //			关闭通知
+    $('.depreciate-cover .sure').click(function(){
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide()
+    })
+
+    //			显示全选
+    $('.bulk-operation .operation-btn').click(function(){
+        $(this).hide().siblings('.all-check').show()
+        $('.cover').show()
+    })
+    //			关闭全选
+    $('.success').click(function(){
+        $('.bulk-operation .operation-btn').show()
+        $('.all-check').hide()
+        $('.cover').hide()
+        $('.allcheck').removeClass('check').addClass('uncheck')
+        $('.shop-list').each(function(){
+            $(this).removeClass('active').find('input').removeAttr('checked')
+        })
+    })
+
+
+    //			单个内容的取消收藏
+    $('.cancel-collection').click(function(){
+        $('.shop-box').show();
+        $('.depreciate-cover').show();
+    })
+
+    //			显示遮罩
+    $('.disqualification').click(function(){
+        $('.depreciate-cover').show();
+        $('.all-shop').show();
+//
+    })
+    //			确定取消收藏
+    $('.depreciate-cover .all-shop .sure').click(function(){
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide();
+        $('#form').submit()
+    })
+    //			取消
+    $('.depreciate-cover .all-shop .countermand').click(function(){
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide();
+
+    })
+    $('.cover label div').click(function(e){
+        if($(this).parents('.content-list').hasClass('active')){
+            $(this).parents('.content-list').removeClass('active')
+        }else{
+            $(this).parents('.content-list').addClass('active')
+        }
+        e.stopPropagation();
+    })
+
+    //			全选
+    $('.allcheck').click(function(){
+        if($(this).hasClass('uncheck')){
+            $(this).removeClass('uncheck').addClass('check')
+            $('.content-list').each(function(){
+                $(this).addClass('active').find('input').attr('checked','checked')
+            })
+        }else{
+            $(this).removeClass('check').addClass('uncheck')
+            $('.content-list').each(function(){
+                $(this).removeClass('active').find('input').removeAttr('checked')
+            })
+        }
+
+    })
+
+
+</script>
+{/block}

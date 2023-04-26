@@ -1,0 +1,146 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请慎重编辑会员的收货地址。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 收货人姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" maxlength="50" autocomplete="off" placeholder="请输入收货人姓名"
+                       value="{$item.name|default=''}"
+                       datatype="*"
+                       nullmsg="请输入收货人姓名" errormsg="请输入收货人姓名"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 收货人手机号</label>
+            <div class="layui-input-block">
+                <input type="text" name="phone" value="{$item.phone|default=''}" maxlength="11" autocomplete="off"
+                       placeholder="请输入收货人手机号"
+                       datatype="*"
+                       nullmsg="请输入收货人手机号" errormsg="请输入收货人手机号"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="width: 800px">
+            <label class="layui-form-label"><span style="color: #cf0000;">*</span>收货地址</label>
+            <div class="layui-input-inline" style="width: 140px">
+                <select name="province" class="state" lay-filter="state" lay-search="">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 140px">
+                <select name="city" class="state" lay-filter="state">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 140px">
+                <select name="area" class="state" lay-filter="state">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+            <div class="layui-input-inline" style="width: 140px">
+                <select name="street" class="state" lay-filter="state">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 收货人详细地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="address" value="{$item.address|default=''}" maxlength="120" autocomplete="off"
+                       placeholder="请输入收货人详细地址"
+                       datatype="*"
+                       nullmsg="请输入收货人详细地址" errormsg="请输入收货人详细地址"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.member_address_id"}
+                <input type="hidden" name="member_address_id" value="{$item.member_address_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    //
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+        var url = '/member_address/area';            //数据请求地址
+        var province = "{$item.province}";           //编辑需要的省
+        var city = "{$item.city}";                   //编辑需要的市
+        var district = "{$item.area}";               //编辑需要的县/区
+        var street = "{$item.street}";               //编辑需要的县/区
+        getJSON(url, $("select[name='province']").closest("div"));
+        form.on('select(state)', function (data) {
+            var $that = $(data.elem);
+            var urls = url + "?id=" + data.value;
+            getJSON(urls, $that.closest("div").next());
+        });
+
+        function getJSON(urls, even) {
+            $.getJSON(urls, function (json) {
+                var pid = 0;
+                var name = even.find("select").attr("name");
+                var select = "<select name=\"" + name + "\" lay-filter=\"state\" lay-search=\"\">";
+                select += "<option value=\"\">请选择 </option>";
+                $(json).each(function () {
+                    select += "<option value=\"" + this.area_id + "\"";
+                    if (province == this.area_name || city == this.area_name || district == this.area_name || street == this.area_name) {
+                        select += " selected=\"selected\" ";
+                        pid = this.area_id;
+                    }
+                    select += ">" + this.area_name + "</option>";
+                });
+                select += "</select>";
+                even.html(select);
+                var nextName = even.next().find("select").attr("name");
+                even.next().html("<select name=\"" + nextName + "\" lay-filter=\"state\" lay-search=\"\"><option value=\"\">请选择 </option></select>");
+                form.render('select');
+                if (pid != 0) {
+                    getJSON(url + "?id=" + pid, even.next());
+                }
+            });
+        }
+    });
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

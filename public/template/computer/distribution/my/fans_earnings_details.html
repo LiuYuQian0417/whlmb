@@ -1,0 +1,292 @@
+{extend name='public/my_header' /}
+{block name='content_css'}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyFans.css" />
+<link rel="stylesheet" href="__RES__/css/my/FansEarnings.css">
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css">
+<script src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts-en.common.js"></script>
+{/block}
+{block name="content"}
+
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left"/}
+    <!--我的页面左侧公共部分结束-->
+    <div class="index-right">
+        <!-- 我的右侧 -->
+        <div class="fans">
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="{:url('/pc2.0/distribution_my/fans')}"  >
+                        粉丝
+                    </a>
+                    <a href="javascript:;" class="primary-color border-color">
+                        粉丝收益详情
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="fans-earnings">
+                <div class="fans-earnings-box">
+                    <div class="title">
+                        <div class="tit-left">
+                            <a  href="{:url('/pc2.0/distribution_my/fans_earnings_details')}?type=0&distribution_id={:input('distribution_id','')}" class=" primary-color-hover {eq name=':input("type",0)' value='0'}primary-color{/eq}" >
+                                累计收益
+                            </a>
+                            <span>|</span>
+                            <a  href="{:url('/pc2.0/distribution_my/fans_earnings_details')}?type=2&distribution_id={:input('distribution_id','')}" class=" primary-color-hover {eq name=':input("type",0)' value='2'}primary-color{/eq}" >
+                                已结算
+                            </a>
+                            <span>|</span>
+                            <a  href="{:url('/pc2.0/distribution_my/fans_earnings_details')}?type=1&distribution_id={:input('distribution_id','')}" class=" primary-color-hover {eq name=':input("type",0)' value='1'}primary-color{/eq}" >
+                                未结算
+                            </a>
+                        </div>
+                        <div class="tit-right ">
+                            订单总量：<span class="primary-color order-num">{$data->total()}</span>
+                            累计收益：<span class="primary-color">￥{$total_price|default=0.00}</span>
+                        </div>
+                    </div>
+
+
+                    <div class="fans-earnings-content">
+                        <div class="fans-top">
+                            <div class="date-picker " >
+                                <a href="javascript:;" class="select" >
+                                    今日收益详情
+                                    <img src="__RES__/imgs/my/TopCornerMark.png" alt="">
+                                </a>
+                                <div class="date-picker-list" >
+                                    <div class="cover" style="width: 100%; height: 100%; position: fixed; left: 0px; top: 0px; z-index: 100;"></div>
+                                    <a href="javascript:;" class="primary-color-hover">
+                                        2019年1月详情
+                                    </a>
+                                    <a href="javascript:;"  class="primary-color-hover">
+                                        2019年1月详情
+                                    </a>
+                                    <a href="javascript:;"  class="primary-color-hover">
+                                        2019年1月详情
+                                    </a>
+                                    <a href="javascript:;"  class="primary-color-hover">
+                                        2019年1月详情
+                                    </a>
+                                    <a href="javascript:;"  class="primary-color-hover">
+                                        2019年1月详情
+                                    </a>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="javascript:;" >
+                                    订单详情
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:;" >
+                                    金额
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:;" >
+                                    下单用户
+                                </a>
+                            </div>
+                            <div>
+                                <a href="javascript:;" >
+                                    下单时间
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="fans-earnings-list">
+                            {empty name="$data"}
+                            <div class="indent-box indent-box-emty">
+                                <img src="__RES__/imgs/orderemty.png" alt="">
+                                <p>暂无数据</p>
+                                <!--<span>“暂无订单，忙里偷闲下一单吧”</span>-->
+                            </div>
+                            {else/}
+                                {volist name="$data" id="item"}
+                                <div class="list">
+                                <div class="goods">
+                                    <img src="{$item.avatar}" alt="">
+                                    <span class="goods-name">{$item.goods_name}</span>
+                                </div>
+                                <div class="money primary-color">
+                                    +￥{$item.price}
+                                </div>
+                                <div class="user">
+                                    <span class="name">{$item.nickname}</span>
+                                    <img src="__RES__/imgs/my/fans/user.png" alt="">
+                                </div>
+                                <div class="date">
+                                    {$item.underOrder_time}
+                                </div>
+                            </div>
+                                {/volist}
+                            {/empty}
+
+                        </div>
+                    </div>
+
+                    <!--分页-->
+                    <div class="pageContainer" style="width: auto">{$data|raw}</div>
+                </div>
+            </div>
+        </div>
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $('.cover label div').click(function (e) {
+        if ($(this).parents('.content-list').hasClass('active')) {
+            $(this).parents('.content-list').removeClass('active')
+        } else {
+            $(this).parents('.content-list').addClass('active')
+        }
+        e.stopPropagation();
+    });
+
+    // $('.tit>a').click(function (e) {
+    //     e.preventDefault()
+    //     $(this).addClass('primary-color border-color').siblings().removeClass('primary-color border-color')
+    //     if ($.trim($(this).text()).length == 2) {
+    //         $('.container-view').css('display', 'block')
+    //         $('.container-block').css('display', 'none')
+    //     } else {
+    //         $('.container-view').css('display', 'none')
+    //         $('.container-block').css('display', 'block')
+    //     }
+    // });
+
+    $('.now-date').hover(function () {
+        $(this).find('img').attr('src', '__RES__/imgs/my/TopCornerMark.png')
+        $('.hover-list').css('display', 'block')
+    }, function () {
+        $('.hover-list').css('display', 'none')
+        $(this).find('img').attr('src', '__RES__/imgs/my/bottom.png')
+    })
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var base = +new Date(2016, 9, 3);
+    var oneDay = 24 * 3600 * 1000;
+    var valueBase = Math.random() * 300;
+    var data = [];
+    for (var i = 1; i < 7; i++) {
+        var now = new Date(base += oneDay);
+        var dayStr = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
+        valueBase = Math.round((Math.random() - 0.5) * 20 + valueBase);
+        valueBase <= 0 && (valueBase = Math.random() * 300);
+        data.push([dayStr, valueBase]);
+    }
+    option = {
+        title: {
+            left: 'center',
+            text: '',
+            subtext: '',
+        },
+        tooltip: {
+            triggerOn: 'none',
+            position: function (pt) {
+                return [pt[0], 130];
+            }
+        },
+        xAxis: {
+            show: true,
+            type: 'time',
+            // boundaryGap: [0, 0],
+            axisPointer: {
+                value: '',
+                snap: true,
+                lineStyle: {
+                    color: '#EA5413',
+                    opacity: 0.5,
+                    width: 2
+                },
+                label: {
+                    show: true,
+                    formatter: function (params) {
+                        return echarts.format.formatTime('yyyy-MM-dd', params.value);
+                    },
+                    backgroundColor: '#983910'
+                },
+
+            },
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+            show: false,
+            type: 'value',
+            axisTick: {
+                inside: true
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+            },
+            z: 10
+        },
+        grid: {
+            top: 110,
+            left: 15,
+            right: 15,
+            height: 160
+        },
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    main.ajax({
+            'url': '/pc2.0/distribution_my/seven_data',
+            'callback': function (res) {
+                if (res.code.toString() === '0') {
+                    console.log(data);
+                    console.log(res.data);
+                    myChart.setOption({
+                        series: [{
+                            name: '',
+                            type: 'line',
+                            smooth: true,
+                            symbol: 'circle',
+                            symbolSize: 5,
+                            sampling: 'average',
+                            itemStyle: {
+                                normal: {
+                                    color: '#EA5413'
+                                }
+                            },
+                            stack: 'a',
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: '#feefef'
+                                    }, {
+                                        offset: 1,
+                                        color: '#fff'
+                                    }])
+                                }
+                            },
+                            data: res.data
+                        },]
+                    });
+                } else {
+                    main.msg('获取最近七天收益数据异常，请从新刷新');
+                }
+            }
+        },
+    );
+
+</script>
+{/block}

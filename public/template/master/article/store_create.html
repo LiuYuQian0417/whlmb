@@ -1,0 +1,593 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/color_picker/spectrum.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+
+    <div class="tabs_info">
+        <ul>
+            <li class="curr" {present name="$item.article_classify_id"}{eq name="$item.article_classify_id" value="14"} style="display: none" {/eq}{/present}><a href="javascript:void(0);">通用信息</a></li>
+            <li class=""><a href="javascript:void(0);">文章内容</a></li>
+            <li class="" {present name="$item.article_classify_id"}{eq name="$item.article_classify_id" value="14"} style="display: none" {/eq}{/present}><a href="javascript:void(0);">关联商品</a></li>
+        </ul>
+    </div>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请注意选择上级分类。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+            </ul>
+        </div>
+    </div>
+    <div class="contentShell" {eq name="$item.article_classify_id|default=''" value="14"} style="display: none" {/eq}>
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 文章标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="120" autocomplete="off" placeholder="请输入文章标题"
+                       datatype="*"
+                       value="{$item.title|default=''}"
+                       nullmsg="请输入文章标题" errormsg="请输入文章标题"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label"><font color="red">*</font> 文章分类</label>
+                <div class="layui-input-block">
+                    <select name="article_classify_id" lay-search=""
+                            datatype="*"
+                            nullmsg="请选择文章分类" errormsg="请选择文章分类"
+                    >
+                        <option value="3" selected>店铺动态</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">店铺信息</label>
+                <div class="layui-input-block">
+                    <select name="store_id" lay-search="">
+                        {volist name='storeList' id='storeList'}
+                        <option
+                                {eq name=":input('get.store_id')" value="$storeList.store_id" }selected{/eq}
+                        {eq name="item.store_id|default=''" value="$storeList.store_id" }selected{/eq}
+                        value="{$storeList.store_id}"
+                        >{$storeList.store_name}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示状态</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="1" title="是"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="否"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <!--店铺动态图片-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>动态缩略图</label>
+            <div class="layui-input-inline">
+                <div>
+                    <div class="layui-upload-drag" {notempty name="$item.file"}style="padding:1px;"{/notempty} id="goods_file">
+                    {empty name="$item.file"}
+                    <i class="layui-icon">&#xe681;</i>
+                    <p>点击上传，或将文件拖拽到此处</p>
+                    <input type="text" name="file" value="" title style="opacity: 0;"
+                           datatype="*" nullmsg="请上传店铺动态图片" errormsg="请上传店铺动态图片" />
+                    {else/}
+                    <img src="{$item.file|default=''}" onerror=this.src="/template/master/resource/image/common/imageError.png" title="" class="uploadImg" alt=""/>
+                    <input type="text" name="file" value="" title style="display: none;"
+                           datatype="*" nullmsg="请上传店铺动态图片" errormsg="请上传店铺动态图片" />
+                    {/empty}
+                </div>
+                <!--<div class="layui-form-mid layui-word-aux">-->
+                <!--建议尺寸，800 X 800-->
+                <!--</div>-->
+            </div>
+
+        </div>
+
+        <!--店铺动态图片-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>动态组图</label>
+            <div class="layui-input-inline">
+                <div class="contentShell80">
+                    <div class="layui-form-item">
+                        <div id="upload_area">
+                            <div id='photos_area' {if condition="!empty($goodsData['multiple_file'])"}style="padding:0;"{/if} class="photos_area clearfix">
+                            {if condition="empty($goodsData['multiple_file'])"}
+                            <p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>
+                            {else/}
+                            {foreach $goodsData['multiple_file'] as $mfKey => $mfVal}
+                            {if condition="$goodsData['multiple_file'][0] neq ''"}
+                            <div class="img-item"><img src="{$mfVal}" title="" class="uploadImg">
+                                <input type="hidden" name="picArr[]" value="{$goodsData['multiple_file_extra'][$mfKey]}" />
+                                <div class="operate">
+                                    <i class="toleft">左移</i>
+                                    <i class="toright">右移</i>
+                                    <i class="del">删除</i>
+                                </div>
+                            </div>
+                            {else/}
+                            <p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>
+                            {/if}
+                            {/foreach}
+                            {/if}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">关键字</label>
+            <div class="layui-input-block">
+                <input type="text" name="keyword" value="{$item.keyword|default=''}" maxlength="50" autocomplete="off"
+                       placeholder="请输入关键字"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">外部链接</label>
+            <div class="layui-input-block">
+                <input type="text" name="link_url" value="{$item.link_url|default=''}" maxlength="200" autocomplete="off"
+                       placeholder="请输入外部链接"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="describe" maxlength="100" class="layui-textarea">{$item.describe|default=''}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShell"
+         {eq name="$Request.action" value="create"}
+         style="display: none"
+         {/eq}
+         {present name="$item.article_classify_id"}
+         {neq name="$item.article_classify_id" value="14"} style="display: none" {/neq}
+         {/present}
+    >
+        <div class="contentShell90">
+            <div class="layui-tab layui-tab-brief">
+                <ul class="layui-tab-title">
+                    {if config("user.")["pc"]["is_include"]}
+                    <li class="layui-this">
+                        <a href="javascript:void(0);"
+                           onclick="$('.describe').eq(0).show().next('.layui-form-item').hide();">
+                            <i class="fa fa-laptop" aria-hidden="true"></i> PC端
+                        </a>
+                    </li>
+                    {/if}
+                    <li {if !config("user.")["pc"]["is_include"]}class="layui-this"{/if}>
+                        <a href="javascript:void(0);"
+                           onclick="$('.describe').eq(1).show().prev('.layui-form-item').hide();">
+                            <i class="fa fa-mobile" aria-hidden="true"></i> 移动端
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {if config("user.")["pc"]["is_include"]}
+            <!--商品PC端详细描述-->
+            <div class="layui-form-item describe">
+                  <textarea type="text/plain" id="containers" name="content"
+                            placeholder="请输入信息内容">{$item.content|default=''}</textarea>
+            </div>
+            {/if}
+            <div class="layui-form-item describe" {if config("user.")["pc"]["is_include"]}style="display: none;"{/if}>
+                <div class="mobile-shell">
+                    <div class="mobile-content">
+                        <div class="container">
+                            <div class="info">{$item.web_content|raw|default=''}</div>
+                        </div>
+                        <input type="hidden" title="" name="web_content" value="{$item.web_content|default=''}"/>
+                        <div class="mo-btn">
+                            <a class="layui-btn layui-btn-normal" id="mobileImg" href="javascript:void(0);">
+                                <i class="fa fa-file-picture-o" aria-hidden="true"></i> 添加图片
+                            </a>
+                            <a class="layui-btn layui-btn-normal"
+                               href="javascript:step.addFont('.mobile-content .container .info');">
+                                <i class="fa fa-font" aria-hidden="true"></i> 添加文字
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="explain">
+                    <p>
+                        <strong>一、基本要求</strong>
+                        <span><em>1、</em>手机详情总体大小：图片+文字，<i class="red">图片不超过20张，文字不超过5000字</i>；</span>
+                        <span><em>建议：</em>所有图片都是本宝贝相关的图片。</span>
+                    </p>
+
+                    <p>
+                        <strong>二、图片大小</strong>
+                        <span><em>1、</em>建议使用宽度480 ~ 620像素、高度小于等于960像素的图片；</span>
+                        <span><em>2、</em>格式为：JPG\JEPG\GIF\PNG；</span>
+                        <span><em>举例：</em>可以上传一张宽度为480，高度为960像素，格式为JPG的图片。</span>
+                    </p>
+                    <p>
+                        <strong>三、文字要求</strong>
+                        <span><em>1、</em>每次插入文字不能超过500个字，标点、特殊字符按照一个字计算；</span>
+                        <span><em>2、</em>请手动输入文字，不要复制粘贴网页上的文字，防止出现乱码；</span>
+                        <span><em>3、</em>以下特殊字符“&lt;”、“&gt;”、“"”、“’”、“\”会被替换为空。</span>
+                        <span><em>建议：</em>不要添加太多的文字，这样看起来更清晰。</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="contentShell" style="display:none">
+        <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 关联商品</label>
+        <hr class="layui-bg-gray">
+        <div class="contentShell90">
+            <div class="layui-form-item">
+                <!--商品分类-->
+                <div class="layui-input-inline" style="width: 450px;">
+                    <input type="text" value="" title autocomplete="off" readonly
+                           placeholder="请选择商品分类" class="layui-input drop-down-cate form-control">
+                    <input type="hidden" class="cate_id_keyword" title/>
+                    <div class="cate-container" style="display: none;">
+                        <div class="cate-header">
+                            <ul class="checkedCate">
+                                <li>请选择商品分类</li>
+                            </ul>
+                        </div>
+                        <div class="cate-list">
+                            <ul>
+                                {foreach $categoryOne as $key => $item}
+                                <li title="{$item.title}" data-count="{$item.count}"
+                                    value="{$item.goods_classify_id}"><em>Ⅰ</em>{$item.title}
+                                </li>
+                                {/foreach}
+                                {empty name="$categoryOne"}
+                                <li class="empty">暂无分类数据</li>
+                                {/empty}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--商品品牌-->
+                <div class="layui-input-inline brand_keyword">
+                    <input type="text" value="" title autocomplete="off" readonly
+                           placeholder="请选择商品品牌" class="brand_name_keyword layui-input drop-down">
+                    <input type="hidden" class="brand_id_keyword" title/>
+                    <div class="brand-container" style="display: none;">
+                        <div class="brand-header">
+                            <div class="letter">
+                                <ul>
+                                    <li class="backStyle">
+                                        <a class="backStyle" rel="" href="javascript:void(0);"
+                                           onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'','keyword':''}})">全部品牌</a>
+                                    </li>
+                                    {foreach $brandFirstChr as $key => $item}
+                                    <li>
+                                        <a href="javascript:void(0);"
+                                           onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'{$item}','keyword':''}})"
+                                           rel="{$item}">{$item}</a></li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                            <div class="search">
+                                <input type="text" value="" placeholder="请输入品牌关键字" class="brand-search-input"/>
+                                <a href="javascript:void(0);"
+                                   onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':$('.brand_keyword a[class=\'backStyle\']').attr('rel'),'keyword':$('.brand_keyword .brand-search-input').val()}})"
+                                   class="brand-search-btn">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                                <a title="点击清空品牌输入框内容"
+                                   href="javascript:$('.brand_name_keyword').val('');$('.brand_id_keyword').val('');"
+                                   class="brand-clear-btn">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="brand-list">
+                            <ul>
+                                {foreach $brand as $key => $item}
+                                <li title="{$item.brand_name}" value="{$item.brand_id}"><em>{$item.brand_first_char}</em>{$item.brand_name}
+                                </li>
+                                {/foreach}
+                                {empty name="$brand"}
+                                <li class="empty">暂无品牌数据</li>
+                                {/empty}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--关键字-->
+                <div class="layui-input-inline">
+                    <input type="text" value="" title autocomplete="off" placeholder="填写商品关键词"
+                           class="layui-input search_keyword form-control">
+                </div>
+                <!--查询按钮-->
+                <a href="javascript:void(0);" class="layui-btn layui-btn-normal" onclick="selectGoods()">
+                    <i class="fa fa-search" aria-hidden="true"></i> 查询
+                </a>
+            </div>
+            <div class="layui-form-item">
+                <div class="relation-div">
+                    <div class="relation-left">
+                        <h4>可选商品</h4>
+                        <div class="relation-left-info">
+                            <div class="relation-left-container">
+                                <!--<ul>-->
+                                    <!--<li><input type="checkbox" name="like[write]" class="chk" lay-filter="chk" title="" lay-skin="primary"></li>-->
+                                <!--</ul>-->
+                            </div>
+                        </div>
+                        <div class="relation-footer">
+                            <input type="checkbox" title="全选" class="chkAll" lay-filter="chkAll" lay-skin="primary" />
+                            <a class="layui-btn layui-btn-xs layui-btn-normal" href="javascript:void(0);"  onclick="checkGoods()"><i class="fa fa-check-circle"></i>&nbsp;确定</a>
+                        </div>
+                    </div>
+                    <div class="relation-middle">
+                        <!--<div class="relation-middle-item">-->
+                            <!--<input type="radio" name="relation_type" value="1" title="单向关联" checked />-->
+                        <!--</div>-->
+                        <!--<div class="relation-middle-item">-->
+                            <!--<input type="radio" name="relation_type" value="2" title="双向关联" />-->
+                        <!--</div>-->
+                    </div>
+                    <div class="relation-right">
+                        <h4>跟该商品关联的商品</h4>
+                        <div class="relation-right-info">
+                            <div class="relation-right-container">
+                                <ul>
+                                    {notempty name="$goods"}
+                                    {volist name="goods" id="goods"}
+                                    <li>
+                                        <input type="checkbox" name="goods_id[]" checked value="{$goods.goods_id}" title="{$goods.goods_name}" lay-skin="primary">
+                                    </li>
+                                    {/volist}
+                                    {/notempty}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="relation-footer">
+                            <input type="checkbox" title="全选" lay-skin="primary" />
+                            <a href="javascript:void(0);" onclick="removeGoods()" class="layui-btn layui-btn-xs layui-btn-normal"><i class="fa fa-check-circle"></i>&nbsp;移除关联</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$article_id"}
+                <input type="hidden" name="article_id" value="{$article_id}">
+                {/present}
+                {present name="$item.article_classify_id"}
+                <input type="hidden" name="article_classify_id" value="{$item.article_classify_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script>
+    main.form();
+    main.valid('.layui-form');
+    // main.file();
+    //内容页切换
+    $('.tabs_info li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    });
+
+    {if config("user.")["pc"]["is_include"]}
+    // 实例化编辑器
+    UE.getEditor('containers')
+    {/if}
+
+    function selectGoods() {
+        var cateId = $('.cate_id_keyword').val(),
+            brandId = $('.brand_id_keyword').val(),
+            keyword = $('.search_keyword').val();
+        main.ajax({data: {cateId:cateId,brandId:brandId,keyword:keyword,search:1},url: '/article/selectGoods',callback: function (res) {
+                $('.relation-left-container').html(res);
+            }});
+    }
+
+    // 上传图片
+    main.upload([{
+        elem: '#mobileImg',
+        size: 2 * 1024,
+        data: {name: 'content_img', dir: 'content_img', auth: 'public-read', style: 3, crypt: 0},
+        field: 'content_img',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="m-img">' +
+                '<img src="' + res.data.ossUrl + '" title="' + res.data.name + '">'
+                + step.toolsHtml + '</div>';
+            $('.mobile-content .container .info').append(html);
+            main.tools.sort($('div[class^="m-"]'));
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_file',
+        size: 2 * 1024,
+        data: {name: 'goods_file', dir: 'goods_file', auth: '', style: 1, crypt: 1},
+        field: 'goods_file',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" alt="' + res.data.name + '" class="uploadImg">' +
+                '<input type="text" name="file" value="'+res.data.ossUrl+'" title style="display:none;"/>';
+            $(this.elem).css('padding','1px').html(html);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#goods_video',
+        size: 10 * 1024,
+        data: {name: 'goods_video', dir: 'video', auth: '', style: 1, crypt: 1},
+        field: 'goods_video',
+        accept: 'video',
+        acceptMime: 'video/*',
+        exts: 'mp4',
+        done: function (res) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<video controls><source src="'+ res.data.ossCryptUrl +'" type = “application/ogg” /></video>';
+            $(this.elem).css('padding','1px').html(html);
+            $('[name="video"]').val(res.data.ossUrl);
+            layer.closeAll('loading');
+        }
+    },{
+        elem: '#photos_area',
+        size: 2 * 1024,
+        data: {name: 'goods_album', dir: 'album', auth: '', style: 1, crypt: 1},
+        field: 'goods_album',
+        multiple: true,
+        number: 5,
+        auto: false,
+        choose: function (obj) {
+            var length = $('.img-item').length,num = 1;
+            obj.preview(function (index,file,result) {
+                if (length <= 5 && (length + num) <= 5 ) obj.upload(index, file);
+                num++;
+            });
+        },
+        done: function (res,index,upload) {
+            if (res.code !== 0) {
+                layer.msg(res.message);
+                return false;
+            }
+            var html = '<div class="img-item">' +
+                '<img src="' + res.data.ossCryptUrl + '" title="' + res.data.name + '" class="uploadImg">' +
+                '<input type="hidden" name="picArr[]" value="'+ res.data.ossUrl +'" />' +
+                '<div class="operate">' +
+                '<i class="toleft">左移</i>' +
+                '<i class="toright">右移</i>' +
+                '<i class="del">删除</i>' +
+                '</div></div>';
+            if ($(this.elem).children('.img-item').length == 0) $(this.elem).empty();
+            $(this.elem).css('padding',0).append(html);
+            layer.closeAll('loading');
+        }
+    }]);
+    $("#photos_area").on("click", '.toright', function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_right = item.next(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_right.length == 0) {
+                item.insertBefore($(this).parents('#photos_area').children(".img-item:first"));
+            } else {
+                item.insertAfter(item_right);
+            }
+        }
+    }).on("click", ".toleft", function () {
+        var item = $(this).parent().parent(".img-item");
+        var item_left = item.prev(".img-item");
+        if ($(this).parents('#photos_area').children(".img-item").length >= 2) {
+            if (item_left.length == 0) {
+                item.insertAfter($(this).parents('#photos_area').children(".img-item:last"));
+            } else {
+                item.insertBefore(item_left);
+            }
+        }
+    }).on("click", ".del", function () {
+        $(this).parent().parent(".img-item").remove();
+        var pa = $('#photos_area');
+        if (pa.html() == '')
+            pa.css({'padding':'60px'}).html('<p>最多可上传5个图片文件,单个文件最大尺寸5M以内</p>');
+
+    }).on('click', '.img-item', function (ev) {
+        var oEvent = ev || event;
+        oEvent.stopPropagation();
+    });
+
+    function checkGoods() {
+        // alert(1);
+        // return false;
+        $('.relation-right-container').html('');
+        //查看当前选中的复选框
+        var checked = $('.chk:checked');
+        if (checked.length === 0) {
+            layer.msg('请选择商品');
+            return;
+        }
+        var id = [];
+        checked.each(function () {
+            id.push($(this).val());
+        });
+        if (id.length > 0) id = id.join(',');
+        main.ajax({
+            type: 'post', url: '/article/getGoods', data: {'id': id}, callback: function (res) {
+                var html = '<ul>';
+                $.each(res,function (i,o) {
+                    html+= '<li>' +
+                        '<input type="checkbox"  name="goods_id[]" checked="checked" value="'+o.goods_id+'" title="'+o.goods_name+'" lay-skin="primary" class="c_right" lay-filter="c_right">' +
+                        '<div class="layui-unselect layui-form-checkbox layui-form-checked" lay-skin="primary"><span>'+o.goods_name+'</span><i class="layui-icon layui-icon-ok"></i></div>'+
+                        '</li>'
+                });
+                html+='</ul>';
+
+                $('.relation-right-container').append(html);
+            }
+        });
+        return id;
+    }
+    
+    function removeGoods() {
+        // alert(1);
+        $("input[name='goods_id[]']").each(function(){
+            console.log($(this).attr("checked"));
+            if ($(this).attr("checked") == 'checked') {
+                $(this).parent('li').remove();
+            }
+        });
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

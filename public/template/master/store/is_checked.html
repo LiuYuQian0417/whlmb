@@ -1,0 +1,96 @@
+<link href="__RES__/font/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+<body class="childrenBody ">
+<div class="main-content" id="mainContent">
+    <div class="tabCon">
+        <form action="" method="post" class="layui-form">
+            <!--是否审核状态-->
+            <div class="layui-form-item">
+                <label class="layui-form-label"><em class="require">* </em>状态：</label>
+                <div class="layui-input-block">
+                    <div class="checkbox_items radio_status" onclick="showunit()">
+                        <input type="radio" lay-filter="status" name="status" value="1" title="同意" checked>
+                        <input type="radio" lay-filter="status" name="status" value="2" title="拒绝" style="margin-left: 10px;" id="refuse">
+
+                    </div>
+                </div>
+            </div>
+            <!--原因-->
+            <div class="layui-form-item" id="refuse_reason" hidden>
+                <label class="layui-form-label"><em class="require">* </em>原因：</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="审核不通过原因，不能超过100字" datatype="*"  nullmsg="请输入原因" errormsg="请输入原因"
+                              id="reason" name="reason" maxlength="100" style="height: 200px;" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="contentShellBtn">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                    <dt>&nbsp;</dt>
+                        <input type="hidden" name="store_id" value="{$store_id}">
+                        <a class="layui-btn" href="javascript:void(0);" onclick="logout()">确认</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/js/common/jquery.cookie.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<script src="__RES__/js/common/jquery.from.js"></script>
+<script src="__RES__/js/common/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/common/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    main.valid('.layui-form');
+    main.form('.layui-form');
+    function logout() {
+        var reason = $('#reason').val();
+        var store_id = $("input[name='store_id']").val();
+        var status = $("input[name='status']:checked").val();
+        if (status == 2) {
+            if (reason == '') {
+                layer.msg('原因不能为空');
+                return false;
+            }
+        }
+        if (store_id == '') {
+            layer.msg('店铺信息不能为空');
+            return false;
+        }
+        layer.msg('确定审核该店铺吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+
+                main.ajax({type:'post',url:'/store/is_checked',data:{'reason': reason,store_id:store_id,status:status},
+                    callback: function (res){
+                        if (res.code == 0){
+                            layer.msg('操作成功');
+                            layer.close(index);
+                            parent.layer.closeAll();
+                            parent.parent.location.reload();
+                        }else {
+                            layer.msg(res.message);
+                        }
+                    }});
+            }
+        });
+    }
+
+    // 切换单选
+    function showunit() {
+        var get_value = $("input[name='status']:checked").val();
+        if (get_value == 1) {
+            $('#refuse_reason').hide()
+        } else {
+            $('#refuse_reason').show();
+        }
+    }
+</script>
+
+

@@ -1,0 +1,212 @@
+{extend name='layout/frame'}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+{/block}
+{block name='body'}
+{block name='breadcrumb'}{/block}
+<form class="layui-form" action="" method="get">
+    <div class="common-head">
+        <div class="fl">
+            <!--选择商品开始-->
+            {notpresent name="item.group_goods_id"}
+            <div class="contentShell90">
+                <div class="layui-form-item">
+                    <!--商品分类-->
+                    <div class="layui-input-inline" style="width: 450px;">
+                        <input type="text" value="" title autocomplete="off" readonly placeholder="请选择商品分类" class="layui-input drop-down-cate form-control">
+                        <input type="hidden" class="cate_id_keyword" name="cateId" title/>
+                        <div class="cate-container" style="display: none;">
+                        <div class="cate-header">
+                            <ul class="checkedCate">
+                                <li>请选择商品分类</li>
+                            </ul>
+                        </div>
+                        <div class="cate-list">
+                            <ul>
+                                {foreach $categoryOne as $key => $item}
+                                <li title="{$item.title}" data-count="{$item.count}"
+                                value="{$item.goods_classify_id}"><em>Ⅰ</em>{$item.title}
+                                </li>
+                                {/foreach}
+                                {empty name="$categoryOne"}
+                                <li class="empty">暂无分类数据</li>
+                                {/empty}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--商品品牌-->
+                <div class="layui-input-inline brand_keyword">
+                    <input type="text" title autocomplete="off" readonly
+                    placeholder="请选择商品品牌" value="{:input('brandName', '')}" class="brand_name_keyword layui-input drop-down" name="brandName">
+                    <input type="hidden" class="brand_id_keyword" name="brandId" title {notempty name=":input('brandId')"}value="{:input('brandId')}"{/notempty}/>
+                    <div class="brand-container" style="display: none;">
+                        <div class="brand-header">
+                            <div class="letter">
+                                <ul>
+                                    <li class="backStyle">
+                                    <a class="backStyle" rel="" href="javascript:void(0);" onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'','keyword':''}})">全部品牌</a>
+                                    </li>
+                                    {foreach $brandFirstChr as $key => $item}
+                                    <li>
+                                    <a href="javascript:void(0);" onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':'{$item}','keyword':''}})"
+                                    rel="{$item}">{$item}</a>
+                                    </li>
+                                    {/foreach}
+                                </ul>
+                            </div>
+                            <div class="search">
+                                <input type="text" value="" placeholder="请输入品牌关键字" class="brand-search-input"/>
+                                <a href="javascript:void(0);"
+                                onclick="step.getBrand({link_url:'/brand/getBrand',data:{'letter':$('.brand_keyword a[class=\'backStyle\']').attr('rel'),'keyword':$('.brand_keyword .brand-search-input').val()}})"
+                                class="brand-search-btn">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                                <a title="点击清空品牌输入框内容" href="javascript:void(0);" onclick="$('.brand_name_keyword').val('');$('.brand_id_keyword').val('');"
+                                class="brand-clear-btn">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="brand-list">
+                        <ul>
+                        {foreach $brand as $key => $item}
+                        <li title="{$item.brand_name}" value="{$item.brand_id}"><em>{$item.brand_first_char}</em>{$item.brand_name}
+                        </li>
+                        {/foreach}
+                        {empty name="$brand"}
+                        <li class="empty">暂无品牌数据</li>
+                        {/empty}
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+                <!--关键字-->
+                <div class="layui-input-inline">
+                <input type="text" value="{:input('get.keyword')}" title autocomplete="off" placeholder="填写商品关键词" name="keyword" class="layui-input search_keyword form-control">
+                </div>
+                <!--查询按钮-->
+                <button type="submit" class="layui-btn layui-btn-normal layui-input-inline" style="width: auto" lay-submit="">查询</button>
+                </div>
+            </div>
+            {/notpresent}
+            <!--选择商品结束-->
+            <div class="inquire_search">
+                <div class="inquire">
+                    <input type="hidden" name="type" value="1">
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!--搜索的商品列表-->
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>编号</th>
+            <th>商品名称</th>
+            <th>店铺名称</th>
+            <th>价格/货号/运费</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach $data as $key => $item}
+        <tr>
+            <td><span class="id-content">{$item.goods_id}</span></td>
+            <td>
+                <div class="goods-special-container">
+                    <a href="javascript:void(0);">
+                        <img src="{$item.file?:'/template/master/resource/image/common/imageError.png'}"
+                             title="{$item.goods_name}" class="goods-special-img"/>
+                    </a>
+                </div>
+                <div class="goods-info">
+                    <div class="name"><span class="name-content">{$item.goods_name}</span></div>
+                    <p>品牌：<span title="{$item.brand_name}">{$item.brand_name}</span></p>
+                    <p>分类：<span title="{$item.goods_classify}">{$item.goods_classify}</span></p>
+                </div>
+            </td>
+            <td><span class="store_name-content" title="{$item.store_name}">{$item.store_name}</span></td>
+            <td>
+                <div class="tDiv">
+                    <div class="tDiv-item">价格：<span class="price-content">{$item.shop_price}</span></div>
+                    <div class="tDiv-item">货号：{$item.goods_sn}</div>
+                </div>
+            </td>
+            <td>
+                <a class="btn_edit" onclick="chooseIt($(this).parents('tr'),{$type})"><i class="fa fa-check-circle"></i>选择</a>
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        {if condition='$data->lastPage() gt 1'}
+        <tfoot>
+        <tr>
+            <td colspan="100">
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        </tfoot>
+        {/if}
+    </table>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='sidebar'}{/block}
+{block name='form'}{/block}
+{block name='script'}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script>
+    main.form();
+    function chooseIt(trDom, type) {
+
+        var goods_id = trDom.find('.id-content').text();
+        main.ajax({data:{goods_id:goods_id,type:type}, url:'/goods/selectActivity',
+            callback: function (res) {
+                if(res.code==0){
+                    switch (type) {
+                        case 1:
+                            var name = '确定选择此商品作为拼团商品吗？';
+                            break;
+                        case 2:
+                            var name = '确定选择此商品作为砍价商品吗？';
+                            break;
+                        case 3:
+                            var name ='确定选择此商品作为抢购商品吗？';
+
+                    }
+                    parent.layer.msg(name, {
+                        btn: ['确定', '再看看'], yes: function (index) {
+                            // 商品名称
+                            $('[name="group_goods_name"]', parent.document).val(trDom.find('.name-content').text());
+                            // 商品原价
+                            $('[name="group_goods_price"]', parent.document).val(trDom.find('.price-content').text());
+                            // 商品id
+                            $('[name="goods_id"]', parent.document).val(trDom.find('.id-content').text());
+                            parent.getProducts(trDom.find('.id-content').text());
+                            layer.close(index);
+                            parent.layer.closeAll();
+                        }
+                    });
+                }else{
+                    layer.msg(res.message);
+                    return false;
+                }
+            }
+        })
+    }
+    step.getCate({:input('cateId', '')});
+</script>
+{/block}

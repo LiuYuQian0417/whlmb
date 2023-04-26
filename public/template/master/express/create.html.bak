@@ -1,0 +1,111 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <!--自营店铺-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>自营店铺</label>
+            <div class="layui-input-block">
+                <select name="member_id" lay-search="" datatype="*"
+                        nullmsg="请选择自营店铺" errormsg="请选择自营店铺">
+                    <option value="">选择店铺</option>
+                    {volist name="store_list" id="shop"}
+                    <option value="{$shop.store_id}" {eq name="$shop.store_id" value="$item.Classify|default=''" }selected{/eq}>{$shop.store_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <!--计算标准-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>计算标准</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" value="1" title="件" lay-filter="integral"
+                       {eq name="item.type|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="type" value="2" title="重量" lay-filter="integral"
+                       {eq name="item.type|default='2'" value="2" }checked{/eq}
+                >
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font>运费设置</label>
+            <table class="layui-table" style="margin-left:13%;">
+                <colgroup>
+                    <col width="400">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col width="150">
+                    <col>
+                </colgroup>
+                <thead>
+                <tr>
+                    <th>可配送区域</th>
+                    <th>首件</th>
+                    <th>运费</th>
+                    <th>续件</th>
+                    <th>运费</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>全国</td>
+                    <td>5</td>
+                    <td>2元</td>
+                    <td>2</td>
+                    <td>1元</td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="layui-btn layui-btn-radius" style="margin-left: 13%;">点击添加可配送的区域和运费</button>
+        </div>
+
+
+
+
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.freight_express_id"}
+                <input type="hidden" name="freight_express_id" value="{$item.freight_express_id}">
+                {/present}
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form(options);
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

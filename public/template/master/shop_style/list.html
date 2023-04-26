@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理列表</title>
+    <link rel="stylesheet" href="/template/master/resource/layui/css/layui.css">
+</head>
+<body>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    table th {
+        text-align: center;
+    }
+
+    .box{
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+    }
+    .with-border{
+        border: 1px solid #ccc;
+    }
+    .layui-table-header th{
+        text-align: center;
+    }
+    .layui-table-header th > div{
+        display: inline-block;
+    }
+
+</style>
+<table id="table" lay-filter="table">
+    <thead>
+    <tr>
+        <th lay-data="{width:20,type:'checkbox',align:'center',field:'checkbox'}"></th>
+        <th lay-data="{width:100,align:'center',field:'color'}">颜色</th>
+        <th lay-data="{width:100,align:'center',field:'control'}">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+        </td>
+        <td>
+            <div style="background-color: rgb(195, 167, 105)" class="box"></div>
+            <div style="background-color: rgb(243, 238, 225)" class="box"></div>
+            <div style="background-color: rgb(255, 255, 255)" class="box with-border"></div>
+        </td>
+        <td>
+            <button class="layui-btn layui-btn-normal">编辑</button>
+            <button class="layui-btn layui-btn-danger">删除</button>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <input type="checkbox" name="checked" lay-skin="primary">
+        </td>
+        <td>
+            <div style="background-color: rgb(195, 167, 105)" class="box"></div>
+            <div style="background-color: rgb(243, 238, 225)" class="box"></div>
+            <div style="background-color: rgb(255, 255, 255)" class="box with-border"></div>
+        </td>
+        <td>
+            <div style="background-color: rgb(195, 167, 105)" class="box"></div>
+            <div style="background-color: rgb(243, 238, 225)" class="box"></div>
+            <div style="background-color: rgb(255, 255, 255)" class="box with-border"></div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script src="/template/master/resource/layui/layui.all.js"></script>
+<script>
+    // var form = layui.form
+    var table = layui.table
+
+    table.init('table', {
+        height: 315 //设置高度
+        , limit: 10 //注意：请务必确保 limit 参数（默认：10）是与你服务端限定的数据条数一致
+        //支持所有基础参数
+    });
+
+</script>
+</body>
+</html>

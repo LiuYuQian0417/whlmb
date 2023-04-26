@@ -1,0 +1,85 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+<!--操作提示begin-->
+<!--<div class="content">-->
+    <!--<div class="explanation" id="explanation">-->
+        <!--<div class="ex_tit">-->
+            <!--<i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>-->
+        <!--</div>-->
+        <!--<ul>-->
+            <!--<li><span>请认真填写链接名称、链接地址等信息。</span></li>-->
+            <!--<li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>-->
+        <!--</ul>-->
+    <!--</div>-->
+<!--</div>-->
+<form class="layui-form" action="" method="post">
+
+    <div class="contentShell">
+        <!--联系方式-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 联系方式：</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$item.contact|default=''}" title readonly
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--链接地址-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 问题类型：</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$item.type|default=''}" title readonly
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--轮播图-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 问题图片：</label>
+            <div class="layui-input-block" style="display: flex;">
+                    {volist name="item['file']" id="vo"}
+                    <div style="width: 200px;height: 200px;align-items: center;justify-content: center;display: flex"><img src="{$vo}" onerror=this.src="/template/master/resource/image/common/imageError.png" style="max-width: 100%;max-height: 100%"></div>
+                    {/volist}
+            </div>
+        </div>
+
+        <!--描述-->
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容"  maxlength="100" class="layui-textarea" readonly>{$item.content|default=''}</textarea>
+            </div>
+        </div>
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a type="reset" class="layui-btn layui-btn-primary"  href="/feedback/index">返回</a>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    layui.use(['carousel', 'form'], function(){
+        var carousel = layui.carousel;
+        carousel.render({
+            elem: '#test1'
+            ,arrow: 'always'
+        });
+    });
+</script>
+{/block}
+{block name='highSearch'}{/block}

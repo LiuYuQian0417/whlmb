@@ -1,0 +1,196 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<link rel="stylesheet" href="__RES__/css/Indent/AfterSale.css">
+{/block}
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+    <div class="index-right">
+        <div class="aftr-sale-box">
+            <div class="title">
+                退款退货
+            </div>
+            <div class="goods">
+                <div class="goods-tit">
+                    <div class="tit-con goods-name-tit">
+                        商品名称
+                    </div>
+                    <div class="tit-con">
+                        商品规格
+                    </div>
+                    <div class="tit-con">
+                        购买数量
+                    </div>
+                </div>
+                <div class="goods-list">
+                    <div class="goods-con">
+                        <img src="__RES__/imgs/del/r1.jpg" alt="">
+                        <p>大白兔奶糖大白兔奶糖大白兔奶糖大白兔奶糖大白兔奶糖</p>
+                    </div>
+                    <div class="goods-pub">
+                        爱的告白 150*200cm
+                    </div>
+                    <div class="goods-pub">
+                        x9
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="after-box">
+                <div class="mark">
+                    <span class="mark-tit">*提示:</span>
+                    <span>退款 — 未收到货（包含未签收）或卖家协商同意前提下</span>
+                    <span>退款退换 — 已收到货，需要退换已收到的货物</span>
+                </div>
+
+                <div class="after-con">
+                    <form action="">
+                        <div class="table">
+                            <div class="table-tit">
+                                <span>*</span>服务类型:
+                            </div>
+                            <div class="table-con">
+                                <label class="btn header">
+                                    仅退款
+                                    <input hidden type="radio" name="header">
+                                </label>
+                                <label class="btn header">
+                                    退款退货
+                                    <input hidden type="radio" name="header">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="table-box">
+                            <div class="table-list">
+                                <div class="table-tit">
+                                    <span>*</span>货物状态:
+                                </div>
+                                <div class="table-con">
+                                    <label class="sex-active">
+                                        <input type="radio" checked="checked" hidden="hidden" name="sex" id=""
+                                               value=""/>
+                                        <img class="xz" src="../../assets/imgs/del/xz.png" alt="">
+                                        <img class="mxz" src="../../assets/imgs/mxz.png" alt="">
+                                        <span>未收到货品</span>
+                                    </label>
+                                    <label>
+                                        <input type="radio" hidden="hidden" name="sex" id="" value=""/>
+                                        <img class="xz" src="../../assets/imgs/del/xz.png" alt="">
+                                        <img class="mxz" src="../../assets/imgs/mxz.png" alt="">
+                                        <span>已收到货</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="table-list">
+                                <div class="table-tit">
+                                    <span>*</span>退款原因:
+                                </div>
+                                <div class="table-con">
+                                    <input class="inp" placeholder="请输入退款原因" type="text">
+                                </div>
+                            </div>
+
+                            <div class="table-list">
+                                <div class="table-tit">
+                                    <span>*</span>退款金额:
+                                </div>
+                                <div class="table-con">
+                                    <input class="inp" style="color: #FE9E74" value="" placeholder="请输入退款金额"
+                                           type="text">
+                                    <p class="ts">最多¥139，含快递邮费¥0,.00</p>
+                                </div>
+                            </div>
+
+                            <div class="table-list">
+                                <div class="table-tit">
+                                    <span>*</span>上传凭证:
+                                </div>
+                                <div class="table-con img-list">
+                                    <!--<div class="img-box" >-->
+                                    <!--<img class="del" src="__RES__/imgs/up-del.png" alt="">-->
+                                    <!--<img src="__RES__/imgs/del/r1.jpg" alt="">-->
+                                    <!--</div>-->
+
+                                    <label for="file" class="label">
+                                        <img src="__RES__/imgs/xj.png" alt="">
+                                        <p>添加图片</p>
+                                        <span>(最多3张)</span>
+                                    </label>
+                                    <div class="file-list">
+                                        <input type="file" class="files" hidden id="file" name="file[]">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <input type="submit" class="submit primary-background-color" value="提交">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+
+    $(' .table-box .table-con label').click(function () {
+        $(this).addClass('sex-active').siblings('label').removeClass('sex-active')
+    })
+
+
+    $('.table .btn').click(function () {
+        $(this).addClass('primary-color border-color').siblings().removeClass('primary-color border-color');
+
+    })
+
+    // 上传图片
+
+    var num = 0;
+    $('.table-list').on('change', '#file', function () {
+        var files = this.files;
+        var len = files.length;
+        num += len;
+//       	上传图片
+        if (num > 3) {
+            $(this).val('');
+            num -= 1;
+            layer.open({
+                content: '最多只能传三张图片',
+            });
+        } else {
+            var inp = '<input type="file" class="files"  hidden name="files[]" id="file"  value=""/>'
+            $('.img-list .file-list').append(inp)
+            $(this).removeAttr('id');
+            var imgRUL = null;
+            var windowURL = window.URL || window.webkitURL;
+            for (var a = 0; a < len; a++) {
+                imgRUL = windowURL.createObjectURL(files[a]);
+                var img = '<div class="img-box">' +
+                    '<img class="del" src="__RES__/imgs/up-del.png"/>' +
+                    '<img  src="' + imgRUL + '"/>' +
+                    '</div>'
+                $('.label').before(img);
+
+            }
+        }
+
+
+    })
+    // 删除图片
+    $('.img-list').on('click', '.del', function () {
+        console.log(123)
+        var xuhao = $(this).parent().index('.img-box');
+        $(this).parent().remove();
+        $('.file-list .files').not('#file').eq(xuhao).remove();
+    })
+</script>
+{/block}

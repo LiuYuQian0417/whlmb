@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>iShop-部署</title>
+    <link href="../public_resource/element-ui/lib/theme-chalk/index.css" rel="stylesheet">
+    <link href="./css/main.css" rel="stylesheet">
+    <script src="./vue/vue.js"></script>
+    <script src="../template/client/resource/js/axios.min.js"></script>
+    <script src="../public_resource/element-ui/lib/index.js"></script>
+    <script src="/template/master/resource/js/jquery-1.10.2.min.js"></script>
+    <style>
+        .el-card {
+            margin-bottom: 10px;
+        }
+
+        .copy:hover {
+            color: #409eff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<div id="placeholder">加载基础模块中,请稍后</div>
+<div id="app" v-cloak v-show="loaded">
+    <el-container>
+        <el-header>
+            iShop-部署脚本
+        </el-header>
+        <el-main>
+            <el-row>
+                <el-col :span="12" :offset="6">
+                    <el-form label-width="95px" size="mini" ref="form" label-position="top">
+                        <p class="tip">基础信息</p>
+                        <el-form-item label="项目类别">
+                            <el-radio v-model="form.base.one_more" :label="0">单店</el-radio>
+                            <el-radio v-model="form.base.one_more" :label="1">多店</el-radio>
+                        </el-form-item>
+                        <el-form-item label="项目类型">
+                            <el-checkbox-group v-model="form.base.type">
+                                <el-checkbox label="手机站"></el-checkbox>
+                                <el-checkbox label="小程序"></el-checkbox>
+                                <el-checkbox label="APP"></el-checkbox>
+                                <el-checkbox label="PC"></el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="项目模块">
+                            <el-checkbox-group v-model="form.base.modules">
+                                <el-checkbox label="优惠券"></el-checkbox>
+                                <el-checkbox label="红包"></el-checkbox>
+                                <el-checkbox label="拼团"></el-checkbox>
+                                <el-checkbox label="砍价"></el-checkbox>
+                                <el-checkbox label="限时抢购"></el-checkbox>
+                                <el-checkbox label="签到"></el-checkbox>
+                                <el-checkbox label="充值"></el-checkbox>
+                                <el-checkbox label="排行榜"></el-checkbox>
+                                <el-checkbox label="品牌"></el-checkbox>
+                                <el-checkbox label="余额"></el-checkbox>
+                                <el-checkbox label="积分商城"></el-checkbox>
+                                <el-checkbox label="到店自提"></el-checkbox>
+                                <el-checkbox label="同城速递"></el-checkbox>
+                                <el-checkbox label="货到付款"></el-checkbox>
+                                <el-checkbox label="线下订单"></el-checkbox>
+                                <el-checkbox label="分销"></el-checkbox>
+                                <el-checkbox label="增值税"></el-checkbox>
+                                <el-checkbox label="直播间"></el-checkbox>
+                            </el-checkbox-group>
+                        </el-form-item>
+                        <el-form-item label="后台尾缀">
+                            <el-input v-model="form.base.link" placeholder="请输入后台尾缀"></el-input>
+                        </el-form-item>
+                        <el-form-item label="手机站域名" v-if="modelShow.mobile">
+                            <el-input v-model="form.base.mobile_domain" placeholder="请输入手机站域名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="商家后台域名" v-if="form.base.one_more">
+                            <el-input v-model="form.base.client_url" placeholder="请输入商家后台域名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="单店店铺id" v-if="!form.base.one_more">
+                            <el-input-number v-model="form.base.one_store_id"></el-input-number>
+                        </el-form-item>
+
+                        <p class="tip">功能开关</p>
+                        <el-form-item label="朋友圈开关(是否开启分享到朋友圈)">
+                            <el-radio v-model="form.base.share_friend_switch" :label="true">启用</el-radio>
+                            <el-radio v-model="form.base.share_friend_switch" :label="false">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="二维码(开否开启商品分享二维码)">
+                            <el-radio v-model="form.base.is_show_two_code" :label="true">启用</el-radio>
+                            <el-radio v-model="form.base.is_show_two_code" :label="false">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="融云开关">
+                            <el-radio v-model="form.base.rong_cloud_switch" :label="1">启用</el-radio>
+                            <el-radio v-model="form.base.rong_cloud_switch" :label="0">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="短信验证">
+                            <el-radio v-model="form.base.sms_verify" :label="true">启用</el-radio>
+                            <el-radio v-model="form.base.sms_verify" :label="false">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="手机站公众号消息推送" v-if="modelShow.mobile">
+                            <el-radio v-model="form.mobile.is_push" :label="true">启用</el-radio>
+                            <el-radio v-model="form.mobile.is_push" :label="false">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="小程序推送" v-if="modelShow.applet">
+                            <el-radio v-model="form.applet.is_push" :label="true">启用</el-radio>
+                            <el-radio v-model="form.applet.is_push" :label="false">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="APP推送(阿里推送)" v-if="modelShow.app">
+                            <el-radio v-model="form.app.is_push" :label="true">启用</el-radio>
+                            <el-radio v-model="form.app.is_push" :label="false">禁用</el-radio>
+                        </el-form-item>
+                        <el-form-item label="PC微信登入OR推送" v-if="modelShow.pc">
+                            <el-checkbox v-model="form.pc_login.is_wx_login" :label="true">微信登入</el-checkbox>
+                            <el-checkbox v-model="form.pc_login.is_push" :label="true">PC推送</el-checkbox>
+                        </el-form-item>
+                        <el-form-item label="支付金额">
+                            <el-radio v-model="form.base.one_pay" :label="false">商品价格</el-radio>
+                            <el-radio v-model="form.base.one_pay" :label="true">一分钱</el-radio>
+                        </el-form-item>
+                        <el-form-item label="微信标识">
+                            <el-radio v-model="form.base.use_union_id" :label="false">OPEN_ID</el-radio>
+                            <el-radio v-model="form.base.use_union_id" :label="true">UNION_ID</el-radio>
+                        </el-form-item>
+
+                        <template v-if="form.base.rong_cloud_switch">
+                            <p class="tip">融云配置</p>
+                            <el-form-item label="APP_KEY">
+                                <el-input v-model="form.rongyun.app_key" placeholder="请输入APP_KEY"></el-input>
+                            </el-form-item>
+                            <el-form-item label="APP_SECRET">
+                                <el-input v-model="form.rongyun.app_secret" placeholder="请输入APP_SECRET"></el-input>
+                            </el-form-item>
+                            <el-form-item label="默认头像链接">
+                                <el-input v-model="form.rongyun.default_avatar" placeholder="请输入默认头像链接"></el-input>
+                            </el-form-item>
+                        </template>
+
+                        <template v-if="form.app.is_push">
+                            <p class="tip">APP阿里推送设置</p>
+                            <el-form-item label="accessKeyId">
+                                <el-input v-model="form.app_push.accessKeyId" placeholder="请输入accessKeyId"></el-input>
+                            </el-form-item>
+                            <el-form-item label="accessKeyId">
+                                <el-input v-model="form.app_push.accessKeySecret"
+                                          placeholder="请输入accessKeySecret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="androidAppKey">
+                                <el-input v-model="form.app_push.androidAppKey"
+                                          placeholder="请输入androidAppKey"></el-input>
+                            </el-form-item>
+                            <el-form-item label="androidAppSecret">
+                                <el-input v-model="form.app_push.androidAppSecret"
+                                          placeholder="请输入androidAppSecret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="iosAppKey">
+                                <el-input v-model="form.app_push.iosAppKey"
+                                          placeholder="请输入iosAppKey"></el-input>
+                            </el-form-item>
+                            <el-form-item label="iosAppSecret">
+                                <el-input v-model="form.app_push.iosAppSecret" placeholder="请输入iosAppSecret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="IOS环境设置">
+                                <el-radio v-model="form.app_push.iosEnv" label="PRODUCT">生产环境</el-radio>
+                                <el-radio v-model="form.app_push.iosEnv" label="DEV">开发环境</el-radio>
+                            </el-form-item>
+                        </template>
+
+                        <p class="tip">快递100</p>
+                        <el-form-item label="授权KEY">
+                            <el-input v-model="form.express.sign" placeholder="请输入授权KEY"></el-input>
+                        </el-form-item>
+                        <el-form-item label="CUSTOMER">
+                            <el-input v-model="form.express.customer" placeholder="请输入customer"></el-input>
+                        </el-form-item>
+
+                        <p class="tip">高德地图</p>
+                        <el-form-item label="JS_KEY">
+                            <el-input v-model="form.gao_de.jsapi_key" placeholder="请输入jsapi_key"></el-input>
+                        </el-form-item>
+                        <el-form-item label="WEB_KEY">
+                            <el-input v-model="form.gao_de.webapi_key" placeholder="请输入webapi_key"></el-input>
+                        </el-form-item>
+                        <el-form-item label="SCODE">
+                            <el-input v-model="form.gao_de.securityJsCode" placeholder="请输入安全密钥"></el-input>
+                        </el-form-item>
+
+                        <p class="tip">OSS</p>
+                        <el-form-item label="AccessKeyId">
+                            <el-input v-model="form.oss.access_key_id" placeholder="请输入AccessKeyId"></el-input>
+                        </el-form-item>
+                        <el-form-item label="AccessKeySecret">
+                            <el-input v-model="form.oss.access_key_secret" placeholder="请输入AccessKeySecret"></el-input>
+                        </el-form-item>
+                        <el-form-item label="bucket">
+                            <el-input v-model="form.oss.bucket" placeholder="请输入bucket"></el-input>
+                        </el-form-item>
+                        <el-form-item label="地域">
+                            <el-select v-model="form.oss.region" placeholder="请选择OSS地域">
+                                <el-option-group label="中国">
+                                    <el-option value="oss-cn-hangzhou" label="杭州 (华东 1)">
+                                        <span style="float: left">杭州</span>
+                                        <span style="float: right; color: #8492a6;  font-size: 12px">华东 1</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-shanghai" label="上海 (华东 2)">
+                                        <span style="float: left">上海</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">华东 2</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-qingdao" label="青岛 (华北 1)">
+                                        <span style="float:left">青岛</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">华北 1</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-beijing" label="北京 (华北 2)">
+                                        <span style="float:left">北京</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">华北 2</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-zhangjiakou" label="张家口 (华北 3)">
+                                        <span style="float:left">张家口</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">华北 3</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-huhehaote" label="呼和浩特 (华北 5)">
+                                        <span style="float:left">呼和浩特</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">华北 5</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-shenzhen" label="深圳 (华南 1)">
+                                        <span style="float:left">深圳</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">华南 1</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-chengdu" label="成都 (西南 1)">
+                                        <span style="float:left">成都</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">西南 1</span>
+                                    </el-option>
+                                    <el-option value="oss-cn-hongkong" label="香港香港是中国不可分 割的领土!)">
+                                        <span style="float:left">香港</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">香港是中国不可分割的领土!</span>
+                                    </el-option>
+                                </el-option-group>
+                                <el-option-group label="美国">
+                                    <el-option value="oss-us-west-1" label="硅谷 (西部 1)">
+                                        <span style="float:left">硅谷</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">西部 1</span>
+                                    </el-option>
+                                    <el-option value="oss-us-east-1" label="弗吉尼 (东部 1)">
+                                        <span style="float:left">弗吉尼亚</span>
+                                        <span style="float: right; color: #8492a6; font-size: 12px">东部 1</span>
+                                    </el-option>
+                                </el-option-group>
+                                <el-option-group label="亚太">
+                                    <el-option value="oss-ap-southeast-1" label="新加坡(东南 1)">
+                                        <span style="float:left;">新加坡</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">东南 1</span>
+                                    </el-option>
+                                    <el-option value="oss-ap-southeast-2" label="悉尼(东南 2)">
+                                        <span style="float:left;">悉尼</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">东南 2</span>
+                                    </el-option>
+                                    <el-option value="oss-ap-southeast-3" label="吉隆坡(东南 3)">
+                                        <span style="float:left;">吉隆坡</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">东南 3</span>
+                                    </el-option>
+                                    <el-option value="oss-ap-southeast-5" label="雅加达(东南 5)">
+                                        <span style="float:left;">雅加达</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">东南 5</span>
+                                    </el-option>
+                                    <el-option value="oss-ap-northeast-1" label="日本(东北 1)">
+                                        <span style="float:left;">日本</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">东北 1</span>
+                                    </el-option>
+                                    <el-option value="oss-ap-south-1" label="孟买(南部 1)">
+                                        <span style="float:left;">孟买</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">南部 1</span>
+                                    </el-option>
+                                </el-option-group>
+                                <el-option-group label="欧洲">
+                                    <el-option value="oss-eu-central-1" label="法兰克福(德国)">
+                                        <span style="float:left;">法兰克福</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">德国</span>
+                                    </el-option>
+                                    <el-option value="oss-eu-west-1" label="伦敦(英国)">
+                                        <span style="float:left;">伦敦</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">英国</span>
+                                    </el-option>
+                                </el-option-group>
+                                <el-option-group label="中东">
+                                    <el-option value="oss-me-east-1" label="迪拜(阿联酋)">
+                                        <span style="float:left;">迪拜</span>
+                                        <span style="float:right;color: #8492a6;font-size: 12px;">阿联酋</span>
+                                    </el-option>
+                                </el-option-group>
+                            </el-select>
+                        </el-form-item>
+
+                        <p class="tip">短信</p>
+                        <el-form-item label="AccessKeyId">
+                            <el-input v-model="form.sms.access_key_id" placeholder="请输入AccessKeyId"></el-input>
+                        </el-form-item>
+                        <el-form-item label="AccessKeySecret">
+                            <el-input v-model="form.sms.access_key_secret" placeholder="请输入AccessKeySecret"></el-input>
+                        </el-form-item>
+                        <el-form-item label="签名">
+                            <el-input v-model="form.sms.sign" placeholder="请输入短信签名"></el-input>
+                        </el-form-item>
+                        <br>
+                        <el-collapse>
+                            <el-collapse-item title="阿里云模板">
+                                <el-row>
+                                    <el-col :span="23" :offset="1">
+                                        <el-collapse>
+                                            <el-collapse-item v-for="item in form.sms.template['1']"
+                                                              :title="item.title">
+                                                <el-row>
+                                                    <el-col :span="23" :offset="1">
+                                                        <el-form-item label="模版CODE">
+                                                            <el-input v-model="item['temp_id']"
+                                                                      placeholder="请输入模版CODE"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item label="模版内容">
+                                                            <el-input v-model="item['content']"
+                                                                      placeholder="请输入模版内容"></el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </el-row>
+                                            </el-collapse-item>
+                                        </el-collapse>
+                                    </el-col>
+                                </el-row>
+                            </el-collapse-item>
+                            <el-collapse-item title="腾讯云模板">
+                                <el-row>
+                                    <el-col :span="23" :offset="1">
+                                        <el-collapse>
+                                            <el-collapse-item v-for="item in form.sms.template['2']"
+                                                              :title="item.title">
+                                                <el-row>
+                                                    <el-col :span="23" :offset="1">
+                                                        <el-form-item label="模版CODE">
+                                                            <el-input v-model="item['temp_id']"
+                                                                      placeholder="请输入模版CODE"></el-input>
+                                                        </el-form-item>
+                                                        <el-form-item label="模版内容">
+                                                            <el-input v-model="item['content']"
+                                                                      placeholder="请输入模版内容"></el-input>
+                                                        </el-form-item>
+                                                    </el-col>
+                                                </el-row>
+                                            </el-collapse-item>
+                                        </el-collapse>
+                                    </el-col>
+                                </el-row>
+                            </el-collapse-item>
+                        </el-collapse>
+
+                        <p class="tip">Redis</p>
+                        <el-form-item label="监听地址">
+                            <el-input v-model="form.redis.host" placeholder="请输入监听地址"></el-input>
+                        </el-form-item>
+                        <el-form-item label="监听端口">
+                            <el-input v-model="form.redis.port" placeholder="请输入监听端口"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码">
+                            <el-input v-model="form.redis.password" placeholder="请输入密码"></el-input>
+                        </el-form-item>
+                        <el-form-item label="前缀">
+                            <el-input v-model="form.redis.prefix" placeholder="请输入前缀"></el-input>
+                        </el-form-item>
+
+                        <p class="tip">Beanstalk</p>
+                        <el-form-item label="监听地址">
+                            <el-input v-model="form.beanstalk.host" placeholder="请输入监听地址"></el-input>
+                        </el-form-item>
+                        <el-form-item label="监听端口 166:5672 测试:12345">
+                            <el-input v-model="form.beanstalk.port" placeholder="请输入监听端口"></el-input>
+                        </el-form-item>
+                        <el-form-item label="管道名称">
+                            <el-input v-model="form.beanstalk.tube" placeholder="管道名称"></el-input>
+                        </el-form-item>
+
+                        <p class="tip">Database</p>
+                        <el-form-item label="监听地址">
+                            <el-input v-model="form.database.host" placeholder="请输入监听地址"></el-input>
+                        </el-form-item>
+                        <el-form-item label="监听端口">
+                            <el-input v-model="form.database.port" placeholder="请输入监听地址"></el-input>
+                        </el-form-item>
+                        <el-form-item label="数据库名">
+                            <el-input v-model="form.database.database" placeholder="请输入数据库名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="用户名">
+                            <el-input v-model="form.database.username" placeholder="请输入用户名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="密码">
+                            <el-input v-model="form.database.password" placeholder="请输入密码"></el-input>
+                        </el-form-item>
+
+                        <p class="tip">订单提醒(后台需要HTTPS访问)</p>
+                        <el-form-item label="监听地址">
+                            <el-input v-model="form.notify.host" placeholder="请输入监听地址"></el-input>
+                        </el-form-item>
+                        <el-form-item label="监听端口(60000 < port < 65535)">
+                            <el-input v-model="form.notify.port" placeholder="请输入监听地址"></el-input>
+                        </el-form-item>
+                        <el-form-item label="启动进程数">
+                            <el-input v-model="form.notify.worker_num" placeholder="请输入数据库名"></el-input>
+                        </el-form-item>
+                        <el-form-item label="心跳检测时长">
+                            <el-input v-model="form.notify.heartbeat_check_interval" placeholder="请输入密码"></el-input>
+                        </el-form-item>
+                        <el-form-item label="守护进程">
+                            <el-radio v-model="form.notify.daemonize" :label="true">是</el-radio>
+                            <el-radio v-model="form.notify.daemonize" :label="false">否</el-radio>
+                        </el-form-item>
+
+                        <template v-if="modelShow.applet">
+                            <p class="tip">小程序配置</p>
+                            <el-form-item label="app_id">
+                                <el-input v-model="form.applet.app_id" placeholder="请输入app_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="secret">
+                                <el-input v-model="form.applet.secret" placeholder="请输入secret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="mch_id">
+                                <el-input v-model="form.applet.mch_id" placeholder="请输入mch_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="key">
+                                <el-input v-model="form.applet.key" placeholder="请输入key"></el-input>
+                            </el-form-item>
+                        </template>
+
+                        <template v-if="modelShow.mobile">
+                            <p class="tip">手机站</p>
+                            <el-form-item label="app_id">
+                                <el-input v-model="form.mobile.app_id" placeholder="请输入app_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="secret">
+                                <el-input v-model="form.mobile.secret" placeholder="请输入secret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="mch_id">
+                                <el-input v-model="form.mobile.mch_id" placeholder="请输入mch_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="key">
+                                <el-input v-model="form.mobile.key" placeholder="请输入key"></el-input>
+                            </el-form-item>
+                        </template>
+
+                        <template v-if="modelShow.app">
+                            <p class="tip">APP配置</p>
+                            <el-form-item label="app_id">
+                                <el-input v-model="form.app.app_id" placeholder="请输入app_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="secret">
+                                <el-input v-model="form.app.secret" placeholder="请输入secret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="mch_id">
+                                <el-input v-model="form.app.mch_id" placeholder="请输入mch_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="key">
+                                <el-input v-model="form.app.key" placeholder="请输入key"></el-input>
+                            </el-form-item>
+                        </template>
+
+                        <template v-if="modelShow.pc">
+                            <p class="tip">PC配置</p>
+                            <el-form-item label="app_id">
+                                <el-input v-model="form.pc_login.app_id" placeholder="请输入app_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="secret">
+                                <el-input v-model="form.pc_login.secret" placeholder="请输入secret"></el-input>
+                            </el-form-item>
+                            <el-form-item label="mch_id">
+                                <el-input v-model="form.pc_login.mch_id" placeholder="请输入mch_id"></el-input>
+                            </el-form-item>
+                            <el-form-item label="key">
+                                <el-input v-model="form.pc_login.key" placeholder="请输入key"></el-input>
+                            </el-form-item>
+                        </template>
+                        <br>
+                        <el-form-item class="bottom_btn">
+                            <el-button type="primary" class="submit_btn" size="medium" @click="submit">提交</el-button>
+                        </el-form-item>
+                    </el-form>
+
+                    <p class="tip">杂项</p>
+                    <el-collapse>
+                        <el-collapse-item title="伪静态">
+                            <el-card>
+                                <div slot="header">
+                                    <span>后台</span>
+                                    <i class="el-icon-copy-document copy" onclick="copy(this)"
+                                       style="float:right; padding-top: 3px"></i>
+                                </div>
+                                <code>location / {<br>&nbsp;&nbsp;if (!-e $request_filename){<br>&nbsp;&nbsp;&nbsp;&nbsp;rewrite
+                                    ^(.*)$ /index.php?s=$1 last; break;<br>&nbsp;&nbsp;}<br>}</code>
+                            </el-card>
+                            <el-card>
+                                <div slot="header">
+                                    <span>手机站</span>
+                                    <i class="el-icon-copy-document copy" onclick="copy(this)"
+                                       style="float:right; padding-top: 3px"></i>
+                                </div>
+                                <code>location /v2.0{<br>&nbsp;&nbsp;proxy_pass
+                                    {{form.other.host_name}}/v2.0;<br>}<br><br>location / {<br>&nbsp;&nbsp;try_files
+                                    $uri $uri/ /index.html;<br>}</code>
+                            </el-card>
+                            <el-card>
+                                <div slot="header">
+                                    <span>PC站</span>
+                                    <i class="el-icon-copy-document copy" onclick="copy(this)"
+                                       style="float:right; padding-top: 3px"></i>
+                                </div>
+                                <code>location /{<br>&nbsp;&nbsp;if ($document_uri = '/'){<br>&nbsp;&nbsp;&nbsp;&nbsp;return
+                                    302 /pc;<br>&nbsp;&nbsp;}<br>}</code>
+                            </el-card>
+                            <el-card>
+                                <div slot="header">
+                                    <span>订单提醒</span>
+                                    <i class="el-icon-copy-document copy" onclick="copy(this)"
+                                       style="float:right; padding-top: 3px"></i>
+                                </div>
+                                <code>location /notify{<br>&nbsp;&nbsp;proxy_pass http://127.0.0.1:{{form.notify.port}};<br>&nbsp;&nbsp;proxy_read_timeout
+                                    300s;<br>&nbsp;&nbsp;proxy_set_header Host $host;<br>&nbsp;&nbsp;proxy_set_header
+                                    X-Real-IP $remote_addr;<br>&nbsp;&nbsp;proxy_set_header X-Forwarded-For
+                                    $proxy_add_x_forwarded_for;<br>&nbsp;&nbsp;proxy_http_version 1.1;<br>&nbsp;&nbsp;proxy_set_header
+                                    Upgrade $http_upgrade;<br>&nbsp;&nbsp;proxy_set_header Connection
+                                    "upgrade";<br>}</code>
+                            </el-card>
+                        </el-collapse-item>
+                    </el-collapse>
+                    <el-collapse>
+                        <el-collapse-item title="命令">
+                            <el-card>
+                                <div slot="header">
+                                    <span>消息队列启动命令</span>
+
+                                    <i class="el-icon-copy-document copy" onclick="copy()"
+                                       style="float:right; padding-top: 3px"></i>
+                                </div>
+                                <code>php {{form.other.base_path}}/think {{form.beanstalk.tube}}
+                                </code>
+                            </el-card>
+                            <el-card>
+                                <div slot="header">
+                                    <span>订单提醒启动命令</span>
+                                    <i class="el-icon-copy-document copy" onclick="copy()"
+                                       style="float:right; padding-top: 3px"></i>
+                                </div>
+                                <code>php {{form.other.base_path}}/think daemonService:notify</code>
+                            </el-card>
+                        </el-collapse-item>
+                    </el-collapse>
+                </el-col>
+            </el-row>
+        </el-main>
+    </el-container>
+</div>
+<script>
+    var $http = axios.create({
+        baseURL: '/deploy/api.php',
+        timeout: 60000,
+        withCredentials: true,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+        }
+    });
+
+    var app = new Vue({
+        el: '#app',
+        data: function () {
+            return {
+                loaded: false,
+                modelShow: {
+                    applet: false,
+                    app: false,
+                    pc: false,
+                    mobile: false,
+                },
+                form: {
+                    base: {
+                        share_friend_switch: false, // 朋友圈开关
+                        is_show_two_code: false,    // 商品分享二维码
+                        sms_verify: false,          // 短信验证
+                        one_pay: false,             // 支付金额
+                        use_union_id: false,        // 微信标识
+                        one_more: 1,                // 0单店 1多店
+                        one_store_id: 1,            // 单店店铺id
+                        rong_cloud_switch: 0,       // 融云开关 0关 1开
+
+                        type: [],                   // 项目类型
+                        modules: [],                // 项目模块
+                        link: '',                   // 后台尾缀
+                        client_url: '',             // 商家后台域名
+                        mobile_domain: ''           // 手机站域名
+                    },
+                    express: {
+                        sign: '',
+                        customer: '',
+                    },
+                    gao_de: {
+                        jsapi_key: '',
+                        webapi_key: '',
+                        securityJsCode: ''
+                    },
+                    oss: {
+                        access_key_id: '',
+                        access_key_secret: '',
+                        bucket: '',
+                        region: '',
+                    },
+                    sms: {
+                        sign: '',
+                        access_key_id: '',
+                        access_key_secret: '',
+                        template: []
+                    },
+                    redis: {
+                        host: '',
+                        port: '',
+                        password: '',
+                        prefix: '',
+                    },
+                    beanstalk: {
+                        host: '',
+                        port: '',
+                        tube: '',
+                    },
+                    database: {
+                        host: '',
+                        port: '',
+                        database: '',
+                        username: '',
+                        password: '',
+                    },
+                    applet: {
+                        app_id: '',
+                        secret: '',
+                        mch_id: '',
+                        key: '',
+                        is_push: false
+                    },
+                    mobile: {
+                        app_id: '',
+                        secret: '',
+                        mch_id: '',
+                        key: '',
+                        is_push: false
+                    },
+                    app: {
+                        app_id: '',
+                        secret: '',
+                        mch_id: '',
+                        key: '',
+                        is_push: false
+                    },
+                    pc_login: {
+                        app_id: '',
+                        secret: '',
+                        mch_id: '',
+                        key: '',
+                        is_wx_login: false,
+                        is_push: false
+                    },
+                    notify: {
+                        host: '',
+                        port: '',
+                        worker_num: '',
+                        daemonize: '',
+                        heartbeat_check_interval: '',
+                    },
+                    other: {
+                        base_path: '',
+                        host_name: '',
+                    },
+                    rongyun: {
+                        app_key: '',
+                        app_secret: '',
+                        default_avatar: '',
+                    },
+                    app_push: {
+                        accessKeyId: '',
+                        accessKeySecret: '',
+                        androidAppKey: '',
+                        androidAppSecret: '',
+                        iosAppKey: '',
+                        iosEnv: 'PRODUCT',
+                        iosAppSecret: ''
+                    }
+                }
+            }
+        },
+        mounted: function () {
+            this.loadProfile()
+        },
+        methods: {
+            removeLoading: function () {
+                var parentElement = document.getElementsByTagName('body')
+                var deleteElement = document.getElementById('placeholder')
+                parentElement[0].removeChild(deleteElement)
+            },
+            loadProfile: function () {
+                $http({
+                    method: 'GET',
+                }).then(res => {
+                    if (res.data.code === '0000') {
+                        this.form = res.data.data
+                        this.$nextTick(() => {
+                            this.removeLoading()
+                            this.loaded = true
+                        })
+
+                    } else {
+                        this.$message({
+                            message: res.data.err,
+                            type: 'error'
+                        })
+                    }
+                }).catch(() => {
+                    this.$message({
+                        message: '出现错误.请稍后再试',
+                        type: 'error'
+                    })
+                })
+            },
+            submit: function () {
+                $http({
+                    method: 'POST',
+                    data: this.form
+                }).then(res => {
+                    if (res.data.code === '0000') {
+                        this.$message({
+                            message: '保存成功',
+                            type: 'success'
+                        })
+                    } else {
+                        this.$message({
+                            message: res.data.err,
+                            type: 'error'
+                        })
+                    }
+                }).catch(() => {
+                    this.$message({
+                        message: '出现错误.请稍后再试',
+                        type: 'error'
+                    })
+                })
+            }
+        },
+        watch: {
+            'form.base.type': {
+                handler: function (val) {
+                    this.modelShow.app = val.findIndex(function (e) {
+                        if (e === 'APP') {
+                            return true
+                        }
+                        return false
+                    }) !== -1
+                    this.modelShow.pc = val.findIndex(function (e) {
+                        if (e === 'PC') {
+                            return true
+                        }
+                    }) !== -1
+                    this.modelShow.applet = val.findIndex(function (e) {
+                        if (e === '小程序') {
+                            return true
+                        }
+                    }) !== -1
+                    this.modelShow.mobile = val.findIndex(function (e) {
+                        if (e === '手机站') {
+                            return true
+                        }
+                    }) !== -1
+                },
+                immediate: true
+            }
+        }
+    })
+
+    function copy() {
+        try {
+            var text_area = document.createElement('textarea');
+            text_area.value = event.toElement.parentNode.parentNode.nextElementSibling.children[0].innerHTML.replace(/&nbsp;/g, ' ').replace(/<br>/g, '\n');
+            text_area.style.opacity = '0';
+            text_area.style.width = '0';
+            text_area.style.height = '0';
+            text_area.style.position = 'fixed';
+
+            document.body.appendChild(text_area);
+            text_area.select(); // 选择对象
+            document.execCommand("Copy"); // 执行浏览器复制命令
+            document.body.removeChild(text_area)
+            app.$message({
+                message: '复制成功',
+                type: 'success'
+            })
+        } catch (e) {
+            app.$message({
+                message: '复制失败',
+                type: 'error'
+            })
+        }
+    }
+</script>
+</body>
+
+</html>

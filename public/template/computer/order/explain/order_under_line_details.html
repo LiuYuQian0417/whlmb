@@ -1,0 +1,180 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<link rel="stylesheet" href="__RES__/css/Indent/OrderDetailObligation.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<style>
+    .index-right .obligation-box .obligation-top .obligation-list .progress .step .bor span {
+        width: 0%;
+    }
+
+    .index-right .obligation-box .obligation-top .obligation-list .progress .active .bor span {
+        width: 100%;
+    }
+
+    .index-right .obligation-box .obligation-top .obligation-list .progress .half .bor span {
+        width: 50%;
+    }
+    .shop-name{
+        padding-left: 20px;
+    }
+    .shop-tit div{
+        flex: 1;
+    }
+    .shop-list>div{
+        flex: 1;
+    }
+    .index-right .indent-detail .consignee-information .info-box .info-tit{
+        width: 75px;
+    }
+</style>
+{/block}
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+    <!--右侧内容开始-->
+    <div class="index-right">
+        <h5 class="title">
+            订单详情
+        </h5>
+        <div class="obligation-box border-color-top">
+
+            <div class="obligation-top">
+
+                <div class="obligation">
+                    <div class="indent-number">订单号：{$result.order_attach_number}</div>
+                    <!--当前订单状态-->
+                    <p class="tit primary-color">交易成功</p>
+                    <!--已关闭-->
+                    <a href="javascript:destroy_order('{$result.order_attach_id}');" class="close-payment ">删除订单</a>
+                </div>
+                <div class="obligation-list">
+                    <div class="progress" style="text-align: center">
+                        <!--已取消订单-->
+                        <div class="step active">
+                            <div class="progress-box">
+                                  <span class="first">
+                                      <img src="__RES__/imgs/del/indent.png" alt="">
+                                  </span>
+                                <p class=""> 提交订单 </p>
+                                <p class="time">{$result.create_time}</p>
+                            </div>
+                            <div class="bor">
+                                <span class="primary-background-color"></span>
+                            </div>
+                        </div>
+                        <div class="step finish">
+                            <div class="progress-box">
+                                  <span class="first">
+                                     <img src="__RES__/imgs/del/active-wc.png" alt="">
+                                  </span>
+                                <p>完成</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--订单详情-->
+        <div class="indent-detail">
+            <!--付款信息-->
+            <div class="consignee-information indent-detail-box">
+                <div class="tit">
+                    付款信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            付款方式：
+                        </div>
+                        <div class="info-con">
+                            在线支付
+                        </div>
+                    </div>
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            优惠券：
+                        </div>
+                        <div class="info-con">
+                            ￥{:number_format($result.subtotal_coupon_price,2)}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-tit">
+                            红包：
+                        </div>
+                        <div class="info-con">
+                            ￥{:number_format($result.total_packet_price,2)}
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="info-tit">
+                            应支付金额：
+                        </div>
+                        <div class="info-con">
+                            ￥{$result.subtotal_price}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="shop">
+            <p class="shop-name">
+                {$result.store_list.store_name}
+                <!--<img src="__RES__/imgs/del/info-s.png" alt="">-->
+            </p>
+            <div class="shop-con">
+                <div class="shop-tit">
+                    <div class="goods-name">商品</div>
+                    <div class="goods-tit">商品价格</div>
+                    <div class="goods-tit">商品数量</div>
+                </div>
+                <div class="shop-list">
+                    <div class="goods">
+                        <img src="__RES__/imgs/orderunderlinelist/offline_goods_file.png" alt="">
+                        <div class="goods-name">
+                            线下订单
+                        </div>
+                    </div>
+                    <!--商品价格-->
+                    <div class="goods-list-con">
+                        ￥{:number_format($result.subtotal_price + $result.subtotal_coupon_price + $result.total_packet_price,2)}
+                    </div>
+                    <!--商品数量-->
+                    <div class="goods-list-con">
+                        1
+                    </div>
+                </div>
+            </div>
+            <!--总计-->
+            <div class="aggregate">
+                <div class="aggregate-box">
+                    <p>
+                        <span class="aggregate-tit">商品总额</span>:
+                        <span class="aggregate-con">￥{:number_format($result.subtotal_price + $result.subtotal_coupon_price + $result.total_packet_price,2)}</span>
+                    </p>
+                    <p>
+                        <span class="aggregate-tit">商品优惠</span>:
+                        <span class="aggregate-con">￥{:number_format($result.subtotal_coupon_price+$result.subtotal_share_platform_packet_price,2)}</span>
+                    </p>
+                    <p>
+                        <span class="aggregate-tit primary-color">应付总额</span><span class="primary-color">:</span>
+                        <span class="aggregate-con primary-color money">￥{$result.subtotal_price}</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+{/block}
+{block name="js"}
+{/block}

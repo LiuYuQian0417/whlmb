@@ -1,0 +1,137 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>展示了电子书的相关信息。</span></li>
+            <li><span>可以通过电子书关键字搜索相关电子书信息。</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form" action="">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onclick="main.jumpFour('book/viewcreate?book_id={$book_id}')">
+                <div class="fbutton">
+                    <div class="add" title="添加会员"><span><i class="fa fa-plus"></i>添加章节</span></div>
+                </div>
+            </a>
+            <div class="refresh" onclick="location.reload();">
+                <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="书名"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+
+    <!--列表开始-->
+    <div class="layui-form">
+        <table class="layui-table">
+            <thead>
+            <tr>
+                <th><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>
+                <th>id</th>
+                <th>章节名</th>
+                <th>书名</th>
+                <th>价格</th>
+                <th>排序</th>
+                <th>是否免费</th>
+                <th>添加时间</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {foreach name='data' item='item'}
+            <tr>
+                <td><input type="checkbox" value="{$item.id}" class="chk" lay-filter="chk" title="" lay-skin="primary"/>
+                </td>
+                <td>{$item.id}</td>
+                <td>{$item.title?:'未设置'}</td>
+                <td>{$item.book_name}</td>
+                <td>{$item.price}</td>
+                <td>{$item.sort}</td>
+                <td>
+                    <input type="checkbox" name="is_free" lay-skin="switch"
+                           lay-filter="is_free"
+                           lay-text="开|关"
+                           value="{$item.id}"
+                           {eq name="item.is_free" value="1" }checked{/eq}>
+                </td>
+                <td>{$item.create_time}</td>
+                <td>
+                    <a class="btn_edit" onclick="main.jumpFour('book/viewedit?id={$item.id}')"><i class="fa fa-edit"></i>编辑</a>
+                    <a class="btn_trash" onclick="main.destroy('/book/viewdestroy','{$item.id}')"><i
+                            class="fa fa-trash-o"></i>删除</a>
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                        <span>
+                            <a class="btn_trash" onclick="main.destroy('/book/view_destroy')"><i class="fa fa-trash-o"></i>多选删除</a>
+                        </span>
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.form([{selector:'switch(is_free)',callback:function (data) {
+            console.log(data);
+            main.ajax({type:'post',url:'/book/viewauditing',data:{'id': data.value}});
+        }}]);
+    //重定向本身
+    function reloadSelf(condition) {
+        var param = '', key = Object.keys(condition);
+
+        if (key.length > 0) {
+            for (var x in condition) {
+                param += '&' + x + '=' + condition[x];
+            }
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+</script>
+{/block}

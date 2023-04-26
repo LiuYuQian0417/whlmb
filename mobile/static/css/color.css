@@ -1,0 +1,261 @@
+.pass_tip span,
+.foot_menu .active .page_txt,
+.search_cate li.active,
+.list_tab .active .title,
+.list_tab .active .down,
+.cate_list_group .goods_det .price,
+.location_area .choose,
+.shop_order .shop_det .goods_det .price .pri,
+.order_foot .total_price span,
+.goods_info .price .now,
+.rew_list li.active a,
+.rew_list li.active i,
+.shop_list_tab li.active .title,
+.footer_cart .total_num span,
+.act_title .together a,
+.det_location .go,
+.location_det li:first-child div,
+.go_cart .total .price,
+.new_pic .list .number,
+.new_pic .list .use .full span,
+.new_pic .list .use .cate,
+.inter_head.new .my span,
+.inter_cate ul  li.active a,
+.cate_list_group .goods_con .inter span,
+.group_det .group_price .now,
+.group_state .person span,
+.cate_list_group .goods_con .group_goods .num,
+.group_det .group_price .tip span,
+.group_suc .look a,
+.group_state .goOthers a,
+.find_cate .listFirst li.active .text,
+.cut_foot  ul li.active a,
+.orderState li.active a .text,
+.cut_list li .ope_btn .ope.pay a,
+.cut_list li .goods_det .cut_price,
+.cut_list li .goods_det .group_price .pri,
+.cut_list li .goods_det .group_price .num .person,
+.cut_con .rule div,
+.cut_con .min_price .min,
+.cut_con .cur_price .cur,
+.cut_con .cut_pro span,
+.cut_con .cut_ope div a,
+.order_det .inter span,
+.order_det .order_price .total span,
+.orderContent .goods_order .name_shop .coupon,
+.orderContent .ope_btn .ope.pay a,
+.swiper_goods .cut_goods .time .tip,
+.swiper_goods .cut_goods .time .time_det,
+.coupon_list .con .info .number .num,
+.coupon_list .con .info .number .tip,
+.coupon_list .con .time_det,
+.coupon_list .con .remind,
+.coupon_list .con .remain_time,
+.coupon_list .con.getted .coupon_tip span,
+.coupon_foot li.active .text,
+.coupon_list .con .inter .tip,
+.coupon_list .con .inter .num,
+.refund_text .text .number,
+.coupon_con .coupon_group li .det .tip .use_btn a,
+.inter_det_list li .active.num,
+.account_list li .getCode,
+.account_security li .more_tip,
+.refund_result>div .price,
+.balance_charge a,
+.orderContent .shop_det .goods_det .price .cur_state,
+.orderContent .shop_det .goods_det .use_inter span,
+.goods_info .sale_num .inter_num,
+.header_col li.active a,
+.cate_shop_list li.active .cate,
+.write_review .write a,
+.review_list li.active .text,
+.buy_goods .det .price .rew_level,
+.brand_con .brand_list .list li .price,
+.service_protocol a,.task_list li .tips span,
+.offline_order li .money_num,
+.recommend_con .recommend_title,.recommend_con .swiper_recommend .price,
+.word_fix li a,
+.concern_goods_list .concern_goods .price,
+.cut_notice .cur_price span,
+.packet_main  .con .use .num,
+.area_select,
+.create_tip a,
+.cart_shop_con .det_con .price,
+.invalid_con .invalid_title .clear,
+.cate_shop .shop_goods .goods_price,
+.active_nav,
+.cate_list ul li.active span,
+.textActive
+{
+    color: black;
+}
+
+
+.mes_num,
+.search_cate li.active .line,
+.condition_foot .submit,
+.area_list li .det .text div,
+.order_foot input,
+.goods_foot .go_buy,
+.layui-m-layerbtn span[yes],
+.side_ope .cart .num,
+.shop_list_tab li.active .line,
+.shop_head_info .shop_info .shop_cate,
+.goods_coupon li .num,
+.footer_cart  .submit,
+.footer_cart .ope_cart .del,
+.cart_goods_ope .ope div.del,
+.address_list li .user .pri,
+.add_new_address a,
+.inter_head.pri .sign,
+.inter_title ul  li.active,
+.inter_cate ul li.active .line,
+.group_state .user_list li .tip,
+.group_state .go,
+.group_process .title,
+.group_process .con ul li .dotted,
+.find_cate ul li.active .line,
+.cate_list_group  .goods_det .cut,
+.orderState li.active .line,
+.cate_list_group .goods_det  .group_price .person,
+.cut_tip .cut_con .know,
+.save_name a,
+.cut_tip .close_icon .icon_bg,
+.swiper_goods .group_goods,
+.swiper_goods .cut_goods .time .time_det span,
+.coupon_list .con .det .ope .get,
+.coupon_list .con .time_det span,
+.exchange_con .exchange_btn,
+.confirm_sub,
+.description_con li .num,
+.feedback_con .submit,
+.refund_state,
+.mes_list li .icon .num,
+.coupon_ope_foot .ope_btn input.del_btn,
+.exchange_info .title .before,
+.header_col li.active .line,
+.review_list li.active .line,
+.preferential_con .shop_order .shop_det .more,
+.time_list li.active,
+.integral_task .task_title .title .line,
+.integral_task .task_con .task_list li .con .go_btn,
+.recommend_con .recommend_title .line,
+header .act_num,
+.shop_activity_con .shop_info .concern,
+.create_btn,
+.goods_btn,
+.new_swiper  .swiper-slide .time,
+.order_new_list li .tip_order,
+.go_cart .submit,
+.cate_list_con .enter,
+.footer_cart .con .ope .delete,
+.goods_attr .size ul li.active,
+.bgActive,
+.cate_list ul li.active .line,
+.login_sub
+{
+    /*background: #f23030!important;*/
+  /*color: white!important;*/
+}
+
+.general_condition li.active,
+.cate_shop .shop_head .enter
+.delivery_way div.active,
+.empaty_cart .ope a:last-child,
+.act_title .act_tip .act,
+.shop_news .swiper-slide .det div,
+.sale_title .date,
+.inter_head.new .sign,
+.order_det .inter .tip,
+.review_goods_list li .go_review>div,
+.concern_goods_list .buy_more .tips,
+.cate_shop .shop_head .enter,
+.cart_shop_con .det_con .restart .choose,
+.footer_cart .con .ope .delete
+{
+    border:1px solid white;
+    /*color: #f23030!important;*/
+}
+
+.rew_list li.active,
+.inter_title ul,
+.group_state .goOthers,
+.cut_list li .ope_btn .ope.pay,
+.cut_list li .goods_det .group_price .num,
+.orderContent .ope_btn .ope.pay,
+.coupon_con .coupon_group li .det .tip .use_btn,
+.balance_charge,
+.write_review .write,
+.inter_title ul li{
+    border: 1px solid white;
+}
+.find_cate.show_cate ul li.active{
+   /*border: 1px solid #f23030!important;*/
+}
+.layui-m-layerbtn span[no] {
+    /*background: #FB6465 ;*/
+
+}
+
+.goods_coupon li img.iconColor{
+    -webkit-filter:drop-shadow(18px 0 0px #f23030);
+    filter:drop-shadow( 18px 0 0px #f23030);
+}
+
+.group_process .con ul{
+    border-left: 2px solid #f23030;
+}
+
+.my_coupon_list li.active .state{
+    /*color: #f23030;*/
+    /*border-bottom: 2px solid #f23030;*/
+}
+
+.inter_det_list li .active.num svg path{
+    fill:#f23030;
+}
+
+.ques_type .type_list div.active,
+.choose_cate_more ul li.active{
+    background: white;
+    border: 1px solid white;
+}
+
+.match_con ul li .save{
+    background: #FEF2F1;
+    color: #f23030;
+}
+
+
+/*提升成长值*/
+.growth_con .integral_task .task_title .title .line{
+    background: #F97312;
+}
+.growth_con .task_list li .tips span{
+    color: #F97312;
+}
+.growth_con .integral_task .task_con .task_list li .con .go_btn{
+    background: #FFC263;
+}
+.growth_num .time span{
+    color: #F97312;
+}
+.growth_num .per_num{
+    color: #ea5900;
+}
+
+.choose_cate .secondList li.active,
+.colorBg{
+  background: #f23030;
+  border-color: #f23030;
+}
+
+#navSwiper .swiper-slide.swiper-slide-active .line{
+  background: #f23030;
+}
+
+.login_tabList .list.colorActive{
+  border-color: white;
+  color:white;
+}
+

@@ -1,0 +1,278 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .operation-title {
+        color: #999!important;
+        font-size: 15px!important;
+    }
+    .operation-desc {
+        color: #333333!important;
+        font-size: 19px!important;
+        font-weight: bold;
+    }
+
+</style>
+<div>
+    <div>
+        <div>
+            <div class="sub-title">店铺类型</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=0')">
+                    <img class="operation-img" src="__RES__/image/general/3.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">自营店铺</div>
+                            <div class="operation-desc">{$item.self_store}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=1')">
+                    <img class="operation-img" src="__RES__/image/general/4.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">入驻店铺</div>
+                            <div class="operation-desc">{$item.enter_store}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">入驻申请</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/checked?status=0')">
+                    <img class="operation-img" src="__RES__/image/general/5.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待审核店铺</div>
+                            <div class="operation-desc">{$item.enter_apply}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=1&status=1')">
+                    <img class="operation-img" src="__RES__/image/general/6.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">审核通过</div>
+                            <div class="operation-desc">{$item.enter_apply_yes}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/checked?status=2')">
+                    <img class="operation-img" src="__RES__/image/general/7.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">审核未通过</div>
+                            <div class="operation-desc">{$item.enter_apply_no}</div>
+                        </div>
+                    </div>
+                </a>
+        </div>
+        <div>
+            <div class="sub-title">入驻店铺认证审核</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=1&status=3')">
+                    <img class="operation-img" src="__RES__/image/general/8.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待审核</div>
+                            <div class="operation-desc">{$item.approve}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=1&status=4')">
+                    <img class="operation-img" src="__RES__/image/general/9.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">审核通过</div>
+                            <div class="operation-desc">{$item.approve_yes}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=1&status=5')">
+                    <img class="operation-img" src="__RES__/image/general/10.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">审核未通过</div>
+                            <div class="operation-desc">{$item.approve_no}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">自营店铺认证审核</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=0&status=3')">
+                    <img class="operation-img" src="__RES__/image/general/8.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">待审核</div>
+                            <div class="operation-desc">{$item.self_approve}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=0&status=4')">
+                    <img class="operation-img" src="__RES__/image/general/9.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">审核通过</div>
+                            <div class="operation-desc">{$item.self_approve_yes}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?type=0&status=5')">
+                    <img class="operation-img" src="__RES__/image/general/10.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">审核未通过</div>
+                            <div class="operation-desc">{$item.self_approve_no}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="sub-title">自营店铺特色</div>
+            <div class="operation-wrap">
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?conditions[]=is_city&status=4')">
+                    <img class="operation-img" src="__RES__/image/general/11.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">同城配送</div>
+                            <div class="operation-desc">{$item.is_city_count}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?conditions[]=is_pay_delivery&status=4')">
+                    <img class="operation-img" src="__RES__/image/general/12.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">货到付款</div>
+                            <div class="operation-desc">{$item.is_pay_delivery_count}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?conditions[]=is_shop&status=4')">
+                    <img class="operation-img" src="__RES__/image/general/13.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">门店自提</div>
+                            <div class="operation-desc">{$item.is_shop_count}</div>
+                        </div>
+                    </div>
+                </a>
+                <!--<a href="javascript:void(0);" onClick="main.jumpFour('store/index?conditions[]=is_express&is_stop=1&status=4')">-->
+                    <!--<img class="operation-img" src="__RES__/image/general/14.png"/>-->
+                    <!--<div>-->
+                        <!--<div class="operation-bg">-->
+                            <!--<div class="operation-title">全国包邮</div>-->
+                            <!--<div class="operation-desc">{$item.is_express_count}</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</a>-->
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?conditions[]=is_brand&status=4')">
+                    <img class="operation-img" src="__RES__/image/general/15.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">品牌甄选</div>
+                            <div class="operation-desc">{$item.is_brand_count}</div>
+                        </div>
+                    </div>
+                </a>
+                <a href="javascript:void(0);" onClick="main.jumpFour('store/index?conditions[]=is_good&status=4')">
+                    <img class="operation-img" src="__RES__/image/general/16.png"/>
+                    <div>
+                        <div class="operation-bg">
+                            <div class="operation-title">发现好店</div>
+                            <div class="operation-desc">{$item.is_good_count}</div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+
+    body{
+        background: #f6f6f6;
+    }
+
+    .childrenBody > div:first-child{
+        background: #f6f6f6!important;
+    }
+    .title{
+        font-size: 16px;
+        color: #8d8d8d;
+        margin: 30px auto;
+        text-align: center;
+    }
+
+    .sub-title{
+        font-size: 16px;
+        padding: 20px 0;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap{
+        overflow: hidden;
+    }
+
+    .operation-wrap > a{
+        float: left;
+        width: 22%;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        margin-right:3% ;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 2px 2px 2px #f2f5f6;
+
+        cursor: pointer;
+    }
+
+    .operation-wrap > a:nth-child(n + 5){
+        margin-top: 24px;
+    }
+
+    .operation-wrap > a .operation-img{
+        margin-left: 24px;
+    }
+
+    .operation-wrap > a .operation-bg{
+        margin-left: 30px;
+        width: 160px;
+    }
+
+    .operation-wrap > a .operation-title{
+        font-size: 15px;
+        font-weight: bold;
+        color: #2c3641;
+    }
+
+    .operation-wrap > a .operation-desc{
+        font-size: 14px;
+        color: #8d8d8d;
+        margin-top: 10px;
+    }
+    .operation-wrap > a .operation-bg {
+        text-align: center;
+        margin-left: 0px;
+        width: 100%;
+    }
+    .operation-wrap>a>div{
+        width: 100%;
+    }
+</style>
+
+{/block}
+{block name='js'}
+{__block__}
+
+{/block}

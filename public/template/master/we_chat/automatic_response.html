@@ -1,0 +1,149 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<meta name="referrer" content="never">
+<style>
+    * {
+        outline: none !important;
+    }
+
+    .tool-bar {
+        margin: 0 auto;
+        height: 60px;
+    }
+
+    .content {
+        margin: 0 auto;
+        width: 610px;
+        height: 330px;
+        overflow: hidden;
+    }
+
+    #input {
+        float: left;
+        width: 278px;
+        height: calc(100% - 22px);
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        resize: none;
+        margin-right: 10px;
+    }
+
+    #emoji-panel {
+        float: left;
+        width: 300px;
+    }
+
+    #emoji-panel > img {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+
+    .control {
+        margin: 10px auto;
+        width: 200px;
+        text-align: center;
+    }
+</style>
+<div class="tool-bar">
+
+</div>
+<div class="content">
+    <textarea id="input" placeholder="请输入回复内容">{$data}</textarea>
+    <div id="emoji-panel">
+        {for start="0" end="91"}
+        <image src="__RES__/image/emoji/{$i}.png"></image>
+        {/for}
+    </div>
+</div>
+<input id="text" type="text" value="123" style="height: 0; width: 0"/>
+<div class="control">
+    <button class="layui-btn" id="submit">提交</button>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    var emoji
+
+    // 获取表情列表
+    $.get('__RES__/js/emoji/emoji.json', function (data) {
+        emoji = data
+    })
+
+    setCaretPosition($('#input')[0], $('#input').val().length)
+
+    $('#emoji-panel').on('click', 'img', function () {
+        // 输入框元素
+        var inputDom = $('#input')
+        // 表情的内容
+        var emoji_item = '[' + emoji[$(this).index()] + ']'
+        // 输入框的值
+        var value = inputDom.val()
+        // 获取当前的光标位置
+        var cp = getCursortPosition(inputDom[0])
+        // 向输入框写入新的值
+        inputDom.val(value.substr(0, cp) + emoji_item + value.substr(cp, value.length))
+        setCaretPosition(inputDom[0], cp + emoji_item.length)
+    })
+
+    $('#submit').on('click', function () {
+        $.post('/we_chat/save_replay', {
+            data: $('#input').val()
+        }, function (data) {
+            if (data.code === 0) {
+                layer.msg('保存成功')
+            } else {
+                layer.msg(data.message)
+            }
+        })
+    })
+
+    /**
+     * 获取当前光标位置
+     * @param element
+     * @returns {number}
+     */
+    function getCursortPosition(element) {
+        var CaretPos = 0;
+        if (document.selection) {
+            //支持IE
+            element.focus();
+            var Sel = document.selection.createRange();
+            Sel.moveStart('character', -element.value.length);
+            CaretPos = Sel.text.length;
+        } else if (element.selectionStart || element.selectionStart == '0') {
+            CaretPos = element.selectionStart;
+            //支持firefox
+        }
+        return CaretPos;
+    }
+
+    /**
+     * 设置光标位置
+     * @param element
+     * @param pos
+     */
+    function setCaretPosition(element, pos) {
+        if (element.setSelectionRange) {
+            element.focus();
+            element.setSelectionRange(pos, pos);
+        } else if (element.createTextRange) {
+            var range = element.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', pos);
+            range.moveStart('character', pos);
+            range.select();
+        }
+    }
+
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

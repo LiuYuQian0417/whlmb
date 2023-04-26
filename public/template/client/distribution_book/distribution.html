@@ -1,0 +1,155 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .calculate {
+        margin-top: 15px;
+    }
+    .calculate span {
+        margin-right: 20px;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="main-content" id="mainContent">
+        <div class="order_stats">
+            <div class="order_stats_search">
+                <!--起止时间开始-->
+                <div class="screeItme">
+                    <strong class="fl lh mr10">成为分销商日期：</strong>
+                    <div style="width: 180px;" id="text_time" class="text_time">
+                        <input title="结算日期" name="date" type="text" class="text"
+                               value="{:input('get.date','')}"
+                               style="width:200px;background-position:190px 7px;"
+                               id="date" readonly placeholder="按结算日期范围查询">
+                    </div>
+                </div>
+                <!--起止时间结束-->
+
+                <div class="screeItme mt10">
+
+                    <!--关键词开始-->
+                    <div class="bf100 fl mt5">
+                        <strong class="fl lh mr10">关键词：</strong>
+                        <input name="keywords" value="{:input('keywords','','htmlspecialchars')}" placeholder="分销商昵称/手机号" type="text"  class="text text_2 mr10"/>
+                        <input type="submit"  value="查询" class="sc-btn sc-blueBg-btn btn30" />
+                    </div>
+                    <!--关键词结束-->
+                </div>
+            </div>
+
+            <div class="calculate">
+                <span>分销商数量：{:$data->total()}</span>
+                <span>已结算总金额：{$only.close|default='0.00'}</span>
+                <span>待结算总金额：{:number_format(($only.total-$only.close),2,'.','')}</span>
+                <span>手续费用：{$service_charge|default=0}</span>
+            </div>
+            <!--列表-->
+            <form method="POST" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                    <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                        <tr>
+                            <th width="10%">分销商</th>
+                            <th width="7%">电话</th>
+                            <th width="7%">分销商等级</th>
+                            <th width="10%">佣金总金额</th>
+                            <th width="10%">已结算</th>
+                            <th width="10%">待结算</th>
+                            <th width="10%">直属粉丝</th>
+                            <th width="10%">推荐粉丝</th>
+                            <th width="10%">佣金明细</th>
+                        </tr>
+                        {empty name='data'}
+                        <tr>
+                            <td class="no-records" colspan="10">没有找到任何记录</td>
+                        </tr>
+                        {/empty}
+
+                        {volist name="data" id="item"}
+                        <tr>
+                            <td>
+                                <a rel="{$item.avatar}" class="preview">
+                                    <img src="{$item.avatar?:'?'}" class="avatar" alt="头像" onerror="this.src='/template/master/resource/image/common/imageError.png'" />
+                                </a>
+                                {$item.nickname}
+                            </td>
+                            <td>{$item.phone}</td>
+                            <td>{$item.level_title}</td>
+                            <td>{$item.total_brokerage}</td>
+                            <td>{$item.total_close_brokerage}</td>
+                            <td>{:number_format(($item.total_brokerage - $item.total_close_brokerage),2,'.','')}</td>
+                            <td>{$distribution_hierarchy > 1 ? ($item.referrer_num?:0) : 0}</td>
+                            <td>{$distribution_hierarchy == 3 ? ($item.relation_num?:0) : 0}</td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="main.jumpFour('client/distribution_book/distribution_details?distribution_id={$item.distribution_id}&type=1')"
+                                   class="btn_edit"><i class="icon icon-eye-open"></i>详情</a>
+                            </td>
+                        </tr>
+                        {/volist}
+
+                        <tfoot>
+                        <tr>
+                            <td colspan="10">
+
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/jQuery.print.js"></script>
+<script type="text/javascript">
+
+    main.valid();
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        location.href='?' + param;
+    }
+</script>
+<script type="text/javascript">
+    function dc(){
+        $("#searchForm").append("<input type='text' id='dc' name='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+    main.laydate([{
+        elem: '#date',
+        type: 'date',
+        range: true,
+        max:0
+    }]);
+</script>
+{/block}

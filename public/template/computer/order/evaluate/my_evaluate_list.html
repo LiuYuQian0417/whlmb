@@ -1,0 +1,73 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css"/>
+<link rel="stylesheet" href="__RES__/css/evaluate/MyEvaluate.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+{/block}
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div class="title">
+            我的订单
+        </div>
+        <div class="aftr-sale-box">
+
+            <div class="goods">
+                <div class="goods-tit">
+                    <div class="tit-con goods-name-tit">
+                        商品名称
+                    </div>
+                    <div class="tit-con">
+                        状态
+                    </div>
+                    <div class="tit-con">
+                        操作
+                    </div>
+                </div>
+
+                {empty name='$result'}
+                <div class="indent-box indent-box-emty">
+                    <img src="__RES__/imgs/orderemty.png" alt="">
+                    <p>暂无订单</p>
+                    <span>“暂无订单，忙里偷闲下一单吧”</span>
+                </div>
+                {/empty}
+
+                {volist name="$result" id="data"}
+                <div class="goods-list">
+                    <div class="goods-con">
+                        <a style="color: #000;" href="{:url('/pc2.0/goods/view')}?goods_id={$data.order_goods.goods_id}">
+                            <img src="{$data.order_goods.file}" alt="">
+                            <p>{$data.order_goods.goods_name}{$data.attr}</p>
+                        </a>
+                    </div>
+                    <div class="goods-pub">
+                        <span class="time">{$data.create_time}</span>
+                    </div>
+                    <div class="goods-pub">
+                        <a href="javascript:main.jump({'url':'/pc2.0/evaluate/myEvaluateExamine?goods_evaluate_id={$data.goods_evaluate_id}'});">查看评价</a>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+
+            <!--分页-->
+            <!--分页-->
+            <div class="pageContainer" style="width: auto;">{$result|raw}</div>
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+
+</script>
+{/block}

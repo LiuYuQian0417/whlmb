@@ -1,0 +1,247 @@
+body{
+    background-color: #f6f6f6;
+    user-select: none;
+    width: 100vw;
+    overflow-x: hidden;
+}
+.logo{
+    display: flex;
+    align-items: center;
+}
+.logo span{
+    margin-left: 10px;
+    font-size: 20px;
+    color: #666;
+}
+.head-container{
+    background-color: #fff;
+    padding-bottom: 57px;
+    border-bottom:1px solid #f15e22;
+}
+
+.ticket-link{.head-container
+    display: block;
+    margin: 30px auto 0;
+}
+.ticket-link img{
+    display: block;
+    margin:  15px auto;
+}
+.ticket-market{
+    display: block;
+    margin: 37px auto;
+}
+.ticket-view{
+    width: 1200px;
+    margin: 0 auto;
+}
+.ticket-view ul{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width:1230px;
+}
+.ticket-view ul li{
+    display: flex;
+    align-items: center;
+    width: 398px;
+    height: 123px;
+    background-color: #fff;
+    margin-bottom: 7px;
+    padding-left:14px;
+    box-sizing: border-box;
+    margin-right: 4px;
+}
+.ticket-view ul li>img{
+    display: block;
+    width: 106px;
+    height: 106px;
+}
+.ticket-cen{
+    position: relative;
+    width: 180px;
+    height: 106px;
+    padding-left: 9px;
+    box-sizing: border-box;
+}
+.ticket-integral{
+    width: 96px;
+    height: 100%;
+    border-left: 1px solid #f2f2f2;
+}
+.ticket-price{
+    display: flex;
+    height: 43px;
+    font-size: 20px;
+    vertical-align: top;
+}
+.ticket-price span{
+    display: block;
+    font-size: 12px;
+    padding-top: 2px;
+}
+.discount{
+    width: 100px;
+    height: 18px;
+    font-size: 12px;
+    text-align: center;
+    line-height: 18px;
+    background-color: #fff4ec;
+}
+.ticket-desc{
+    position: absolute;
+    width: 160px;
+    font-size: 12px;
+    margin-top: 10px;
+    z-index: 999!important;
+}
+.ticket-integral p{
+    text-align: center;
+}
+.ticket-integral p:first-child{
+    margin: 17px 0;
+}
+.ticket-integral p:nth-child(2){
+    font-size: 18px;
+    font-weight: bold;
+}
+.ticket-integral div{
+    width: 80px;
+    height: 22px;
+    color: #fff;
+    text-align: center;
+    line-height: 22px;
+    border-radius: 15px;
+    font-size: 12px;
+    cursor: pointer;
+    margin: 12px auto 0;
+}
+.gray{
+    color: #d3d3d3;
+}
+.gray-background-color{
+    background-color: #d3d3d3;
+}
+.has-gone{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 67px;
+    height: 74px;
+}
+.ticket-integral .immediately-content{
+    display: none;
+    position: fixed;
+    top:-13px;
+    left: 0;
+    width: 100%;
+    height:100%;
+    background: rgba(0,0,0,0.4);
+    border-radius: 0;
+    z-index: 99999;
+}
+.ticket-integral .immediately-popup{
+    width: 490px;
+    height: 450px;
+    position: absolute;
+    top:50%;
+    left: 50%;
+    margin: -225px 0 0 -245px;
+    background: #fff;
+    border-radius: 0;
+}
+.ticket-integral  .immediately-popup-title{
+    width: 444px;
+   text-align: right;
+    padding: 14px 23px;
+}
+.ticket-integral .immediately-popup-content{
+    width: 360px;
+    height: 264px;
+    border:1px solid #f2f2f2;
+    margin: 0 auto;
+    border-radius: 0;
+}
+.ticket-integral .immediat-preferential{
+    width: 340px;
+    margin: 0 auto;
+    background:url(../../../resource/imgs/ticket/youhuitanchuang.png) top left no-repeat;
+    height:90px;
+    padding: 20px 0 0 20px;
+    border-radius: 0;
+}
+.immediat-preferential span{
+    float: left;
+}
+.immediat-preferential span:nth-child(1){
+    font-size: 16px;
+    line-height: 16px;
+    margin-top: -4px;
+}
+.immediat-preferential span:nth-child(2){
+    font-size: 30px;
+}
+.ticket-integral  .immediat-preferential{
+    font-size: 30px;
+}
+
+.ticket-integral  .immediat-preferential .immediat-preferential-full{
+    font-size: 12px;
+    background: #ee753f;
+    width: 76px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    margin: 4px 0 0 10px;
+    float: left;
+}
+.ticket-integral .immediat-preferential-content{
+    color: #fff;
+    font-size: 12px;
+    padding-left: 17px;
+    text-align: left;
+}
+.clear{
+    clear: both;
+    height: 0;
+    overflow: hidden;
+    width: 100%;
+}
+.ticket-view .recommended{
+    justify-content: inherit;
+}
+.ticket-view .recommended li{
+    float: left;
+    width: 103px;
+    height:103px;
+    border:1px solid #f2f2f2;
+    padding:0;
+    box-sizing:inherit;
+    align-items:end;
+    margin: 10px 0 0 12px;
+}
+.ticket-view .recommended li:nth-child(1){
+    margin: 10px 0 0 9px;
+}
+.recommended-all{
+    line-height: 40px;
+    color: #000;
+}
+.ticket-view  .cost{
+    display: block;
+    width: 100px;
+    height: 33px;
+    margin: 0 auto;
+    text-align: center;
+    line-height: 33px;
+    color: #fff;
+    border-radius: 5px;
+    margin-top: 30px;
+}
+.ticket-view  .integral{
+    line-height: 50px;
+    color: #000;
+}
+.gray-background-color{
+    background:#d3d3d3!important;
+}

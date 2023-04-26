@@ -1,0 +1,105 @@
+{extend name='layout/common' /}
+{block name='title'}<title>登录 - 平台管理后台</title>{/block}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/login/base.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/login/iconfont.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/login/reg.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/login/login.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='css'}{/block}
+{block name="body"}
+<div id="ajax-hook"></div>
+<div class="wrap">
+    <div class="wpn">
+        <form name="login" method="post">
+            <div class="form-data pos">
+<!--                <img src="/template/client/resource/images/logo.png" class="head-logo">-->
+                <h2>平台管理后台</h2>
+                <div class="lock-holder">
+                    <div class="form-group pull-left input-username">
+                        <label>账号</label>
+                        <input type="text" name="nickname" datatype="*" nullmsg="请输入账号" maxlength="20"
+                               placeholder="请输入账号" autocomplete="off" class="input-text">
+                    </div>
+                    <i class="fa fa-ellipsis-h dot-left"></i> <i class="fa fa-ellipsis-h dot-right"></i>
+                    <div class="form-group pull-right input-password-box">
+                        <label>密码</label>
+                        <input type="password" name="password" datatype="s6-18" nullmsg="请输入密码" placeholder="请输入密码"
+                               minlength="6" maxlength="18" autocomplete="off" class="input-password"></div>
+                </div>
+                <div class="avatar"><img src="__RES__/image/login/admin.png" alt=""></div>
+                <button class="lang-btn log-btn submit" id="submit">登录</button>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/login/jquery.supersized.min.js"></script>
+<script>
+    $(function () {
+        $.supersized({
+            // 功能
+            slide_interval: 4000,
+            transition: 1,
+            transition_speed: 1000,
+            performance: 1,
+            // 大小和位置
+            min_width: 0,
+            min_height: 0,
+            vertical_center: 1,
+            horizontal_center: 1,
+            fit_always: 0,
+            fit_portrait: 1,
+            fit_landscape: 0,
+            // 组件
+            slide_links: 'blank',
+            slides: [
+                {image: '__RES__/image/login/1.jpg'},
+                {image: '__RES__/image/login/2.jpg'},
+                {image: '__RES__/image/login/3.jpg'},
+                {image: '__RES__/image/login/4.jpg'},
+                {image: '__RES__/image/login/5.jpg'}
+            ]
+        });
+        $.Tipmsg.r = null;
+        $.Tipmsg.c = null;
+        $.Tipmsg.p = null;
+        $('#submit').click(function (data) {
+            $('[name="login"]').Validform({
+                btnSubmit: '#submit',
+                ajaxPost: true,
+                tipSweep: true,
+                datatype: {
+                    's6-18': /^\S{6,18}$/
+                },
+                tiptype: function (msg) {
+                    layer.msg(msg, {time: 2000});
+                },
+                beforeSubmit: function () {
+                    $('.input-username').addClass('animated fadeOutRight');
+                    $('.input-password-box').addClass('animated fadeOutLeft');
+                    $('.submit').addClass('animated fadeOutUp');
+                },
+                callback: function (res) {
+                    if (res.code !== 0){
+                        setTimeout(function () {
+                            layer.msg(res.message,{time:2000});
+                            $('.input-username').removeClass('animated fadeOutRight');
+                            $('.input-password-box').removeClass('animated fadeOutLeft');
+                            $('.submit').removeClass('animated fadeOutUp');
+                        },1200);
+                    }else{
+                        setTimeout(function () {
+                            location.href = res.url;
+                        }, 500);
+                    }
+                }
+            });
+        });
+    })
+</script>
+{/block}

@@ -1,0 +1,56 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>修改系统设置后需清除缓存。<li>
+            <li>部分设置才能正常显示。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form" action="">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>系统缓存</legend>
+    </fieldset>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            {foreach $classify as $key => $v}
+            <input type="checkbox" name="like[]" value="{$v}" title="{$key}" checked>
+            {/foreach}
+        </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>Session(清除成功会重新进行登录)</legend>
+    </fieldset>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="checkbox" name="like[]" value="Session" title="Session" checked>
+        </div>
+    </div>
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>Cookie</legend>
+    </fieldset>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="checkbox" name="like[]" value="Cookie" title="Cookie" checked>
+        </div>
+    </div>
+    <div class="layui-form-item center">
+        <a href="javascript:void(0);" class="layui-btn" onclick="main.clearCache()">清除</a>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form();
+</script>
+{/block}
+{block name='highSearch'}{/block}

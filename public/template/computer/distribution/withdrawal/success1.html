@@ -1,0 +1,43 @@
+{extend name="public/my_header"}
+{block name="content_css"}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<link rel="stylesheet" href="__RES__/css/distribution/withdrawal_record.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    {include file="public/my_left"}
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div>
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="{:url('/pc2.0/distribution_withdrawal/index')}" class='primary-color border-color'>提现</a>
+                    <a href="{:url('/pc2.0/distribution_withdrawal/record')}" >提现记录</a>
+                </div>
+            </div>
+            <div  class="tip-img-view">
+                <div class="tip-img">
+                    <img src="__RES__/imgs/yield/success.png" alt="">
+                    <p>提现申请提交成功!</p>
+                    <div onclick="main.jump({'url':'/pc2.0/distribution_withdrawal/record'})" class="withdrawal-record primary-background-color">提现记录</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+
+{block name="js"}
+<script type="text/javascript">
+
+</script>
+{/block}

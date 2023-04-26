@@ -1,0 +1,225 @@
+
+<!--公共头部结束-->
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+<!--我的设置左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MySetting.css" />
+
+<!--账户安全css-->
+<link rel="stylesheet" href="__RES__/css/my/PersonalInfor.css" />
+<link rel="stylesheet" href="__RES__/css/my/PersonalInfor.css" />
+<link rel="stylesheet" href="__RES__/upload/cropper.css" />
+<link rel="stylesheet" href="__RES__/upload/dialog.css" />
+<style>
+	.imageUpload{
+		width: 100px !important;
+		height: 100px !important;
+		border-radius: 100%;
+		float: left;
+	}
+	.imageUploadPreview{
+		border-radius: 100%;
+	}
+	.imageUploadDialog .operationArea{
+		padding-top:55px ;
+	}
+	.imageUploadDialog .operationArea .imageUploadPreview{
+		width: 120px !important;
+		height: 120px;
+		margin: 0px auto;
+	}
+	.imageUploadDialog .operationArea .title{
+		font-size: 16px;
+		font-weight: 500;
+	}
+	.button-group .layui-btn{
+		display: inline-block;
+		width: 105px;
+		height: 35px;
+		text-align: center;
+		line-height: 35px;
+		border: none;
+		color: #fff;
+
+	}
+</style>
+{/block}
+{block name="content"}
+
+<div class="imageUploadDialog" id="imageUploadDialog">
+	<!--图片处理区-->
+	<div class="handleArea">
+		<img id="imageHandle" alt="imageHandle">
+	</div>
+	<!--图片操作区-->
+	<div class="operationArea">
+		<p class="title">头像预览120*120</p >
+		<div id="imageUploadPreview" class="imageUploadPreview"></div>
+
+		<div class="button-group">
+			<button class="layui-btn primary-background-color" type="button" id="submitImage">保存</button>
+		</div>
+	</div>
+</div>
+
+<!--图片预览-->
+<div id="imageView" class="imageView">
+	<img>
+</div>
+
+<!--我的设置主体-->
+<div class="setting">
+	  <!--据中部分-->
+	    <div class="setting-center">
+	    	<!--左侧列表-->
+			{include file="public/setting_left" /}
+	      <!--右侧内容-->
+	      <div class="setting-right">
+
+	      	<!--账号安全右侧开始-->
+	        <div class="personal-infor">
+			    <p class="title">
+			      个人信息
+			    </p>
+				<form action="{:url('pc2.0/setting/edit')}" type="post" id="information" >
+			      <div class="personal-infor-content">
+			        <div class="head-portrait-box">
+						<div
+								class="imageUpload"
+								default="{$member_info.avatar}"
+								width="300"
+								height="300"
+								file-mime="image/gif,image/jpeg,image/png"
+								name="avatar"
+								dir="goods_image_file"
+								value="{$member_info->getData('avatar')|default=''}"
+						>
+						</div>
+			          <div class="name-right">
+			            <p class="name">
+			              <span>会员名:</span> {$member_info.nickname}
+			            </p>
+			            <p>
+			              <!--<router-link to="">-->
+			                <!--立即查看-->
+			              <!--</router-link>-->
+			              <!--账户安全状态-->
+			            </p>
+			          </div>
+			        </div>
+			        <div class="infor">
+			          <div class="nickname">
+			            <div class="infor-left"><i class="primary-color">*</i><span class="tit">昵称</span><span class="mark">：</span>
+			            </div>
+			            <div class="input-box">
+			              <input type="text" name="nickname" maxlength="15"  datatype="*" nullmsg="请填写昵称" errormsg="请填写正确的昵称" value="{$member_info.nickname|default=''}">
+			            </div>
+			          </div>
+			          <div class="sex">
+			            <div class="infor-left"><i class="primary-color">*</i><span class="tit">性别</span><span class="mark">：</span>
+			            </div>
+			            <div class="input-box">
+			              <label class="sex-active">
+			              	<input type="radio" {eq name="$member_info.sex" value="1"} checked="checked" {/eq} datatype="*"  nullmsg="请选择性别" errormsg="请选择性别" name="sex"  value="1" />
+			                <!--<img class="xz" src="__RES__/imgs/del/xz.png"  alt="">-->
+			                <!--<img class="mxz" src="__RES__/imgs/mxz.png" alt="">-->
+			                <span>男</span>
+			              </label>
+			              <label >
+			              	<input type="radio" {eq name="$member_info.sex" value="0"} checked="checked" {/eq} name="sex"  value="0" datatype="*"  nullmsg="请选择性别" errormsg="请选择性别" 	 />
+			                <!--<img class="xz" src="__RES__/imgs/del/xz.png"  alt="">-->
+			                <!--<img class="mxz" src="__RES__/imgs/mxz.png"  alt="">-->
+			                <span>女</span>
+			              </label>
+
+			            </div>
+			          </div>
+			          <div class="date" style="display: none">
+			            <div class="infor-left"><span class="tit">出生日期</span> <span class="mark">：</span></div>
+			            <div class="input-box">
+			              <span>：</span><div class="date-box">请选择</div>
+			              <!--<div class="block">
+			                <el-date-picker
+			                  v-model="birth_date"
+			                  type="date"
+			                  placeholder="选择日期">
+			                </el-date-picker>
+			              </div>-->
+			            </div>
+			          </div>
+			          <!--遮罩-->
+			          <div class="cover" style="display: none;">
+			            <div class="up-img">
+			              <!--降价通知-->
+			              <div class="tit">
+			                自定义头像
+			                <div class="right">
+			                  <img src="__RES__/imgs/my/close.png"  alt="">
+			                </div>
+			              </div>
+
+			              <div class="img-box">
+			                <div class="img-left">
+			                    <p class="up-load primary-color">
+			                      <img src="__RES__/imgs/del/upimg.png" alt="">
+			                      <span>点击上传</span>
+			                    </p>
+			                    <p>仅支持JPG、JPEG、GIF、PNG、BMP图片文件 且文件小于3M</p>
+			                </div>
+			                <div class="img-right">
+			                  <p>头像预览120*120</p>
+			                  <div class="img-preview">
+			                    <span >暂无预览</span>
+			                    <img src="avatar_img" alt="">
+			                  </div>
+			                </div>
+			              </div>
+			              <div class="btn-group">
+			                <a href="javascript:;" class="save primary-background-color" >
+			                  保存
+			                </a>
+			                <a href="javascript:;"  class="close">
+			                  取消
+			                </a>
+			              </div>
+			            </div>
+			          </div>
+
+			          <input type="submit" class="submit primary-background-color" value="保存" >
+			        </div>
+					  </form>
+			      </div>
+			      <!--遮罩-->
+			      <div class="co"></div>
+
+			  </div>
+			<!--账号安全右侧结束-->
+
+	      </div>
+	    </div>
+	  </div>
+{/block}
+
+
+
+{block name="js"}
+<script src="__RES__/upload/cropper.js"></script>
+<script src="__RES__/upload/main.js"></script>
+<script type="text/javascript">
+	$('.head-portrait-box .img-left a').click(function(){
+		$('.cover').show()
+	})
+	$('.up-img .tit .right img').click(function(){
+		$('.cover').hide()
+	})
+	$('.up-img .btn-group .close').click(function(){
+		$('.cover').hide()
+	})
+
+	$('.sex label').click(function(){
+		$(this).addClass('sex-active').siblings('label').removeClass('sex-active')
+	})
+	main.valid('#information');
+</script>
+{/block}

@@ -1,0 +1,117 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css" />
+<div class="main-content" id="mainContent">
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label>
+                是否开启到店自提:&nbsp;&nbsp;
+            </label>
+            {if condition="$coordinate.is_delivery == 0 && $coordinate.is_city == 0"}
+            <input
+                    type="checkbox"
+                    name="enabled"
+                    lay-skin="switch"
+                    lay-filter="enabled"
+                    disabled="disabled"
+                    checked="checked"
+            >
+            <label>无法关闭,请至少开启一项配送方式</label>
+            {else/}
+            <input
+                    type="checkbox"
+                    name="enabled"
+                    lay-skin="switch"
+                    lay-filter="enabled"
+                    {eq name="coordinate.is_shop" value="1" }checked="checked"{/eq}
+            >
+            {/if}
+        </div>
+    </div>
+    <form action="">
+        <div class="btn-info">
+            <a class="sc-btn sc-blue-btn" onclick="main.jumpFour('client/take/create')">
+                <i class="icon-plus"></i>添加自提点</a>
+        </div>
+        <div class="search-info">
+            <div class="search-form">
+                <div class="search-key">
+                    <input type="text" name="keyword" size="30" class="text text_2" placeholder="自提点名称"/>
+                    <!--<input type="submit" value=" 搜索 " class="submit"/>-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+
+            </div>
+        </div>
+
+        <div class="list-div" id="listDiv">
+            <!--列表-->
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th>自提点名称</th>
+                    <th>联系电话</th>
+                    <th>自提点地址</th>
+                    <th>营业时间</th>
+                    <th>状态</th>
+                    <th class="tr pr20">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr>
+                    <td class="no-records" colspan="9">没有找到任何记录</td>
+                </tr>
+                {/empty}
+                {volist name="data" id="item"}
+                <tr>
+                    <td class="tl pl10">{$item.take_name}</td>
+                    <td>{$item.contacts_phone}</td>
+                    <td>{$item.address}</td>
+                    <td>{$item.start_hours} - {$item.end_hours}</td>
+                    <td>{$item.statusText}</td>
+                    <td class="ecsc-table-handle tr">
+                    <a href="javascript:void(0);"
+                             onclick="main.jumpFour('client/take/edit?id={$item.take_id}')"
+                             class="btn_edit"><i class="fa fa-edit"></i>编辑</a></span>
+                        <a href="javascript:void(0);"
+                                 onclick="main.destroy('/client/take/destroy','{$item.take_id}')" class="btn_trash"><i
+                                class="fa fa-trash"></i>删除</a></span>
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+                {notempty name="render"}
+                <tfoot>
+                <tr>
+                    <td colspan="20">
+                        {:$data->render()}
+                    </td>
+                </tr>
+                </tfoot>
+                {/notempty}
+            </table>
+            <!--列表-->
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    // main.form({status:'/take/auditing'});
+    main.form([
+        {
+            selector:'switch(enabled)',
+            callback:function(data){
+                main.switchEnabled('is_shop',data.elem,'{$Think.session.client_store_id}')
+            }
+        }
+    ]);
+</script>
+{/block}

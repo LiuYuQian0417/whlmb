@@ -1,0 +1,174 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/map.css" rel="stylesheet" type="text/css"/>
+
+<style>
+    .button-group .button{  height: 28px;  line-height: 28px;  background-color: #0D9BF2;  color: #FFF;  border: 0;
+        outline: none;  padding-left: 5px;  padding-right: 5px;  border-radius: 3px;  margin-bottom: 4px;  cursor: pointer;  }
+    .table_item td.label{width: 28.5%;!important;}
+    .layui-form-radio{
+        margin: 0!important;
+    }
+    .layui-form-checkbox[lay-skin=primary]{margin-bottom: 10px;}
+    .layui-form-checked[lay-skin=primary] i{background: #f98a10;border-color:#f98a10}
+    .layui-form-checked[lay-skin=primary]:hover i{border-color:#f98a10}
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="main-content">
+    <!--TAB切换-->
+    <div class="tabmenu">
+        <ul class="tab">
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('client/distribution_city/index')">自主配送</a></li>
+            <li class="active"><a href="javascript:void(0);" onclick="main.jumpFour('client/dada/merchantAdd')">第三方配送</a></li>
+        </ul>
+    </div>
+    <div class="explanation clear">
+        <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>
+        <ul>
+            <li>温馨提示：提交操作将会重新审核，请慎重提交确定。</li>
+        </ul>
+    </div>
+    <!--TAB切换-->
+    <div class="tabmenu" style="margin-top: 15px;">
+        <ul class="tab">
+            <li class="active"><a href="javascript:void(0);" onclick="main.jumpFour('client/dada/merchantAdd')">创建商户</a></li>
+            <li><a href="javascript:void(0);" onclick="main.jumpFour('client/dada/dadaShop')">门店列表</a></li>
+        </ul>
+    </div>
+    <div class="ecsc-form-goods">
+        <form action="" method="post" class="layui-form">
+            <div class="wrapper-list border1 hide">
+
+
+            </div>
+
+            <div class="wrapper-list">
+                <!--注册商户手机号-->
+                <dl>
+                    <dt>注册商户手机号：</dt>
+                    <dd>
+                        <input type="text" name="mobile" value="{$merchant.mobile}"
+                               maxlength="200" class="text" autocomplete="off" style="width: 400px;" {present name="$merchant"} disabled {/present}
+                               placeholder="请输入注册商户手机号"/>
+                    </dd>
+                </dl>
+                <!--商户城市名称-->
+                <dl {present name="$merchant"} style="display: none" {/present}>
+                    <dt>商户城市名称：</dt>
+                    <dd>
+                        <div class="layui-input-inline" style="width: 140px;float: left;margin: 0 10px">
+                            <select id="city" name="city_name" class="state" lay-filter="state" >
+                                <option value="">请选择</option>
+                                {volist name="city" id="city"}
+                                    <option value="{$city.area_name}">{$city.area_name}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                    </dd>
+                </dl>
+                <!--企业全称-->
+                <dl {present name="$merchant"} style="display: none" {/present}>
+                    <dt>企业全称：</dt>
+                    <dd>
+                        <input type="text" name="enterprise_name" value=""
+                               maxlength="200" class="text" autocomplete="off" style="width: 400px;"
+                               placeholder="请输入企业全称"/>
+                    </dd>
+                </dl>
+                <!--企业地址-->
+                <dl {present name="$merchant"} style="display: none" {/present}>
+                    <dt>企业地址：</dt>
+                    <dd>
+                        <input type="text" name="enterprise_address" value=""
+                               maxlength="200" class="text" autocomplete="off" style="width: 400px;"
+                               placeholder="请输入企业地址"/>
+                    </dd>
+                </dl>
+                <!--联系人姓名-->
+                <dl {present name="$merchant"} style="display: none" {/present}>
+                    <dt>联系人姓名：</dt>
+                    <dd>
+                        <input type="text" name="contact_name" value=""
+                               maxlength="200" class="text" autocomplete="off" style="width: 400px;"
+                               placeholder="请输入联系人姓名"/>
+                    </dd>
+                </dl>
+                <!--联系人电话-->
+                <dl {present name="$merchant"} style="display: none" {/present}>
+                    <dt>联系人电话：</dt>
+                    <dd>
+                        <input type="text" name="contact_phone" value=""
+                               maxlength="200" class="text" autocomplete="off" style="width: 400px;"
+                               placeholder="请输入联系人电话"/>
+                    </dd>
+                </dl>
+                <!--邮箱地址-->
+                <dl {present name="$merchant"} style="display: none" {/present}>
+                    <dt>邮箱地址：</dt>
+                    <dd>
+                        <input type="text" name="email" value=""
+                               maxlength="200" class="text" autocomplete="off" style="width: 400px;"
+                               placeholder="请输入邮箱地址"/>
+                    </dd>
+                </dl>
+            </div>
+
+            <dl class="button_info" {present name="$merchant"} style="display: none" {/present}>
+                <dt>&nbsp;</dt>
+                <dd>
+                    <button type="submit" class="sc-btn sc-blueBg-btn btn35" id="submit">确定</button>
+                    <button type="reset" class="sc-btn btn35 sc-blue-btn">重置</button>
+                </dd>
+            </dl>
+
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch,AMap.CircleEditor'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch,AMap.CircleEditor'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script type="text/javascript">
+
+    //模块切换
+    $('.tab li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("active").siblings().removeClass("active");
+        $(".wrapper-list").eq(index).show().siblings(".wrapper-list").hide();
+    });
+
+    main.valid('.layui-form');
+
+    layui.use(['form'],function () {
+        var form = layui.form;
+        form.render();
+
+        form.on("radio(distribution_type)",function (data) {
+            switch (data.value) {
+                case '1':
+                    $(".distribution_area1").show();
+                    $(".distribution_area2").hide();
+                    break;
+                case '2':
+                    $(".distribution_area2").show();
+                    $(".distribution_area1").hide();
+                    break;
+            }
+        })
+    })
+
+</script>
+{/block}

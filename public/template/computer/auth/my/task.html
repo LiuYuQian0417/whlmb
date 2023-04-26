@@ -1,0 +1,288 @@
+{extend name="public/common"}
+
+{block name="content_css"}
+<!--公共头部css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicHeader.css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/color.css"/>
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css"/>
+<!--公共搜索css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/indexHeader.css"/>
+<!--会员卡css-->
+<link rel="stylesheet" href="__RES__/css/membershipcard/promotegrowth.css">
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+{/block}
+
+{block name="content"}
+
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="spokesperson-center" >
+            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <p>会员</p>
+        </div>
+        <div class="my-grade">
+            <a href="{:url('/pc2.0/rank/index')}">会员</a>
+            <a href="{:url('/pc2.0/my/task')}" class="primary-color border-color-bottom">会员成长值</a>
+        </div>
+    </div>
+</div>
+
+<!--会员卡提升开始-->
+<div class="ascension">
+    <div class="current">
+        <div class="current-growth">当前成长值</div>
+        <div class="current-content">
+            <div class="current-left">
+                <img src="__RES__/imgs/promotegrowth/chengzhang.png" width="269" height="153">
+                <p class="current-growth-number">{$result.growth_value}</p>
+                <p class="current-growth-next">距离下一等级还需<span>{:empty($result.next.min_points)?0:$result.next.min_points-$result.growth_value}</span> 成长值</p>
+            </div>
+
+            <div CLASS="current-right">
+                <p class="current-right-top">可享权益</p>
+                {volist name="$result.rank_list" id="item"}
+                <div class="members-list">
+                    {eq name="$item.member_rank_id" value="$result.now.member_rank_id" }
+                        <div class="membership-grade border-color">
+                            <img src="__RES__/imgs/promotegrowth/tonghuiyuan.png" width="19" height="18">
+                        </div>
+                    {else/}
+                        <div class="membership-grade">
+                            <img src="__RES__/imgs/promotegrowth/tupian.png" width="19" height="18">
+                        </div>
+                    {/eq}
+                    <p class="members-brand">{$item.rank_name}</p>
+                    <p class="members-discount primary-color">{$item.discount/10}折</p>
+                </div>
+                {/volist}
+                 <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div class="how-grow">
+        <div class="how-improve">如何提升成长值</div>
+         <div class="how-grow-content">
+           <div class="how-grow-content-img">
+               <img src="__RES__/imgs/promotegrowth/wanshangerenxinxi.png" width="32" height="32">
+           </div>
+             <p class="perfect">完善个人信息</p>
+             <p class="growth-value">+{$result.info.growth}成长值</p>
+             <div class="block"></div>
+             <a href="javascript:;"  class="binding primary-color border-color">{eq name='$result.info.state' value='0'}<span onclick="main.jump({'url':'/pc2.0/setting/index'})">去绑定</span>{else/}已绑定{/eq}</a>
+         </div>
+        <div class="how-grow-content">
+            <div class="how-grow-content-img">
+                <img src="__RES__/imgs/promotegrowth/shouji.png" width="32" height="32">
+            </div>
+            <p class="perfect">绑定手机号</p>
+            <p class="growth-value">+{$result.phone.growth}成长值</p>
+            <div class="block"></div>
+            <a href="javascript:;" class="binding primary-color border-color">
+                {eq name='$result.phone.state' value='0'}
+                <span onclick="main.jump({'url':'/pc2.0/setting/safety'})">去绑定
+                </span>
+                {else/}
+                <span>已绑定</span>
+                {/eq}
+            </a>
+        </div>
+        <div class="how-grow-content">
+            <div class="how-grow-content-img">
+                <img src="__RES__/imgs/promotegrowth/disanfang.png" width="32" height="32">
+            </div>
+            <p class="perfect">绑定第三方社交账号</p>
+            <p class="growth-value">+{$result.third_party.growth}成长值</p>
+            <div class="block"></div>
+            <a href="javascript:;" class="binding primary-color border-color">{eq name='$result.third_party.state' value='0'}
+                <span onclick="main.jump({'url':'/pc2.0/setting/relevance'})">去绑定
+                </span>
+                {else/}
+                <span>已绑定</span>
+                {/eq}</a>
+        </div>
+        <div class="how-grow-content">
+            <div class="how-grow-content-img how-grow-content-img-color">
+                <img src="__RES__/imgs/promotegrowth/wanshangerenxinxi.png" width="32" height="32">
+            </div>
+            <p class="perfect">购物</p>
+            <p class="growth-value">购物越多（实际支付金额）...</p>
+            <div class="block"></div>
+            <a href="javascript:main.jump({'url':'/pc2.0/index/index'});" class="binding primary-color border-color">去购物</a>
+        </div>
+        <div class="how-grow-content">
+            <div class="how-grow-content-img how-grow-content-img-color">
+                <img src="__RES__/imgs/promotegrowth/wanshangerenxinxi.png" width="32" height="32">
+            </div>
+            <p class="perfect">评价商品</p>
+            <p class="growth-value">发表一次评价+{$result.evaluate_number.growth}成长值</p>
+            <div class="block"></div>
+            <a href="javascript:main.jump({'url':'/pc2.0/order/order_list.html?status=3'});" class="binding primary-color border-color">去评价</a>
+        </div>
+        <!--<div class="how-grow-content">-->
+            <!--<div class="how-grow-content-img how-grow-content-imgcolor">-->
+                <!--<img src="__RES__/imgs/promotegrowth/wanshangerenxinxi.png" width="32" height="32">-->
+            <!--</div>-->
+            <!--<p class="perfect">分享商品或活动</p>-->
+            <!--<p class="growth-value">将链接分享到其他平台+2...</p>-->
+            <!--<div class="block"></div>-->
+            <!--<a href="" class="binding primary-color border-color">去绑定</a>-->
+        <!--</div>-->
+        <div class="how-grow-content">
+            <div class="how-grow-content-img how-grow-content-imgcolor">
+                <img src="__RES__/imgs/promotegrowth/wanshangerenxinxi.png" width="32" height="32">
+            </div>
+            <p class="perfect">浏览广告</p>
+            <p class="growth-value">查看一条广告+{$result.growth_adv.growth}成长值</p>
+            <div class="block"></div>
+            <a href="javascript:main.jump({'url':'/pc2.0/home/hot_list'});" class="binding primary-color border-color">去浏览</a>
+        </div>
+        <div class="how-grow-content">
+            <div class="how-grow-content-img how-grow-content-imgcolor">
+                <img src="__RES__/imgs/promotegrowth/wanshangerenxinxi.png" width="32" height="32">
+            </div>
+            <p class="perfect">使用余额支付</p>
+            <p class="growth-value">支付1次+{$result.growth_balance.growth}成长值（每日最多{$result.growth_balance.number}</p>
+            <div class="block"></div>
+            <a href="javascript:main.jump({'url':'/pc2.0/order/order_list.html?status=0'});" class="binding primary-color border-color">去支付</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!--会员卡提升结束-->
+
+<!--公共尾部结束-->
+<div class="side-navigation">
+    <div class="side-navigation-view">
+        <div class="shop-vip primary-background-color" onclick="main.jump({'url':'/pc2.0/rank/index'})">
+            <span class="shop-vip-text" >会员</span>
+            <img src="__RES__/imgs/cart/my.png" alt="">
+        </div>
+        <div class="collect" onclick="main.jump({'url':'/pc2.0/cart/index'})">
+            <img src="__RES__/imgs/shophome/gouwuche.png" alt="">
+        </div>
+        <div class="collect" style="top: 453px;" onclick="main.jump({'url':'/pc2.0/goods/collect_goods_list'})">
+            <img src="__RES__/imgs/cart/collect.png" alt="">
+        </div>
+        <!--/template/computer/resource/imgs/shophome/xiaoxi.png-->
+        <div class="collect" style="top: 489px;" onclick="main.jump({'url':'/pc2.0/message/index.html?type=1'})">
+            <img src="__RES__/imgs/shophome/xiaoxi.png" alt="">
+        </div>
+        <!--<div class="qrcode">-->
+            <!--<img src="__RES__/imgs/cart/qrcode.png" alt="">-->
+        <!--</div>-->
+        <div class="top to-top back-top">
+            <img src="__RES__/imgs/cart/top.png" alt="">
+        </div>
+        <div class="question" onclick="main.jump({'url':'/pc2.0/setting/help_center?status=feedback'})">
+            <img src="__RES__/imgs/cart/question.png" alt="">
+        </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    /*置顶*/
+    $('.back-top').click(function () {
+        $("html,body").animate({scrollTop: 0}, 300);
+    })
+    $('.to-top').click(function () {
+        $("html,body").animate({scrollTop: 0}, 300);
+    })
+</script>
+
+{/block}
+
+{block mame="js"}
+<script type="text/javascript">
+
+    //			显示降价通知
+    $('.goods-collection .goods .goods-list .bottom .depreciate').click(function () {
+        var pic = $(this).parents('.goods-list').find('.pic .money').text();
+        $('.depreciate-cover .price').html(pic)
+        $('.depreciate-box').show();
+        $('.depreciate-cover').show();
+    })
+
+    //			关闭降价通知
+    $('.depreciate-cover .right img').click(function () {
+        $('.depreciate-box').hide();
+        $('.depreciate-cover').hide()
+    })
+    //			关闭降价通知
+    $('.depreciate-cover .depreciate-box .sure').click(function () {
+        $('.depreciate-box').hide();
+        $('.depreciate-cover').hide()
+    })
+
+
+    //			显示全选
+    $('.bulk-operation .operation-btn').click(function () {
+        $(this).hide().siblings('.all-check').show()
+        $('.cover').show()
+    })
+    //			关闭全选
+    $('.success').click(function () {
+        $('.bulk-operation .operation-btn').show()
+        $('.all-check').hide()
+        $('.cover').hide()
+        $('.allcheck').removeClass('check').addClass('uncheck')
+        $('.goods-list').each(function () {
+            $(this).removeClass('active').find('input').removeAttr('checked')
+        })
+    })
+
+
+    //			提交
+    $('.disqualification').click(function () {
+        $('.depreciate-cover').show();
+        $('.collect-box').show();
+//
+    })
+    //			确定取消收藏
+    $('.depreciate-cover .collect-box .sure').click(function () {
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide();
+        $('#form').submit()
+    })
+    //			取消
+    $('.depreciate-cover .collect-box .countermand').click(function () {
+        $('.collect-box').hide();
+        $('.depreciate-cover').hide();
+
+    })
+    $('.cover label div').click(function (e) {
+        if ($(this).parents('.goods-list').hasClass('active')) {
+            $(this).parents('.goods-list').removeClass('active')
+        } else {
+            $(this).parents('.goods-list').addClass('active')
+        }
+        e.stopPropagation();
+    })
+
+    //			全选
+    $('.allcheck').click(function () {
+        if ($(this).hasClass('uncheck')) {
+            $(this).removeClass('uncheck').addClass('check')
+            $('.goods-list').each(function () {
+                $(this).addClass('active').find('input').attr('checked', 'checked')
+            })
+        } else {
+            $(this).removeClass('check').addClass('uncheck')
+            $('.goods-list').each(function () {
+                $(this).removeClass('active').find('input').removeAttr('checked')
+            })
+        }
+
+    })
+    $('.endorsementarea-content a').each(function () {
+        var maxwidth = 70;
+        if ($(this).text().length > maxwidth) {
+            $(this).text($(this).text().substring(0, maxwidth));
+            $(this).html($(this).html() + "...");
+        }
+    });
+</script>
+{/block}

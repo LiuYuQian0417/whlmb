@@ -1,0 +1,93 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .inline-input {
+        display: inline-block;
+        width: calc(100% - 86px)
+    }
+
+    .inline-button {
+        display: inline-block;
+    }
+</style>
+<form class="layui-form" action="" method="post">
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>设置二次发票是否承担运费及运费模板、设置发票代码</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!----------------------------------------------------基本设置------------------------------------------------------>
+    <div class="layui-container" style="margin-top: 50px;">
+
+        <!--快递运费-->
+        <div class="layui-row" style="display: flex;align-items: center;">
+            <label class="layui-form-label" style="width:300px;font-size: 14px;line-height:24px;">二次开票的发票邮递运费商家是否承担：</label>
+            <label class="layui-form-label" style="color: #FF6600;flex: 1;text-align: left;width: auto">开通后，商家将包邮发票<a style="margin-left: 50px;">设置快递运费</a></label>
+            <div class="layui-input-block" style="width: 100px;">
+                <input title type="checkbox" name="invoiced_freight" lay-skin="switch"  lay-filter="is_freight" lay-text="开|关"
+                       value="{$item.store_id}"
+                       {if condition="$item['invoiced_freight'] eq 1" }checked{/if}>
+            </div>
+        </div>
+        <!--快递运费-->
+
+        <!--二次开票-->
+        <div class="layui-row" style="display: flex;align-items: center;">
+            <label class="layui-form-label" style="width:300px;font-size: 14px;line-height:24px;">
+                是否允许用户二次以上开票:
+            </label>
+            <label class="layui-form-label" style="color: #FF6600;flex: 1;text-align: left;width: auto">
+                商家可在商品发布页面设置单品分佣比例和分销商等级对应的分佣比例
+            </label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input title type="checkbox" name="invoiced_second_order" lay-skin="switch"  lay-filter="is_second" lay-text="开|关"
+                       value="{$item.store_id}"
+                       {if condition="$item['invoiced_second_order'] eq 1" }checked{/if} >
+            </div>
+        </div>
+        <!--二次开票-->
+
+        <div class="layui-row">
+            <label class="layui-form-label" style="width:300px;font-size: 14px;line-height:24px;">发票代码:</label>
+            <div class="layui-input-inline" style="margin:5px 0 0 15px;">
+                <input type="number" name="invoice_code" value="{$item.invoice_code?:''}" title
+                       datatype="zNum"
+                       nullmsg="请输入发票代码" errormsg="发票代码错误"
+                       autocomplete="off" placeholder="填写发票代码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin:20px 0 0 345px;">
+                <input type="hidden" name="store_id" value="{$item.store_id}">
+                <button class="layui-btn" type="submit" id="submit">立即提交</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{selector:'switch(is_freight)',callback:function (data) {
+            main.ajax({type:'post',url:'/invoice_store/auditing_freight',data:{'id': data.value}})
+        }},{selector: 'switch(is_second)',callback:function (data) {
+            main.ajax({type:'post',url:'/invoice_store/auditing_second_order',data:{'id': data.value}})
+        }}]);
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,148 @@
+{extend name="public/index_header"}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/shophome/shophome.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+<script src="__RES__/js/swiper.min.js"></script>
+<style>
+    body {background: #fff !important;}
+    .back_img{position: relative;display: inline-block;width: 100%;height: 431px;}
+    .back_img .text{position: absolute;width: 100%;height: 100%;top: 0;color: #fff;background-color: rgba(0,0,0,0.5);}
+    .back_img .text .name{width: 100%;text-align: center;font-size: 32px;font-weight: bold;margin: 8% 0 20px 0;}
+    .back_img .text .collect{display: table;margin: 0 auto;padding: 3px 45px;border: 1px solid #fff;border-radius: 25px;line-height: 32px;}
+    .explain_list{width: 1200px;height:460px;margin: 20px auto;overflow: hidden;}
+    .license{width: 48%;float: left;padding: 12px;}
+    .info{width: 1200px;height: 460px;margin: 0 auto}
+    .info_item{width: 48%;float: left;padding: 12px;}
+    .english_txt{font-size: 14px;height: 20px;line-height: 20px;}
+    .chinese_txt{font-size: 18px; font-weight: bold;height: 26px;line-height: 26px;}
+    .chinese_txt .txt{float: left;}
+    .chinese_txt .txt_style{float: left;margin-left: 15px;border-bottom: 1px solid #6e7479;; height: 14px;position: relative;}
+    .chinese_txt .txt_style:before{content:"\25CB";position: absolute;left: -9px;}
+    .icon-img{width: 30px;float: left;margin-right: 10px;}
+    #address_container{height: 100%;}
+    .show-address{width: 200px;background: #fff;position: absolute;z-index: 99;top: 110px;left: 170px;padding: 10px;box-shadow: 0px 0px 5px #bbb;border-radius: 5px;font-size: 12px;}
+    .info p{line-height: 30px;margin-bottom: 15px;}
+    .info p:first-child{margin-top: 25px;}
+</style>
+{/block}
+{block name="content"}
+{include file="public/store_right" /}
+<div class="shop-classification-top">
+    <div class="shop-detail">
+        <div class="shop-box-tit-center">
+            <div class="title-right">
+                <a class="shop-name" href="javascript:void(0);">{$info.store_name}
+                    <span class="pf primary-color">{$info.store_percent.self_score}</span>
+                    <img src="__RES__/imgs/goodsdetail/zz.png" alt="">
+                    {if condition="config('user.one_more') eq 1"}
+                    <span class="mark primary-color border-color">{if $info.shop == 0}自营{else}{if $info.type==1}个人{else/}企业{/if}{/if}</span>
+                    {/if}
+                </a>
+                <a href="javascript:main.jump({'url':'/pc2.0/store/view?store_id={$info.store_id}'});">
+                    <img src="__RES__/imgs/my/shop.png" alt="">
+                    <span>店铺详情</span>
+                </a>
+                {if INI_CONFIG['IS_CUSTOMER'] ==1}
+                <a href="javascript:void(0);" onclick="jump_service({store_id:'{$info.store_id}',diversion_id:'1002'})">
+                    <img src="__RES__/imgs/goodsdetail/shopinfo.png" alt="">
+                    联系客服
+                </a>
+                {/if}
+                {notempty name='$info.state'}
+                <a href="javascript:void(0);" onclick="goods_collect_store(this,{'store_id':'{$info.store_id}','type':'2'})">
+                    <img src="__RES__/imgs/start_on.png" alt="">
+                    <span>取消关注</span>
+                </a>
+                {else/}
+                <a href="javascript:void(0);" onclick="goods_collect_store(this,{'store_id':'{$info.store_id}','type':'1'})">
+                    <img src="__RES__/imgs/start_off.png" alt="">
+                    <span>关注店铺</span>
+                </a>
+                {/notempty}
+            </div>
+        </div>
+    </div>
+    <div class="top-img">
+        <img src="{$info.pc_head_back_image}" alt="">
+    </div>
+    <div class="back_img">
+        <img src="{$info.pc_back_image}" style="width: 100%;height: 431px;" alt="">
+        <div class="text">
+            <div class="name">{$info.store_name}</div>
+            <div class="collect">
+                <img src="__RES__/imgs/ysc.png" style="margin-right: 8px;" alt="">
+                <span>{$info.collect}人关注</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--菜单-->
+<div class="explain_list">
+    <div class="license">
+        <div style="color: #6e7479;margin-bottom: 15px;">
+            <div class="english_txt">BUSINESS LICENSE</div>
+            <div class="chinese_txt">
+                <div class="txt">营业执照</div>
+                <div class="txt_style" style="width: 488px;"></div>
+            </div>
+        </div>
+        <div>
+            <img src="{$info.file1}" onerror="this.src='/template/computer/resource/imgs/zwt.png'" style="width: 100%;height: 375px;" alt="营业执照">
+        </div>
+    </div>
+    <div class="license">
+        <div style="color: #6e7479;margin-bottom: 15px;">
+            <div class="english_txt">ADMINISTRATIVE LICENSE</div>
+            <div class="chinese_txt" style="">
+                <div class="txt">行政许可证</div>
+                <div class="txt_style" style="width: 470px;"></div>
+            </div>
+        </div>
+        <div>
+            <img src="{$info.licence_file}" onerror="this.src='/template/computer/resource/imgs/zwt.png'" style="width: 100%;height: 375px;" alt="行政许可证">
+        </div>
+    </div>
+</div>
+<div class="info">
+    <div style="margin-bottom: 15px;color: #6e7479;">
+        <div class="english_txt">MORE MESSAGE</div>
+        <div class="chinese_txt">
+            <div class="txt">更多信息</div>
+            <div class="txt_style" style="width: 1112px"></div>
+        </div>
+    </div>
+    <div class="info_item" style="height: 400px;background-color: #fff3ee;">
+        <p><img class="icon-img" src="__RES__/imgs/store/1.png" alt="" />店铺地址：{$info.province}{$info.city}{$info.area}{$info.address}</p>
+        <p><img class="icon-img" src="__RES__/imgs/store/2.png" alt="" />服务电话：{$info.phone|default='未设置'}</p>
+        <p><img class="icon-img" src="__RES__/imgs/store/3.png" alt="" />开店时间：{$info.create_time}</p>
+        <p><img class="icon-img" src="__RES__/imgs/store/4.png" alt="" />店铺简介：{$info.describe}</p>
+        <p style="float: left"><img class="icon-img" src="__RES__/imgs/store/5.png" alt="" />店铺二维码：</p>
+        <img src="{$info['qr_code']}" style="width: 100px;height: 100px;"  alt=""/>
+    </div>
+    <div class="info_item" style="padding: 0;height: 424px;width: 600px">
+        <div id="address_container">
+            <div class="show-address"></div>
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script src="//webapi.amap.com/ui/1.0/main.js"></script>
+<script>
+    var address_map = new AMap.Map('address_container', {
+        resizeEnable: true,
+        zoom: 20,
+    });
+    address_map.setZoomAndCenter(20, ['126.639442', '45.774208']);
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',//设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
+            map: address_map//依赖地图对象
+        });
+        positionPicker.on('success', function (positionResult) {
+            $('.show-address').text(positionResult.address);
+        });
+        positionPicker.start();
+    });
+</script>
+{/block}

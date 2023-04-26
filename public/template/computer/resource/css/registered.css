@@ -1,0 +1,310 @@
+.top {
+  background: #fff;
+  height: 110px;
+  border-bottom: 1px solid #eee;
+}
+.top .top-center {
+  width: 1200px;
+  margin: 0px auto;
+  line-height: 110px;
+}
+.top .top-center img {
+  width: 140px;
+  position: relative;
+  top: 10px;
+  margin-right: 10px;
+}
+.top .top-center span {
+  color: #8C8C8C;
+  font-size: 20px;
+}
+.top .top-center .top-right {
+  float: right;
+}
+.mark {
+  font-size: 14px;
+  margin-top: 3px;
+  color: #666666;
+}
+.registered-box {
+  border-bottom: 1px solid #EEEEEE;
+  margin-top: 50px;
+  height: 565px;
+}
+.registered-box .registered-box-center {
+  width: 400px;
+  margin: 0px auto;
+  height: 565px;
+}
+.registered-box .registered-box-center .progress {
+  overflow: hidden;
+}
+.registered-box .registered-box-center .progress .step {
+  float: left;
+  text-align: center;
+  font-size: 12px;
+}
+.registered-box .registered-box-center .progress .step .progress-box {
+  float: left;
+}
+.registered-box .registered-box-center .progress .step .bor {
+  float: left;
+  position: relative;
+  top: 6px;
+}
+.registered-box .registered-box-center .progress .step .bor span {
+  float: left;
+  width: 3px;
+  height: 3px;
+  background: #CFCFCF;
+  border-radius: 50%;
+  margin-right: 7px;
+  position: relative;
+  top: 3px;
+}
+.registered-box .registered-box-center .progress .step .bor .triangle {
+  background: none !important;
+  top: 0px;
+  margin-right: 3px;
+}
+.registered-box .registered-box-center .progress .step .bor .triangle .color {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 0px;
+  border: 4.5px solid transparent;
+  border-left: 4.5px solid #CFCFCF;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+.registered-box .registered-box-center .progress .step .bor .triangle .withe {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 0px;
+  border: 4.5px solid transparent;
+  border-left: 4.5px solid #fff;
+  position: absolute;
+  top: 0px;
+  left: -1px;
+}
+.registered-box .registered-box-center .progress .step .first {
+  display: inline-block;
+  width: 23px;
+  height: 23px;
+  box-sizing: border-box;
+  border: 1px solid #CFCFCF;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 23px;
+  color: #CFCFCF;
+  margin-bottom: 14px;
+}
+.registered-box .registered-box-center .progress .step .first i {
+  font-style: initial;
+}
+.registered-box .registered-box-center .progress .step .bg {
+  background: url("../imgs/registerd/dg.png") no-repeat center;
+}
+.registered-box .registered-box-center .progress .step p {
+  color: #969696;
+}
+.registered-box .registered-box-center .progress .active .progress-box .first {
+  color: #fff;
+}
+.registered-box .registered-box-center .input-group {
+  padding-top: 20px;
+}
+.registered-box .registered-box-center .input-box {
+  width: 398px;
+  height: 50px;
+  border: 1px solid #DDDDDD;
+  box-sizing: border-box;
+  margin-top: 35px;
+}
+.registered-box .registered-box-center .input-box .area-code {
+  float: left;
+  width: 107px;
+  height: 48px;
+  border-right: 1px solid #DDDDDD;
+  position: relative;
+}
+/*.registered-box .registered-box-center .input-box .area-code:before {*/
+/*  content: '';*/
+/*  display: block;*/
+/*  width: 0px;*/
+/*  height: 0px;*/
+/*  border: 4px solid transparent;*/
+/*  border-top: 4px solid #727272;*/
+/*  position: absolute;*/
+/*  top: 22px;*/
+/*  right: 10px;*/
+/*}*/
+/*.registered-box .registered-box-center .input-box .area-code:after {*/
+/*  content: '';*/
+/*  display: block;*/
+/*  width: 0px;*/
+/*  height: 0px;*/
+/*  border: 4px solid transparent;*/
+/*  border-top: 4px solid #fff;*/
+/*  position: absolute;*/
+/*  top: 21px;*/
+/*  right: 10px;*/
+/*}*/
+.registered-box .registered-box-center .input-box .area-code a {
+  display: block;
+  width: 107px;
+  height: 48px;
+  font-size: 12px;
+  color: #666666;
+  text-align: center;
+  line-height: 48px;
+}
+.registered-box .registered-box-center .input-box .tit {
+  float: left;
+  width: 107px;
+  height: 48px;
+  position: relative;
+}
+.registered-box .registered-box-center .input-box .tit a {
+  display: block;
+  width: 107px;
+  height: 48px;
+  font-size: 12px;
+  color: #666666;
+  text-align: center;
+  line-height: 48px;
+}
+.registered-box .registered-box-center .input-box input {
+  width: 288px;
+  height: 48px;
+  float: left;
+  border: none;
+  text-indent: 12px;
+  outline: none;
+}
+.registered-box .registered-box-center .input-box .pass {
+  width: 248px;
+}
+.registered-box .registered-box-center .input-box .get-code {
+  float: left;
+  width: 107px;
+  height: 48px;
+  border-left: 1px solid #DDDDDD;
+  background: #F4F5F6;
+}
+.registered-box .registered-box-center .input-box .get-code a {
+  display: block;
+  width: 107px;
+  height: 48px;
+  font-size: 12px;
+  color: #666666;
+  text-align: center;
+  line-height: 48px;
+}
+.registered-box .registered-box-center .input-box img {
+  position: relative;
+  top: 15px;
+  left: 5px;
+  cursor: pointer;
+}
+.registered-box .registered-box-center .gift-bag {
+  display: block;
+  font-size: 12px;
+  margin-top: 8px;
+  color: #666666;
+  cursor: pointer;
+}
+.registered-box .btn {
+  display: block;
+  width: 398px;
+  height: 52px;
+  color: #fff;
+  text-align: center;
+  line-height: 52px;
+  font-size: 16px;
+  margin-top: 32px;
+  border: none;
+  cursor: pointer;
+}
+.registered-box .bottom {
+  overflow: hidden;
+  margin-top: 35px;
+}
+.registered-box .bottom .agreement {
+  float: left;
+  font-size: 12px;
+  line-height: 20px;
+}
+.registered-box .bottom .agreement label {
+  display: block;
+  float: left;
+  color: #666666;
+  cursor: pointer;
+}
+.registered-box .bottom .agreement label img {
+  display: none;
+}
+.registered-box .bottom .agreement .checked .bor {
+  display: none;
+}
+.registered-box .bottom .agreement .checked img {
+  display: block;
+}
+.registered-box .bottom .agreement a {
+  display: block;
+  float: left;
+  color: #666666;
+  cursor: pointer;
+}
+.registered-box .bottom .agreement .bor {
+  display: inline-block;
+  float: left;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #B2B2B2;
+  margin-right: 5px;
+}
+.registered-box .bottom .agreement img {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin-right: 5px;
+}
+.registered-box .bottom .agreement a {
+  float: left;
+  margin-left: 5px;
+}
+.registered-box .bottom .service {
+  float: right;
+  font-size: 12px;
+  line-height: 20px;
+}
+.registered-box .bottom .service img {
+  float: left;
+  margin-right: 5px;
+}
+.registered-box .success {
+  text-align: center;
+}
+.registered-box .success .tit {
+  font-size: 20px;
+  color: #666666 ;
+  margin-bottom: 10px;
+}
+.registered-box .success .registered-success {
+  font-size: 14px;
+  color: #969696;
+  margin-bottom: 60px;
+}
+.registered-box .success .btn {
+  display: block;
+  width: 168px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  margin: 0px auto;
+  border-radius: 20px;
+  margin-bottom: 50px;
+}

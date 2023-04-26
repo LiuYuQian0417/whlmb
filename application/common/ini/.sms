@@ -1,0 +1,15 @@
+[base]
+type=1
+reg=1
+changePrice=0
+underOrder=1
+pay=0
+deliver=0
+[qCloud]
+appId=
+appKey=
+sign=
+[aLi]
+appId=
+appKey=
+sign=

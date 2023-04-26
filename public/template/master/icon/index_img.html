@@ -1,0 +1,91 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>展示了商城首页图标列表。</span></li>
+            <li><span>首页最多可展示15个图标，如果已设置图标不足15个则从商品分类中补齐。</span></li>
+            <li><span>系统内置默认功能模块不可删除。</span></li>
+            <li><span>如果在商城设置开关设置中关闭对应共能则此处不展示。</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('icon/img_create')">
+                <div class="fbutton">
+                    <div class="add" title="添加图标"><span><i class="fa fa-plus"></i> 添加图标</span></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>图标名字</th>
+            <th>图标</th>
+            <th>排序</th>
+            <th>是否显示</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {volist name="$data" id="item"}
+        <tr>
+            <td>{$item.title}</td>
+            <td>
+                <img src="{$item.img|default=''}" alt="1" title="1" class="thumb-img"
+                     style="max-width: 60px;" onerror="this.src='/template/master/resource/image/common/imageError.png'" />
+            </td>
+            <td>
+                <input type="text" id="sort{$item.index_icon_id}" value="{$item.sort}" class="text_center" oninput="main.triggerText('{$item.index_icon_id}','sort','/icon/store_update')">
+            </td>
+            <td>
+                <input type="checkbox" name="is_show" lay-skin="switch"
+                       lay-filter="is_show"
+                       lay-text="开|关"
+                       value="{$item.index_icon_id}"
+                       {eq name="$item.is_show" value="1" }checked{/eq}>
+            </td>
+            <td>
+                <a class="btn_edit" onclick="main.jumpFour('icon/img_edit?id={$item.index_icon_id}')"><i class="fa fa-edit"></i>编辑</a>
+                {if $item.type==2}<a class="btn_trash" onclick="main.destroy('/icon/img_delete','{$item.index_icon_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>{/if}
+            </td>
+        </tr>
+        </tbody>
+        {/volist}
+    </table>
+</div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form([{selector:'switch(is_show)',callback:function (data) {
+            main.ajax({data:{'index_icon_id': data.value},url:'/icon/img_is_show',callback:main.callback})
+        }}]);
+</script>
+{/block}

@@ -1,0 +1,146 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、用户在商城通过积分兑换或换购的订单；</li>
+                <li>2、商品：创建积分商品后，将展示在积分商城中，不在普通商品分类中展示</li>
+                <li>3、分类：此分类为积分商品的分类，设置开启后将展示在积分商城中</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('integral_order/index')">订单</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('integral/index')">商品</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('integral_classify/index')">分类</a></li>
+    </ul>
+</div>
+<form class="layui-form" action="">
+    <!--导航-->
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('integral/create')">
+                <div class="fbutton">
+                    <div class="add" title="添加商品"><span><i class="fa fa-plus"></i> 添加商品</span></div>
+                </div>
+            </a>
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据"  onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+                <a href="javascript:void(0);" onclick="reloadSelf({flag:0})" style="display: flex;align-items: flex-end">
+                    <img style="width: 20px;height: 20px;margin-left: 10px;" src="__RES__/image/common/warning.png" alt=""><span style="margin-left: 10px">预警商品数量：{$warn_count}</span>
+                </a>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select">
+                    <select name="type" class="cite ps-container">
+                        <option value="-1">兑换类型</option>
+                        <option value="0" {eq name=":input('type')" value="0" }selected{/eq}>积分兑换</option>
+                        <option value="1" {eq name=":input('type')" value="1" }selected{/eq}>积分换购</option>
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入积分商品名称"
+                           value="{:input('keyword')}"
+                           autocomplete="off">
+                    <!--<input type="submit" class="btn" name="secrch_btn" value="">-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>积分商品名称</th>
+            <th>积分商品分类</th>
+            <th>兑换类型</th>
+            <th>所需积分</th>
+            <th>所需金额</th>
+            <th>库存数量</th>
+            <th>累计兑换数量</th>
+            <th>创建时间</th>
+            <th width="150">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td><input type="checkbox" value="{$item.integral_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>{$item.integral_name}</td>
+            <td>{$item.IntegralClassifyIdText}</td>
+            <td>{eq name='$item.type' value='0'}积分兑换{else/}积分换购{/eq}</td>
+            <td>{$item.integral}</td>
+            <td>{$item.price}</td>
+            <td>{$item.integral_number}
+                {if condition="$item.integral_number elt $item.warn_number"}
+                <img style="width: 20px;height: 20px;margin-left: 10px;position: absolute;" src="__RES__/image/common/warning.png" alt="">
+                {/if}
+            </td>
+            <td>{$item.add_number}</td>
+            <td>{$item.create_time}</td>
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('integral/edit?integral_id={$item.integral_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/integral/destroy','{$item.integral_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/integral/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{selector:'switch(is_gift)',callback:function (data) {
+        main.ajax({type:'post',url:'/coupon/auditing',data:{'id': data.value},callback:main.callback})
+    }}]);
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

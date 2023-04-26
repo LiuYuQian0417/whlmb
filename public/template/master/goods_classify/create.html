@@ -1,0 +1,449 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css"  rel="stylesheet" type="text/css" />
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<style>
+    .remarks {
+        display: block;
+        width: 445px;
+        margin: 5px 0;
+        color: #767676;
+    }
+    .layui-btn-new {
+        display: inline-block;
+        height: 30px;
+        line-height: 30px;
+        padding: 0 12px;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        background-color: #cc3300;
+        float: left;
+    }
+    .layui-btn-new:hover img{
+        display: block !important;
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>1、添加商品一级分类；</span></li>
+                <li><span>2、可设置一级分类广告图片及广告图片等信息；</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 分类名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" maxlength="6" autocomplete="off" placeholder="请输入分类名称"
+                       datatype="*"
+                       value="{$item.title|default=''}"
+                       nullmsg="请输入分类名称" errormsg="请输入分类名称"
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+            <!--<div class="layui-inline">-->
+                <!--<label class="layui-form-label">上级分类</label>-->
+                <!--<div class="layui-input-block">-->
+                    <!--<select name="parent_id" lay-search="">-->
+                        <!--<option value="0" {eq name="item.parent_id|default=''" value="0" }selected{/eq}>顶级分类</option>-->
+                        <!--{volist name='classify_list' id='classify_list'}-->
+                        <!--<option-->
+                                <!--{eq name=":input('get.classify_id')" value="$classify_list.goods_classify_id" }selected{/eq}-->
+                                <!--{eq name="item.parent_id|default=''" value="$classify_list.goods_classify_id" }selected{/eq}-->
+                                <!--value="{$classify_list.goods_classify_id}"-->
+                        <!--&gt;{for start="1" end="$classify_list.level" }　{/for}{$classify_list.title}</option>-->
+                        <!--{/volist}-->
+                    <!--</select>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">移动端图标</label>
+            <div class="layui-input-block">
+                <div
+                    class="imageUpload"
+                    default="{$item.web_file|default=''}"
+                    width="110"
+                    height="110"
+                    file-mime="image/gif,image/jpeg,image/png" 文件类型
+                    name="web_file"
+                    dir="goods_classify/file"
+                    value="{$item.web_file_data|default=''}"
+                ></div>
+                <div style="display: flex;">
+                    <span class="remarks" style="float: left">上传分类图标，尺寸要求110*110，如果不上传分类图片，当系统设置只展示一级分类时，会影响展示效果</span>
+                    <div class="layui-btn-new"  style="float: left;margin-left: 20px;position: relative;">显示预览
+
+                        <img src="__RES__/image/hover/u11134.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -160px;left: 92px;z-index: 999;display: none;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">移动端分类顶部展示图片</label>
+            <div class="layui-input-block">
+                <div class="layui-btn" onclick="advImage({title:'分类顶部广告设置',btn:[]},{$item.adv_id|default=0},1)">设置分类顶部图片</div>
+                <div style="display: flex">
+                    <span class="remarks" style="float: left">上传分类顶部展示图片，尺寸要求540*160，如果不上传分类顶部图片，分类展示时会影响展示效果</span>
+                    <div class="layui-btn-new"  style="float: left;margin-left: 20px;position: relative;">显示预览
+
+                        <img src="__RES__/image/hover/u11171.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -160px;left: 90px;z-index: 999;display: none;">
+                    </div>
+                </div>
+                <input type="hidden" name="a[adv_position_id]" value="{$adv.adv_position_id|default=''}" id="a_adv_position_id">
+                <input type="hidden" name="a[title]" value="{$adv.title|default=''}" id="a_title">
+                <input type="hidden" name="a[file]" value="{$adv.file|default=''}" id="a_file">
+                <input type="hidden" name="a[content]" value="{$adv.content|default=''}" id="a_content">
+                <input type="hidden" name="a[status]" value="{$adv.status|default=''}" id="a_status">
+                <input type="hidden" name="a[sort]" value="{$adv.sort|default=''}" id="a_sort">
+                <input type="hidden" name="a[start_time]" value="{$adv.start_time|default=''}" id="a_start_time">
+                <input type="hidden" name="a[end_time]" value="{$adv.end_time|default=''}" id="a_end_time">
+                <input type="hidden" name="a[client]" value="{$adv.client|default=''}" id="a_client">
+                <input type="hidden" name="a[type]" value="{$adv.type|default=''}" id="a_type">
+                <input type="hidden" name="a[adv_id]" value="{$adv.adv_id|default=''}" id="a_adv_id">
+                <input type="hidden" name="a[file_data]" value="{$adv.file_data|default=''}" id="a_file_data">
+                <input type="hidden" name="classify_adv_id" value="{$adv.adv_id|default=''}" id="classify_adv_id">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sort" value="{$item.sort|default='100'}" maxlength="5" autocomplete="off" placeholder="请输入分类名称"
+                       class="layui-input">
+                <span class="remarks">数值越大，排序越靠前</span>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">关键字</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<input type="text" name="keyword" value="{$item.keyword|default=''}" maxlength="50" autocomplete="off" placeholder="请输入关键字"-->
+                       <!--class="layui-input">-->
+                <!--<span class="remarks">最多可设置5个关键，每个关键字用英文逗号分开","，例如：户外,帽衫,防寒</span>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">描述</label>
+            <div class="layui-input-block">
+                <textarea placeholder="请输入内容" name="describe" maxlength="100" class="layui-textarea">{$item.describe|default=''}</textarea>
+            </div>
+        </div>
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">PC端图标</label>-->
+            <!--<div class="layui-input-block">-->
+                <!--<div>-->
+                    <!--<div class="uploader white left">-->
+                        <!--<input type="text" class="filename" id="localPath" value="{$item.file|default=''}" readonly/>-->
+                        <!--<input type="button" class="button" value="上传..."/>-->
+                        <!--<input type="file" id="up_img" name="image" />-->
+                    <!--</div>-->
+                    <!--<div id="imgPrev" style="float: left;margin: 10px 0 0 10px;">-->
+                        <!--<img id="imgShow" src="{$item.file|default=''}" height="30" onerror="this.src='__RES__/image/common/imageError.png'"  alt="PC端图标"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">显示状态</label>
+            <div class="layui-input-inline">
+                <input type="radio" name="status" value="1" title="是"
+                       {eq name="item.status|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="status" value="0" title="否"
+                       {eq name="item.status|default=''" value="0" }checked{/eq}
+                >
+                <span class="remarks">选择否，商城分类中则无法显示该分类</span>
+            </div>
+        </div>
+
+        {if $Think.INI_CONFIG['IS_CLASSIFY_RECOMMEND']}
+            <div class="layui-form-item">
+                <label class="layui-form-label">移动端首页推荐</label>
+                <div class="layui-input-block" onclick="showunit()">
+                    <input type="radio" name="is_recommend" value="1" title="是"
+                           {eq name="item.is_recommend|default='1'" value="1" }checked{/eq}
+                    >
+                    <input type="radio" name="is_recommend" value="0" title="否"
+                           {eq name="item.is_recommend|default='1'" value="0" }checked{/eq}
+                    >
+                    <div class="layui-btn" onclick="advImage({title:'首页分类广告推荐设置',btn:[]},{$item.classify_adv_id|default=0},2)" id="classify_adv"
+                         {eq name="item.is_recommend|default='1'" value="0" } style="display: none" {/eq}
+                    >首页分类广告推荐设置</div>
+                <div style="display: flex">
+                    <span class="remarks"  >选择是，商城首页将显示该分类，建议您点击“首页分类广告设置”按钮，完成首页分类广告设置后再进行首页推荐；</span>
+
+                <div class="layui-btn-new"  style="margin-left: 20px;position: relative;">显示预览
+
+                    <img src="__RES__/image/hover/u11160.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -480px;left: 90px;z-index: 999;display: none;">
+                </div>
+                </div>
+                    <input type="hidden" name="b[adv_position_id]" value="{$classify_adv.adv_position_id|default=''}" id="b_adv_position_id">
+                    <input type="hidden" name="b[title]" value="{$classify_adv.title|default=''}" id="b_title">
+                    <input type="hidden" name="b[file]" value="{$classify_adv.file|default=''}" id="b_file">
+                    <input type="hidden" name="b[content]" value="{$classify_adv.content|default=''}" id="b_content">
+                    <input type="hidden" name="b[status]" value="{$classify_adv.status|default=''}" id="b_status">
+                    <input type="hidden" name="b[sort]" value="{$classify_adv.sort|default=''}" id="b_sort">
+                    <input type="hidden" name="b[start_time]" value="{$classify_adv.start_time|default=''}" id="b_start_time">
+                    <input type="hidden" name="b[end_time]" value="{$classify_adv.end_time|default=''}" id="b_end_time">
+                    <input type="hidden" name="b[client]" value="{$classify_adv.client|default=''}" id="b_client">
+                    <input type="hidden" name="b[type]" value="{$classify_adv.type|default=''}" id="b_type">
+                    <input type="hidden" name="b[adv_id]" value="{$classify_adv.adv_id|default=''}" id="b_adv_id">
+                    <input type="hidden" name="b[file_data]" value="{$classify_adv.file_data|default=''}" id="b_file_data">
+                    <input type="hidden" name="adv_id" value="{$classify_adv.adv_id|default=''}" id="adv_id">
+                </div>
+            </div>
+        {/if}
+
+
+
+{eq name="$pc" value="1"}
+        <div class="layui-form-item">
+            <label class="layui-form-label">电脑端首页推荐</label>
+            <div class="layui-input-block" onclick="pcShowunit()">
+                <input type="radio" name="pc_is_recommend" value="1" title="是"
+                       {eq name="item.pc_is_recommend|default='1'" value="1" }checked{/eq}
+                >
+                <input type="radio" name="pc_is_recommend" value="0" title="否"
+                       {eq name="item.pc_is_recommend|default='1'" value="0" }checked{/eq}
+                >
+                <div class="layui-btn" onclick="advImage({title:'电脑端首页分类广告推荐设置',btn:[]},{$item.pc_adv_id|default=0},3)" id="pc_adv"
+                     {eq name="item.pc_is_recommend|default='1'" value="0" } style="display: none" {/eq}
+                >电脑端首页分类广告推荐设置</div>
+                <div style="display: flex">
+                    <span class="remarks"  >选择是，商城首页将显示该分类，建议您点击“首页分类广告设置”按钮，完成首页分类广告设置后再进行首页推荐；</span>
+
+                    <div class="layui-btn-new"  style="margin-left: 20px;position: relative;">显示预览
+
+                        <img src="__RES__/image/hover/u11180.png" alt="" style="width: 339px;height: 632px; position: absolute;top: -480px;left: 90px;z-index: 999;display: none;">
+                    </div>
+                </div>
+                <input type="hidden" name="c[adv_position_id]" value="{$pc_advArr.adv_position_id|default=''}" id="c_adv_position_id">
+                <input type="hidden" name="c[title]" value="{$pc_advArr.title|default=''}" id="c_title">
+                <input type="hidden" name="c[file]" value="{$pc_advArr.file|default=''}" id="c_file">
+                <input type="hidden" name="c[content]" value="{$pc_advArr.content|default=''}" id="c_content">
+                <input type="hidden" name="c[status]" value="{$pc_advArr.status|default=''}" id="c_status">
+                <input type="hidden" name="c[sort]" value="{$pc_advArr.sort|default=''}" id="c_sort">
+                <input type="hidden" name="c[start_time]" value="{$pc_advArr.start_time|default=''}" id="c_start_time">
+                <input type="hidden" name="c[end_time]" value="{$pc_advArr.end_time|default=''}" id="c_end_time">
+                <input type="hidden" name="c[client]" value="{$pc_advArr.client|default=''}" id="c_client">
+                <input type="hidden" name="c[type]" value="{$pc_advArr.type|default=''}" id="c_type">
+                <input type="hidden" name="c[adv_id]" value="{$pc_advArr.adv_id|default=''}" id="c_adv_id">
+                <input type="hidden" name="c[file_data]" value="{$pc_advArr.file_data|default=''}" id="c_file_data">
+                <input type="hidden" name="pc_adv_id" value="{$pc_advArr.adv_id|default=''}" id="pc_adv_id">
+            </div>
+        </div>
+{else/}
+<input type="hidden" name="c[adv_position_id]" value="{$pc_advArr.adv_position_id|default=''}" id="c_adv_position_id">
+<input type="hidden" name="c[title]" value="{$pc_advArr.title|default=''}" id="c_title">
+<input type="hidden" name="c[file]" value="{$pc_advArr.file|default=''}" id="c_file">
+<input type="hidden" name="c[content]" value="{$pc_advArr.content|default=''}" id="c_content">
+<input type="hidden" name="c[status]" value="{$pc_advArr.status|default=''}" id="c_status">
+<input type="hidden" name="c[sort]" value="{$pc_advArr.sort|default=''}" id="c_sort">
+<input type="hidden" name="c[start_time]" value="{$pc_advArr.start_time|default=''}" id="c_start_time">
+<input type="hidden" name="c[end_time]" value="{$pc_advArr.end_time|default=''}" id="c_end_time">
+<input type="hidden" name="c[client]" value="{$pc_advArr.client|default=''}" id="c_client">
+<input type="hidden" name="c[type]" value="{$pc_advArr.type|default=''}" id="c_type">
+<input type="hidden" name="c[adv_id]" value="{$pc_advArr.adv_id|default=''}" id="c_adv_id">
+<input type="hidden" name="c[file_data]" value="{$pc_advArr.file_data|default=''}" id="c_file_data">
+<input type="hidden" name="pc_adv_id" value="{$pc_advArr.adv_id|default=''}" id="pc_adv_id">
+{/eq}
+
+
+        <!--<div class="layui-form-item">-->
+            <!--<label class="layui-form-label">分类有效时间</label>-->
+            <!--<div class="layui-input-inline">-->
+                <!--<input title="分类有效时间" name="date" type="text" class="layui-input" id="date" readonly placeholder="分类有效时间"-->
+                       <!--{present name="$item.start_time"}-->
+                       <!--{if condition="($item.start_time eq '') and ($item.end_time eq '')"}-->
+                       <!--value=""-->
+                       <!--{else/}-->
+                        <!--value="{$item.start_time|default=''} - {$item.end_time|default=''}"-->
+                        <!--{/if}-->
+                        <!--{/present}-->
+                        <!--&gt;-->
+                <!--<span class="remarks">不填写代表永久有效</span>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <a type="reset" class="layui-btn layui-btn-primary" href="/goods_classify/index">返回</a>
+                <input type="hidden" name="parent_id" value="0">
+                <input type="hidden" name="goods_classify_id" value="{$item.goods_classify_id|default=''}">
+                <button class="layui-btn" type="submit" id="submit">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#date',
+        type: 'datetime',
+        range: true,
+    }]);
+    function showunit() {
+        var get_value = $("input[name='is_recommend']:checked").val();
+        var classify_adv_id = $("input[name='classify_adv_id']").val();
+        if (get_value != 1) {
+            $('#classify_adv').hide()
+            if (classify_adv_id == '') {
+                $('#classify_adv').parent().find("input[type='hidden']").val('');
+            }
+        } else {
+            $('#classify_adv').show();
+        }
+    }
+    function pcShowunit() {
+        var get_value = $("input[name='pc_is_recommend']:checked").val();
+        var pc_adv_id = $("input[name='pc_adv_id']").val();
+        if (get_value != 1) {
+            $('#pc_adv').hide()
+            if (pc_adv_id == '') {
+                $('#pc_adv').parent().find("input[type='hidden']").val('');
+            }
+        } else {
+            $('#pc_adv').show();
+        }
+    }
+
+    function advImage(obj,id,flag) {
+        var a_adv_position_id = $("input[id='a_adv_position_id']").val();
+        var a_title = $("input[id='a_title']").val();
+        var a_file = $("input[id='a_file']").val();
+        var a_content = $("input[id='a_content']").val();
+        var a_start_time = $("input[id='a_start_time']").val();
+        var a_end_time = $("input[id='a_end_time']").val();
+        var a_sort = $("input[id='a_sort']").val();
+        var a_client = $("input[id='a_client']").val();
+        var a_type = $("input[id='a_type']").val();
+        var a_status = $('input:radio[id="a_status"]:checked').val();
+        var a_file_data = $('input[id="a_file_data"]').val();
+        var b_adv_position_id = $("input[id='b_adv_position_id']").val();
+        var b_title = $("input[id='b_title']").val();
+        var b_file = $("input[id='b_file']").val();
+        var b_content = $("input[id='b_content']").val();
+        var b_start_time = $("input[id='b_start_time']").val();
+        var b_end_time = $("input[id='b_end_time']").val();
+        var b_sort = $("input[id='b_sort']").val();
+        var b_client = $("input[id='b_client']").val();
+        var b_type = $("input[id='b_type']").val();
+        var b_status = $('input:radio[id="b_status"]:checked').val();
+        var b_file_data = $('input[id="b_file_data"]').val();
+        var c_adv_position_id = $("input[id='c_adv_position_id']").val();
+        var c_title = $("input[id='c_title']").val();
+        var c_file = $("input[id='c_file']").val();
+        var c_content = $("input[id='c_content']").val();
+        var c_start_time = $("input[id='c_start_time']").val();
+        var c_end_time = $("input[id='c_end_time']").val();
+        var c_sort = $("input[id='c_sort']").val();
+        var c_client = $("input[id='c_client']").val();
+        var c_type = $("input[id='c_type']").val();
+        var c_status = $('input:radio[id="c_status"]:checked').val();
+        var c_file_data = $('input[id="c_file_data"]').val();
+        var a = {
+            a_adv_position_id: a_adv_position_id,
+            'a_title': a_title,
+            'a_file': a_file,
+            'a_content': a_content,
+            'a_start_time': a_start_time,
+            'a_end_time': a_end_time,
+            'a_sort': a_sort,
+            a_client: a_client,
+            a_type: a_type,
+            a_status: a_status,
+            a_file_data: a_file_data
+        };
+        var b = {
+            b_adv_position_id: b_adv_position_id,
+            'b_title': b_title,
+            'b_file': b_file,
+            'b_content': b_content,
+            'b_start_time': b_start_time,
+            'b_end_time': b_end_time,
+            'b_sort': b_sort,
+            b_client: b_client,
+            b_type: b_type,
+            b_status: b_status,
+            b_file_data: b_file_data,
+        };
+        var c = {
+            c_adv_position_id: c_adv_position_id,
+            'c_title': c_title,
+            'c_file': c_file,
+            'c_content': c_content,
+            'c_start_time': c_start_time,
+            'c_end_time': c_end_time,
+            'c_sort': c_sort,
+            c_client: c_client,
+            c_type: c_type,
+            c_status: c_status,
+            c_file_data: c_file_data,
+        };
+        function queryStringfy(obj) {
+            let keys = Object.keys(obj);
+            let str = '';
+            keys.forEach(k => {
+                if (obj[k]) {
+                    str += '&'+k+'='+obj[k];
+                }
+            });
+            return str.slice(1);
+        }
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.5,
+            shadeClose: false,
+            area: ['65%', '750px'],
+            btn: obj.btn,
+            content: '/goods_classify/adv_create?adv_id=' + id + '&flag=' + flag + '&' + queryStringfy(a) + '&' + queryStringfy(b) + '&' + queryStringfy(c),
+            cancel: function(index, layero){
+                if(confirm('确定信息已保存并关闭吗')){ //只有当点击confirm框的确定时，该层才会关闭
+                    layer.close(index)
+                }
+                return false;
+            }
+        });
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

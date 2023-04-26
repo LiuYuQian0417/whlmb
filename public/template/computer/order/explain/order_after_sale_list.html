@@ -1,0 +1,79 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/Indent/RefundAfterSale.css">
+{/block}
+
+{block name="content"}
+<!--我的页面公共头部结束-->
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+
+
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div class="title">
+            退款/售后
+        </div>
+        <div class="index-right-box">
+            <div class="tit">
+                <div class="indent">
+                    订单详情
+                </div>
+                <div class="tit-con">
+                    退款方式
+                </div>
+                <div class="tit-con">
+                    操作
+                </div>
+            </div>
+            <div class="goods-con">
+                {empty name='$result'}
+                <div class="indent-box indent-box-emty">
+                    <img src="__RES__/imgs/orderemty.png" alt="">
+                    <p>暂无订单</p>
+                    <span>“暂无订单，忙里偷闲下一单吧”</span>
+                </div>
+                {/empty}
+                {volist name="$result" id="order_goods"}
+                <div class="goods-list">
+                    <div class="goods-tit">
+                            <span>
+                                申请时间：{$order_goods.order_goods_refund_list.create_time}
+                            </span>
+                        <span>
+                                订单号：{$order_goods.order_goods_refund_list.order_goods_refund_number}
+                            </span>
+                        <span class="shop-name">
+                                {$order_goods.order_goods_refund_store.store_name}
+                                {if INI_CONFIG['IS_CUSTOMER'] ==1}
+                                <a href="javascript:;" onclick="jump_service({store_id:'{$order_goods.store_id}',order_goods_id:'{$order_goods.order_goods_id}',diversion_id:'1005'})">
+                                    <img src="__RES__/imgs/my/info.png" alt="">
+                                </a>
+                                {/if}
+                            </span>
+                    </div>
+
+                    <div class="goods-con">
+                        <div class="goods">
+                            <img src="{$order_goods.file}" alt="">
+                            <p>{$order_goods.goods_name} {$order_goods.attr}</p>
+                            <span>x{$order_goods.quantity}</span>
+                        </div>
+                        <div class="goods-box">{$order_goods.RefundStatus}</div>
+                        <div class="goods-box">
+                            <a href="javascript:main.jump({'url':'/pc2.0/order/refundDetails?order_goods_id={$order_goods.order_goods_id}' + '&lat='+localStorage.lat + '&lng=' + localStorage.lng})">查看详情</a>
+                        </div>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <!--分页-->
+            <!--分页-->
+            <div class="pageContainer" style="width: auto;">{$result|raw}</div>
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+{/block}

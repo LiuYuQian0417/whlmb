@@ -1,0 +1,337 @@
+{extend name='public/my_header' /}
+{block name='content_css'}
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+<link rel="stylesheet" href="__RES__/css/distribution/earnings_view.css">
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css"/>
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+<script src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts-en.common.js"></script>
+{/block}
+{block name="content"}
+
+<style>
+    .record-tit span{
+        flex: 1;
+        margin: 0px !important;
+        text-align: center;
+    }
+    .record-info .shops{
+        flex: 2;
+    }
+    .record-info .shops .order-detail{
+        line-height: 64px;
+    }
+    .record-info .shops .thumb{
+        float: left;
+    }
+    .record-info .order-price{
+        flex: 1;
+        text-align: center;
+        margin: 0px !important;
+    }
+    .record-info .user{
+        flex: 1;
+        margin: 0px !important;
+    }
+    .record-info .user span{
+        display: inline-block;
+        float: left;
+        width: 130px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .record-info .user img{
+        margin-left: 11px;
+    }
+    .record-info .date{
+        flex: 1;
+        text-align: center;
+        margin: 0px !important;
+    }
+</style>
+
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left"/}
+    <!--我的页面左侧公共部分结束-->
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div>
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="{:url('/pc2.0/distribution_my/earnings_view')}" class='primary-color border-color'>
+                        收益
+                    </a>
+                    <a href="{:url('/pc2.0/distribution_my/earnings_details')}">
+                        收益记录
+                    </a>
+                </div>
+            </div>
+            <div class="container-view">
+                <div class="current-yield">
+                    <div class="current-yield-left">
+                        <div class="now-yield">当前收益（元）：<h4 class="yield-price">{$data.close_pro}</h4></div>
+                        <div class="balance">账户余额：￥<span>{$data.usable_money}</span>
+                            <div class="question" onclick="main.jump({'url':'/pc2.0/distribution_my/explain'})">?</div>
+                        </div>
+                    </div>
+                    <div class="current-yield-right">
+                        <div class="withdraw primary-background-color" onclick="main.jump({'url':'/pc2.0/distribution_withdrawal/index'})">立即提现</div>
+                    </div>
+                </div>
+                <div class="yield-detail">
+                    <div class="yield-detail-left">
+                        <div class="yield-detail-left-item y-top">
+                            <p>累计收益</p>
+                            <div class="account">
+                                <div class="already-account">
+                                    <p class="account-title">已结算</p>
+                                    <p class="account-price"><span>￥</span><span>{$data.total_close_brokerage|default='0.00'}</span>
+                                    </p>
+                                </div>
+                                <div class="no-account">
+                                    <p class="account-title">未结算</p>
+                                    <p class="account-price"><span>￥</span><span>{$data.wait_pro|default='0.00'}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="yield-detail-left-item">
+                            <p>今日收益</p>
+                            <div class="account">
+                                <div class="already-account">
+                                    <p class="account-title">已结算</p>
+                                    <p class="account-price">
+                                        <span>￥</span><span>{$data.today_close_pro|default='0.00'}</span></p>
+                                </div>
+                                <div class="no-account">
+                                    <p class="account-title">未结算</p>
+                                    <p class="account-price">
+                                        <span>￥</span><span>{$data.today_wait_pro|default='0.00'}</span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="yield-detail-right">
+                        <p class="seven">最近七天收益</p>
+                        <div id="main"></div>
+                    </div>
+                </div>
+                <div class="record" style="padding-bottom: 20px;">
+                    <div class="record-title">
+                        <a href="javascript:;" data_type="2" class="yielded primary-color">已结算</a>
+                        <span></span>
+                        <a href="javascript:;" data_type="1" class="yielded ">未结算</a>
+                    </div>
+                    <div class="record-tit">
+                        <span style="margin-left: 20px;flex: 2;">今日收益记录
+<!--                            <img style="margin-left: 10px;" src="__RES__/imgs/my/bottom.png" alt="">-->
+                        </span>
+<!--                        <span style="margin-left: 58px;">订单详情</span>-->
+                        <span style="margin-left: 188px;">金额</span>
+                        <span style="margin-left: 120px;">下单用户</span>
+                        <span style="margin-left: 158px;">下单时间</span>
+                    </div>
+                    <div id="earnings_view">
+                    {volist name="$result" id="item"}
+                    <div class="record-info">
+                        <div class="shops">
+                            <img class="thumb" src="{$item.file}" alt="">
+                            <a href="javascript:jump_goods('{$item.goods_id}')" class="order-detail">{$item.goods_name}</a>
+                        </div>
+                        <span class="order-price primary-color">+￥{$item.brokerage}</span>
+                        <div class="user">
+                            <span>{$item.nickname}</span>
+                            <img class="user-img" src="__RES__/imgs/yield/user.png" alt="">
+                        </div>
+                        <span class="date">{$item.underOrder_time}</span>
+
+                    </div>
+                    {/volist}
+                    </div>
+                </div>
+                {notempty name="$result"}
+                <div class="find-all">
+                    <a href="{:url('/pc2.0/distribution_my/earnings_details')}">查看全部明细 ></a>
+                </div>
+                {/notempty}
+            </div>
+        </div>
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+
+    $('.yielded').click(function () {
+        $(this).addClass('primary-color').siblings().removeClass('primary-color');
+        var type = $(this).attr('data_type');
+        main.ajax({'url':'{:url(\'pc2.0/distribution_my/ajax_earnings\')}','data':{'type': type},callback:function (t) {
+                var str='';
+                $.each(t.data,function(k,v){
+                    str+= '<div class="record-info"> ' +
+                        '<div class="shops"><img class="thumb" src="'+v.file+'" alt=""> ' +
+                        '<a href="javascript:jump_goods('+v.goods_id+')" class="order-detail">'+v.goods_name+'</a></div> ' +
+                        '<span class="order-price primary-color">+￥'+v.brokerage+'</span> ' +
+                        '<div class="user"> ' +
+                        '<span>'+v.nickname+'</span> ' +
+                        '<img class="user-img" src="__RES__/imgs/yield/user.png" alt=""> ' +
+                        '</div> ' +
+                        '<span class="date">'+v.underOrder_time+'</span> ' +
+                        '</div>';
+                });
+                $('#earnings_view').html(str);
+            }});
+    });
+
+
+    $('.cover label div').click(function (e) {
+        if ($(this).parents('.content-list').hasClass('active')) {
+            $(this).parents('.content-list').removeClass('active')
+        } else {
+            $(this).parents('.content-list').addClass('active')
+        }
+        e.stopPropagation();
+    });
+
+    // $('.tit>a').click(function (e) {
+    //     e.preventDefault()
+    //     $(this).addClass('primary-color border-color').siblings().removeClass('primary-color border-color')
+    //     if ($.trim($(this).text()).length == 2) {
+    //         $('.container-view').css('display', 'block')
+    //         $('.container-block').css('display', 'none')
+    //     } else {
+    //         $('.container-view').css('display', 'none')
+    //         $('.container-block').css('display', 'block')
+    //     }
+    // });
+
+    $('.now-date').hover(function () {
+        $(this).find('img').attr('src', '__RES__/imgs/my/TopCornerMark.png')
+        $('.hover-list').css('display', 'block')
+    }, function () {
+        $('.hover-list').css('display', 'none')
+        $(this).find('img').attr('src', '__RES__/imgs/my/bottom.png')
+    })
+
+    var myChart = echarts.init(document.getElementById('main'));
+
+    var base = +new Date(2016, 9, 3);
+    var oneDay = 24 * 3600 * 1000;
+    var valueBase = Math.random() * 300;
+    var data = [];
+    for (var i = 1; i < 7; i++) {
+        var now = new Date(base += oneDay);
+        var dayStr = [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('-');
+        valueBase = Math.round((Math.random() - 0.5) * 20 + valueBase);
+        valueBase <= 0 && (valueBase = Math.random() * 300);
+        data.push([dayStr, valueBase]);
+    }
+    option = {
+        title: {
+            left: 'center',
+            text: '',
+            subtext: '',
+        },
+        tooltip: {
+            triggerOn: 'none',
+            position: function (pt) {
+                return [pt[0], 130];
+            }
+        },
+        xAxis: {
+            show: true,
+            type: 'time',
+            // boundaryGap: [0, 0],
+            axisPointer: {
+                value: '',
+                snap: true,
+                lineStyle: {
+                    color: '#EA5413',
+                    opacity: 0.5,
+                    width: 2
+                },
+                label: {
+                    show: true,
+                    formatter: function (params) {
+                        return echarts.format.formatTime('yyyy-MM-dd', params.value);
+                    },
+                    backgroundColor: '#983910'
+                },
+
+            },
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+            show: false,
+            type: 'value',
+            axisTick: {
+                inside: true
+            },
+            splitLine: {
+                show: false
+            },
+            axisLabel: {
+                inside: true,
+                formatter: '{value}\n'
+            },
+            z: 10
+        },
+        grid: {
+            top: 110,
+            left: 15,
+            right: 15,
+            height: 160
+        },
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    main.ajax({
+            'url': '/pc2.0/distribution_my/seven_data',
+            'not_load':true,
+            'callback': function (res) {
+                if (res.code.toString() === '0') {
+                    console.log(data);
+                    console.log(res.data);
+                    myChart.setOption({
+                        series: [{
+                            name: '',
+                            type: 'line',
+                            smooth: true,
+                            symbol: 'circle',
+                            symbolSize: 5,
+                            sampling: 'average',
+                            itemStyle: {
+                                normal: {
+                                    color: '#EA5413'
+                                }
+                            },
+                            stack: 'a',
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: '#feefef'
+                                    }, {
+                                        offset: 1,
+                                        color: '#fff'
+                                    }])
+                                }
+                            },
+                            data: res.data
+                        },]
+                    });
+                } else {
+                    main.msg('获取最近七天收益数据异常，请从新刷新');
+                }
+            }
+        },
+    );
+
+</script>
+{/block}

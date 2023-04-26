@@ -1,0 +1,381 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    blockquote{
+        margin-top: 10px;
+        background:none !important;
+        border-left: 3px solid #f98a10 !important;
+        font-size: 16px;
+        color: #f98a10;
+        padding: 9px !important;;
+    }
+    .title{
+        line-height: 2.5 !important;
+    }
+    .layui-table tbody tr{
+        background: none !important;
+    }
+    .newTitle{color: #000;font-weight: bold;margin-top: 5px;display: block}
+    .ecsc-default-table tbody tr:last-child td{border-bottom: none}
+    .layui-input, .layui-textarea{height: 30px;font-size: 12px;}
+    .flex{
+        display: flex;align-items: center;
+    }
+    .layui-form-select dl dd{margin-left: 0;width: calc(100% - 20px)}
+    .layui-form-label{margin: 5px 0;width: auto;}
+</style>
+<div class="main-content" id="mainContent">
+    <div class="ecsc-form-goods">
+        <form action="{:url('client/invoice/create')}" method="post" class="layui-form">
+
+            <div class="tabmenu" style="margin-top: 20px;">
+                <ul class="tab">
+                    <li class="active"><a href="javascript:;">发票信息</a></li>
+                    <li class=""><a href="javascript:;">订单信息</a></li>
+                    {neq name="item.invoice_type" value="1"}
+                    <li class=""><a href="javascript:;">物流和收货信息</a></li>
+                    {/neq}
+                </ul>
+            </div>
+
+            <!--发票信息start-->
+            <div class="wrapper-list">
+                <!--企业信息start-->
+                <div class="layui-col-xs3">
+                    <blockquote class="layui-elem-quote">企业信息</blockquote>
+                    <div class="tabCon">
+                        <div class="title">
+                            <span>发票类型：</span>{$item.InvoiceTypeText}
+                        </div>
+                        <div class="title">
+                            <span>发票抬头：</span>{$item.rise_name}
+                        </div>
+                        {eq name="item.rise" value="2"}
+                        <div class="title">
+                            <span>纳税人识别号：</span>{$item.invoice_attach.identification}
+                        </div>
+                        <div class="title">
+                            <span>注册地址：</span>{$item.invoice_attach.address}
+                        </div>
+                        <div class="title">
+                            <span>注册电话：</span>{$item.invoice_attach.phone}
+                        </div>
+                        <div class="title">
+                            <span>开户银行：</span>{$item.invoice_attach.bank}
+                        </div>
+                        <div class="title">
+                            <span>银行账号：</span>{$item.invoice_attach.account}
+                        </div>
+                        {/eq}
+                    </div>
+                </div>
+                <!--企业信息end-->
+                <!--收票人信息-->
+                <div class="layui-col-xs9">
+                    {neq name="item.invoice_type" value="2"}
+                    <blockquote class="layui-elem-quote">收票人信息</blockquote>
+                    <div class="tabCon">
+                        <div class="title">
+                            <span>收票人手机号：</span>{$item.InvoiceTypeText}
+                        </div>
+                        <div class="title">
+                            <span>收票人邮箱：</span>{$item.rise_name}
+                        </div>
+                    </div>
+                    {/neq}
+                    <blockquote class="layui-elem-quote">发票内容</blockquote>
+                    <div class="tabCon">
+                        <div class="layui-form">
+                            <table class="layui-table goods-list" frame=void>
+                                {eq name="item.detail_type" value="1"}
+                                <tbody>
+                                {volist name="item.order_goods" id="good"}
+                                <tr>
+                                    <td>商品名称：{$good.goods_name}</td>
+                                    <td>规格型号：{$good.attr|default='无'}</td>
+                                    <td>单位：{$good.goods_unit}</td>
+                                    <td>数量：{$good.quantity}</td>
+                                    <td>单价：{$good.unit_price}</td>
+                                    <td>金额：{$good.sum_price}</td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                                {else/}
+                                {volist name="item.order_goods" id="good"}
+                                <tr>{$good.class_name}&nbsp;&nbsp;</tr>
+                                {/volist}
+                                {/eq}
+                            </table>
+                            <span>合计：￥{$sum_order_price}</span>
+                        </div>
+                    </div>
+                </div>
+                <!--收票人信息-->
+                <!--发票信息end-->
+
+                <!--开票内容start-->
+                <div class="layui-row">
+                    <blockquote class="layui-elem-quote">开票内容</blockquote>
+                    <div class="layui-col-xs6">
+                        <div class="tabCon">
+                            <div class="title">
+                                <span>发票代码：</span>{$item.invoice_code}<input type="hidden" name="invoice_code" value="{$item.invoice_code}">
+                            </div>
+                            <div class="title">
+                                <span>开票类型：</span>{$item.BillingTypeText}
+                            </div>
+                            <div class="title">
+                                <span>价税合计：</span>{$item.valorem}
+                            </div>
+                            {eq name="item.invoice_type" value="1"}
+                            <div class="title">
+                                <span style="float: left;line-height: 2">发票下载链接：</span> {$item.download_links}
+                            </div>
+                            {else/}
+                            <div class="title">
+                                <span>收票地址：</span>{$item.invoice_attach.address_province}&nbsp;{$item.invoice_attach.address_city}&nbsp;{$item.invoice_attach.address_area}&nbsp;{$item.invoice_attach.address_street}&nbsp;{$item.invoice_attach.address_details}
+                            </div>
+                            <div class="title">
+                                <span>快递公司：</span>{$item.express_value}
+                            </div>
+                            <div class="title">
+                                <span>运单编号：</span>{$item.express_number}
+                            </div>
+                            {/eq}
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <div class="tabCon">
+                            <div class="title">
+                                <span>发票号码：</span>
+                                {$item.invoice_number}
+                            </div>
+                            <div class="title">
+                                <span>操作类型：</span>
+                                {eq name="$item.billing_type" value="1"}
+                                <div class="layui-input-inline">
+                                    <select lay-filter='store' title="选择操作类型" name="stagger">
+                                        <option value="3">退货折让红票</option>
+                                        <option value="4">错票重开红票</option>
+                                        <option value="5">换票冲红</option>
+                                    </select>
+                                </div>
+                                {else/}
+                                {switch name="item.stagger"}
+                                {case value="3"}退货折让红票{/case}
+                                {case value="4"}错票重开红票{/case}
+                                {case value="5"}换票冲红{/case}
+                                {/switch}
+                                {/eq}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--开票内容end-->
+                {eq name="$item.billing_type" value="1"}
+                <dl class="button_info">
+                    <dd>
+                        <input type="button" value="冲红" onclick="main.flushing('/client/invoice/flushing','{$item.invoice_id}')" class="sc-btn sc-blueBg-btn btn35"/>
+                    </dd>
+                </dl>
+                {/eq}
+            </div>
+
+            <!--订单信息start-->
+            <div class="wrapper-list hide">
+                <div class="tabCon">
+                    <div class="title">
+                        <span>买家信息：</span>
+                    </div>
+                    <div class="title" style="display: flex;align-items: center;padding-top: 0!important;">
+                        <div style="width: 26%">买家账号：{$item_order.nickname|default=''}/{$item_order.username|default=''}</div>
+                        <div style="width: 26%">所在地区：{$item_order.address_province|default=''}
+                            {$item_order.address_city|default=''} {$item_order.address_area|default=''}
+                        </div>
+                        <div style="width: 26%">联系电话：{$item_order.consignee_phone|default=''}</div>
+                        <div style="width: 22%">支付方式：{switch name="$item_order.pay_channel|default=''"}
+                            {case value="0"}待付款{/case}
+                            {case value="1"}微信{/case}
+                            {case value="2"}支付宝{/case}
+                            {case value="3"}余额{/case}
+                            {case value="4"}银行卡{/case}
+                            {default /}出错啦
+                            {/switch}
+                        </div>
+                    </div>
+                    <div class="dash_line"></div>
+                    <div class="title">
+                        <span>订单信息：</span>
+                    </div>
+                    <div class="title" style="display: flex;align-items: center;padding: 0!important;">
+                        <div style="width: 26%">订单编号：{$item_order.order_attach_number|default=''}</div>
+                        <div style="width: 26%">订单类型：
+                            {switch name="$item_order.order_type|default=''"}
+                            {case value="1"}普通线上{/case}
+                            {case value="2"}拼团{/case}
+                            {case value="3"}砍价{/case}
+                            {case value="4"}限时抢购{/case}
+                            {case value="5"}普通线下{/case}
+                            {default /}出错啦
+                            {/switch}
+                        </div>
+                        <div style="width: 26%">订单来源：{switch name="$item_order.case_pay_type|default=''"}
+                            {case value="1"}APP{/case}
+                            {case value="2"}小程序{/case}
+                            {case value="3"}PC{/case}
+                            {case value="4"}手机站{/case}
+                            {case value="5"}线下支付{/case}
+                            {default /}出错啦
+                            {/switch}
+                        </div>
+                        <div style="width: 22%">创建时间：{$item_order.create_time|default=''}</div>
+                    </div>
+                    <div class="title" style="display: flex;align-items: center">
+                        <div style="width: 26%">付款时间：{$item_order.pay_time|default='未付款'}</div>
+
+                        <div style="width: 26%">配送方式：
+                            {switch name="$item_order.distribution_type|default=''"}
+                            {case value="1"}同城速递{/case}
+                            {case value="2"}预约自提{/case}
+                            {case value="3"}快递邮寄{/case}
+                            {default /}出错啦
+                            {/switch}
+                        </div>
+
+                        {if condition="$item_order.distribution_type neq 2"}
+                        {if condition="$item_order.distribution_type eq 1"}
+                        <div style="width: 26%">配送时间：{$item_order.deliver_time|default=''}</div>
+                        {else/}
+                        <div style="width: 26%">发货时间：{$item_order.deliver_time|default=''}</div>
+                        {/if}
+                        {else/}
+                        {if condition="$item_order.deal_time neq NULL"}
+                        <div style="width: 26%">提货时间：{$item_order.deal_time|default=''}</div>
+                        {else/}
+                        <div style="width: 26%">发货时间：待自提</div>
+                        {/if}
+                        {/if}
+
+                        <div style="width: 22%">订单状态：
+                            {switch name="$item_order.status|default=''"}
+                            {case value="0"}待付款{/case}
+                            {case value="1"}
+                            {switch name="$item_order.distribution_type"}
+                            {case value="1"}待配送{/case}
+                            {default/}待发货
+                            {/switch}
+                            {/case}
+                            {case value="2"}
+                            {switch name="$item_order.distribution_type"}
+                            {case value="2"}待自提{/case}
+                            {default/}配送中
+                            {/switch}
+                            {/case}
+                            {case value="3"}已完成{/case}
+                            {case value="4"}已关闭{/case}
+                            {case value="5"}退款中{/case}
+                            {case value="6"}已取消{/case}
+                            {default /}出错啦
+                            {/switch}
+                        </div>
+                    </div>
+                    <div class="dash_line"></div>
+                </div>
+            </div>
+            <!--订单信息end-->
+            <!--物流与收货信息start-->
+            <div class="wrapper-list hide">
+                <div class="logistics_info">
+                    <div class="det">
+                        <div class="title">收货人信息</div>
+                        <ul>
+                            <li>
+                                <div class="tips">收货人：</div>
+                                <div class="info">{$item_order.consignee_name|default=''}</div>
+                            </li>
+                            <li>
+                                <div class="tips">地区：</div>
+                                <div class="info">{$item_order.address_province|default=''} {$item_order.address_city|default=''}
+                                    {$item_order.address_area|default=''} {$item_order.address_street|default=''}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="tips">地址：</div>
+                                <div class="info">{$item_order.address_details|default=''}</div>
+                            </li>
+                            <li>
+                                <div class="tips">手机号码：</div>
+                                <div class="info">{$item_order.consignee_phone|default=''}</div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="det">
+                        <div class="title">配送信息</div>
+                        <ul>
+                            <li>
+                                <div class="tips">配送方式：</div>
+                                <div class="info">{switch name="$item_order.distribution_type|default=''"}
+                                    {case value="1"}同城速递{/case}
+                                    {case value="2"}预约自提{/case}
+                                    {case value="3"}快递邮寄{/case}
+                                    {default /}出错啦
+                                    {/switch}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="tips">物流公司：</div>
+                                <div class="info">
+                                    {if condition="$item_order.dada eq 0"}
+                                    {$express_name|default='无'}
+                                    {else/}
+                                    达达配送
+                                    {/if}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="tips">运单号：</div>
+                                <div class="info">
+                                    {if condition="$item_order.dada eq 0"}
+                                    {$item_order.express_number|default='无'}
+                                    {else/}
+                                    {$dadaExpress.data.client_id||default='无'}
+                                    {/if}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="tips">买家留言：</div>
+                                <div class="info">{$item.message|default='无'}</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--物流与收货信息end-->
+
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+{__block__}
+<script>
+    //模块切换
+    $('.tab li').click(function () {
+        var index = $(this).index();
+        console.log(index);
+        $(this).addClass("active").siblings().removeClass("active");
+        $(".wrapper-list").eq(index).show().siblings(".wrapper-list").hide();
+    });
+
+    main.form('.layui-form');
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+
+</script>
+{/block}

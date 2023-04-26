@@ -1,0 +1,92 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+.index-box .index-right .title {
+  line-height: 58px;
+  font-size: 14px;
+  font-weight: bolder;
+  background: #fff;
+  text-indent: 20px;
+  margin-bottom: 20px;
+}
+.index-box .index-right .index-right-box {
+  background: #fff;
+  padding: 20px;
+  font-size: 12px;
+}
+.index-box .index-right .index-right-box .tit {
+  display: flex;
+  line-height: 34px;
+  background: #F9F9F9;
+  color: #666666;
+}
+.index-box .index-right .index-right-box .tit .indent {
+  flex: 3;
+  text-indent: 20px;
+}
+.index-box .index-right .index-right-box .tit .tit-con {
+  text-align: center;
+  flex: 1;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list {
+  border: 1px solid #E5E5E5;
+  margin-top: 20px;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-tit {
+  line-height: 29px;
+  border-bottom: 1px solid #E5E5E5;
+  padding-left: 15px;
+  color: #494949;
+  background: #F9F9F9;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-tit span {
+  margin-right: 35px;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-tit span img {
+  position: relative;
+  top: 2px;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-con {
+  padding-top: 15px;
+  padding-left: 10px;
+  padding-bottom: 15px;
+  display: flex;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-con .goods {
+  flex: 3;
+  overflow: hidden;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-con .goods img {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #E5E5E5;
+  float: left;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-con .goods p {
+  float: left;
+  margin-left: 20px;
+  width: 218px;
+  line-height: 20px;
+  margin-top: 14px;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-con .goods span {
+  float: left;
+  margin-left: 155px;
+  line-height: 60px;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-con .goods-box {
+  flex: 1;
+  text-align: center;
+  line-height: 60px;
+  color: #5D5D5D;
+}
+.index-box .index-right .index-right-box .goods-con .goods-list .goods-con .goods-box a {
+  color: #333333;
+}

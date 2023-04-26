@@ -1,0 +1,356 @@
+<link href="__RES__/font/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="__PUBLIC_RES__/upload/cropper.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="__PUBLIC_RES__/upload/dialog.css" rel="stylesheet" type="text/css" media="all"/>
+<style>
+    .remarks {
+        display: block;
+        width: 445px;
+        margin: 5px 0;
+        color: #767676;
+    }
+    #start_time, #end_time {
+        width: 45%;
+        float: left;
+    }
+    #elect{
+        width:100%;
+        border: none;
+    }
+</style>
+
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 广告位置</label>
+            <div class="layui-input-block">
+                <input type="text" name="" maxlength="50" autocomplete="off" placeholder="广告位置" disabled
+                       value="{$adv_position.title} [{$adv_position.width} x {$adv_position.height}]" class="layui-input">
+                <input type="hidden" name="adv_position_id" value="{$adv_position.adv_position_id|default=''}">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 广告标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="title" maxlength="50" autocomplete="off" placeholder="请输入广告标题"
+                       value="{$item.title|default=''}" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 广告类型</label>
+            <div class="layui-input-block">
+                <select name="type" lay-filter="select">
+                    <option value="">请选择</option>
+                    <!--<option value="0" {eq name="item.type|default=''" value="0" }selected{/eq} {in name="item.adv_position_id|default=''" value="4,9,11" }disabled{/in}>链接广告</option>-->
+                    <option value="1" {eq name="item.type|default=''" value="1" }selected{/eq}>商品广告</option>
+                    {eq name="one_more" value="1"}
+                    <option value="2" {eq name="item.type|default=''" value="2" }selected{/eq}>店铺广告</option>
+                    {/eq}
+                    <option value="3" {eq name="item.type|default=''" value="3" }selected{/eq}>无操作广告</option>
+                </select>
+                <input type="hidden" name="" value="{$item.type|default=''}" id="type">
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="link_number" {eq name="item.type|default=''" value="3" }hidden{/eq}>
+            <label class="layui-form-label"><font color="red">*</font>编号</label>
+            <div class="layui-input-block">
+                <input type="text" name="content" id="content" value="{$item.content|default=''}" autocomplete="off" placeholder="选择商品/选择店铺"
+                       class="layui-input">
+            </div>
+            <div id="goods" hidden><a class="layui-btn" onclick="elect('/adv/goods_search','商品列表');">选择商品</a></div>
+            <div id="store" hidden><a class="layui-btn" onclick="elect('/adv/store_search','店铺列表');">选择店铺</a></div>
+        </div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">广告图片</label>
+    <div class="layui-input-block">
+        {switch name="$flag"}
+            {case value="1"}
+                <div
+                        class="imageUpload"
+                        default="{notempty name="item.file_data|default=''"}{$oss_config}{$item.file_data|default=''}{/notempty}"
+                width="540"
+                height="160"
+                file-mime="image/gif,image/jpeg,image/png" 文件类型
+                name="file"
+                dir="adv"
+                value="{$item.file_data|default=''}"
+
+                ></div>
+            {/case}
+            {case value="2"}
+                <div
+                        class="imageUpload"
+                        default="{notempty name="item.file_data|default=''"}{$oss_config}{$item.file_data|default=''}{/notempty}"
+                width="706"
+                height="318"
+                file-mime="image/gif,image/jpeg,image/png" 文件类型
+                name="file"
+                dir="adv"
+                value="{$item.file_data|default=''}"
+
+                ></div>
+            {/case}
+            {case value="3"}
+                <div
+                        class="imageUpload"
+                        default="{notempty name="item.file_data|default=''"}{$oss_config}{$item.file_data|default=''}{/notempty}"
+                width="292"
+                height="460"
+                file-mime="image/gif,image/jpeg,image/png" 文件类型
+                name="file"
+                dir="adv"
+                value="{$item.file_data|default=''}"
+
+                ></div>
+            {/case}
+        {/switch}
+
+
+        <span class="remarks">上传广告图片，尺寸要求
+            {switch name="$flag"}
+            {case value="1"}540*160{/case}
+            {case value="2"}706*318{/case}
+            {case value="3"}292*460{/case}
+            {/switch}
+        </span>
+    </div>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label"><font color="red">*</font> 显示状态</label>
+    <div class="layui-input-block">
+        <input type="radio" name="status" value="0" title="不显示"
+               {eq name="item.status|default=''" value="0" }checked{/eq}
+        >
+        <input type="radio" name="status" value="1" title="显示"
+               {eq name="item.status|default='1'" value="1" }checked{/eq}
+        >
+    </div>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">排序</label>
+    <div class="layui-input-block">
+        <input type="text" name="sort" value="{$item.sort|default='100'}" maxlength="5" autocomplete="off" placeholder="请填写排序"
+               class="layui-input">
+        <span class="remarks">数值越大，排序越靠前</span>
+    </div>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">广告有效时间</label>
+    <div class="layui-input-inline">
+        <input title="入驻时间" name="date" type="text" class="layui-input" id="date" readonly placeholder="广告有效时间"
+               {present name="$item.start_time"}
+               {if condition="($item.start_time eq '') and ($item.end_time eq '')"}
+               value=""
+               {else/}
+                value="{$item.start_time|default=''} - {$item.end_time|default=''}"
+               {/if}
+               {/present}
+        >
+        <span class="remarks">不填写代表永久有效</span>
+    </div>
+</div>
+
+<div class="imageUploadDialog" id="imageUploadDialog">
+    <!--图片处理区-->
+    <div class="handleArea">
+        <img id="imageHandle" alt="imageHandle">
+    </div>
+    <!--图片操作区-->
+    <div class="operationArea">
+        <p class="title">预览</p>
+        <div id="imageUploadPreview" class="imageUploadPreview"></div>
+        <div class="button-group">
+            <button id="imageRotateLeft" class="layui-btn layui-icon layui-icon-refresh-1" style="transform: rotateY(180deg)"></button>
+            <button id="imageRotateRight" class="layui-btn layui-icon layui-icon-refresh-1"></button>
+        </div>
+        <div class="button-group">
+            <button class="layui-btn" type="button" id="submitImage">裁剪</button>
+        </div>
+    </div>
+</div>
+<!--图片预览-->
+<div id="imageView" class="imageView">
+    <img>
+</div>
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        {switch name="$flag"}
+        {case value="1"}
+        <input type="hidden" name="client" value="2">
+        {/case}
+        {case value="2"}
+        <input type="hidden" name="client" value="2">
+        {/case}
+        {case value="3"}
+        <input type="hidden" name="client" value="1">
+        {/case}
+        {/switch}
+        <input type="hidden" name="flag" value="{$flag|default=1}">
+        <input type="hidden" name="adv_id" value="{$item.adv_id|default=''}">
+        <a class="layui-btn" href="javascript:void(0);" onclick="chooseIt()">保存</a>
+    </div>
+</div>
+</form>
+</div>
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/js/common/jquery.cookie.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<script src="__RES__/js/common/jquery.from.js"></script>
+<script src="__RES__/js/common/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/common/jquery.dataTables.min.js"></script>
+<script src="__PUBLIC_RES__/upload/cropper.js"></script>
+<script src="__PUBLIC_RES__/upload/main.js"></script>
+
+<script>
+    var formObj = main.form([{selector:'select(select)',callback:function (data, form) {
+            var link_url = $('#link_url'),goods = $('#goods'),store = $('#store'),link_number = $('#link_number');
+
+            if (data.value == 0){
+                link_url.prop('hidden',false);
+                goods.prop('hidden',true);
+                store.prop('hidden',true);
+                link_number.prop('hidden',false);
+                $('#content').attr("readonly",false);
+            }
+            if (data.value == 1){
+                link_url.prop('hidden',true);
+                goods.prop('hidden',false);
+                store.prop('hidden',true);
+                link_number.prop('hidden',false);
+                $('#content').attr("readonly","readonly");
+            }
+
+            if (data.value == 2){
+                link_url.prop('hidden',true);
+                goods.prop('hidden',true);
+                store.prop('hidden',false);
+                link_number.prop('hidden',false);
+                $('#content').attr("readonly","readonly");
+            }
+
+            if (data.value == 3){
+                link_number.prop('hidden',true);
+            }
+
+            if (!data.value){
+                link_url.prop('hidden',true);
+                goods.prop('hidden',true);
+                store.prop('hidden',true);
+            }
+            $('#type').val(data.value);
+            form.render();
+        }},
+        {selector:'select(adv_position)',callback:function (data,form) {
+                if (data.value == 4 || data.value == 9 || data.value == 11){
+                    $('#type option:eq(1)').prop('disabled', true);
+                    form.render();
+                } else {
+                    $('#type option:eq(1)').prop('disabled', false);
+                    form.render();
+                }
+            }}
+    ]);
+    main.form(formObj);
+    main.laydate([{
+        elem: '#date',
+        type: 'datetime',
+        range: true,
+    }]);
+    main.valid('.layui-form');
+    function chooseIt() {
+        var adv_position_id = $("input[name='adv_position_id']").val();
+        var title = $("input[name='title']").val();
+        var file = $("input[name='file']").val();
+        var content = $("input[name='content']").val();
+        var date = $("input[name='date']").val();
+        var sort = $("input[name='sort']").val();
+        var client = $("input[name='client']").val();
+        var type = $('#type').val();
+        var status = $('input:radio[name="status"]:checked').val();
+        var flag = $("input[name='flag']").val();
+
+        main.ajax({type:'post',url:'/goods_classify/adv_create',data:{
+                adv_position_id: adv_position_id,
+                'title': title,
+                type: type,
+                'file': file,
+                'content': content,
+                status: status,
+                'sort': sort,
+                'date': date,
+                client: client,
+                flag: flag
+            },
+            callback: function (res){
+                if (res.code == 0){
+                    if (res.data.flag == 1) {
+                        $('#a_adv_position_id', parent.document).val(res.data.adv_position_id);
+                        $('#a_title', parent.document).val(res.data.title);
+                        $('#a_file', parent.document).val(res.data.file);
+                        $('#a_content', parent.document).val(res.data.content);
+                        $('#a_status', parent.document).val(res.data.status);
+                        $('#a_sort', parent.document).val(res.data.sort);
+                        $('#a_start_time', parent.document).val(res.data.start_time);
+                        $('#a_end_time', parent.document).val(res.data.end_time);
+                        $('#a_client', parent.document).val(res.data.client);
+                        $('#a_type', parent.document).val(res.data.type);
+                        $('#a_file_data', parent.document).val(res.data.file);
+                    } else if(res.data.flag == 2) {
+                        $('#b_adv_position_id', parent.document).val(res.data.adv_position_id);
+                        $('#b_title', parent.document).val(res.data.title);
+                        $('#b_file', parent.document).val(res.data.file);
+                        $('#b_content', parent.document).val(res.data.content);
+                        $('#b_status', parent.document).val(res.data.status);
+                        $('#b_sort', parent.document).val(res.data.sort);
+                        $('#b_start_time', parent.document).val(res.data.start_time);
+                        $('#b_end_time', parent.document).val(res.data.end_time);
+                        $('#b_client', parent.document).val(res.data.client);
+                        $('#b_type', parent.document).val(res.data.type);
+                        $('#b_file_data', parent.document).val(res.data.file);
+                    }else{
+                        $('#c_adv_position_id', parent.document).val(res.data.adv_position_id);
+                        $('#c_title', parent.document).val(res.data.title);
+                        $('#c_file', parent.document).val(res.data.file);
+                        $('#c_content', parent.document).val(res.data.content);
+                        $('#c_status', parent.document).val(res.data.status);
+                        $('#c_sort', parent.document).val(res.data.sort);
+                        $('#c_start_time', parent.document).val(res.data.start_time);
+                        $('#c_end_time', parent.document).val(res.data.end_time);
+                        $('#c_client', parent.document).val(res.data.client);
+                        $('#c_type', parent.document).val(res.data.type);
+                        $('#c_file_data', parent.document).val(res.data.file);
+                    }
+                    layer.close();
+                    parent.layer.closeAll();
+
+                }else {
+                    layer.msg(res.message);
+                }
+        }});
+    }
+    // 选择
+    function elect(url,title) {
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['60%', '60%'],
+            content: [url]
+        });
+    }
+</script>

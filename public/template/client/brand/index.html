@@ -1,0 +1,119 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css" />
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+
+
+<!--操作提示end-->
+        <div class="main-content" id="mainContent">
+            <form method="get" class="layui-form" action="" >
+            <div class="tabmenu">
+            <ul class="tab">
+                <li class="active"> <a href="javascript:;">商品品牌</a> </a></li>
+            </ul>
+        </div>
+                <!--操作提示begin-->
+                <div class="content">
+                    <div class="explanation" id="explanation">
+                        <div class="ex_tit">
+                            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                        </div>
+                        <ul>
+                            <li><span>展示了商家品牌的相关信息。</span></li>
+                            <li><span>可以通过品牌关键字搜索相关品牌信息。</span></li>
+                        </ul>
+                    </div>
+                    </div>
+            <div class="btn-info">
+                <a class="sc-btn sc-blue-btn" href="javascript:void(0);" onclick="main.jumpFour('client/brand/create')"><i class="icon-plus"></i>新建品牌</a>
+            </div>
+
+
+            <div class="search-info">
+                <div class="search-form">
+                    <div class="search-key">
+                        <input type="text" name="keyword" size="30" class="text text_2" placeholder="品牌名称"/>
+                        <!--<input type="submit" value=" 搜索 " class="submit"/>-->
+                    </div>
+                    <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+                </div>
+            </div>
+
+
+
+                <div class="list-div" id="listDiv">
+                    <table class="ecsc-default-table">
+                        <thead>
+                        <tr>
+                            <th width="6%">
+                                <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" />
+                            </th>
+                            <th width="15%">编号</th>
+                            <th width="10%">品牌名称</th>
+                            <th width="5%">品牌logo</th>
+                            <th width="10%">品牌分类</th>
+                            <th width="10%">关联品牌</th>
+                            <th width="25%">品牌英文名称</th>
+                            <th width="25%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {empty name='data'}
+                        <tr><td class="no-records" colspan="10">没有找到任何记录</td></tr>
+                        {/empty}
+                        {volist name='data' id='item'}
+                        <tr>
+                            <td><input type="checkbox" value="{$item.store_brand_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+                            <td>{$item.store_brand_id}</td>
+                            <td>{$item.store_brand_name}</td>
+                            <td> <img src="{$item.brand_logo}" alt="{$item.brand_logo}" title="{$item.brand_logo}" class="thumb-img"
+                                      style="max-width: 60px;" onerror="this.src='/template/master/resource/image/common/imageError.png'" />
+                            </td>
+                            <td>
+                                {$item.brand_classify_name}
+                            </td>
+                            <td>{$item.brand_name}</td>
+                            <td>{$item.brand_letter}</td>
+                            <td class="ecsc-table-handle tr">
+                                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('client/brand/edit?id={$item.store_brand_id}')"><i
+                                        class="fa fa-edit"></i>编辑</a>
+                                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/client/brand/destroy','{$item.store_brand_id}')"><i
+                                        class="fa fa-trash"></i>删除</a>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="2" style="text-align: left;padding-left: 14px;">
+                                <a class="sc-btn sc-red-btn" onclick="main.destroy('/client/brand/destroy')"><i class="fa fa-trash-o" style="margin-right: 5px"></i>多选删除</a>
+                            </td>
+                            <td colspan="20">
+                                {:$data->render()}
+                            </td>
+
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </form>
+        </div>
+
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+</script>
+{/block}
+

@@ -1,0 +1,46 @@
+{extend name="public/my_header"}
+
+{block name="content_css"}
+<link rel="stylesheet" href="__RES__/css/represent/represent.css">
+<link rel="stylesheet" href="__RES__/css/my/MyAttention.css" />
+{/block}
+
+{block name="content"}
+<div class="index-box">
+
+    {include file="public/my_left"}
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div>
+            <div class="my-attention">
+                <div class="tit">
+                    <a href="javascript:;" class=''>
+                        我的邀请
+                    </a>
+                </div>
+            </div>
+            <div class="my-right">
+                <div style="width: 225px;height: 400px;background-image:url('{$data.combination}');background-size: contain;position: relative">
+                    <img src="{$data.domain}{$data.qr_code}" alt="" style="position: absolute;top:219px;left: 73px;width: 77px;"></div>
+                <div class="my-item my-item1">
+                    <span>推荐分销商普通二维码</span>
+                    <img src="{$data.domain}{$data.qr_code}" alt="">
+                </div>
+                <!--<div class="my-item my-item2">-->
+                    <!--<span>推荐分销商小程序二维码</span>-->
+                    <!--<img src="__RES__/imgs/represent/2.png" alt="">-->
+                <!--</div>-->
+            </div>
+        </div>
+
+        <!--右侧内容结束-->
+    </div>
+</div>
+{/block}
+
+
+{block name="js"}
+<script type="text/javascript">
+
+</script>
+{/block}

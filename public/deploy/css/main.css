@@ -1,0 +1,52 @@
+[v-cloak] {
+    display: none;
+}
+
+#placeholder {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+}
+
+#app, body {
+    margin: 0;
+    padding: 0;
+}
+
+.el-header {
+    text-align: center;
+    line-height: 60px;
+    color: #fff;
+    font-size: 26px;
+    font-weight: bolder;
+    background: #409EFF;
+}
+
+.tip {
+    border-bottom: 1px solid #e2e2e2;
+    padding-bottom: 7px;
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.el-select {
+    width: 100%;
+}
+
+.el-form-item__label {
+    padding-bottom: 0 !important;
+}
+
+.el-form-item {
+    margin-bottom: 5px !important;
+}
+
+.bottom_btn {
+    position: fixed;
+    bottom: 0;
+    z-index: 19950522;
+    left: 48%;
+}

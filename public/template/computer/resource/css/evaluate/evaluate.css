@@ -1,0 +1,236 @@
+.index-box .evaluate-title {
+  height: 100px;
+  width: 1200px;
+  background: #fff;
+  text-align: center;
+  box-sizing: border-box;
+  padding-top: 25px;
+  color: #010101;
+  margin-bottom: 25px;
+}
+.index-box .evaluate-title p {
+  font-size: 12px;
+  color: #A1A1A9;
+  margin-top: 10px;
+}
+.index-box .evaluate-title p i {
+  color: #010101;
+  font-style: inherit;
+}
+.index-box .evaluate-con {
+  background: #fff;
+  margin-bottom: 10px;
+  overflow: hidden;
+  min-height: 300px;
+}
+.index-box .evaluate-con .goods {
+  float: left;
+  width: 320px;
+  border-right: 1px solid #F0F3EF;
+  padding-top: 55px;
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 12px;
+  color: #666666;
+  padding-bottom: 1000px;
+  margin-bottom: -1000px;
+}
+.index-box .evaluate-con .goods img {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 15px;
+}
+.index-box .evaluate-con .goods .pic {
+  margin: 10px 0px;
+}
+.index-box .evaluate-con .goods .goods-name {
+  display: inline-block;
+  width: 220px;
+  line-height: 22px;
+}
+.index-box .evaluate-con .goods .goods-specification {
+  color: #999999;
+}
+.index-box .evaluate-con .bor {
+  border-right: none;
+}
+.index-box .evaluate-con .evaluate {
+  float: left;
+  padding-top: 25px;
+  background: #fff;
+}
+.index-box .evaluate-con .evaluate ul li {
+  overflow: hidden;
+  font-size: 12px;
+  margin-bottom: 25px;
+}
+.index-box .evaluate-con .evaluate ul li .tit {
+  float: left;
+  width: 130px;
+  text-align: center;
+  color: #666666;
+}
+.index-box .evaluate-con .evaluate ul li .con {
+  float: left;
+  padding-left: 30px;
+}
+.index-box .evaluate-con .evaluate ul li .con .start-box img {
+  cursor: pointer;
+}
+.index-box .evaluate-con .evaluate ul li .con .evaluate-content .text {
+  width: 647px;
+  height: 104px;
+  border: 1px solid #E0E0E0;
+  position: relative;
+}
+.index-box .evaluate-con .evaluate ul li .con .evaluate-content .text .text-num {
+  position: absolute;
+  right: 13px;
+  bottom: 7px;
+  color: #999999;
+}
+.index-box .evaluate-con .evaluate ul li .con .evaluate-content .text textarea {
+  border: none;
+  width: 100%;
+  height: 100%;
+  resize: none;
+  outline: none;
+  padding: 15px;
+  box-sizing: border-box;
+  background: none;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload {
+  display: flex;
+  justify-content: flex-start;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .img-list {
+  overflow: hidden;
+  padding-top: 15px;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .video-list {
+  overflow: hidden;
+  padding-top: 15px;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .video-list video {
+  width: 100% ;
+  height: 100%;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .img-box {
+  float: left;
+  width: 55px;
+  height: 55px;
+  position: relative;
+  background: #eee;
+  margin-right: 10px;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .img-box .play {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .img-box .del {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  z-index: 9;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .img-box img {
+  width: 100%;
+  height: 100%;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .label {
+  display: block;
+  width: 55px;
+  height: 55px;
+  border: 1px #E3E3E3 dashed ;
+  padding-top: 12px;
+  box-sizing: border-box;
+  text-align: center;
+  line-height: 19px;
+  color: #A2A2A2;
+  float: left;
+  cursor: pointer;
+  margin-top: 15px;
+  margin-right: 15px;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .label img {
+  width: 17px;
+}
+.index-box .evaluate-con .evaluate ul li .con .upload .label p {
+  transform: scale(0.8);
+}
+.index-box .cover {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  top: 0px;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+}
+.index-box .cover video {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.index-box .evaluate-bottom {
+  width: 1200px;
+  height: 120px;
+  background: #fff;
+  margin: 0px auto;
+  margin-top: 20px;
+  padding-top: 36px;
+  box-sizing: border-box;
+}
+.index-box .evaluate-bottom .submit {
+  width: 220px;
+  height: 50px;
+  border-radius: 3px;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 18px;
+  margin-left: 442px;
+  cursor: pointer;
+}
+.index-box .evaluate-bottom label {
+  color: #656565;
+  margin-left: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  moz-user-select: -moz-none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.index-box .evaluate-bottom label img {
+  position: relative;
+  top: 2px;
+}
+.index-box .evaluate-bottom label .bor {
+  display: inline-block;
+  width: 14px ;
+  height: 14px;
+  border: 1px solid #E0E0E0;
+  box-sizing: border-box;
+  position: relative;
+  top: 2px;
+  display: none;
+}
+.index-box .evaluate-bottom label span {
+  color: #999999;
+}

@@ -1,0 +1,177 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-tab-title .layui-this {
+        background-color: #fff !important;
+    }
+
+    .show {
+        margin-top: 1%;
+        padding: 20px;
+        background-color: #F2F2F2;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、根据条件查询砍价商品</span></li>
+            <li><span>2、当活动状态为进行中时，只能查看砍价明细，不能修改、删除商品，当活动结束时才可编辑和删除</span></li>
+            <li><span>3、审核未通过或待审核时，无法查看砍价明细，只有已通过的商品才可以查看砍价明细</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<form class="layui-form" method="get">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('cut/create')">
+                <div class="fbutton">
+                    <div class="add" title="添加砍价商品"><span><i class="fa fa-plus"></i> 添加砍价商品</span></div>
+                </div>
+            </a>
+            <div class="refresh">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i
+                        class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select">
+                    <select name="activity_status" class="cite ps-container">
+                        <option value="-1">活动状态</option>
+                        <option value="0" {eq name=":input('activity_status')" value="0" }selected{/eq}>进行中</option>
+                        <option value="1" {eq name=":input('activity_status')" value="1" }selected{/eq}>已结束</option>
+                    </select>
+                </div>
+                <div class="imitate_select" {eq name="single_store" value="0"} hidden {/eq}>
+                    <select name="type" class="cite ps-container">
+                        <option value="-1">店铺类型</option>
+                        <option value="0" {eq name=":input('type')" value="0" }selected{/eq}>自营</option>
+                        <option value="1" {eq name=":input('type')" value="1" }selected{/eq}>商家</option>
+                    </select>
+                </div>
+                <div class="imitate_select">
+                    <select name="status" class="cite ps-container">
+                        <option value="-1">审核状态</option>
+                        <option value="2" {eq name=":input('status')" value="2" }selected{/eq}>待审核</option>
+                        <option value="1" {eq name=":input('status')" value="1" }selected{/eq}>审核已通过</option>
+                        <option value="0" {eq name=":input('status')" value="0" }selected{/eq}>审核未通过</option>
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="请输入砍价商品"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                    <!--<input type="submit" class="btn" name="secrch_btn" value="">-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+</form>
+<!--列表开始-->
+<div class="layui-form">
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>
+            <th>编号</th>
+            <th>名称</th>
+            {eq name="single_store" value="1"}<th>店铺</th>{/eq}
+            <th>底价</th>
+            <th>原价</th>
+            <th>库存</th>
+            <th>有效时长</th>
+            <th>参与活动时间</th>
+            <th>活动状态</th>
+            <th>审核状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {foreach name='data' item='v'}
+        <tr>
+            <td><input type="checkbox" value="{$v.cut_goods_id}" class="chk" lay-filter="chk" title="" lay-skin="primary"/>
+            </td>
+            <td>{$v.cut_goods_id}</td>
+            <td>{$v.goods_name?:'未设置'}</td>
+            {eq name="single_store" value="1"}<td>{$v.store_name}</td>{/eq}
+            <td>{$v.cut_price}</td>
+            <td>{$v.shop_price}</td>
+            <td>{$v.goods_number}</td>
+            <td>{$v.continue_time}小时</td>
+            <td>{$v.up_shelf_time}-{$v.down_shelf_time}</td>
+            <td>{$v.ActivityText}</td>
+            <td>{$v.StatusText}</td>
+            <td>
+                {if condition="$v.status eq 1"}
+                    {if condition="$v.ActivityText eq '进行中'"}
+                    <a class="btn_edit" onclick="main.jumpFour('cut/inspect?id={$v.cut_goods_id}')"><i class="fa fa-eye"></i>砍价明细</a>
+                    {elseif condition="$v.ActivityText eq '已结束'"}
+                    <a class="btn_edit" onclick="main.jumpFour('cut/edit?id={$v.cut_goods_id}')"><i class="fa fa-edit"></i>编辑</a>
+                    <a class="btn_trash" onclick="main.destroy('/cut/destroy','{$v.cut_goods_id}')"><i class="fa fa-trash-o"></i>删除</a>
+                    <a class="btn_edit" onclick="main.jumpFour('cut/inspect?id={$v.cut_goods_id}')"><i class="fa fa-eye"></i>砍价明细</a>
+                    {else/}
+                    <a class="btn_edit" onclick="main.jumpFour('cut/edit?id={$v.cut_goods_id}')"><i class="fa fa-edit"></i>编辑</a>
+                    <a class="btn_trash" onclick="main.destroy('/cut/destroy','{$v.cut_goods_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+                    {/if}
+                {elseif condition="$v.status eq 2"}
+                <a class="btn_edit" onclick="main.jumpFour('cut/edit?id={$v.cut_goods_id}')"><i class="fa fa-edit"></i>审核</a>
+                <a class="btn_trash" onclick="main.destroy('/cut/destroy','{$v.cut_goods_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+                {else/}
+                <a class="btn_edit" onclick="main.jumpFour('cut/edit?id={$v.cut_goods_id}')"><i class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" onclick="main.destroy('/cut/destroy','{$v.cut_goods_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/cut/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+<!--列表结束-->
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    //重定向本身
+    function reloadSelf(condition) {
+        var param = '', key = Object.keys(condition);
+        if (key.length > 0) {
+            for (var x in condition) {
+                param += '&' + x + '=' + condition[x];
+            }
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+</script>
+{/block}

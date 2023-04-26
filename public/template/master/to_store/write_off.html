@@ -1,0 +1,61 @@
+{extend name='layout/frame' /}
+{block name='title'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+
+<style>
+    .semi-circle3{  width:50px;  height:100px;  background-color:#cb18f8;  border-radius:50px 0 0 50px; /* 左上、右上、右下、左下 */  }
+    .in_store{margin-top: 50px;}
+    .in_store i{  font-size: 60px;  display: block;  margin: 0 auto;  color: #38f;  }
+    .in_store div{  font-size: 13px;  line-height: 30px;  text-align: center;  margin-top: 10px;  }
+    .in_store .look{  margin-top:10px;border-radius: 2px;  font-size: 12px;  font-family: inherit;  color: #38f;  background: #fff;  border: 1px solid #38f;  text-align: center;  vertical-align: middle;  -webkit-box-sizing: border-box;  -moz-box-sizing: border-box;  box-sizing: border-box;  cursor: pointer;  -webkit-transition: all .3s;  -moz-transition: all .3s;  transition: all .3s;  display: inline-block;  width: 80px;  line-height: 30px;  }
+
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>输入订单号，显示订单信息</li>
+                <li>审核相关订单信息，进行核销。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="layui-tab layui-tab-brief">
+
+</div>
+<!--导航-->
+<form class="layui-form" method="post" action="">
+    <div class="layui-form-item" style="text-align: center;">
+        <div style="display: inline-block;padding: 50px 0">
+            <label class="layui-form-label" style="width: auto">订单号</label>
+            <div class="layui-input-inline" style="width: 400px;">
+                <input type="text" id="order_id" lay-verify="title" autocomplete="off"
+                       placeholder="请输入订单号" class="layui-input" style="width: 400px;">
+            </div>
+            <button class="layui-btn" onclick="step.cancellation({title:'自提订单',btn:[]})" style="margin-top: 5px;">核销</button>
+        </div>
+        <div class="in_store" style="">
+            <svg t="1538116856754" class="icon" style="display: block;margin: 0 auto" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1431" xmlns:xlink="http://www.w3.org/1999/xlink" width="80" height="80"><defs><style type="text/css"></style></defs><path d="M525.258467 51.343365c-244.178255 0-442.140932 197.929932-442.140932 442.141956 0 244.176209 197.962677 442.105117 442.140932 442.105117 244.194628 0 442.12456-197.928908 442.12456-442.105117C967.382003 249.273297 769.452071 51.343365 525.258467 51.343365zM524.839935 891.081735c-219.593324 0-397.614833-178.00309-397.614833-397.596414 0-219.628116 178.021509-397.632229 397.614833-397.632229s397.615856 178.004113 397.615856 397.632229C922.454768 713.078645 744.433258 891.081735 524.839935 891.081735z" p-id="1432" fill="#1e9fff"></path><path d="M757.56023 412.915307l-97.156784-97.29493L383.503952 315.620377l-95.018074 97.29493 24.602328 0 0 0.001023-24.602328 0c0 17.830087 9.951653 33.337269 24.602328 41.273009l0 254.298753 256.834506 0 0-35.606962L348.697215 672.881131 348.697215 457.899848c13.673417-4.036943 24.742521-14.130835 30.101575-27.181059l7.013741 0c7.013741 17.075911 23.800056 29.104875 43.401486 29.104875 19.602454 0 36.389792-12.028964 43.402509-29.104875l6.999414 0c7.017834 17.075911 23.814382 29.104875 43.416835 29.104875 19.590174 0 36.383652-12.028964 43.399439-29.104875l6.999414 0c7.013741 17.075911 23.800056 29.104875 43.402509 29.104875s36.389792-12.028964 43.402509-29.104875l7.013741 0c5.164626 12.57541 15.632025 22.405289 28.623921 26.715455l0 150.906965L731.480248 608.341209 731.480248 454.946586C746.934219 447.273836 757.56023 431.339936 757.56023 412.915307l-26.079982 0.001023 0-0.001023L757.56023 412.915307z" p-id="1433" fill="#1e9fff"></path><path d="M599.845209 641.793088l0 86.48063c0 5.669116 4.468778 10.6782 9.94756 10.6782l19.959587 0L629.752356 631.570259l-19.959587 0C604.31501 631.570259 599.845209 636.124995 599.845209 641.793088z" p-id="1434" fill="#1e9fff"></path><path d="M724.49209 631.570259l-19.960611 0 0 107.379613 19.960611 0c5.494131 0 9.961886-5.008061 9.961886-10.677177l0-86.479607C734.453976 636.124995 729.985198 631.570259 724.49209 631.570259z" p-id="1435" fill="#1e9fff"></path><path d="M684.588265 611.087762l-34.896788 0c-5.511527 0-9.979282 4.588505-9.979282 10.257621l0 117.603465 54.854329 0L694.566524 621.34743C694.568571 615.678314 690.100816 611.087762 684.588265 611.087762zM684.587242 631.570259l-34.895765 0 0-5.111414c0-2.850931 2.226714-5.145184 4.992711-5.145184l24.930809 0c2.7486 0 4.971222 2.294252 4.971222 5.145184L684.586219 631.570259z" p-id="1436" fill="#1e9fff"></path></svg>            <div>0个订单待自提</div>
+            <a href="javascript:main.jumpFour('to_store/index');" class="look">查看</a>
+        </div>
+    </div>
+
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script>
+    main.form();
+</script>
+{/block}
+{block name='highSearch'}{/block}

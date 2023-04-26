@@ -1,0 +1,357 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<link href="__RES__/css/common/formSelects-v4.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<style>
+    .xm-cz{
+        display: none;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>前台可在抢购频道页看到该商品。</span></li>
+            <li><span>根据要求填写相关抢购信息。</span></li>
+            <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示over-->
+<!--表单开始-->
+<form class="layui-form" action="" method="post">
+    <div class="contentShell65">
+        <input type="hidden" name="goods_id" value="{$item.goods_id|default=''}" title/>
+        <!--商品名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-inline">
+                <input type="text" name="group_goods_name" value="{$item.Goods.goods_name|default=''}" title readonly
+                       autocomplete="off" placeholder="请选择抢购商品" class="layui-input">
+            </div>
+            {neq name="$item.status|default=''" value="2"}
+            <a href="javascript:void(0);" onclick="openCity({title:'选择抢购商品',btn:[]},3)"
+               class="layui-btn layui-btn-normal layui-input-inline" style="width: auto">选择商品</a>
+            {/neq}
+        </div>
+        <!--商品原价-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">商品原价</label>
+            <div class="layui-input-inline">
+                <input type="text" name="group_goods_price" value="{$item.Goods.shop_price|default=''}" title readonly
+                       autocomplete="off" placeholder="请输入商品原价" class="layui-input" maxlength="8">
+            </div>
+        </div>
+        <!--所属场次-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 所属场次</label>
+            <div class="layui-input-inline">
+                <select name="interval_id" xm-select="store" {eq name="$item.status|default=''" value="2"} disabled {/eq}>
+                    <option value="">所属场次</option>
+                    {volist name="classify_list" id="classify"}
+                    <option value="{$classify.limit_interval_id}" {present name="$item.interval_id"}
+                            {in name="$classify.limit_interval_id" value="$item.interval_id"}selected="selected"{/in}{/present}>{$classify.interval_name}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <!--抢购默认价格-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>抢购默认价格</label>
+            <div class="layui-input-inline">
+                <input type="text" name="limit_price" value="{$item.Goods.time_limit_price|default=''}" title maxlength="8" {eq name="$item.status|default=''" value="2"} readonly {/eq}
+                       autocomplete="off" placeholder="填写抢购默认价格" class="layui-input">
+            </div>
+        </div>
+        <!--可售数量-->
+        <div class="layui-form-item">
+            <input type="hidden" name="goods_number" id="goods_number" value="{$item.goods.goods_number|default=0}">
+            <label class="layui-form-label"><em class="require">* </em>售卖上限</label>
+            <div class="layui-input-inline">
+                <input onkeyup="check_vendibility_number(this)" type="text" goods_number="{$item.goods.goods_number|default=0}" name="available_sale" id="single_cut_min" value="{$item.available_sale|default=''}" title
+                       autocomplete="off" placeholder="填写售卖上限(正整数)" class="layui-input" maxlength="8" {eq name="$item.status|default=''" value="2"} readonly {/eq}>
+                <div style="overflow: hidden">
+                    <span class="remarks" style="float: left">限时抢购中可兑换最多商品数量</span>
+                </div>
+            </div>
+        </div>
+        <!--活动价格限购-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>活动价格限购数量</label>
+            <div class="layui-input-inline">
+                <input type="text" name="limit_purchase" value="{$item.limit_purchase|default=''}"  oninput="value=value.replace(/[^\d]/g,'')" title maxlength="3" {eq name="$item.status|default=''" value="2"} readonly {/eq}
+                       autocomplete="off" placeholder="活动价格限购数量(正整数)，填0则不限购" class="layui-input">
+            </div>
+        </div>
+        <!--商品属性抢购价格-->
+        <div class="layui-form-item" style="display:none;">
+            <label class="layui-form-label">设置属性抢购价</label>
+            <div class="layui-input-block">
+                <div class="layui-form">
+                    <table class="layui-table spec_table">
+                        <thead>
+                        <tr>
+                            <th>规格</th>
+                            <th>属性原价</th>
+                            <th>属性限时抢购价
+                                <div class="batch">
+                                    <b onclick="$('.batch-input').not($(this).next('.batch-input')).hide();$(this).next('.batch-input').toggle();$('.batch_set').focus();" class="fa fa-edit" title="批量设置此列"></b>
+                                    <div class="batch-input" style="display: none;">
+                                        <h6>批量设置限时抢购价：</h6>
+                                        <a href="javascript:void(0)" class="close" onclick="$(this).parent('.batch-input').hide();">
+                                            <div class="fa fa-close (alias)"></div></a>
+                                        <input type="text" title class="text price batch_set1">
+                                        <a href="javascript:void(0)" class="ncsc-btn-mini" onclick="batchSetTxt($(this))">设置</a>
+                                        <span class="arrow"></span>
+                                    </div></div>
+                            </th>
+                            <th>属性库存</th>
+                            <th>限时抢购库存
+                                <div class="batch">
+                                    <b onclick="$('.batch-input').not($(this).next('.batch-input')).hide();$(this).next('.batch-input').toggle();$('.batch_set').focus();" class="fa fa-edit" title="批量设置此列"></b>
+                                    <div class="batch-input" style="display: none;">
+                                        <h6>限时抢购库存：</h6>
+                                        <a href="javascript:void(0)" class="close" onclick="$(this).parent('.batch-input').hide();">
+                                            <div class="fa fa-close (alias)"></div></a>
+                                        <input type="text" title class="text price batch_set">
+                                        <a href="javascript:void(0)" class="ncsc-btn-mini" onclick="batchSetTxt($(this))">设置</a>
+                                        <span class="arrow"></span>
+                                    </div></div>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--开始时间-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>生效日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="up_shelf_time" id="up_shelf_time" readonly {eq name="$item.status|default=''" value="2"} readonly {/eq}
+                       value="{$item.up_shelf_time|default=''}" autocomplete="off" placeholder="请选择生效日期"
+                       class="layui-input">
+            </div>
+        </div>
+        <!--结束时间-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>失效日期</label>
+            <div class="layui-input-inline">
+                <input type="text" name="down_shelf_time" id="down_shelf_time" readonly {eq name="$item.status|default=''" value="2"} readonly {/eq}
+                       value="{$item.down_shelf_time|default=''}" autocomplete="off" placeholder="请选择失效日期"
+                       class="layui-input">
+            </div>
+        </div>
+        {eq name="single_store" value="1"}
+        <!--审核状态-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><em class="require">* </em>审核状态</label>
+            <div class="layui-input-block">
+                <div class="checkbox_items radio_status" onclick="showunit()">
+                    <input type="radio" name="status" value="1" title="已通过"
+                           {eq name="item.status|default='1'" value="1" }checked{/eq}{eq name="item.status|default='1'" value="2" }checked{/eq}
+                    >
+                    <input type="radio" name="status" value="0" title="未通过"
+                           {eq name="item.status|default='1'" value="0" }checked{/eq}
+                    >
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" id="reason"    {in name="item.status|default='1'" value="1,2" } hidden {/in}>
+            <label class="layui-form-label"><em class="require">* </em>未通过原因：</label>
+            <div class="layui-input-block">
+                            <textarea placeholder="未通过原因，不能超过100字"
+                                      name="reason" maxlength="100" style="height: 200px;" class="layui-textarea">{$item.reason|default=''}</textarea>
+            </div>
+        </div>
+        {else/}
+        <input type="hidden" name="status" value="1">
+        {/eq}
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <input type="hidden" name="limit_id" value="{$item.limit_id|default=''}">
+                <a type="reset" class="layui-btn layui-btn-primary" href="/limit/index">返回</a>
+                <button class="layui-btn" type="submit" id="submit">提交</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+<!--表单结束-->
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<script src="__RES__/js/common/formSelects-v4.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    function openCity(obj, type) {
+        var param = 'cateId='
+            + '&brandId='
+            + '&keyword=' + '&type=' + type;
+        layer.open({
+            type: 2,
+            title: obj.title,
+            move: false,
+            shade: 0.2,
+            shadeClose: true,
+            area: ['80%', '700px'],
+            btn: obj.btn,
+            content: '/goods/searchGoods?' + param
+        });
+    }
+    function showunit() {
+        var get_value = $("input[name='status']:checked").val();
+        if (get_value == 1) {
+            $('#reason').hide()
+        } else {
+            $('#reason').show();
+        }
+    }
+    //检查设置库存是否满足已有库存
+    // function check_arrt_number(e, number) {
+    //     var _number = parseInt($(e).val());
+    //     var attr_number = parseInt(number);
+    //     if (_number > attr_number) {
+    //         $(e).val(attr_number);
+    //         layer.msg('所设置属性库存不足');
+    //         return;
+    //     }
+    //     $(e).val(isNaN(_number)?0:_number);
+    // }
+    //检查设置可售数量是否满足已有库存
+    // function check_vendibility_number(e) {
+    //     var number = parseInt($(e).val());
+    //     var attr_number = parseInt($(e).attr('goods_number'));
+    //     if (number > attr_number) {
+    //         $(e).val(attr_number);
+    //         layer.msg('所设置库存大于总库存');
+    //         return;
+    //     }
+    //     $(e).val(isNaN(number)?0:number);
+    // }
+
+    main.form();
+    $.Datatype.zNum = /^[1-9]\d*$/;
+    main.valid('.layui-form');
+    main.laydate([
+        {
+            elem: '#up_shelf_time'
+        },
+        {
+            elem: '#down_shelf_time'
+        }
+    ]);
+    $(function () {
+        getProducts('{$item.goods_id?:\'\'}');
+
+        $('body').on('change','input[name="attr_time_limit_number[]"]',function () {
+            var available_sale = 0;
+
+            $('input[name="attr_time_limit_number[]"]').each(function () {
+                available_sale += parseInt($(this).val())
+            });
+
+            $('input[name=available_sale]').val(available_sale)
+
+        })
+
+
+
+    });
+    //检查设置库存是否满足已有库存
+    function check_arrt_number(e, number) {
+        var _number = parseInt($(e).val());
+        var attr_number = parseInt(number);
+        if (_number > attr_number) {
+            $(e).val(attr_number);
+            layer.msg('所设置属性库存不足');
+            return;
+        }
+        $(e).val(isNaN(_number)?0:_number);
+    }
+    var option = {
+        columnDefs: [
+            {orderable: false,targets: [1, -1] }
+        ],
+        //解决从新加载表格内容问题
+        destroy:true,
+        retrieve:true,
+        lengthChange: false,
+        language: {
+            "url": "__RES__/js/DataTables-1.10.15/media/chinese.json"
+        }
+    };
+    // 获取规格
+    function getProducts(id) {
+        if (id === '') return;
+        main.ajax({data: {id:id,type:3},url: '/goods/getProducts',callback: function (res) {
+            if (res.code != 0){
+                layer.msg(res.message);
+                return false;
+            }
+                $('#single_cut_min').attr('goods_number', res.goods_number);
+                $('#goods_number').val(res.goods_number);
+            if (res.data !== ''){
+                $('.spec_table tbody').children().remove();
+                $('.spec_table').dataTable().fnClearTable();    //清空数据
+                $('.spec_table').dataTable().fnDestroy();       // 销毁
+                $('.spec_table tbody').html(res.data).parents('.layui-form-item').show()
+                $('.spec_table').dataTable(option);
+            }else{
+                $('.spec_table tbody').parents('.layui-form-item').hide();
+            }
+        }});
+    }
+    // 批量设置
+    function batchSetTxt(jq) {
+        var dt = {},
+            index = jq.parents('th').index();
+        if ($.fn.dataTable.isDataTable('.spec_table')){
+            dt = $('.spec_table').dataTable().api();
+        }else {
+            dt = $('.spec_table').dataTable(option).api();
+        }
+        jq.parent('.batch-input').hide();
+        switch (index) {
+            case 2:
+                var price = jq.prev('.batch_set1').val();
+                dt.$('.batch-'+index).val(price);
+                break;
+            case 4:
+                var txt = jq.prev('.batch_set').val();
+                var is_number=false;
+                dt.$('.batch-'+index).each(function(k,v){
+                    var number=parseInt($(v).attr('number'));
+                    var _txt=txt;
+                    if(_txt>number){
+                        is_number=true;
+                        _txt=number;
+                    }
+                    $(v).val(_txt);
+                });
+                if(is_number) {
+                    layer.msg('部分属性库存不足，已默认填入最大值');
+                }
+                break;
+        }
+    }
+</script>
+
+{/block}
+{block name='highSearch'}{/block}

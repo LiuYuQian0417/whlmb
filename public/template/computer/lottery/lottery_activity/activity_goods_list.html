@@ -1,0 +1,608 @@
+{extend name='public/index_header' /}
+
+{block name='content_css'}
+<!--品牌甄选css-->
+<link rel="stylesheet" href="__RES__/css/draw/draw.css">
+<link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/js/swiper.min.js"></script>
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+<link rel="stylesheet" href="__RES__/css/my/MyAddress.css"/>
+{/block}
+
+{block name="content"}
+<!--头部搜索-->
+<!--<div class="head-container border-color-bottom">-->
+<!--    <div class="head-container-center">-->
+<!--        <div class="logo" >-->
+<!--            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">-->
+<!--            <span>抽奖活动</span>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--头部搜索结束-->
+
+<div class="draw">
+    <div class="draw-center">
+        <div class="draw-left">
+
+            <div class="record">
+                <div class="tit">
+                    中奖记录
+                </div>
+                <div class="silder">
+                    <!-- Swiper -->
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            {volist name='lottery_record' id='lottery_record_list'}
+                            <div class="swiper-slide">
+                                <div class="list">
+                                    <div class="name primary-color">{$lottery_record_list.member.nickname}</div>
+                                    <div class="iphone">{$lottery_record_list.member.phone}</div>
+                                    <div class="poil">
+                                        {$lottery_record_list.prize_title}
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" record-a">
+                <a href="javascript:;" onclick="main.jump({'url':'/pc2.0/lottery_activity/order_list'})"
+                   class="primary-color border-color">查看我的中奖记录</a>
+            </div>
+        </div>
+
+        <div class="draw-right">
+            <div class="btn-box">
+                <a class=" draw-btn" href="javascript:;">
+                    抽奖规则
+                </a>
+            </div>
+
+
+            <div class="lottery">
+                <div class="draw-list">
+                    {volist name="data.lottery_prize" id='lottery_prize1' offset="0" length='3'}
+                    <div class="con" data-num="{$key}">
+                        {eq name='lottery_prize1.is_open' value='1'}
+                        <div class="img">
+                            <img src="{$lottery_prize1.file}" alt="">
+                            <p class="primary-color">{$lottery_prize1.prize_title}</p>
+                        </div>
+                        {else/}
+                        <p class="primary-color">谢谢参与</p>
+                        {/eq}
+                    </div>
+                    {/volist}
+                    <div class="con" data-num="7">
+                        {eq name='data.lottery_prize.7.is_open' value='1'}
+                        <div class="img">
+                            <img src="{$data.lottery_prize.7.file}" alt="">
+                            <p class="primary-color">{$data.lottery_prize.7.prize_title}</p>
+                        </div>
+                        {else/}
+                        <p class="primary-color">谢谢参与</p>
+                        {/eq}
+                    </div>
+                    <a href="javascript:;" class="con btn">
+                        立即抽奖
+                    </a>
+                    <div class="con" data-num="3">
+                        {eq name='data.lottery_prize.3.is_open' value='1'}
+                        <div class="img">
+                            <img src="{$data.lottery_prize.3.file}" alt="">
+                            <p class="primary-color">{$data.lottery_prize.3.prize_title}</p>
+                        </div>
+                        {else/}
+                        <p class="primary-color">谢谢参与</p>
+                        {/eq}
+                    </div>
+                    <!--4-->
+                    <div class="con" data-num="6">
+                        {eq name='data.lottery_prize.6.is_open' value='1'}
+                        <div class="img">
+                            <img src="{$data.lottery_prize.6.file}" alt="">
+                            <p class="primary-color">{$data.lottery_prize.6.prize_title}</p>
+                        </div>
+                        {else/}
+                        <p class="primary-color">谢谢参与</p>
+                        {/eq}
+                    </div>
+                    <div class="con" data-num="5">
+                        {eq name='data.lottery_prize.5.is_open' value='1'}
+                        <div class="img">
+                            <img src="{$data.lottery_prize.5.file}" alt="">
+                            <p class="primary-color">{$data.lottery_prize.5.prize_title}</p>
+                        </div>
+                        {else/}
+                        <p class="primary-color">谢谢参与</p>
+                        {/eq}
+                    </div>
+                    <div class="con" data-num="4">
+                        {eq name='data.lottery_prize.4.is_open' value='1'}
+                        <div class="img">
+                            <img src="{$data.lottery_prize.4.file}" alt="">
+                            <p class="primary-color">{$data.lottery_prize.4.prize_title}</p>
+                        </div>
+                        {else/}
+                        <p class="primary-color">谢谢参与</p>
+                        {/eq}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="address-corver">
+    <div class="bg"></div>
+    <!--账号安全右侧开始-->
+    <!--账号安全右侧开始-->
+    <div class="my-address">
+        <div class="title">
+            <div class="title-left">
+                <span class="tit">收货地址</span>
+                <!--<span class="prompt">您暂未创建收货地址，最多可创建20个</span>-->
+                <!--<span class="prompt">您已创建3个收货地址，最多可创建20个</span>-->
+            </div>
+            <!--<a class="add-address primary-color border-color" @click="addNewAddress" href="javascript:;">-->
+            <!--+新增收货地址-->
+            <!--</a>-->
+        </div>
+
+        <div class="address-box">
+            <div class="address-big">
+                {empty name='$member_address'}
+                <div class="indent-box indent-box-emty">
+                    <img src="__RES__/imgs/orderemty.png" alt="">
+                    <p>暂无地址</p>
+                </div>
+                {/empty}
+                <!--每一条地址-->
+                {volist name="$member_address" id="item"}
+                <div class="address default-address" onclick="set_address(this)" data-address_id="{$item.member_address_id}">
+                    <div class="address-top">
+                        {eq name="item.is_default" value="1"}
+                        <div class="primary-background-color default">
+                                    <span>
+                                      默认地址
+                                    </span>
+                        </div>
+                        {/eq}
+                        <!--<div class="deitor-del">-->
+                            <!--<a href="javascript:;" onclick="site(this,'2');" class="deitor"-->
+                               <!--address_id="{$item.member_address_id}">-->
+                                <!--<img src="__RES__/imgs/my/editor.png" alt="">-->
+                            <!--</a>-->
+                            <!--<a href="javascript:;"-->
+                               <!--onclick="main.ajax({'url':'/pc2.0/address/destroy',data:{'member_address_id':'{$item.member_address_id}'}})"-->
+                               <!--class="del">-->
+                                <!--<img src="__RES__/imgs/my/del-address.png" alt="" data-address="{$item.address}"-->
+                                     <!--data-lat="{$item.lat}" data-lng="{$item.lng}">-->
+                            <!--</a>-->
+                        <!--</div>-->
+                    </div>
+                    <div class="contact">
+                        <span class="name">{$item.name}</span>
+                        <span class="iphone">{$item.phone}</span>
+                    </div>
+                    <div class="detailed-address">
+                        {$item.province} {$item.city} {$item.area} {$item.street}
+                        <!--黑龙江省 哈尔滨市 南岗区 爱民小区132号-->
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <!--每一条地址-->
+            <!--<div class="address default-address">-->
+                    <!--<div class="address-top">-->
+                        <!--<div class="primary-background-color default">-->
+			                    <!--<span>-->
+			                      <!--默认地址-->
+			                    <!--</span>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash;<div class="deitor-del">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<a href="javascript:;" class="deitor" >&ndash;&gt;-->
+                        <!--&lt;!&ndash;<img src="../../assets/imgs/my/editor.png" alt="">&ndash;&gt;-->
+                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<a href="javascript:;" class="del">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<img src="../../assets/imgs/my/del-address.png"  alt="">&ndash;&gt;-->
+                        <!--&lt;!&ndash;</a>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                    <!--</div>-->
+                    <!--<div class="contact">-->
+                        <!--<span class="name">小二郎的老黄牛</span>-->
+                        <!--<span class="iphone">13111111111</span>-->
+                    <!--</div>-->
+
+                    <!--<div class="detailed-address">-->
+                        <!--黑龙江省 哈尔滨市 南岗区 爱民小区132号-->
+                    <!--</div>-->
+                <!--</div>-->
+        </div>
+
+        <!--添加地址-->
+        <!--<div class="mask" style="display: none;">-->
+        <!--<form action="">-->
+        <!--<div class="address-con">-->
+        <!--<div class="tit">-->
+        <!--<span>添加地址</span>-->
+        <!--<div class="right" >-->
+        <!--<img src="../../assets/imgs/my/close.png" alt="">-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="list">-->
+        <!--<p class="list-tit">-->
+        <!--<span class="primary-color">*</span>收货人：-->
+        <!--</p>-->
+        <!--<input type="text" class="sty" name="name">-->
+        <!--</div>-->
+
+        <!--<div class="list">-->
+        <!--<p class="list-tit">-->
+        <!--<span class="primary-color">*</span>手机号码：-->
+        <!--</p>-->
+        <!--<input type="text" class="sty" name="phone">-->
+        <!--</div>-->
+
+
+        <!--<div class="list">-->
+        <!--<p class="list-tit">-->
+        <!--<span class="primary-color">*</span>所在地区：-->
+        <!--</p>-->
+        <!--<div class="select-address">-->
+        <!--<div class="address-detailed-box  ">-->
+        <!--<span >&#45;&#45;请选择&#45;&#45;</span>-->
+        <!--<img src="../../assets/imgs/my/datebottom.png" alt="">-->
+        <!--</div>-->
+        <!--<div class="detailed-box" style="display: none;" >-->
+        <!--<div class="detailed-box-top">-->
+        <!--&lt;!&ndash;省&ndash;&gt;-->
+        <!--<div class="address-text active"  >-->
+        <!--<a href="javascript:;">&#45;&#45;请选择&#45;&#45;</a>-->
+        <!--<img src="../../assets/imgs/my/datebottom.png" alt="">-->
+        <!--</div>-->
+
+        <!--&lt;!&ndash;市&ndash;&gt;-->
+        <!--<div class="address-text "  style="display: none;">-->
+        <!--<a href="javascript:;">&#45;&#45;请选择&#45;&#45;</a>-->
+        <!--<img src="../../assets/imgs/my/datebottom.png" alt="">-->
+        <!--</div>-->
+        <!--&lt;!&ndash;县&ndash;&gt;-->
+        <!--<div class="address-text " style="display: none;">-->
+        <!--<a href="javascript:;">&#45;&#45;请选择&#45;&#45;</a>-->
+        <!--<img src="../../assets/imgs/my/datebottom.png" alt="">-->
+        <!--</div>-->
+        <!--&lt;!&ndash;区&ndash;&gt;-->
+        <!--<div class="address-text  " style="display: none;">-->
+        <!--<a href="javascript:;">&#45;&#45;请选择&#45;&#45;</a>-->
+        <!--<img src="../../assets/imgs/my/datebottom.png" alt="">-->
+        <!--</div>-->
+
+        <!--<img class="close" src="../../assets/imgs/my/address-close.png" style="cursor: pointer;" alt="">-->
+        <!--</div>-->
+
+        <!--<div class="address-detailed">-->
+        <!--&lt;!&ndash;省份列表&ndash;&gt;-->
+        <!--<a href="javascript:;" class="primary-background-color checked provincial">-->
+        <!--黑龙江省-->
+        <!--</a>-->
+        <!--&lt;!&ndash;省份列表&ndash;&gt;-->
+        <!--<a href="javascript:;" class="provincial">-->
+        <!--黑龙江省1-->
+        <!--</a>-->
+
+        <!--</div>-->
+
+        <!--<div class="address-detailed" style="display: none;">-->
+        <!--<a href="javascript:;" class=" city">-->
+        <!--哈尔滨市-->
+        <!--</a>-->
+        <!--<a href="javascript:;" class=" city">-->
+        <!--哈尔滨市1-->
+        <!--</a>-->
+        <!--</div>-->
+        <!--<div class="address-detailed" style="display: none;">-->
+        <!--<a href="javascript:;" class="area">-->
+        <!--南岗区-->
+        <!--</a>-->
+        <!--<a href="javascript:;" class="area">-->
+        <!--南岗区1-->
+        <!--</a>-->
+        <!--</div>-->
+        <!--<div class="address-detailed" style="display: none;">-->
+        <!--<a href="javascript:;" class=" street">-->
+        <!--爱民街-->
+        <!--</a>-->
+        <!--<a href="javascript:;" class=" street">-->
+        <!--爱民街 1-->
+        <!--</a>-->
+        <!--</div>-->
+
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+
+        <!--<div class="list">-->
+        <!--<p class="list-tit">-->
+        <!--<span class="primary-color">*</span>详细地址：-->
+        <!--</p>-->
+        <!--<input type="text" class="sty" v-model="address.address">-->
+        <!--</div>-->
+
+        <!--<div class="setting-default-address">-->
+        <!--&lt;!&ndash;hidden&ndash;&gt;-->
+        <!--<input id="default" hidden type="checkbox" >-->
+        <!--<label for="default" >-->
+        <!--<img class="xdz" src="../../assets/imgs/my/xdz.png" alt="">-->
+        <!--<img  class="wdz" src="../../assets/imgs/my/wdz.png" alt="">-->
+        <!--<a href="javascript:;">设为默认收货地址</a>-->
+        <!--</label>-->
+        <!--</div>-->
+
+        <!--<input type="submit" class="submit primary-background-color" value="保存">-->
+        <!--</div>-->
+        <!--</form>-->
+        <!--</div>-->
+
+    </div>
+    <!--账号安全右侧结束-->
+    <!--账号安全右侧结束-->
+</div>
+<div class="corver">
+    <div class="corver-box">
+        <img class="del" src="__RES__/imgs/draw/del.png" alt="">
+        <div class="spoil">
+            <div class="img">
+                <img src="__RES__/imgs/del/r1.jpg" alt="" hidden id="prize_img">
+            </div>
+            <p class="spoil-name">
+                恭喜您抽中，<span id="prize_name"></span>
+            </p>
+            <div class="address-box" id="prize_type">
+                <div class="address-left">
+                    <p>邮寄地址</p>
+                    <p>姓名 <span id="prize_user_name"></span></p>
+                    <p class="address" id="prize_address"></p>
+                </div>
+                <div class="address-right">
+                    <a href="javascript:;">
+                        <img src="__RES__/imgs/draw/bj.png" alt="">
+                        <span class="primary-color">编辑地址</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-group">
+            <a class="primary-background-color" href="javascript:;"
+               onclick="main.jump({'url':'/pc2.0/lottery_activity/order_list'})">
+                我的抽奖
+            </a>
+            <a class="border-color primary-color" id="draw_again" href="javascript:;">
+                再抽一次
+            </a>
+            <a class="border-color primary-color" id="get_prize" href="javascript:;" data-member_address_id="">
+                确认领取
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="rule-corver">
+    <div class="rule-box">
+        <div class="rule-tit">抽奖规则
+            <img class="del" src="__RES__/imgs/draw/del.png" alt="">
+        </div>
+        <div class="rule-con">
+            {volist name='data.action_rule' id='action_rule'}
+            <p>{$i}：{$action_rule}</p>
+            {/volist}
+        </div>
+    </div>
+</div>
+{/block}
+{block name='js'}
+<!-- Initialize Swiper -->
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        direction: 'vertical',
+        slidesPerView: 6,
+        loop: true,
+        autoplay: {
+            delay: 3000,
+            stopOnLastSlide: false,
+            disableOnInteraction: false,
+        },
+    });
+</script>
+<script>
+    // 抽奖规则
+    $('.draw-btn').click(function () {
+        $('.rule-corver').show()
+    })
+    $('.rule-tit .del').click(function () {
+        $('.rule-corver').hide()
+    })
+
+    $('.address-corver .bg').click(function () {
+        $('.address-corver').hide();
+    });
+    // 地址选择
+    $('.address-right a').click(function () {
+        $('.address-corver').show();
+    });
+
+    $('.corver-box .del').click(function () {
+        $('.corver').hide();
+    });
+    // 中奖编号
+    var draw_num = 0;
+    // 时间
+    var seep = 200;
+    // 初始位置
+    var num = 2;
+    // 总圈数(必须大于5)
+    var cycle_index = 5;
+    // 当前圈数
+    var c_num = 0;
+    // 停止条件
+    var stop = 0;
+    // 定时器
+    var timer;
+    // 控制点击
+    var click = true;
+    //中奖信息
+    var awart_info = {};
+    $('.con[data-num=' + num + ']').addClass('active').siblings('.con').removeClass('active');
+
+    function run() {
+        num++;
+        if (num > 7) {
+            num = 0;
+            c_num++;
+        }
+        if (c_num >= 3) {
+            seep = 200;
+            clearInterval(timer);
+            timer = setInterval(run, seep);
+        }
+        if (c_num >= 4) {
+            seep = 400;
+            clearInterval(timer);
+            timer = setInterval(run, seep);
+        }
+        if (c_num >= 4) {
+            seep += 200;
+            clearInterval(timer);
+            timer = setInterval(run, seep);
+            stop = 1;
+        }
+        if (stop == 1) {
+            if (num == draw_num) {
+                clearInterval(timer);
+                setTimeout(function () {
+                    $('#get_prize').data('member_address_id', '');
+                    // 中奖类别  1实物奖品  2 积分奖品  3优惠券奖品  4未中奖
+                    if (awart_info.file){
+                        $('#prize_img').attr('src',awart_info.file).show();
+                    }else{
+                        $('#prize_img').hidden();
+                    }
+                    switch (awart_info.prize_type.toString()) {
+                        case '1':
+                            if (awart_info.address.length <= 0) {
+                                $('.address-left').hide();
+                            } else {
+                                $('#get_prize').data('member_address_id', awart_info.address.member_address_id);
+                                $('#prize_user_name').text(awart_info.address.name);
+                                $('#prize_address').text(awart_info.address.province + awart_info.address.city + awart_info.address.area + awart_info.address.street);
+                            }
+                            $('#prize_name').text($('div[data-num=' + draw_num + ']').children('div').children('p').text());
+                            $('#prize_type').show();
+                            $('#draw_again').hide();
+                            $('#get_prize').show();
+                            $('.corver').show();
+                            break;
+                        case '2':
+                            $('#prize_name').text($('div[data-num=' + draw_num + ']').children('div').children('p').text());
+                            $('#prize_type').hide();
+                            $('#draw_again').show();
+                            $('#get_prize').hide();
+                            $('.corver').show();
+                            break;
+                        case '3':
+                            $('#prize_name').text($('div[data-num=' + draw_num + ']').children('div').children('p').text());
+                            $('#prize_type').hide();
+                            $('#draw_again').show();
+                            $('#get_prize').hide();
+                            $('.corver').show();
+                            break;
+                        case '4':
+                            layer.msg('{$data.copy_writer}');
+                            break;
+                    }
+                    click = true;
+                    num = draw_num
+                }, 500)
+
+            }
+        }
+        $('.con[data-num=' + num + ']').addClass('active').siblings('.con').removeClass('active');
+    }
+
+    $('.btn').click(function () {
+        awart_info = {};
+        if ('{$data.is_open}' === '1') {
+            layer.msg('当前活动未开启');
+            return;
+        }
+        if (click) {
+            main.ajax({
+                'url': '/pc2.0/lottery_activity/draw',
+                'data': {'activity_id': '{$data.activity_id}','update_time':'{$data.update_time}'},
+                'callback': function (res) {
+                    switch (res.code.toString()) {
+                        //中奖
+                        case '0':
+                            awart_info = res.data;
+                            awart_info.order_id = res.order_id;
+                            // 中奖编号
+                            draw_num = res.data.prize_index;
+                            // 时间
+                            seep = 100;
+                            // 当前圈数
+                            c_num = 0;
+                            // 停止条件
+                            stop = 0;
+                            click = false;
+                            timer = setInterval(run, seep);
+                            break;
+                        //活动被修改
+                        case '-1':
+                            layer.msg(res.message,function(){
+                                window.location.reload();
+                            });
+                            break;
+                        default :
+                            layer.msg(res.message);
+                            break;
+                    }
+                }
+            });
+        }
+    });
+
+    //领取奖品
+    $('#get_prize').on('click', function () {
+        if ($(this).data('member_address_id') === '') {
+            larer.msg('请选择收货地址');
+        } else {
+            main.ajax({
+                'url': '/v2.0/lottery_activity/set_addres',
+                'data': {
+                    'member_address_id': $(this).data('member_address_id'),
+                    'activity_order_id': awart_info.order_id
+                },
+            });
+        }
+
+    });
+    //设置收货地址信息
+    function set_address(e){
+        $('#prize_user_name').text($(e).children('.contact').children('.name').text());
+        $('#prize_address').text($(e).children('.detailed-address').text());
+        $('#get_prize').data('member_address_id',$(e).data('address_id'));
+        $('.address-corver').hide();
+    }
+    //再抽一次
+    $('#draw_again').on('click', function () {
+        $('.corver').hide();
+    });
+</script>
+{/block}

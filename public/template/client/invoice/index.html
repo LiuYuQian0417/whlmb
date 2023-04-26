@@ -1,0 +1,242 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<script src="__RES__/js/jquery-1.10.2.min.js"></script>
+<link rel="stylesheet" href="__RES__/css/style.css">
+<style>
+    .tabCon .title{
+        border-bottom: none;
+        padding: 10px 0!important;
+        background-color: #fff !important;
+    }
+    .tabCon .title span{
+        color: #000;
+        font-weight: bold;
+
+
+    }
+    .layui-input-block{
+        float: left;
+        margin-left: 0px;
+        width: 192px;
+    }
+    .imitate_select{
+        width: 192px;
+    }
+    .layui-form-item .layui-input-inline{
+        width: 192px;
+    }
+    .layui-table tbody tr:nth-child(2n){
+        background: #fff;
+    }
+    .layui-table td, .layui-table th, .layui-table-fixed-r, .layui-table-header, .layui-table-page, .layui-table-tips-main, .layui-table-tool, .layui-table-view, .layui-table[lay-skin="line"], .layui-table[lay-skin="row"]{
+        border-right: none;
+        border-left: none;
+    }
+    .layui-table{
+        border: 1px solid #e6e6e6;
+    }
+    .layui-table tbody tr:hover{
+        background: #f2f2f2;
+    }
+</style>
+<style>
+    a:last-child {
+        margin-right: 10px;
+    }
+
+    a.btn_edit{
+        background-color: #1e9fff;
+        color: #fff !important;
+        width: 60px;
+    }
+</style>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css"/>
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>1、根据订单实际情况开具发票；<li>
+                <li>2、可通过此功能按照用户要求进行发票正常开具和补开操作；<li>
+                <li>3、对已开发票可进行 冲红与重开操作；<li>
+            </ul>
+        </div>
+    </div>
+    <!--操作提示end-->
+    <!--选项卡-->
+    <div class="layui-tab layui-tab-brief tabmenu">
+        <ul class="layui-tab-title tab">
+            <li class="layui-this active"><a href="/client/invoice/index">待开票</a></li>
+            <li><a href="/client/invoice/open">已开票</a></li>
+        </ul>
+    </div>
+    <!--申请开票起止时间开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label" style="width: 100px;">申请开票日期：</label>
+            <div class="imitate_select">
+                <input type="text" class="layui-input" name="date" id="date" value="{:input('get.date','')}" placeholder="申请开票日期">
+            </div>
+    </div>
+    <!--起止时间结束-->
+
+    <!--发票类型-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label" style="width: 100px;">发票类型：</label>
+        <div class="layui-input-block">
+            <select name="" lay-filter="invoice_type">
+                <option value="-1" {eq name=":input('invoice_type','-1')" value='-1' } selected {/eq}>全部</option>
+                <option value="0" {eq name=":input('invoice_type','')" value='0' } selected {/eq}>普通纸质发票 </option>
+                <option value="1" {eq name=":input('invoice_type','')" value='1' } selected {/eq}>增值税专用发票</option>
+            </select>
+        </div>
+    </div>
+    <!--发票类型-->
+
+    <!--发票抬头开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label" style="width: 100px;">发票抬头：</label>
+        <div class="layui-input-inline">
+            <input type="text" name="rise_name" value="{:input('rise_name','')}" autocomplete="off" placeholder=""
+                   class="layui-input">
+        </div>
+    </div>
+
+    <!--开票操作-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label" style="width: 100px;">开票操作：</label>
+        <div class="layui-input-block">
+            <select name="" lay-filter="invoice_status">
+                <option value="-1" {eq name=":input('invoice_status','0')" value='-1' } selected {/eq}>全部</option>
+                <option value="0" {eq name=":input('invoice_status','0')" value='0' } selected {/eq}>正常开票 </option>
+                <option value="1" {eq name=":input('invoice_status','0')" value='1' } selected {/eq}>补开发票</option>
+                <input type="hidden" name="invoice_status" id="invoice_status" value="0">
+            </select>
+        </div>
+    </div>
+    <!--发票类型-->
+
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label" style="width: 100px;">订单编号：</label>
+        <div class="layui-input-inline">
+            <input type="text" name="order_attach_number" value="{:input('order_attach_number','')}" autocomplete="off" placeholder=""
+                   class="layui-input">
+        </div>
+        <button class="layui-btn" lay-submit="">查询</button>
+    </div>
+
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th>发票类型</th>
+                <th>发票抬头</th>
+                <th>订单编号</th>
+                <th>申请开票日期</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>
+                    {present name="$item.invoice_type"}
+                    {if condition="$item.invoice_type eq 0"/}
+                    普通发票
+                    {else/}
+                    增值税专用发票
+                    {/if}
+                    {else/}
+                    ----
+                    {/present}
+                </td>
+                <td>{$item.rise_name|default='----'}</td>
+                <td>{$item.order_attach_number}</td>
+                <td>{$item.create_time|default='----'}</td>
+                <td>
+                    {notempty name="$item.invoice_id"}
+                    <a href="javascript:void(0);" onclick="main.jumpFour('client/invoice/examine?invoice_id={$item.invoice_id}')"
+                       class="btn_edit"></i>开票</a>
+                    {else/}
+                    <a href="javascript:void(0);" onclick="main.jumpFour('client/invoice/fill_open?order_attach_id={$item.order_attach_id}')"
+                       class="btn_edit"></i>补开</a>
+                    {/notempty}
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+<script>
+
+    $(function () {
+        layui.use('form', function(){
+
+            var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+
+            form.render();
+        });
+    })
+</script>
+<script>
+    $(function () {
+        main.form([
+            {
+                selector: 'select(invoice_status)', callback: function (data, formObj) {
+
+                    $('#invoice_status').val(data.value);
+                    formObj.render();
+                }
+            }
+        ]);
+        //重定向本身
+        function reloadSelf(args) {
+            var param = '', key = Object.keys(args);
+            if (key.length > 0) {
+                $.each(args, function (i, o) {
+                    param += '&' + i + '=' + o;
+                });
+                param = param.substr(1);
+            }
+            console.log(param);
+            location.href = '?' + param;
+        }
+
+        main.laydate([{
+            elem: "#date",
+            type: "date",
+            range: true,
+            max:0
+        }]);
+    })
+</script>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+
+{/block}

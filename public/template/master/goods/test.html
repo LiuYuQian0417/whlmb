@@ -1,0 +1,73 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/color_picker/spectrum.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/js/DataTables-1.10.15/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<!--<link href="__RES__/css/common/attr.css" rel="stylesheet" type="text/css">-->
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>请按提示栏信息进行商品添加。
+            <li>
+            <li>标注<font>*</font>的为必填项。
+            <li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div>
+    <div class="contentHeader">
+        <!--步骤结束-->
+        <!--表单开始-->
+        <form class="layui-form" action="/goods/createAct" method="post" enctype="multipart/form-data">
+            <div class="contentShellFull stepList">
+                <label class="layui-form-label stepTips"><i class="fa fa-dot-circle-o"></i> 设置商品属性</label>
+                <hr class="layui-bg-gray">
+                <div class="contentShell90">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">商品类型</label>
+                        <div class="layui-input-inline">
+                            <select name="attr_type_id" title="选择商品类型">
+                                <option value="0">-请选择商品属性-</option>
+                                <option value="1">服装</option>
+                                <option value="2">手机</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--规格容器-->
+                    <div class="layui-form-item attr-container"></div>
+                    <!--结果容器-->
+                    <div class="layui-form attr-ret"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='script'}
+{__block__}
+<!--商品属性js-->
+<script src="__RES__/js/common/attr.js"></script>
+<script src="__RES__/js/common/goods_attr.js"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+<!--<script src="__RES__/js/DataTables-1.10.15/extensions/RowReorder/js/dataTables.rowReorder.min.js"></script>-->
+<!--<script src="__RES__/js/DataTables-1.10.15/extensions/ColReorder/js/dataTables.colReorder.min.js"></script>-->
+<!--<script src="__RES__/js/DataTables-1.10.15/extensions/FixedColumns/js/dataTables.fixedColumns.min.js"></script>-->
+<!--<script src="__RES__/js/DataTables-1.10.15/extensions/FixedHeader/js/dataTables.fixedHeader.min.js"></script>-->
+<!--<script src="__RES__/js/DataTables-1.10.15/extensions/KeyTable/js/dataTables.keyTable.min.js"></script>-->
+<!--<script src="__RES__/js/DataTables-1.10.15/extensions/RowGroup/js/dataTables.rowGroup.min.js"></script>-->
+<script>
+    attrControl.init('',1);
+    main.form([{
+        selector: 'checkbox(attr-val)',callback: function (data) {
+            attrControl.changeTable($(data.elem));
+        }
+    }]);
+</script>
+{/block}
+{block name='highSearch'}{/block}

@@ -1,0 +1,116 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .goods-desc .name{
+        height: auto!important;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<form action="" name="searchForm" class="layui-form" method="post" id="searchForm">
+    <div class="main-content" id="mainContent">
+        <div class="btn-info" style="overflow: hidden;float: none">
+            <a class="sc-btn sc-blue-btn" href="javascript:dc()"><i class="icon-download-alt"></i>下载订单</a>
+        </div>
+        <div class="order_stats">
+            <div class="order_stats_search">
+                <!--起止时间开始-->
+                <div class="screeItme">
+                    <strong class="fl lh mr10">起止时间：</strong>
+                    <div class="text_time" id="text_time1">
+                        <input name="start_date" id="start_date" type="text" id="start_date" size="15" value="{:input('start_date','')}" readonly placeholder="下单起始时间" class="text" />
+                    </div>
+                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                    <div class="text_time" id="text_time2">
+                        <input name="end_date" type="text" id="end_date" size="15" value="{:input('end_date','')}" readonly class="text" placeholder="下单结束时间"/>
+                    </div>
+                    <input type="submit"  value="查询" class="sc-btn sc-blueBg-btn btn30" style="margin-left: 10px;" />
+                </div>
+                <!--起止时间结束-->
+            </div>
+            <!--列表-->
+            <form method="POST" action="" name="listForm">
+                <div class="list-div" id="listDiv">
+                    <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                        <tr>
+                            <th width="12%">订单号</th>
+                            <th width="10%">支付方式</th>
+                            <th width="10%">买家</th>
+                            <th width="10%">下单时间</th>
+                            <th width="10%">总金额</th>
+                            <th width="10%">实收款</th>
+                            <th width="10%">使用店铺优惠券金额</th>
+                            <th width="10%">使用商家红包金额</th>
+                            <th width="10%">订单状态</th>
+                        </tr>
+                        {empty name='data'}
+                        <tr>
+                            <td class="no-records" colspan="10">没有找到任何记录</td>
+                        </tr>
+                        {/empty}
+                        {volist name="data" id="item"}
+                        <tr>
+                            <td>{$item.order_attach_number|default=''}</td>
+                            <td>线下</td>
+                            <td>{$item.member.nickname|default=''}</td>
+                            <td>{$item.create_time|default=''}</td>
+                            <td>{$item.order_goods.0.original_price}</td>
+                            <td>{$item.subtotal_price|default=0}</td>
+                            <td>{$item.subtotal_coupon_price|default=0}</td>
+                            <td>{$item.subtotal_share_platform_packet_price|default=0}</td>
+                            <td>已完成</td>
+                        </tr>
+                        {/volist}
+                        {notempty name="render"}
+                        <tfoot>
+                        <tr>
+                            <td colspan="10">
+                                {:$data->render()}
+                            </td>
+                        </tr>
+                        </tfoot>
+                        {/notempty}
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    main.laydate([{
+        elem: '#start_date'
+        , type: 'date'
+    }, {
+        elem: '#end_date'
+        , type: 'date'
+    }
+    ])
+    function dc(){
+        $("#searchForm").append("<input type='text' id='dc' name='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+</script>
+{/block}

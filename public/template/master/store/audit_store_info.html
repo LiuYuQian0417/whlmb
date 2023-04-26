@@ -1,0 +1,444 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/map.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<style>
+    .picShow>.pic{display: none}
+    .picShow>.pic:first-child{display: block}
+    .picShow>.pic a{position: relative;width: 150px;}
+    .picShow>.pic img{width: 150px;display: block;}
+    #tooltip{position:absolute;width:300px;border:1px solid #f4f4f4;background:#fff;color:#fff;display: none}
+    #tooltip img{width: 100%}
+    .step{
+        text-align: center;
+    }
+    .step > li{
+        width: 50%;
+        display: inline-block;
+    }
+    .step > li:not(.active) > .stepLabel:hover:before{
+        background: #fff;
+        color: rgb(51, 51, 51);
+    }
+    .step > li:not(.active) > .stepLabel:hover:after{
+        background: rgb(235, 235, 235);
+        color: rgb(51, 51, 51);
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请先选择商城已注册会员进行添加店铺操作。</span></li>
+                <li><span>请根据提示信息准确无误填写店铺信息。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+                <li><span>入驻店铺需认证，自营无需认证。</span></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+
+    <ul class="nav nav-pills nav-justified step step-round">
+        <li class="step1 active">
+            <a class="stepLabel">店铺信息</a>
+        </li>
+        <li class="step2">
+            <a class="stepLabel">认证信息</a>
+        </li>
+    </ul>
+
+
+    <!--店铺基本信息-->
+    <div class="contentShell">
+        <!--会员名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">会员账户</label>
+            <div class="layui-input-inline" id="member">
+                <input type="text" value="{$data.member_name}"
+                       readonly
+                       class="layui-input">
+            </div>
+        </div>
+
+        <!--主营项目-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">主营项目</label>
+            <div class="layui-input-block">
+                <select name="category" disabled="disabled"
+                >
+                    <option value=""></option>
+                    {volist name='classify_list' id='classify'}
+                    <option
+                            {eq name="$data.category" value="$classify.store_classify_id" }selected{/eq}
+                    value="{$classify.store_classify_id}">{$classify.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <!--店铺名称-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺名称</label>
+            <div class="layui-input-block">
+                <input type="text" value="{$data.store_name}" autocomplete="off"
+                       placeholder="" class="layui-input" name="store_name" readonly>
+            </div>
+        </div>
+
+        <!--店铺logo-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">店铺logo</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$data.logo}"
+                        width="150"
+                        height="150"
+                        file-mime="image/gif,image/jpeg,image/png"
+                        name="logo"
+                        dir="store_image_logo"
+                        value="{$data.logo}"
+                        disabled="disabled"
+                >
+            </div>
+        </div>
+    </div>
+
+    <!--店铺客服电话-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺客服电话</label>
+        <div class="layui-input-block">
+            <input type="text"
+                   name="phone"
+                   value="{$data.phone}"
+                   autocomplete="off"
+                   readonly
+                   class="layui-input">
+        </div>
+    </div>
+
+
+    <!--店铺所在地-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺所在地</label>
+        <div class="layui-input-inline" style="width: 140px">
+            <select name="province" class="state" lay-filter="state" lay-search="" disabled="disabled">
+                <option value="">{$data.province}</option>
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width: 140px">
+            <select name="city" class="state" lay-filter="state" disabled="disabled">
+                <option value="">{$data.city}</option>
+            </select>
+        </div>
+        <div class="layui-input-inline" style="width: 140px">
+            <select name="area" class="state" lay-filter="state" disabled="disabled">
+                <option value="">{$data.area}</option>
+            </select>
+        </div>
+    </div>
+
+    <!--店铺详细地址-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">店铺详细地址</label>
+        <div class="layui-input-block">
+            <input type="text" name="address" id="tipinput" value="{$data.address}" maxlength="200"
+                   autocomplete="off"
+                   placeholder="请输入店铺详细地址"
+                   class="layui-input"
+                   readonly="readonly"
+            >
+            <br>
+            <div id="container" style="width: 550px;height: 300px;" tabindex="0">
+                <div id="interaction"></div>
+            </div>
+        </div>
+    </div>
+
+    <!--经度-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">经度</label>
+        <div class="layui-input-block">
+            <input type="text" name="lng" id="lng" value="{$data.lng}" autocomplete="off"
+                   placeholder="请根据地图获取经度"
+                   readonly
+                   class="layui-input">
+        </div>
+    </div>
+
+    <!--纬度-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">纬度</label>
+        <div class="layui-input-block">
+            <input type="text" name="lat" id="lat" value="{$data.lat}" autocomplete="off"
+                   placeholder="请根据地图获取纬度"
+                   readonly
+                   class="layui-input">
+        </div>
+    </div>
+
+    <!--排序-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">排序</label>
+        <div class="layui-input-block">
+            <input type="text" name="sort" value="{$data.sort}" maxlength="5" autocomplete="off"
+                   placeholder="请输入排序"
+                   class="layui-input"
+                   readonly="readonly"
+            >
+        </div>
+    </div>
+
+    <!--关键字-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">关键字</label>
+        <div class="layui-input-block">
+            <input type="text"
+                   name="keywords"
+                   value="{$data.keywords}"
+                   autocomplete="off"
+                   placeholder="请输入关键字"
+                   readonly
+                   class="layui-input">
+        </div>
+    </div>
+
+    <!--描述-->
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">描述</label>
+        <div class="layui-input-block">
+            <textarea
+                    placeholder="请输入内容"
+                    name="describe"
+                    class="layui-textarea"
+                    readonly
+            >{$data.describe}</textarea>
+        </div>
+    </div>
+
+    <!--到期时间-->
+    <div class="layui-form-item">
+        <label class="layui-form-label">到期时间（不填写是无限制）</label>
+        <div class="layui-input-block">
+            <input type="text"
+                   name="end_time"
+                   id="time"
+                   value="{$data.end_time}"
+                   class="layui-input"
+                   readonly
+            >
+        </div>
+    </div>
+
+
+    {eq name="data.shop" value="0"}
+        <!--公司店铺分类-->
+        <div class="layui-form-item">
+            <label class="layui-form-label">公司店铺分类</label>
+            <div class="layui-input-block">
+                <input type="radio" name="type" value="0" title="普通店"
+                       disabled="disabled"
+                       {eq name="data.type|default=0" value="0" }checked{/eq}
+                >
+                <input type="radio" name="type" value="1" title="旗舰店"
+                       disabled="disabled"
+                       {eq name="data.type|default=0" value="1" }checked{/eq}
+                >
+                <input type="radio" name="type" value="2" title="专卖店"
+                       disabled="disabled"
+                       {eq name="data.type|default=0" value="2" }checked{/eq}
+                >
+                <input type="radio" name="type" value="3" title="直营店"
+                       disabled="disabled"
+                       {eq name="data.type|default=0" value="3" }checked{/eq}
+                >
+            </div>
+        </div>
+    {else/}
+<!--        <div class="layui-form-item">-->
+<!--            <label class="layui-form-label">店铺类型</label>-->
+<!--            <div class="layui-input-block">-->
+<!--                <input type="radio" name="shop" value="1" title="个人店铺"-->
+<!--                       disabled="disabled"-->
+<!--                       {eq name="data.shop|default=1" value="1" }checked{/eq}-->
+<!--                >-->
+<!--                <input type="radio" name="shop" value="2" title="企业店铺"-->
+<!--                       disabled="disabled"-->
+<!--                       {eq name="data.shop|default=1" value="2" }checked{/eq}-->
+<!--                >-->
+<!--            </div>-->
+<!--        </div>-->
+    {/eq}
+
+    </div>
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-primary" type="button" onclick="main.jumpFour('store/index')">返回</button>
+                <button class="layui-btn" type="button" onclick="main.jumpFour('store/audit_auth_info?store_id={$store_id}')">查看认证信息</button>
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('element');
+
+    main.laydate([{
+        elem: "#time",
+        type: "date"
+    }]);
+
+    // 联动
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+
+        form.on('radio(shop)', function (data) {
+            var shop = $('#shop');
+            if (data.value == 0) {
+                shop.prop('hidden', false);
+            }
+            if (data.value == 1) {
+                shop.prop('hidden', true);
+            }
+            if (data.value == 2) {
+                shop.prop('hidden', false);
+            }
+        });
+        form.on('radio(goods_style)', function (data) {
+            console.log(data.value);
+            if (data.value == 0) {
+                $('.pic1').show();
+                $('.pic2').hide();
+            }
+            if (data.value == 1) {
+                $('.pic1').hide()
+                $('.pic2').show()
+            }
+
+        });
+
+        var url = '/member_address/area';            //数据请求地址
+
+        var province = "{$data.province|default=''}";           //编辑需要的省
+        var city = "{$data.city|default=''}";                   //编辑需要的市
+        var district = "{$data.area|default=''}";               //编辑需要的县/区
+    });
+
+    //内容页切换
+    $('#tabs1 li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    })
+
+    // 模式选择
+    $(function () {
+        var showId = $(".goods_style").find("input:checked").attr('id');
+        $('.picShow .pic').eq(showId).show().siblings().hide();
+
+        var x = 10;
+        var y = 20;
+        $("a.tooltip").mouseover(function (e) {
+            var tooltip = "<div id='tooltip'><img src='" + this.href + "' alt='预览图'/><\/div>"; //创建 div 元素
+            $("body").append(tooltip);	//把它追加到文档中
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                }).show("fast");	  //设置x坐标和y坐标，并且显示
+        }).mouseout(function () {
+
+            $("#tooltip").remove();	 //移除
+        }).mousemove(function (e) {
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                });
+        });
+
+
+    })
+
+    // 地图
+    AMapUI.loadUI(['misc/PositionPicker'], function (PositionPicker) {
+
+        var map = new AMap.Map('container', {
+            zoom: 17,
+            resizeEnable: true,
+            scrollWheel: false,
+            dragEnable: false,
+            center:[$('#lng').val(),$('#lat').val()]
+        })
+
+        //输入提示
+        var autoOptions = {
+            input: "tipinput",
+        };
+        var auto = new AMap.Autocomplete(autoOptions);
+        var placeSearch = new AMap.PlaceSearch({
+            map: map
+        });  //构造地点查询类
+        AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+        function select(e) {
+            placeSearch.setCity(e.poi.adcode);
+            placeSearch.search(e.poi.name);  //关键字查询查询
+        }
+
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',
+            map: map
+        });
+
+        positionPicker.start();
+        map.panBy(0, 1);
+
+        map.addControl(new AMap.ToolBar({
+            liteStyle: true
+        }));
+    });
+
+    function interaction(address, lng, lat) {
+        $('#lng').val(lng);
+        $('#lat').val(lat);
+    }
+
+    // 选择
+    function elect(url, title) {
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['800px', '600px'],
+            content: [url, 'yes']
+        });
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

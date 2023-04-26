@@ -1,0 +1,103 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="main-content" id="mainContent">
+    <div class="explanation clear" id="explanation">
+        <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4></div>
+        <ul>
+            <li>温馨提示：提交操作将会重新审核，请慎重提交确定。</li>
+            <li>修改运费，运费增加则支付金额增加；运费减少则支付金额减少；自动计算，修改运费后点击空白处即可。</li>
+        </ul>
+    </div>
+    <div class="ecsc-form-goods">
+        <form action="" method="post" class="layui-form">
+            <div class="wrapper-list border1">
+                <!--提现金额-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;修改支付金额：</dt>
+                    <dd>
+                        <input type="text" name="alter_price" value="{$item.subtotal_price|default=0}" size="20" class="text"
+                               placeholder="请输入修改金额，最多两位小数" autocomplete="off" maxlength="10" datatype="d" nullmsg="请输入金额！" errormsg="金额为两位小数！"
+                        />
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <!--提现金额-->
+                <dl>
+                    <dt><span class="require-field">*</span>&nbsp;修改运费金额：</dt>
+                    <dd>
+                        <input type="text" name="freight" value="{$item.sub_freight_price|default=0}" size="20" class="text"
+                               placeholder="请输入修改运费，最多两位小数" autocomplete="off" maxlength="10" datatype="d" nullmsg="请输入运费！" errormsg="运费为两位小数！"/>
+                        <input type="hidden" id="subtotal_freight_price" value="{$item.sub_freight_price|default=''}">
+                        <input type="hidden" name="order_goods_id" value="{:input('order_goods_id')}">
+                        <div class="form_prompt"></div>
+                    </dd>
+                </dl>
+                <dl class="button_info">
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        <input type="button" value=" 确定 " onclick="chooseIt()" class="sc-btn sc-blueBg-btn btn35"
+                               id="submitBtn"/>
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+    main.valid('.layui-form');
+    function editTotal() {
+
+    }
+    function chooseIt() {
+        layer.msg('确定修改价格吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                var order_goods_id = $('input[name="order_goods_id"]').val();
+                var total = parseFloat($('input[name="alter_price"]').val());
+                var subtotal_freight_price1 = parseFloat($('input[name="freight"]').val()); // 现运费
+                main.ajax({
+                    data: {order_goods_id: order_goods_id, alter_price: isNaN(total)?'':total,freight:isNaN(subtotal_freight_price1)?'':subtotal_freight_price1}, url: '/client/order/editPrice', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            var alter_price=parseFloat(parseFloat($('#alter_price_'+order_goods_id, parent.document).html())+total+subtotal_freight_price1);
+                            $('#subtotal_freight_price', parent.document).html(parseFloat(parseFloat($('#subtotal_freight_price', parent.document).html())+subtotal_freight_price1).toFixed(2));
+                            $('#sum_alter_goods_price', parent.document).html(parseFloat(parseFloat($('#sum_alter_goods_price', parent.document).html())+total+subtotal_freight_price1).toFixed(2));
+                            $('#subtotal_price', parent.document).html(parseFloat(parseFloat($('#subtotal_price', parent.document).html())+total+subtotal_freight_price1).toFixed(2));
+                            $('#alter_price_'+order_goods_id, parent.document).html(alter_price.toFixed(2));
+                            if(alter_price>0){
+                                $('#symbol_'+order_goods_id, parent.document).html('+');
+                            }else{
+                                $('#symbol_'+order_goods_id, parent.document).html('');
+                            }
+
+                            layer.close(index);
+                            parent.layer.closeAll();
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+{/block}

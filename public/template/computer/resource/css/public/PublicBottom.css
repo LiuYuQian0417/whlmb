@@ -1,0 +1,86 @@
+img{
+  border:none;
+}
+.public-bottom-box {
+  width: 100%;
+  margin-top: 66px;
+}
+.public-bottom-box .public-bottom-top-all {
+  background: #EAEAEA;
+  border-bottom: 1px solid #E9E5E5;
+}
+.public-bottom-box .public-bottom-top-all .public-bottom-center-top {
+  width: 1190px;
+  margin: 0px auto;
+  overflow: hidden;
+}
+.public-bottom-box .public-bottom-top-all .public-bottom-center-top .public-bottom-top-list {
+  width: 212px;
+  height: 93px;
+  line-height: 93px;
+  font-size: 18px;
+  text-align: center;
+  margin-right: 114px;
+  float: left;
+}
+.public-bottom-box .public-bottom-top-all .public-bottom-center-top .public-bottom-top-list:last-child{
+  margin-right: 0;
+}
+.public-bottom-box .public-bottom-top-all .public-bottom-center-top .public-bottom-top-list img {
+  position: relative;
+  top: 29px !important;
+  width: 34px;
+  height: 34px;
+  margin-right: 8px;
+  float: left;
+}
+.public-bottom-box .public-bottom-floor-all {
+  background: #EEEEEE;
+  padding-top: 43px;
+  padding-bottom: 45px;
+  border-bottom: 1px solid #E9E5E5;
+}
+.public-bottom-box .public-bottom-floor-all .public-bottom-floor-center {
+  width: 1190px;
+  overflow: hidden;
+  margin: 0px auto;
+}
+.public-bottom-box .public-bottom-floor-all .public-bottom-floor-center .public-bottom-floor-list {
+  width: 75px;
+  color: #636363;
+  float: left;
+  margin-right:310px
+}
+.public-bottom-box .public-bottom-floor-all .public-bottom-floor-center .public-bottom-floor-list:last-child{
+  margin-right: 0;
+}
+.public-bottom-box .public-bottom-floor-all .public-bottom-floor-center .public-bottom-floor-list .public-bottom-floor-list-title {
+  margin-bottom: 10px;
+}
+.public-bottom-box .public-bottom-floor-all .public-bottom-floor-center .public-bottom-floor-list a {
+  display: block;
+  color: #636363;
+  font-size: 14px;
+  line-height: 24px;
+}
+.bottom-formation {
+  text-align: center;
+  padding-top: 40px;
+  padding-bottom: 10px;
+  background: #EEEEEE;
+  font-size: 14px;
+}
+.bottom-formation p {
+  margin-bottom: 15px;
+  color: #636363;
+}
+.bottom-formation p a {
+  color: #636363;
+}
+.copyright-con{
+  text-align: center;
+  height:60px;
+  line-height: 60px;
+  font-size:14px;
+  color:#636363
+}

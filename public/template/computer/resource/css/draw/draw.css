@@ -1,0 +1,290 @@
+body {
+  background-color: #f6f6f6;
+}
+
+.draw {
+  height: 595px;
+  background: url("../../imgs/draw/cjbg.png") no-repeat center;
+  background-size: contain;
+  padding-top: 1px;
+}
+.draw .draw-center {
+  width: 1200px;
+  margin: 0px auto;
+}
+.draw .draw-center .draw-left {
+  float: left;
+  width: 400px;
+}
+.draw .draw-center .draw-left .record {
+  width: 392px;
+  height: 290px;
+  border: 5px solid rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  background: #fff;
+  margin-top: 237px;
+}
+.draw .draw-center .draw-left .record .tit {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  color: #FFDE00;
+  text-shadow: 1px 2px 0px #FE633B;
+  line-height: 40px;
+}
+.swiper-container {
+  height: 225px;
+}
+.list {
+  display: flex;
+  line-height: 40px;
+}
+.list div {
+  flex: 1;
+  overflow: hidden;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  color: #D1C0A5;
+}
+.record-a {
+  text-align: right;
+  margin-top: 5px;
+}
+.record-a a {
+  padding-bottom: 5px;
+  border-bottom: 1px solid #fff;
+}
+.draw-right {
+  float: right;
+}
+.draw-right .btn-box {
+  overflow: hidden;
+}
+.draw-right .draw-btn {
+  width: 175px;
+  height: 52px;
+  border-radius: 26px;
+  text-align: center;
+  line-height: 52px;
+  display: block;
+  color: #fff;
+  font-size: 24px;
+  box-shadow: 0px 5px 0px #EB4206;
+  margin-top: 18px;
+  margin-bottom: 25px;
+  float: right;
+  background: #FE8810;
+}
+.draw-right .lottery {
+  width: 757px;
+  height: 466px;
+  background: url("../../imgs/draw/cjk.png");
+  padding: 40px;
+  box-sizing: border-box;
+}
+.draw-right .lottery .draw-list {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.draw-right .lottery .draw-list .con {
+  width: 210px;
+  height: 110px;
+  background: #fff;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  text-align: center;
+  padding-top: 10px;
+  border: 3px solid #fff;
+}
+.draw-right .lottery .draw-list .con .img p {
+  line-height: 20px;
+}
+.draw-right .lottery .draw-list .con p {
+  line-height: 90px;
+}
+.draw-right .lottery .draw-list .con img {
+  width: 60px;
+  height: 60px;
+}
+.draw-right .lottery .draw-list .active {
+  border: 3px solid #000;
+}
+.draw-right .lottery .draw-list .btn {
+  display: block;
+  border: 5px solid #FE7422;
+  background: #FFE77B;
+  text-align: center;
+  line-height: 90px;
+  font-size: 28px;
+  color: #fff;
+  text-shadow: 1px 2px 0px #EF632C;
+}
+.corver {
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  display: none;
+}
+.corver .corver-box {
+  width: 408px;
+  height: 408px;
+  background: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.corver .corver-box .del {
+  position: absolute;
+  top: 5px;
+  right: 10px;
+  cursor: pointer;
+}
+.corver .corver-box .spoil {
+  width: 335px;
+  margin: 0px auto;
+  font-size: 12px ;
+}
+.corver .corver-box .spoil .img {
+  padding-top: 30px;
+  text-align: center;
+}
+.corver .corver-box .spoil .img img {
+  width: 106px;
+  height: 106px;
+  border: 1px solid #F1F2F6;
+}
+.corver .corver-box .spoil .spoil-name {
+  text-align: center;
+  font-size: 16px;
+  margin-top: 20px;
+}
+.corver .corver-box .spoil .address-box {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+.corver .corver-box .spoil .address-box .address-left {
+  line-height: 24px;
+  width: 248px;
+}
+.corver .corver-box .spoil .address-box .address-left .address {
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.corver .corver-box .spoil .address-box .address-right a {
+  position: relative;
+  top: 5px;
+}
+.corver .corver-box .spoil .address-box .address-right span {
+  display: block;
+}
+.corver .corver-box .btn-group {
+  display: flex;
+  width: 335px;
+  margin: 0px auto;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+.corver .corver-box .btn-group a {
+  display: block;
+  width: 100px;
+  height: 33px;
+  border: 1px solid #fff;
+  color: #fff;
+  text-align: center;
+  line-height: 33px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+.address-corver {
+  display: none;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  z-index: 9999;
+}
+.address-corver .bg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  top: 0px;
+  left: 0px;
+  z-index: 9;
+}
+.address-corver .my-address {
+  width: 1030px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #eee;
+  z-index: 99;
+}
+.address-corver .my-address .address-box {
+  padding: 0px 10px;
+}
+.rule-corver {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.15);
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 999;
+  display: none;
+}
+.rule-corver .rule-box {
+  width: 648px;
+  height: 426px;
+  background: #fff;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 4px solid rgba(0, 0, 0, 0.1);
+}
+.rule-corver .rule-box .rule-tit {
+  position: relative;
+  padding: 0 10px;
+  height: 31px;
+  line-height: 31px;
+  background: #f3f3f3;
+  font-size: 14px;
+  color: #666;
+}
+.rule-corver .rule-box .rule-tit img {
+  float: right;
+  position: relative;
+  top: 8px;
+  cursor: pointer;
+}
+.rule-corver .rule-box .rule-con {
+  height: 375px;
+  padding: 10px;
+  overflow: auto;
+  line-height: 28px;
+  font-size: 12px;
+  color: #666;
+}
+.public-bottom-box {
+  width: 100%;
+  margin:0;
+}

@@ -1,0 +1,133 @@
+{extend name='public/my_header' /}
+
+{block name='content_css'}
+
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css" />
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+
+<link rel="stylesheet" href="__RES__/css/my/MyIntegration.css" />
+
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+<style type="text/css">
+	.red-packet-con{
+		display: none;
+	}
+	.un-used{
+		display: block;
+	}
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+	<!--我的页面左侧公共部分开始-->
+	{include file="public/my_left" /}
+	<!--我的页面左侧公共部分结束-->
+
+
+	<div class="index-right">
+		<!--右侧内容开始-->
+
+		<div class="my-integration">
+			<h5 class="title">
+				<a class="" href="{:url('/pc2.0/integral/my')}">
+					我的积分
+				</a>
+				<a class="primary-color border-color" href="{:url('/pc2.0/integral/detail')}">
+					积分明细
+				</a>
+				<a class="" href="{:url('/pc2.0/integral/conversion_record')}">
+					兑换记录
+				</a>
+				<div class="title-right">
+					<a href="javascript:main.jump({'url':'/pc2.0/integral/index'})">兑换商城，给你不一样的优惠惊喜</a>
+					<img src="__RES__/imgs/my/right.png" alt="">
+				</div>
+			</h5>
+		<!--积分明细-->
+		<div class="lately-integration-statistics-box">
+			<div class="lately-integration-statistics">
+				<div class="tit">
+					最近积分明细
+				</div>
+				<div class="list">
+					<div class="list-tit">
+						<span>时间</span>
+						<span>收入/支出</span>
+						<span>详细说明</span>
+					</div>
+					{empty name='$result'}
+					<div class="indent-box indent-box-emty">
+						<img src="__RES__/imgs/orderemty.png" alt="">
+						<p>暂无数据</p>
+					</div>
+					{/empty}
+					<!--每条积分明细-->
+					{volist name="result" id="item"}
+					<div class="list-detail" >
+						<span>{$item.create_time}</span>
+						<span>{eq name="$item.type" value="0"}+{else/}-{/eq}{$item.integral}</span>
+						<span>{$item.describe}</span>
+					</div>
+					{/volist}
+					<!--每条结束-->
+				</div>
+			</div>
+
+			<!--分页-->
+			<div class="pageContainer" style="width: auto">{$result|raw}</div>
+
+		</div>
+		</div>
+
+		<!--右侧内容结束-->
+	</div>
+</div>
+{/block}
+
+{block name="js"}
+<script src="__RES__/js/swiper.min.js" type="text/javascript" charset="utf-8"></script>
+
+<script>
+	var swiper = new Swiper('.swiper-exchange', {
+		slidesPerView: 5,
+		spaceBetween: 6,
+		navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev',
+		},
+		observer:true,
+		observeParents:true,
+	});
+
+	var swiper1 = new Swiper('.swiper-redemption', {
+		slidesPerView: 5,
+		spaceBetween: 6,
+		navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev',
+		},
+		observer:true,
+		observeParents:true,
+	});
+</script>
+
+<script type="text/javascript">
+	$('.exchange .title>a').click(function(){
+		var num = $(this).index();
+		$(this).addClass('primary-color border-color').siblings('a').removeClass('primary-color border-color')
+		$('.swiper').eq(num).show().siblings('.swiper').hide();
+
+		if(num==1){
+			$('.swiper-redemption .goods-con img').each(function(){
+				var src = $(this).attr('data-src');
+				$(this).attr('src',src)
+			})
+
+
+		}
+	})
+</script>
+{/block}

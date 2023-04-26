@@ -1,0 +1,214 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}{__block__}{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .layui-colla-title > div, .layui-colla-title > div > div {
+        float: right;
+    }
+
+    .classify-name-input {
+        width: 300px;
+    }
+
+    .layui-colla-content {
+        padding: 0;
+    }
+
+    .classify-last-update-time {
+        font-size: 10px;
+        color: #9797a1 !important;
+        margin-right: 10px;
+    }
+
+    .ecsc-table-handle {
+        background: #fff !important;
+    }
+
+    .is-default {
+        color: #FF8C00;
+        margin-right: 100px;
+    }
+    .layui-collapse{margin-bottom: 30px;border-bottom: none}
+    .layui-colla-content{
+        padding: 0 !important;
+    }
+    .a.btn_see, a.btn_edit, a.btn_trash{
+        margin-right: 0 !important;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="__RES__/css/main.css"/>
+<div class="layui-row" style="position: relative;">
+    <div class="layui-form" style="width: 480px;position: absolute;">
+        <div class="layui-form-item">
+            <label>
+                是否开启全国快递:&nbsp;&nbsp;
+            </label>
+            {if condition="$store.is_city == 0 && $store.is_shop == 0"}
+            <input type="checkbox" class="layui-checkbox-disbaled" lay-skin="switch" lay-filter="enabled" disabled="disabled" checked />
+            <label>无法关闭,请至少开启一项配送方式</label>
+            {else/}
+            <input type="checkbox" lay-skin="switch" lay-filter="enabled" {if condition="$store.is_delivery"} checked {/if}  />
+            {/if}
+        </div>
+    </div>
+    <div class="btn-info">
+        <a class="sc-btn sc-blue-btn" href="javascript:main.jumpFour('client/business_express/create')"><i
+                class="icon-plus"></i>新建运费模板</a>
+    </div>
+</div>
+<form method="post" action="" name="listForm">
+    <div class="list-div" id="listDiv">
+        {empty name='data'}
+        <div class="layui-collapse">
+
+            <div class="layui-colla-item">
+                <div class="layui-colla-content layui-show">
+                    <table cellpadding="1" cellspacing="1" class="ecsc-default-table" style="border:none">
+                        <thead>
+                        <tr>
+                            <th>可配送区域</th>
+                            <th width="10%">首件(个)/首重（kg）</th>
+                            <th width="10%">运费(元)</th>
+                            <th width="10%">续件(个)/续重(kg)</th>
+                            <th width="10%">续费(元)</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td class="no-records" colspan="9">没有找到任何记录</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        {/empty}
+        {volist name="data" id="voClassify"}
+        <div class="layui-collapse">
+
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">
+                    <span class="classify-name-text">{$voClassify.name}</span>
+                    <div class="fr">
+                        <!--{eq name="voClassify.is_default" value="1"}<span class="is-default">新商品默认模板</span>{/eq}-->
+                        <span class="classify-last-update-time">最后编辑时间：{$voClassify.update_time}</span>
+                        <!--{eq name="voClassify.is_default" value="2"}<a title="设为默认" class="btn_edit set-default" data-id="{$voClassify.freight_express_classify_id}">设为默认</a>{/eq}-->
+                    </div>
+                </h2>
+                <div class="layui-colla-content layui-show">
+                    <table cellpadding="1" cellspacing="1" class="ecsc-default-table" style="border:none">
+                        <thead>
+                        <tr>
+                            <th>可配送区域</th>
+                            <th width="10%">{eq name="voClassify.type" value="1"}首件(个){else/}首重（kg）{/eq}</th>
+                            <th width="10%">{eq name="voClassify.type" value="1"}运费(元){else/}运费(元){/eq}</th>
+                            <th width="10%">{eq name="voClassify.type" value="1"}续件(个){else/}续重(kg){/eq}</th>
+                            <th width="10%">续费(元)</th>
+                            <th width="10%">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {eq name="voClassify.all_address_express" value="1"}
+                        <tr>
+                            <td>所有地区</td>
+                            <td>{$voClassify.upper_num}</td>
+                            <td>{$voClassify.base_amount}</td>
+                            <td>{$voClassify.extend_num_unit}</td>
+                            <td style="border-right: 1px solid #e5e5e5">{$voClassify.extend_amount}</td>
+                            <td class="ecsc-table-handle" rowspan="{:count($voClassify.children)+1}">
+                                <a href="javascript:main.jumpFour('client/business_express/edit?id={$voClassify.freight_express_classify_id}')"
+                                   title="编辑" class="btn_edit"><i class="fa fa-edit"></i>编辑</a>
+                                <a href="javascript:;"
+                                   onclick="main.destroy('/client/business_express/destroy','{$voClassify.freight_express_classify_id}')"
+                                   title="删除"
+                                   class="btn_trash"><i class="fa fa-trash"></i>删除</a>
+                            </td>
+                        </tr>
+                        {/eq}
+                        {volist name="voClassify.children" id="vo" key="k"}
+                        <tr>
+                            <td><span>{$vo.distribution_area_name}</span></td>
+                            <td>{$vo.upper_num}</td>
+                            <td>{$vo.base_amount}</td>
+                            <td>{$vo.extend_num_unit}</td>
+                            <td style="border-right: 1px solid #e5e5e5">{$vo.extend_amount}</td>
+                            {if $k == 1 && $voClassify.all_address_express != 1}
+                            <td class="ecsc-table-handle" rowspan="{:count($voClassify.children)}">
+                                <a href="javascript:main.jumpFour('client/business_express/edit?id={$voClassify.freight_express_classify_id}')"
+                                   title="编辑" class="btn_edit">编辑</a>
+                                <a href="javascript:;"
+                                   onclick="main.destroy('/client/business_express/destroy','{$voClassify.freight_express_classify_id}')"
+                                   title="删除"
+                                   class="btn_trash">删除</a>
+                            </td>
+                            {/if}
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+        {/volist}
+        <!--列表-->
+    </div>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script>
+    main.form([{
+        selector:'switch(enabled)',
+        callback:function (data) {
+            main.switchEnabled('is_delivery',data.elem, '{$Think.session.client_store_id}')
+        }
+    }]);
+    layui.use('element', function () {
+    });
+
+    $('.set-default').on('click',function (event) {
+        event.stopPropagation()
+        $.ajax({
+            url: '/client/business_express_classify/set_default',
+            method: 'post',
+            async: false,
+            data: {
+                freight_express_classify_id: $(this).data('id'),
+            },
+            dataType: 'json',
+        }).done(function (data) {
+            layer.msg(data.message, {
+                time: 1000,
+                end: function () {
+                    location.reload()
+                }
+            })
+        })
+    })
+
+    function destroy(id, ele) {
+        $.ajax({
+            url: '/client/business_express_classify/destroy',
+            method: 'post',
+            async: false,
+            data: {
+                freight_express_classify_id: id,
+            },
+            dataType: 'json',
+        }).done(function (data) {
+            layer.msg(data.message, {
+                time: 1000
+            })
+            if (data.code == '0') {
+                ele.closest('.layui-colla-item').remove()
+            }
+        })
+    }
+
+</script>
+{/block}

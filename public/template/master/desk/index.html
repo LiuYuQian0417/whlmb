@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="__RES__/css/common/home.css">
+    <script src="__RES__/js/common/main.js"></script>
+</head>
+<body>
+<div class="head-title">
+    <div>
+        <img src="{:fileOss(env('logo',''))}" alt="" class="logoIcon"
+             onerror=this.src="/template/master/resource/image/common/imageError.png">
+        <div class="shop-wrap">
+            <div class="shop-name">{:env('title','')}</div>
+            <div class="shop-info">店铺数:&nbsp;{$item.store}&nbsp;&nbsp;&nbsp;用户数:&nbsp;{$item.member}</div>
+        </div>
+    </div>
+    <span><a class="config" href="javascript:void(0);" onClick="main.jumpFour('config/index')">平台设置</a></span>
+</div>
+<div class="operation-list">
+    <div>
+        <img class="logo" src="__RES__/image/desk/1.png">
+        <div class="num">{$item.store_status}</div>
+        <a class="operation to-audit" href="javascript:void(0);"
+           onClick="main.jumpFour('store/index?status=0')">待审核店铺</a>
+    </div>
+    <div>
+        <img class="logo" src="__RES__/image/desk/2.png">
+        <div class="num">{$item.self_store}</div>
+        <a class="operation self-shop" href="javascript:void(0);" onClick="main.jumpFour('store/index?type=0')">自营店铺</a>
+    </div>
+    <div>
+        <img class="logo" src="__RES__/image/desk/3.png">
+        <div class="num">{$item.enter_store}</div>
+        <a class="operation come-shop" href="javascript:void(0);" onClick="main.jumpFour('store/index?type=1')">入驻店铺</a>
+    </div>
+</div>
+
+<div class="operation-list" style="margin-top: 30px">
+    <div>
+        <img class="logo" src="__RES__/image/desk/4.png">
+        <div class="num">{$item.store_brand}</div>
+        <a class="operation choice-brand" href="javascript:void(0);" onClick="main.jumpFour('store/index?is_brand=1')">品牌甄选</a>
+    </div>
+    <div>
+        <img class="logo" src="__RES__/image/desk/5.png">
+        <div class="num">{$item.store_is_good}</div>
+        <a class="operation good-shop" href="javascript:void(0);"
+           onClick="main.jumpFour('store/index?is_good=1')">发现好店</a>
+    </div>
+    <div>
+        <img class="logo" src="__RES__/image/desk/6.png">
+        <div class="num">{$item.store_classify}</div>
+        <a class="operation main-classify" href="javascript:void(0);" onClick="main.jumpFour('store_classify/index')">主营类目</a>
+    </div>
+    <div>
+        <img class="logo" src="__RES__/image/desk/7.png">
+        <div class="num">233</div>
+        <a class="operation come-classify">入驻分类</a>
+    </div>
+</div>
+</body>
+
+<style>
+    body {
+        background: #f6f6f6;
+        padding: 0 40px;
+    }
+
+    .head-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 30px auto;
+    }
+
+    .head-title > div {
+        display: flex;
+        align-items: center;
+    }
+
+    .head-title > span {
+        font-size: 14px;
+        line-height: 36px;
+        color: white;
+        background: #59c3eb;
+        border-radius: 2px;
+        padding: 0 10px;
+        cursor: pointer;
+    }
+
+    .head-title > div img {
+        width: 52px;
+        height: 52px;
+    }
+
+    .head-title .shop-wrap {
+        margin-left: 20px;
+    }
+
+    .head-title .shop-wrap .shop-name {
+        font-size: 15px;
+        font-weight: bold;
+    }
+
+    .head-title .shop-wrap .shop-info {
+        font-size: 14px;
+        color: #838383;
+        margin-top: 4px;
+    }
+
+    .operation-list {
+        overflow: hidden;
+    }
+
+    .operation-list > div {
+        width: 22%;
+        height: 320px;
+        float: left;
+        margin-right: 40px;
+        background: white;
+        box-shadow: 2px 2px 2px #f2f5f6;
+        border-radius: 6px;
+    }
+
+    .operation-list > div .logo {
+        width: 98px;
+        height: 98px;
+        display: block;
+        margin: 45px auto 0;
+    }
+
+    .operation-list > div .num {
+        font-size: 30px;
+        color: #848484;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .operation-list > div .operation {
+        font-size: 14px;
+        line-height: 34px;
+        background: white;
+        width: 158px;
+        border: 1px solid #d5d5d5;
+        margin: 28px auto 0;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 4px;
+        color: #828282;
+        display: block;
+    }
+
+    .operation-list > div .operation:hover {
+        color: white;
+        border: transparent;
+    }
+
+    .operation {
+        text-decoration: none;
+    }
+
+    .config {
+        text-decoration: none;
+        color: white;
+    }
+
+    .to-audit:hover {
+        background: linear-gradient(to right, #fe6c6a, #ff918f) !important;
+    }
+
+    .self-shop:hover {
+        background: linear-gradient(to right, #8eacfd, #66b6ff) !important;
+    }
+
+    .come-shop:hover {
+        background: linear-gradient(to right, #ffd172, #fee083) !important;
+    }
+
+    .choice-brand:hover {
+        background: linear-gradient(to right, #ff8575, #ffc763) !important;
+    }
+
+    .good-shop:hover {
+        background: linear-gradient(to right, #fb613e, #fc9683) !important;
+    }
+
+    .main-classify:hover {
+        background: linear-gradient(to right, #64daef, #6beed5) !important;
+    }
+
+    .come-classify:hover {
+        background: linear-gradient(to right, #6babfe, #8d9dfd) !important;
+    }
+</style>
+<script>
+    parent.$(document).ready(function (e) {
+        var self_url = document.location.toString();
+        var arrUrl = self_url.split("//");
+        var start = arrUrl[1].indexOf("/");
+        var _relUrl = relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+        if (_relUrl.indexOf("?") != -1) {
+            relUrl = _relUrl.split("?")[0];
+        }
+        var url = relUrl.substring(1);
+        var Y_data_param = parent.window.Y_data_param[url];
+        var param = Y_data_param.topK + '|' + Y_data_param.leftK + '|' + _relUrl.substring(1);
+        console.log(param);
+        window.parent.CMFCMenuBar(param);
+    });
+</script>
+</html>

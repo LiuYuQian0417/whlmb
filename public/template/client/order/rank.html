@@ -1,0 +1,98 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+
+    <!--<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>-->
+    <link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+    <link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+    <link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+    <link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+
+
+<form action="" name="searchForm" class="layui-form" method="post">
+    <div class="main-content" id="mainContent">
+        <div class="tabmenu">
+            <ul class="tab">
+                <li class="active"><a href="javascript:;">销售排行</a></li>
+
+            </ul>
+        </div>
+        <div class="btn-info">
+            <a class="sc-btn sc-blue-btn" href="#download"><i class="icon-download-alt"></i>销售排行报表下载</a>
+        </div>
+        <div class="search-info">
+            <form name="TimeInterval"  action="javascript:getList()" style="margin:0px">
+                <div class="search-form">
+                    <strong class="fl lh mr10">起始时间：</strong>
+                    <div class="text_time" id="text_time1">
+                        <input name="start_date" type="text" id="start_date" size="15" value='2018-08-20' readonly class="text"/>
+                    </div>
+                    <span class="bolang">&nbsp;&nbsp;~&nbsp;&nbsp;</span>
+                    <div class="text_time" id="text_time2">
+                        <input name="end_date" type="text" id="end_date" size="15" value='2018-08-27' readonly class="text" />
+                    </div>
+                    <input type="submit" name="submit" value="查询" class="sc-btn sc-blueBg-btn btn30 ml10" />
+                </div>
+            </form>
+        </div>
+        <div class="clear"></div>
+        <form method="POST" action="" name="listForm">
+            <div class="list-div" id="listDiv">
+                <table width="100%" class="ecsc-default-table ecsc-table-seller mt20">
+                    <tr>
+                        <th width="10%">排行</th>
+                        <th width="30%">商品名称</th>
+                        <th width="15%">货号</th>
+                        <th width="15%">销售量</th>
+                        <th width="15%">销售额</th>
+                        <th width="10%">均价</th>
+                    </tr>
+                    <tr><td class="no-records" colspan="10">没有找到任何记录</td></tr>
+                    <tfoot>
+                    <tr>
+                        <td colspan="10"><!----></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/calendar.min.js"></script>
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript" src="__RES__/js/jquery.picTip.js"></script>
+<script src="__RES__/js/step.js" type="application/javascript"></script>
+<script src="__RES__/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    //日期选择插件调用start sunle
+    var opts1 = {
+        'targetId':'start_date',//时间写入对象的id
+        'triggerId':['start_date'],//触发事件的对象id
+        'alignId':'text_time1',//日历对齐对象
+        'format':'-'//时间格式 默认'YYYY-MM-DD HH:MM:SS'
+    },opts2 = {
+        'targetId':'end_date',
+        'triggerId':['end_date'],
+        'alignId':'text_time2',
+        'format':'-'
+    }
+
+    xvDate(opts1);
+    xvDate(opts2);
+    //日期选择插件调用end sunle
+    //-->
+</script>
+{/block}

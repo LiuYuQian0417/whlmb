@@ -1,0 +1,135 @@
+
+{extend name="public/index_header"}
+
+
+{block name="content_css"}
+<!--公共头部css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicBottom.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/public/PublicHeader.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/color.css" />
+<!--排行榜css-->
+<link rel="stylesheet" href="__RES__/css/RankingList/Rank.css">
+<!--iconfont-->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1111076_zk19qp75pdr.css">
+<style>
+    .goods-view-title-icon a{
+        color: #333;
+        font-size: 14px;
+    }
+    .goods-view-title-icon a:last-child{
+        color: #666;
+    }
+    .goods-view-title-all{
+        text-align: right;
+        font-size: 14px;
+    }
+    .goods-view-title-all a{
+        color: #333;
+    }
+</style>
+
+{/block}
+
+{block name="content"}
+
+<!--商品列表-->
+<div class="goods-view">
+    <div class="goods-view-title" style="height: 40px; line-height: 40px;">
+        <div class="goods-view-title-icon">
+            <div >
+                <a href="{:url('/pc2.0/home/ranking')}" class="primary-color-hover">排行榜首页</a> > <a href="javascript:window.location.reload()">{$classify}</a>
+            </div>
+            <!--<img src="__RES__/imgs/ranking/29.png" alt="" style="display: block;margin-left: 300px">-->
+
+        </div>
+
+    </div>
+    <div class="title-center" style="background: url('__RES__/imgs/ranking/bg-color.png') no-repeat center;height: 38px;width: 1200px;text-align: center;line-height: 38px">
+        <span style="font-size: 20px;color: #fff">{$classify}</span>
+    </div>
+    <div class="goods-view-title-all" >
+        <a href="javascript:window.location.reload()">
+            <i class="iconfont icon-refresh"></i>
+            <span>刷新查看完整榜单</span>
+        </a>
+    </div>
+    <div class="goods-list-top">
+        <ul>
+            {volist name="$result" key="key1" id="item1" length="3"}
+            <li>
+                <a href="JavaScript:jump_goods('{$item1.goods_id}')">
+                    <img class="iconpos" src="__RES__/imgs/ranking/{$key1}.png" alt="">
+                    <div class="goods-content">
+                        <img src="{$item1.file}" width="159" height="111" alt="">
+                        <div class="goods-content-info">
+                            <div class="goods-content-info-top">
+                                <p class="goods-name">{$item1.goods_name}</p>
+                                <div class="goods-tag">
+                                    {if condition="config('user.one_more') eq 1"}
+                                    {switch name="$item1.shop"}{case value="0"}<span class="border-color primary-color">自营</span>{/case}{case value="1"}<span class="border-color primary-color">个人</span>{/case}{case value="2"}<span class="border-color primary-color">公司</span>{/case}{/switch}
+                                    {/if}
+                                    {eq name="$item1.is_city" value="1"}<span class="border-color primary-color">同城配送</span>{/eq}
+                                </div>
+                            </div>
+                            <div class="goods-content-info-btm">
+                                <div class="show-num">
+                                    <div class="goods-price primary-color"><span>￥</span>{$item1.goods_price}</div>
+                                    <div class="sales-volume">销量<span class="primary-color">{$item1.sales_volume}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    <div class="goods-list-btm">
+        <ul>
+            {volist name="$result" key="key2" id="item2" offset="3"}
+            <li>
+                <a href="javascript:jump_goods('{$item2.goods_id}')">
+                    <img class="iconpos" src="__RES__/imgs/ranking/4.png" alt="">
+                    <div class="icon-num">{$key2+3}</div>
+                    <img class="goods-img-pic" src="{$item2.file}" width="159" height="111" alt="">
+                    <div class="goods-tag">
+                        {if condition="config('user.one_more') eq 1"}
+                        <span class="border-color primary-color">{switch name="$item2.shop"}{case value="0"}自营{/case}{case value="1"}个人{/case}{case value="2"}公司{/case}{/switch}</span>
+                        {/if}
+                        <span class="border-color primary-color">{eq name="$item2.is_city" value="1"}同城配送{/eq}</span>
+                    </div>
+                    <p class="goods-name">{$item2.goods_name}</p>
+                    <div class="goods-content-info-btm">
+                        <div class="show-num">
+                            <div class="goods-price primary-color"><span>￥</span>{$item2.goods_price}</div>
+                            <div class="sales-volume">销量<span class="primary-color">{$item2.sales_volume}</span></div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {/volist}
+
+        </ul>
+    </div>
+</div>
+<!--商品列表结束-->
+
+<!--置顶-->
+<div class="to-top" style="height: 77px;">
+    <div class="back-top">
+        <i class="iconfont icon-arrow_top"></i>
+        <span>返回顶部</span>
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $('.ranking-category-view ul li').hover(function(){
+        $(this).addClass('primary-background-color')
+    },function () {
+        $(this).removeClass('primary-background-color')
+    })
+
+</script>
+{/block}

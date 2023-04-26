@@ -1,0 +1,166 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/step.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="__RES__/css/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/general.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/style.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link href="__RES__/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css">
+<style>
+    .layui-input, .layui-select {
+        height: 30px !important; width: 300px;
+    }
+    .goods_search_div{
+        margin-left: 10%;
+    }
+    .text_time .text{width: 300px;background: none!important;}
+    .cut-text{
+        width: 150px !important;
+    }
+    .sc-blueBg-btn{
+        margin-left: 10px;
+    }
+    .layui-form-item{
+        width: 65%;
+        margin: 0px auto;
+    }
+</style>
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<div class="main-content" id="mainContent">
+    <div class="explanation clear" id="explanation">
+        <div class="ex_tit"><i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>1、按照商品价格分佣改成按照实际支付金额与利润进行分佣，并且所有百分比总和不能大于100%；</li>
+        </ul>
+    </div>
+</div>
+
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        <div class="layui-form-item" style="margin-left: -20%">
+            <label class="layui-form-label">该商品是否可分销</label>
+            <div class="layui-input-inline" style="width: 100px;padding: 9px 0 !important;">
+                <input title type="checkbox" lay-filter="changeStatus" name="is_distribution" value="1"
+                       {eq name="item.is_distribution|default=''" value="1" }checked{/eq}
+                data-id="is_distribution" lay-skin="switch" lay-text="开|关">
+            </div>
+            <div class="layui-form-mid layui-word-aux"><b style="color: red;">注：可以分销的商品将展示在代言中心</b></div>
+        </div>
+        <div id="is_distribution" {empty name="item.is_distribution"}style="display: none;margin-left: -20%" {else/}style="margin-left: -20%"{/empty}>
+        <div class="layui-form-item">
+            <label class="layui-form-label">返利类型</label>
+            <div class="layui-input-block">
+                <input type="radio" name="rebates_type" value="0" title="现金（元）"
+                       {eq name="item.rebates_type|default='0'" value="0" }checked{/eq}
+                >
+                <input type="radio" name="rebates_type" value="1" title="百分比%"
+                       {eq name="item.rebates_type|default=''" value="1" }checked{/eq}
+                >
+            </div>
+        </div>
+        <div class="tabs_info" style="margin-left: 20%">
+            <ul>
+                <li class="curr"><a href="javascript:void(0);">一级分销设置</a></li>
+                <li class="" {lt name=":env('distribution_level')" value="2" }style="display: none" {/lt}><a href="javascript:void(0);">二级分销设置</a></li>
+                <li class="" {lt name=":env('distribution_level')" value="3" }style="display: none" {/lt}><a href="javascript:void(0);">三级分销设置</a></li>
+            </ul>
+        </div>
+        <div class="contentShells">
+            {volist name='distribution_level' id='one_level'}
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 一级{$one_level.level_title}</label>
+                <div class="layui-input-block">
+                    <input type="number" step="0.01" name="distribution_set[1][{$one_level.distribution_level_id}]"
+                           autocomplete="off" placeholder="请输入分销比例或现金（元）"
+                           datatype="num"
+                           nullmsg="请输入分销比例或现金（元）" errormsg="请输入分销比例或现金（元）,保留两位小数"
+                           value="{$item.distribution_set[1][$one_level.distribution_level_id]|default='0'}"
+                           class="layui-input">
+                </div>
+            </div>
+            {/volist}
+        </div>
+        <div class="contentShells" style="display:none">
+            {volist name='distribution_level' id='two_level'}
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 二级{$two_level.level_title}</label>
+                <div class="layui-input-block">
+                    <input type="number" step="0.01" name="distribution_set[2][{$two_level.distribution_level_id}]"
+                           autocomplete="off" placeholder="请输入分销比例或现金（元）"
+                           datatype="num"
+                           nullmsg="请输入分销比例或现金（元）" errormsg="请输入分销比例或现金（元）,保留两位小数"
+                           value="{$item.distribution_set[2][$two_level.distribution_level_id]|default='0'}"
+                           class="layui-input">
+                </div>
+            </div>
+            {/volist}
+        </div>
+        <div class="contentShells" style="display:none">
+            {volist name='distribution_level' id='three_level'}
+            <div class="layui-form-item">
+                <label class="layui-form-label"><font color="red">*</font> 三级{$three_level.level_title}</label>
+                <div class="layui-input-block">
+                    <input type="number" step="0.01" name="distribution_set[3][{$three_level.distribution_level_id}]"
+                           autocomplete="off" placeholder="请输入分销比例或现金（元）"
+                           datatype="num"
+                           nullmsg="请输入分销比例或现金（元）" errormsg="请输入分销比例或现金（元）,保留两位小数"
+                           value="{$item.distribution_set[3][$three_level.distribution_level_id]|default='0'}"
+                           class="layui-input">
+                </div>
+            </div>
+            {/volist}
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <input type="hidden" name="goods_id" value="{:input('get.goods_id')}">
+            <button class="layui-btn" type="submit" id="submit">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/layui/lay/modules/layer.js"></script>
+<script>
+
+    main.form([{
+        selector: 'switch(changeStatus)',
+        callback: function (data) {
+            if (data.elem.getAttribute('data-id') == 'is_distribution' && !data.elem.checked) {
+                $('#is_distribution').hide();
+            } else {
+                $('#is_distribution').show();
+            }
+        }
+    }]);
+
+    $.Datatype.num = /(^[1-9](\d+)?(\.\d{1,2})?$)|(^0$)|(^\d\.\d{1,2}$)/;
+    main.valid('.layui-form');
+    //内容页切换
+    $('.tabs_info li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShells").eq(index).show().siblings(".contentShells").hide();
+    });
+
+    // $('form').submit(function () {
+    //     setTimeout(function () {
+    //         var index = parent.layer.getFrameIndex(window.name);
+    //         parent.layer.close(index);
+    //     }, 2000);
+    // });
+</script>
+{/block}

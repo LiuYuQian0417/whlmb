@@ -1,0 +1,98 @@
+body{
+    font-family: Helvetica,STHeiti,"Microsoft YaHei",Verdana,Arial,Tahoma,sans-serif;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
+}
+.el-select>.el-input{
+    overflow: hidden;
+}
+#app{
+    width: 60%;
+    margin: 20px auto 0;
+}
+.el-form-item{
+    border-bottom: none;
+}
+.el-form-item:hover{
+    background: none;
+}
+.el-select .el-input.is-focus .el-input__inner,.el-select .el-input .el-input__inner:hover{
+    border: 1px solid #C9C9C9;
+}
+.el-input__inner{
+    border-radius: 0;
+    height: 30px!important;
+    line-height: 30px!important;
+    width: 240px!important;
+    margin-top: 0;
+}
+.el-input__prefix, .el-input__suffix{
+    top:2px!important;
+}
+.el-select-dropdown__item{
+    padding: 0 10px;
+    line-height: 36px!important;
+    height: 36px!important;
+    font-weight: normal;
+}
+.el-select-dropdown__item.selected{
+    background-color: #5FB878;
+    color: #fff;
+}
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover{
+    background: #f6f6f6;
+}
+.el-input__inner:hover,.el-input__inner:focus{
+    border-color:#c9c9c9!important;
+}
+.el-button--primary{
+    background: #1e9fff!important;
+    border-color: #1e9fff!important;
+}
+.bottom-control .el-button--default{
+    background: #fff;
+    color: #1e9fff!important;
+    border-color: #1e9fff!important;
+}
+.el-radio__input.is-checked .el-radio__inner{
+    background: #fff!important;
+    border-color: #5FB878!important;
+}
+.el-radio__inner:hover{
+    border-color: #c9c9c9!important;
+}
+.el-radio__inner{
+    width: 14px!important;
+    height: 14px!important;
+}
+.el-radio__inner::after{
+    width: 6px!important;
+    height: 6px!important;
+    background: #5BB75B!important;
+}
+.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background: #5BB75B!important;
+    border-color: #5BB75B!important;
+}
+.el-button--default:hover{
+    background: #fff;
+    color: #1e9fff!important;
+    border-color: #1e9fff!important;
+}
+.cell .el-input__inner{
+    width: 60px!important;
+}
+.el-table__body, .el-table__footer, .el-table__header{
+    width: auto!important;
+}
+.el-button--text, .el-button--text:hover{
+    color: #1e9fff!important;
+}
+.el-checkbox__inner:hover{
+    border-color:#c9c9c9!important;
+}
+.el-form-item__label{
+    color: #333;
+}

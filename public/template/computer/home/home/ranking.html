@@ -1,0 +1,556 @@
+{extend name="public/index_header"}
+{block name="content_css"}
+    <!--排行榜css-->
+    <link rel="stylesheet" href="__RES__/css/RankingList/Rank.css">
+    <link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+    <!--iconfont-->
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1111076_kt6tcyfyhdd.css">
+<style>
+    .active{
+        color: #fff !important;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<style>
+    .head-container .logo span{
+        font-size: 14px;
+        position: relative;
+        top: 0px;
+        margin-left: 10px;
+    }
+    .goods-category>ul>li span{
+        text-overflow: -o-ellipsis-lastline;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>
+<!--商品分类-->
+<div class="goods_category ranking-category">
+    <div class="goods-category height">
+        <ul class="first">
+            {volist name="goods_classify" id="item" key="key11" length="9"}
+            <li data_goods_classify_id="{$item.goods_classify_id}" class="parent {eq name="$key11" value="1"}active primary-background-color{/eq} primary-background-color-hover" data_id="{$item.goods_classify_id}">
+                <span>{$item.title}</span>
+                <div class="find-menu">
+                    <!--三角-->
+                    <div class="triangle"></div>
+                    <div class="menu-con">
+                        {empty name='$item.subset'}
+                        <p style="text-align: center;color: #8C8C8C;">暂无分类</p>
+                        {/empty}
+                        <ul>
+                            <!--border-color primary-color 高亮-->
+                            {volist name="$item.subset" id="val" key="k"}
+                            <li data_goods_classify_id="{$val.goods_classify_id}" class='{if condition="$key11 == 1"}  {if condition=" $k == 1"} border-color primary-color {/if} {/if} primary-color-hover'"' data_id="{$val.goods_classify_id}">{$val.title}</li>
+                            {/volist}
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            {/volist}
+            {gt name=":count($goods_classify)" value="11" }
+            <li class="all-menu primary-background-color-hover">
+                <a href="javasctipy:;">
+                    <div>
+                        <span>全部分类</span>
+                        <img src="__RES__/imgs/findshop/20.png" alt="">
+                    </div>
+                </a>
+            </li>
+            {/gt}
+
+        </ul>
+
+        <ul class="second-menu ov">
+            {volist name="goods_classify" id="item1" offset="9"}
+            <li data_goods_classify_id="{$item1.goods_classify_id}" class="parent primary-background-color-hover" data_id="{$item1.goods_classify_id}">
+                <span>{$item1.title}</span>
+                <div class="find-menu">
+                    <!--三角-->
+                    <div class="triangle"></div>
+                    <div class="menu-con">
+                        {empty name='$item1.subset'}
+                        <p style="text-align: center;color: #8C8C8C;">暂无分类</p>
+                        {/empty}
+                        <ul>
+                            {volist name="$item1.subset" id="val1"}
+                            <li data_goods_classify_id="{$val1.goods_classify_id}" class="primary-color-hover" data_id="{$val1.goods_classify_id}">{$val1.title}</li>
+                            {/volist}
+                        </ul>
+
+                    </div>
+                </div>
+            </li>
+            {/volist}
+
+        </ul>
+    </div>
+</div>
+<!--商品-->
+<div id="goods">
+{volist name="$goods_data" id="goods"}
+<!--类目-->
+<div class="category">[{$first_goods_classify_name}—{$goods.title}]</div>
+<!--类目结束-->
+<!--商品列表-->
+<div class="goods-view">
+    <div class="goods-view-title">
+        <div class="goods-view-title-icon">
+            <img src="__RES__/imgs/ranking/rmb.png" alt="">
+            <div>
+                <p>热卖榜</p>
+                <p>销量冠军音量购物风向标</p>
+            </div>
+        </div>
+        <div style="cursor: pointer" class="goods-view-title-all" onclick="main.jump({'url':'/pc2.0/home/goods_ranking?goods_classify_id={$goods.goods_classify_id}'})">
+            <span >查看完整榜单</span>
+            <img src="__RES__/imgs/ranking/up_fill.png" alt="">
+        </div>
+    </div>
+    <div class="goods-list-top">
+        <ul>
+            {volist name="$goods.three_goods" key="key1" id="item1" length="3"}
+            <li>
+                <a href="javascript:jump_goods('{$item1.goods_id}')">
+                    <img class="iconpos" src="__RES__/imgs/ranking/{$key1}.png" alt="">
+                    <div class="goods-content">
+                        <img src="{$item1.file}" width="159" height="111" alt="">
+                        <div class="goods-content-info">
+                            <div class="goods-content-info-top">
+                                <p class="goods-name">{$item1.goods_name}</p>
+                                <div class="goods-tag">
+                                    {if condition="config('user.one_more') eq 1"}
+                                    {switch name="$item1.shop"}{case value="0"}<span class="border-color primary-color">自营</span>{/case}{case value="1"}<span class="border-color primary-color">个人</span>{/case}{case value="2"}<span class="border-color primary-color">公司</span>{/case}{/switch}
+                                    {/if}
+                                    {eq name="$item1.is_city" value="1"}<span class="border-color primary-color">同城配送</span>{/eq}
+                                </div>
+                            </div>
+                            <div class="goods-content-info-btm">
+                                <div class="show-num">
+                                    <div class="goods-price primary-color"><span>￥</span>{$item1.goods_price}</div>
+                                    <div class="sales-volume">销量<span class="primary-color">{$item1.sales_volume}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+    <div class="goods-list-btm">
+        <ul>
+            {volist name="$goods.three_goods" key="key2" id="item2" offset="3"}
+            <li>
+                <a href="javascript:jump_goods('{$item2.goods_id}')">
+                    <img class="iconpos" src="__RES__/imgs/ranking/4.png" alt="">
+                    <div class="icon-num">{$key2+3}</div>
+                    <img class="goods-img-pic" src="{$item2.file}" width="159" height="111" alt="">
+                    <div class="goods-tag">
+                        {if condition="config('user.one_more') eq 1"}
+                        <span class="border-color primary-color">
+                            {switch name="$item2.shop"}{case value="0"}自营{/case}{case value="1"}个人{/case}{case value="2"}公司{/case}{/switch}
+                        </span>
+                        {/if}
+                        {eq name="$item2.is_city" value="1"}
+                        <span class="border-color primary-color">同城配送</span>
+                        {/eq}
+                    </div>
+                    <p class="goods-name">{$item2.goods_name}</p>
+                    <div class="goods-content-info-btm">
+                        <div class="show-num">
+                            <div class="goods-price primary-color"><span>￥</span>{$item2.goods_price}</div>
+                            <div class="sales-volume">销量<span class="primary-color">{$item2.sales_volume}</span></div>
+                        </div>
+                    </div>
+                </a>
+            </li>
+            {/volist}
+
+        </ul>
+    </div>
+</div>
+<!--商品列表结束-->
+{/volist}
+</div>
+
+
+{if $function_status.one_or_more===true}
+<!--店铺分类-->
+<div class="ranking-category ranking-category2">
+    <div class=" shop_category goods-category height">
+        <ul>
+            {volist name="store_classify" id="item2" length="9" key="shop_key"}
+
+            <li data_id="{$item2.store_classify_id}" class="{eq name="$shop_key" value="1"}active primary-background-color {/eq} primary-background-color-hover" >
+                <span>{$item2.title}</span>
+            </li>
+            {/volist}
+            {gt name=":count($store_classify)" value="9" }
+            <li class="all-menu primary-background-color-hover">
+                <a href="javasctipy:;">
+                    <div>
+                        <span>全部分类</span>
+                        <img src="__RES__/imgs/findshop/20.png" alt="">
+                    </div>
+                </a>
+            </li>
+            {/gt}
+        </ul>
+        <ul class="second-menu ov">
+            {volist name="store_classify" id="item3" offset="9"}
+            <li class=" primary-background-color-hover" data_id="{$item3.store_classify_id}">
+                <span>{$item3.title}</span>
+            </li>
+            {/volist}
+        </ul>
+    </div>
+</div>
+
+<!--店铺列表-->
+<div class=" goods-view goods-view2">
+    <div class="goods-view2-container">
+        <div class="goods-view-title">
+            <div class="goods-view-title-icon">
+                <img src="__RES__/imgs/ranking/dpb.png" height="39" alt="">
+                <div>
+                    <p class="primary-color">店铺榜</p>
+                    <p>销量冠军音量购物风向标</p>
+                </div>
+            </div>
+            <div style="cursor: pointer" class="goods-view-title-all" onclick="jump()">
+                <span >查看完整榜单</span>
+                <img src="__RES__/imgs/ranking/up_fill.png" alt="">
+            </div>
+        </div>
+        <div class="goods-container">
+            <ul>
+                {volist name="$store_data" id="shop" key="key_shop"}
+                <li data_>
+                    <div class="container-top" onclick="jump_store({'store_id':'{$shop.store_id}'})">
+                        {gt name="$key_shop" value="3"}<div class="icon-num">{$key_shop}</div> {/gt}
+                        <img class="bg-pic" src="__RES__/imgs/ranking/26.png" alt="">
+                        <img class="icon-num-pic" {gt name="$key_shop" value="3"}src="__RES__/imgs/ranking/4.png" {else/} src="__RES__/imgs/ranking/{$key_shop}.png" {/gt} alt="">
+                        <div class="bg-top">
+                            <img width="100" height="33" src="{$shop.logo}" alt="">
+                            <p>
+                                <a href="javascript:;">
+                                    {$shop.store_name}
+                                    <img src="__RES__/imgs/ranking/dpgd.png" alt="">
+                                </a>
+                            </p>
+                            <div class="goods-tag">
+                                {if condition="config('user.one_more') eq 1"}
+                                <span class="border-color primary-color">{switch name="$shop.shop"}{case value="0"}自营{/case}{case value="1"}个人{/case}{case value="2"}公司{/case}{/switch}</span>
+                                {/if}
+                                {eq name="$shop.is_city" value="1"}<span class="border-color primary-color">同城配送</span>{/eq}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-btm">
+                        <ul>
+                            {volist name="$shop.store_goods" id="goods_value"}
+                            <li>
+                                <a href="javascript:jump_goods('{$goods_value.goods_id}')">
+                                    <div class="li-view">
+                                        <img width="159" height="141" src="{$goods_value.file}" alt="">
+                                        <p class="goods-name">{$goods_value.goods_name}</p>
+                                        <div class="goods-content-info-btm">
+                                            <div class="show-num">
+                                                <div class="goods-price primary-color"><span>￥</span>{$goods_value.goods_price}</div>
+                                                <div class="sales-volume">销量<span class="primary-color">{$goods_value.sales_volume}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+</div>
+{/if}
+<!--置顶-->
+<div class="to-top">
+    <!--<div class="top-view">-->
+        <!--<img src="__RES__/imgs/ranking/syssj.png" alt="">-->
+        <!--<span class="primary-color">扫一扫手机看榜单</span>-->
+    <!--</div>-->
+    <div class="rank">热卖榜</div>
+    {if $function_status.one_or_more===true}
+    <div class="rank">店铺榜</div>
+    {/if}
+    <div class="back-top">
+        <i class="iconfont icon-arrow_top"></i>
+        <span>返回顶部</span>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+    $('.to-top .rank').eq(0).click(function () {
+        $("html,body").animate({scrollTop:0}, 300);
+    })
+    $('.to-top .rank').eq(1).click(function () {
+        var st = $('.goods-view2').offset().top;
+        $("html,body").animate({scrollTop:st}, 300);
+    })
+
+    $(window).scroll(function () {
+       var ST =  $(document).scrollTop();
+        if(ST>=245){
+            $('.back-top').show()
+        }else{
+            $('.back-top').hide()
+        }
+    })
+    $('.ranking-category-view ul li').hover(function(){
+        $(this).addClass('primary-background-color')
+    },function () {
+        $(this).removeClass('primary-background-color')
+    })
+    var bl = 0;
+    $('.all-menu').mouseenter(function () {
+        // $(this).parent().siblings('.second-menu').stop().slideDown();
+        var h = $(this).parent().siblings('.second-menu').children('li').length;
+        // console.log(h)
+        h = parseInt(h/10)+1;
+        h=h*50;
+        $(this).parent().siblings('.second-menu').removeClass('ov').stop().animate({'height':h+'px'},300);
+    })
+    $('.goods-category').mouseleave(function () {
+        if(bl==0){
+            $(this).find('.second-menu').addClass('ov').stop().animate({'height':0+'px'},300);
+
+        }
+    })
+
+    $('.goods-category ul li').mouseenter(function () {
+        var num = $(this).index();
+        // console.log(num)
+        if(num%10>=6){
+            $(this).find('.triangle').css('left',(num%10-6)*120+84+'px')
+            $(this).find('.find-menu').css('left',(num%10-6)*-120-37+'px')
+        }
+    })
+
+    $('.goods-category .menu-con li').click(function () {
+        if($(this).parents().hasClass('second-menu')){
+            bl=1;
+            console.log(bl)
+        }else{
+            bl=0;
+            console.log(bl)
+        }
+    })
+    $('.shop_category  li').click(function () {
+        if($(this).parents().hasClass('second-menu')){
+            bl=1;
+            console.log(bl)
+        }else{
+            bl=0;
+            console.log(bl)
+        }
+    })
+
+
+    //以下数据处理
+
+    // 商品ajax
+    // $('.goods_category .find-menu li').click(function () {
+    $('.goods_category li').click(function () {
+
+        $('.goods_category li').each(function () {
+            $(this).removeClass('border-color primary-color')
+            $(this).removeClass('active primary-background-color')
+        })
+        $(this).addClass('border-color primary-color ');
+
+        $(this).parents('li').addClass('active primary-background-color');
+
+        var two_classify_name = $(this).hasClass('parent') ? $(this).children('span').text() : $(this).html();
+        var goods_classify_id = $(this).attr('data_goods_classify_id');
+
+        main.ajax({'url':'{:url(\'pc2.0/home/ajax_goods_ranking\')}','data':{'goods_classify_id':goods_classify_id},callback:function (res) {
+                var str = '';
+                $.each(res.result, function (k, v) {
+                    var li ='';
+                    var li1 ='';
+                    $.each(v.three_goods,function (k1,v1) {
+                        var zj = '';  var tc = '';
+                        switch (v1.shop) {
+                            case 0: zj='<span class="border-color primary-color">自营</span>'; break;
+                            case 1: zj='<span class="border-color primary-color">个人</span>'; break;
+                            case 2: zj='<span class="border-color primary-color">公司</span>'; break;
+                        }
+                        if(v1.is_city == 1) {tc = '<span class="border-color primary-color">同城配送</span>';}
+                        var key = k1+1;
+                        if(k1 <3){
+                            li +='<li>\n' +
+                                '    <a href="javascript:jump_goods('+v1.goods_id+')">\n' +
+                                '        <img class="iconpos" src="__RES__/imgs/ranking/'+key+'.png" alt="">\n' +
+                                '        <div class="goods-content">\n' +
+                                '            <img width="159" height="111" onerror="this.src=\'/template/computer/resource/imgs/zwt.png\'" src="'+v1.file+'" alt="">\n' +
+                                '            <div class="goods-content-info">\n' +
+                                '                <div class="goods-content-info-top">\n' +
+                                '                    <p class="goods-name">'+v1.goods_name+'</p>\n' +
+                                '                    <div class="goods-tag">\n' +
+                                '                        '+zj+'\n' +
+                                '                        '+tc+'\n' +
+                                '                    </div>\n' +
+                                '                </div>\n' +
+                                '                <div class="goods-content-info-btm">\n' +
+                                '                    <div class="show-num">\n' +
+                                '                        <div class="goods-price primary-color"><span>￥</span>'+v1.goods_price+'</div>\n' +
+                                '                        <div class="sales-volume">销量<span class="primary-color">'+v1.sales_volume+'</span></div>\n' +
+                                '                    </div>\n' +
+                                '                </div>\n' +
+                                '            </div>\n' +
+                                '        </div>\n' +
+                                '    </a>\n' +
+                                '</li>';
+                        }else{
+                            li1 +='<li>\n' +
+                                '    <a href="javascript: jump_goods('+v1.goods_id+')">\n' +
+                                '        <img class="iconpos" src="__RES__/imgs/ranking/4.png" alt="">\n' +
+                                '        <div class="icon-num">'+key +'</div>\n' +
+                                '        <img class="goods-img-pic" width="159" height="111" onerror="this.src=\'/template/computer/resource/imgs/zwt.png\'" src="'+v1.file+'" alt="">\n' +
+                                '        <div class="goods-tag">\n' +zj+tc+
+                                '        </div>\n' +
+                                '        <p class="goods-name">'+v1.goods_name+'</p>\n' +
+                                '        <div class="goods-content-info-btm">\n' +
+                                '            <div class="show-num">\n' +
+                                '                <div class="goods-price primary-color"><span>￥</span>'+v1.goods_price+'</div>\n' +
+                                '                <div class="sales-volume">销量<span class="primary-color">'+v1.sales_volume+'</span></div>\n' +
+                                '            </div>\n' +
+                                '        </div>\n' +
+                                '    </a>\n' +
+                                '</li>';
+                        }
+
+
+                    })
+
+
+                    str += '<div class="category">['+two_classify_name+'—'+v.title+']</div>' +
+                        '<div class="goods-view">\n' +
+                        '    <div class="goods-view-title">\n' +
+                        '        <div class="goods-view-title-icon">\n' +
+                        '            <img src="" alt="">\n' +
+                        '            <div>\n' +
+                        '                <p>热卖榜</p>\n' +
+                        '                <p>销量冠军音量购物风向标</p>\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '        <div style="cursor: pointer" class="goods-view-title-all" onclick="main.jump({\'url\':\'/pc2.0/home/goods_ranking?goods_classify_id='+v.goods_classify_id+'\'})">\n' +
+                        '            <span >查看完整榜单</span>\n' +
+                        '            <img src="__RES__/imgs/ranking/up_fill.png" alt="">\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '    <div class="goods-list-top">\n' +
+                        '        <ul>'+li+'</ul>\n' +
+                        '    </div>\n' +
+                        '    <div class="goods-list-btm">\n' +
+                        '        <ul>'+li1+'</ul>\n' +
+                        '    </div>\n' +
+                        '</div>'
+                });
+                $('#goods').html(str);
+            }})
+
+    })
+
+    //店铺ajax
+    $('.shop_category  ul li').click(function () {
+
+        $('.shop_category ul li').each(function () {
+            $(this).removeClass('active primary-background-color');
+        })
+
+        $(this).addClass('active primary-background-color');
+
+        var store_classify_id = $(this).attr('data_id');
+        main.ajax({'url':'{:url(\'pc2.0/home/ajax_shop_ranking\')}','data':{'store_classify_id':store_classify_id},callback:function (res) {
+                var html = '';
+                $.each(res.result, function (k, v) {
+                    var li ='';
+                    var zj = '';
+                    var tc = '';
+                    var gjz = '';
+                    switch (v.shop) {
+                        case 0: zj='<span class="border-color primary-color">自营</span>'; break;
+                        case 1: zj='<span class="border-color primary-color">个人</span>'; break;
+                        case 2: zj='<span class="border-color primary-color">公司</span>'; break;
+                    }
+                    if(v.is_city == 1) {tc = '<span class="border-color primary-color">同城配送</span>';}
+                    var key = k+1;
+
+                    if(k >=3){
+                        var key1 =4;
+                        gjz =' <div class="icon-num">'+key+'</div>'
+                    }else{
+                        var key1 = k+1;
+                    }
+                    $.each(v.store_goods,function (k1,v1) {
+                        li+='<li>\n' +
+                            '    <a href="javascript:jump_goods(\''+v1.goods_id+'\')">\n' +
+                            '        <div class="li-view">\n' +
+                            '            <img width="159" height="141" src="'+v1.file+'" alt="">\n' +
+                            '            <p class="goods-name">'+v1.goods_name+'</p>\n' +
+                            '            <div class="goods-content-info-btm">\n' +
+                            '                <div class="show-num">\n' +
+                            '                    <div class="goods-price primary-color"><span>￥</span>'+v1.goods_price+'</div>\n' +
+                            '                    <div class="sales-volume">销量<span class="primary-color">'+v1.sales_volume+'</span></div>\n' +
+                            '                </div>\n' +
+                            '            </div>\n' +
+                            '        </div>\n' +
+                            '    </a>\n' +
+                            '</li>'
+                    })
+                    html +='<li>\n' +
+                        '    <div class="container-top" onclick="jump_store({\'store_id\':\''+v.store_id+'\'})">\n' +gjz+
+                        '        <img class="bg-pic" src="__RES__/imgs/ranking/26.png" alt="">\n' +
+                        '        <img class="icon-num-pic" src="__RES__/imgs/ranking/'+key1+'.png" alt="">\n' +
+                        '        <div class="bg-top">\n' +
+                        '            <img width="100" height="33" src="'+v.logo+'" alt="">\n' +
+                        '            <p>\n' +
+                        '                <a href="javascript:;">\n' + v.store_name+
+                        '                    <img src="__RES__/imgs/ranking/dpgd.png" alt="">\n' +
+                        '                </a>\n' +
+                        '            </p>\n' +
+                        '            <div class="goods-tag">\n' +
+                        '                '+zj+'\n' +
+                        '                '+tc+'\n' +
+                        '            </div>\n' +
+                        '        </div>\n' +
+                        '    </div>\n' +
+                        '    <div class="container-btm">\n' +
+                        '        <ul>'+li+'</ul>\n' +
+                        '    </div>\n' +
+                        '</li>'
+
+                });
+                $('.goods-container ul').html(html);
+            }})
+    })
+
+    function jump() {
+        var store_classify_id = $('.shop_category ul  .primary-background-color').attr('data_id');
+        main.jump({'url':'/pc2.0/home/store_ranking?goods_classify_id='+store_classify_id+''});
+    }
+
+
+
+
+</script>
+{/block}

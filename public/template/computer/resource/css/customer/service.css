@@ -1,0 +1,904 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+a {
+  text-decoration: none;
+}
+li {
+  list-style: none;
+}
+.service-bg {
+  background: rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+}
+.service-bg .service-box {
+  width: 1130px;
+  height: 800px;
+  background: #fff;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -565px;
+  margin-top: -400px;
+  border-radius: 10px;
+  border-top-right-radius: 0px;
+  display: flex;
+  overflow: hidden;
+}
+.service-bg .service-box .service-left {
+  width: 251px;
+  height: 800px;
+}
+.service-bg .service-box .service-left .service-header {
+  background: #EA5514;
+  height: 105px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-left .service-header .header-img {
+  width: 50px;
+  height: 50px;
+  background: #FFFFFF;
+  border-radius: 5px;
+  float: left;
+}
+.service-bg .service-box .service-left .service-header .personal-info {
+  overflow: hidden;
+}
+.service-bg .service-box .service-left .service-header .name-box {
+  float: left;
+  color: #fff;
+  margin-left: 10px;
+  width: 165px;
+}
+.service-bg .service-box .service-left .service-header .name-box .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.service-bg .service-box .service-left .service-header .leave {
+  font-size: 14px;
+  color: #fff;
+  margin-top: 5px;
+}
+.service-bg .service-box .service-left .service-header .leave .vip {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(top left, #95949A, #B8B7BC);
+  background: -webkit-linear-gradient(top left, #95949A, #B8B7BC);
+  background: -moz-linear-gradient(top left, #95949A, #B8B7BC);
+  background: -ms-linear-gradient(top left, #95949A, #B8B7BC);
+  background: -o-linear-gradient(top left, #95949A, #B8B7BC);
+  text-align: center;
+  line-height: 22px;
+  position: relative;
+  z-index: 2;
+}
+.service-bg .service-box .service-left .service-header .leave .vip-con {
+  display: inline-block;
+  height: 17px;
+  background: linear-gradient(top left, #95949A, #B8B7BC);
+  background: -webkit-linear-gradient(top left, #95949A, #B8B7BC);
+  background: -moz-linear-gradient(top left, #95949A, #B8B7BC);
+  background: -ms-linear-gradient(top left, #95949A, #B8B7BC);
+  background: -o-linear-gradient(top left, #95949A, #B8B7BC);
+  padding: 0px 5px;
+  border-radius: 5px;
+  line-height: 17px;
+  text-indent: 5px;
+  position: relative;
+  left: -10px;
+}
+.service-bg .service-box .service-left .service-header .input-box {
+  width: 230px;
+  height: 25px;
+  background: #fff;
+  border-radius: 5px;
+  padding-left: 30px;
+  box-sizing: border-box;
+  position: relative;
+  margin-top: 10px;
+}
+.service-bg .service-box .service-left .service-header .input-box img {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+}
+.service-bg .service-box .service-left .service-header .input-box input {
+  border: none;
+  background: none;
+  width: 180px;
+  height: 100%;
+}
+.service-bg .service-box .service-left .shop-list .list {
+  height: 50px;
+  background: #F8F8F8;
+  padding: 10px;
+  box-sizing: border-box;
+  cursor:pointer;
+}
+.service-bg .service-box .service-left .shop-list .list:hover {
+  background: #FFEFE8!important;
+}
+.service-bg .service-box .service-left .shop-list .list .shop-logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  background: #fff;
+  float: left;
+}
+.service-bg .service-box .service-left .shop-list .list .shop-name {
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  float: left;
+  font-size: 14px;
+  color: #333333;
+  line-height: 30px;
+  margin-left: 8px;
+  width: 150px;
+}
+.service-bg .service-box .service-left .shop-list .list .mark {
+  float: right;
+  padding: 1px 5px;
+  border: 1px solid #EA5514;
+  font-size: 12px;
+  border-radius: 3px;
+  position: relative;
+  top: 5px;
+  color: #EA5514;
+}
+.service-bg .service-box .service-left .shop-list .active {
+  background: #FFEFE8;
+}
+.service-bg .service-box .service-right {
+  width: 880px;
+  height: 800px;
+}
+.service-bg .service-box .service-right .shop-content {
+  height: 800px;
+  display: flex;
+}
+.service-bg .service-box .service-right .shop-content .chat-box {
+  width: 550px;
+  height: 800px;
+  border-right: 1px solid #EEEEEE;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-header {
+  height: 60px;
+  border-bottom: 1px solid #EEEEEE;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-header .shop-logo {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #EEEEEE;
+  border-radius: 5px;
+  float: left;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-header .shop-name {
+  line-height: 40px;
+  margin-left: 10px;
+  width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con {
+  height: 540px;
+  overflow: auto;
+  background: #F7F7F7;
+  border-bottom: 1px solid #eee;
+  border-left: 1px solid #eee;
+  padding-bottom: 30px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px;
+  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  background: #D2D2D2;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  border-radius: 10px;
+  background: none;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .time {
+  font-size: 12px;
+  color: #B1B1B1;
+  text-align: center;
+  margin-top: 20px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info {
+  padding-right: 15px;
+  margin-top: 25px;
+  overflow: hidden;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .img {
+  float: right;
+  width: 40px;
+  height: 40px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .img img {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con {
+  float: right;
+  margin-right: 15px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .name {
+  text-align: right;
+  color: #B1B1B1;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods {
+  width: 400px;
+  height: 115px;
+  border-radius: 5px;
+  background: #fff;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods a {
+  padding-top: 15px;
+  padding-left: 15px;
+  display: block;
+  height: 115px;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods .goods-img {
+  width: 80px;
+  height: 80px;
+  float: left;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods .goods-img img {
+  width: 80px;
+  height: 80px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods .goods-right {
+  float: left;
+  margin-left: 15px;
+  width: 275px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods .goods-right .goods-name {
+  height: 36px;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: #333333;
+  font-size: 12px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods .goods-right .pic-box {
+  color: #EA5413;
+  font-size: 14px;
+  margin-top: 20px;
+  line-height: 26px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .goods .goods-right .btn {
+  float: right;
+  width: 76px;
+  height: 26px;
+  border-radius: 5px;
+  background: #EA5413;
+  color: #fff;
+  text-align: center;
+  padding-right: 0px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .chat {
+  padding: 15px 20px;
+  background: #EAEAEA;
+  color: #333;
+  font-size: 12px;
+  border-radius: 10px;
+  border-bottom-right-radius: 0px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .my-info .con .chat .imgRUL {
+  height: 90px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info {
+  padding-right: 15px;
+  margin-top: 25px;
+  overflow: hidden;
+  padding-left: 15px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .img {
+  float: right;
+  width: 40px;
+  height: 40px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .img img {
+  width: 40px;
+  height: 40px;
+  border-radius: 5px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con {
+  float: right;
+  margin-right: 15px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .name {
+  text-align: right;
+  color: #B1B1B1;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods {
+  width: 400px;
+  height: 115px;
+  border-radius: 5px;
+  background: #fff;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods a {
+  padding-top: 15px;
+  padding-left: 15px;
+  display: block;
+  height: 115px;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods .goods-img {
+  width: 80px;
+  height: 80px;
+  float: left;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods .goods-img img {
+  width: 80px;
+  height: 80px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods .goods-right {
+  float: left;
+  margin-left: 15px;
+  width: 275px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods .goods-right .goods-name {
+  height: 36px;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: #333333;
+  font-size: 12px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods .goods-right .pic-box {
+  color: #EA5413;
+  font-size: 14px;
+  margin-top: 20px;
+  line-height: 26px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .goods .goods-right .btn {
+  float: right;
+  width: 76px;
+  height: 26px;
+  border-radius: 5px;
+  background: #EA5413;
+  color: #fff;
+  text-align: center;
+  padding-right: 0px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .chat {
+  padding: 15px 20px;
+  background: #EAEAEA;
+  color: #333;
+  font-size: 12px;
+  border-radius: 10px;
+  border-bottom-right-radius: 0px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .chat .emoji_img{
+    width: 30px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .chat .imgRUL {
+  height: 90px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .img {
+  float: left;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con {
+  float: left;
+  margin-left: 15px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .chat-con .service-info .con .name {
+  text-align: left;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box {
+  height: 170px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state {
+  height: 50px;
+  padding-top: 15px;
+  box-sizing: border-box;
+  position: relative;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression {
+  float: left;
+  margin-left: 20px;
+  cursor: pointer;
+  position: relative;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .img-send {
+  float: left;
+  padding-left: 20px;
+  cursor: pointer;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box {
+  width: 362px;
+  height: 182px;
+  border: 1px solid #e1e1e1;
+  position: absolute;
+  top: -194px;
+  left: 0px;
+  z-index: 2;
+  padding: 5px;
+  background: #fff;
+  display: none;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box .expression-con {
+  overflow: auto;
+  width: 360px;
+  height: 180px;
+  border: 1px solid #E1E1E1;
+  border-right: none;
+  border-bottom: none;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box .expression-con .box {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  border-right: 1px solid #E1E1E1;
+  border-bottom: 1px solid #E1E1E1;
+  box-sizing: border-box;
+  text-align: center;
+  float: left;
+  cursor: pointer;
+  outline: 1px solid transparent;
+  position: relative;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box .expression-con .box > img {
+  position: relative;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box .expression-con .box .big-expression {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 1px solid #EA5413;
+  top: 30px;
+  left: 30px;
+  background: #fff;
+  z-index: 3;
+  display: none;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box .expression-con .box .big-expression img {
+  margin-top: 18px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box .expression-con .box:hover {
+  outline: 1px solid #EA5413;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .state .expression-box .expression-con .box:hover .big-expression {
+  display: block;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .txt {
+  height: 70px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .txt .input {
+  resize: none;
+  height: 70px;
+  background: none;
+  border: none;
+  line-height: 24px;
+  outline: none;
+  word-break: break-all;
+  white-space: normal;
+  overflow-y: auto;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0px 19px 0px 19px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .input-box .txt .input img {
+  margin-right: 5px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .btn {
+  height: 30px;
+  padding-right: 30px;
+}
+.service-bg .service-box .service-right .shop-content .chat-box .btn .send {
+  width: 75px;
+  height: 26px;
+  border: 1px solid #EEEEEE;
+  background: #F7F7F7;
+  font-size: 12px;
+  display: block;
+  text-align: center;
+  line-height: 26px;
+  border-radius: 5px;
+  color: #666666;
+  text-decoration: none;
+  float: right;
+}
+.service-bg .service-box .service-right .shop-content .shop-list {
+  border-bottom: 1px solid #eee;
+  width: 330px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list{
+
+}
+.service-bg .service-box .service-right .shop-content .shop-list .header {
+  display: flex;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .header a {
+  display: block;
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  line-height: 40px;
+  color: #666666;
+  position: relative;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .header a:after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 17px;
+  background: #DCDCDC;
+  position: absolute;
+  right: 0px;
+  top: 12px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .header a:last-child:after {
+  display: none;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .header .active {
+  color: #EA5413;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box {
+  position: relative;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order{
+  height: 760px;
+  overflow: auto;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px;
+  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  background: #D2D2D2;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  border-radius: 10px;
+  background: none;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods {
+  width: 330px;
+  height: 68px;
+  border-radius: 5px;
+  background: #fff;
+  box-sizing: border-box;
+  margin-top: 15px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods a {
+  padding-left: 15px;
+  display: block;
+  height: 68px;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods .goods-img {
+  width: 68px;
+  height: 68px;
+  float: left;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods .goods-img img {
+  width: 68px;
+  height: 68px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods .goods-right {
+  float: left;
+  margin-left: 15px;
+  width: 220px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods .goods-right .goods-name {
+  height: 36px;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: #333333;
+  font-size: 12px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods .goods-right .pic-box {
+  color: #EA5413;
+  font-size: 14px;
+  margin-top: 9px;
+  line-height: 26px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .goods .goods-right .btn {
+  float: right;
+  width: 76px;
+  height: 26px;
+  border-radius: 5px;
+  background: #EA5413;
+  color: #fff;
+  text-align: center;
+  padding-right: 0px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .fw {
+  font-size: 12px;
+  margin-top: 15px;
+  padding-left: 15px;
+  color: #999999;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .fw span {
+  color: #333333;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .fw span i {
+  font-style: initial;
+  display: inline-block;
+  width: 50px;
+  text-align: justify;
+  text-align-last: justify;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .browse-header {
+  height: 40px;
+  background: #F8F8F8;
+  width: 330px;
+  display: flex;
+  margin-top: 25px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .browse-header a {
+  display: block;
+  flex: 1;
+  text-align: center;
+  font-size: 12px;
+  line-height: 40px;
+  color: #666666;
+  position: relative;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .browse-header a:after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 17px;
+  background: #DCDCDC;
+  position: absolute;
+  right: 0px;
+  top: 12px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .browse-header a:last-child:after {
+  display: none;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .browse-header .active {
+  color: #EA5413;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .table-box .table {
+  overflow: auto;
+  height: 530px;
+  padding-bottom: 20px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .table-box .table::-webkit-scrollbar {
+  /*滚动条整体样式*/
+  width: 10px;
+  /*高宽分别对应横竖滚动条的尺寸*/
+  height: 1px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .table-box .table::-webkit-scrollbar-thumb {
+  /*滚动条里面小方块*/
+  border-radius: 10px;
+  background: #D2D2D2;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .table-box .table::-webkit-scrollbar-track {
+  /*滚动条里面轨道*/
+  border-radius: 10px;
+  background: none;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .table-box .table .goods {
+  width: 300px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .table-box .table .goods .goods-right {
+  width: 200px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .counsel .browse-box .table-box .table .btn {
+  background: #F7F7F7;
+  border: 1px solid #EEEEEE;
+  color: #666666;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods {
+  width: 330px;
+  height: 90px;
+  border-radius: 5px;
+  background: #fff;
+  box-sizing: border-box;
+  margin-top: 15px;
+  border-bottom: 1px solid #EEEEEE;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods a {
+  padding-left: 15px;
+  display: block;
+  height: 68px;
+  box-sizing: border-box;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods .goods-img {
+  width: 68px;
+  height: 68px;
+  float: left;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods .goods-img img {
+  width: 68px;
+  height: 68px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods .goods-right {
+  float: left;
+  margin-left: 15px;
+  width: 210px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods .goods-right .goods-name {
+  height: 36px;
+  line-height: 18px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  color: #333333;
+  font-size: 12px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods .goods-right .pic-box {
+  color: #EA5413;
+  font-size: 14px;
+  margin-top: 9px;
+  line-height: 26px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .goods .goods-right .btn {
+  float: right;
+  width: 76px;
+  height: 26px;
+  border-radius: 5px;
+  background: #F7F7F7;
+  color: #666666;
+  text-align: center;
+  padding-right: 0px;
+  border: 1px solid #B1B1B1;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .order-header {
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  color: #666666;
+  padding: 0px 15px;
+  border-bottom: 1px solid #EEEEEE;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .order-header .order-number {
+  float: left;
+  width: 166px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .order-header .time {
+  float: right;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .goods-bottom {
+  height: 40px;
+  line-height: 40px;
+  font-size: 12px;
+  color: #333333;
+  padding: 0px 15px;
+  border-bottom: 1px solid #eeeeee;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .goods-bottom .je {
+  float: left;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .goods-bottom .je span {
+  color: #EA5514;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .goods-bottom .order-btn {
+  float: right;
+  color: #EA5514;
+  width: 67px;
+  height: 26px;
+  border: 1px solid #EA5514;
+  line-height: 26px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 6px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .order-box .goods-bottom .consignment {
+  float: right;
+  width: 67px;
+  height: 26px;
+  color: #B1B1B1;
+  border: 1px solid #B1B1B1;
+  line-height: 26px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 6px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .order .fg {
+  height: 10px;
+  background: #F7F7F7;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-top {
+  height: 90px;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+  padding: 0px 15px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-top .tit {
+  color: #999999;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-top p {
+  margin-top: 15px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-top .fs {
+  margin-top: 15px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-top .fs .start {
+  width: 65px;
+  height: 13px;
+  display: inline-block;
+  background: url(/template/computer/resource/imgs/customer/2.png) repeat-x;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-top .fs .start .active-start {
+  width: 65px;
+  height: 13px;
+  display: inline-block;
+  background: url(/template/computer/resource/imgs/customer/1.png) repeat-x;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-top .fs .score {
+  color: #EA5514;
+  margin-left: 10px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom {
+  display: flex;
+  width: 100%;
+  padding-left: 15px;
+  margin-top: 20px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom .tit {
+  color: #333333;
+  font-size: 14px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom > div {
+  flex: 1;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom .particulars p {
+  font-size: 12px;
+  margin-top: 15px;
+  color: #333333;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom .particulars p span {
+  color: #999999;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom .contrast {
+  font-size: 12px;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom .contrast p {
+  margin-top: 15px;
+  color: #999999;
+}
+.service-bg .service-box .service-right .shop-content .shop-list .shop-box .store .store-bottom .contrast p img {
+  margin-right: 10px;
+  position: relative;
+  top: 2px;
+}

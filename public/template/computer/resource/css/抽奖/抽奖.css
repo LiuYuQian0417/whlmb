@@ -1,0 +1,19 @@
+body{
+    background-color: #f6f6f6;
+}
+.logo{
+    display: flex;
+    align-items: center;
+}
+.logo span{
+    margin-left: 10px;
+    font-size: 20px;
+    color: #666;
+}
+.head-container{
+    background-color: #fff;
+}
+.head-container-center{
+    height: 112px!important;
+    padding: 0!important;
+}

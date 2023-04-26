@@ -1,0 +1,1410 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+{eq name="$result.distribution_type" value="2"}
+<link rel="stylesheet" href="__RES__/css/Indent/OrderNoutoasiakas.css">
+{else/}
+<link rel="stylesheet" href="__RES__/css/Indent/OrderDetailObligation.css">
+{/eq}
+<link rel="stylesheet" href="__RES__/css/swiper.min.css" />
+
+<script src="__RES__/js/public/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<style>
+
+    .index-right .obligation-box .obligation-top .obligation-list .progress .step .bor span{
+    width:0%;
+    }
+    .index-right .obligation-box .obligation-top .obligation-list .progress .active .bor span{
+        width:100%;
+    }
+    .index-right .obligation-box .obligation-top .obligation-list .progress .half .bor span{
+        width:50%;
+    }
+    .shop-list .goods-list-con span{
+    display: inline-block;
+    border: 1px solid #EEEEEE;
+    border-radius: 3px;
+    padding: 3px 10px;
+}
+    /*发票*/
+    .invoice-modify-box{
+        background: rgba(0,0,0,.5);
+        width: 100%;
+        height: 100%;
+        display: none;
+        position: fixed;
+        left: 0;
+        top:0;
+        z-index: 9;
+    }
+    .invoice-modify-content{
+        width: 690px;
+        position: absolute;
+        top:50%;
+        left:50%;
+        margin-left:-345px;
+        margin-top: -350px;
+        border:6px solid rgba(0,0,0,.5);
+        background: #fff;
+        padding: 0 0 40px 0;
+        height: 500px;
+        overflow: auto;
+
+    }
+    .invoice-modify-contenttop{
+        font-size: 14px;
+        height: 40px;
+        line-height: 40px;
+        padding:0 20px;
+        background: #f3f3f3;
+
+    }
+    .invoice-modify-contenttop a{
+        color: #cdcdcd;
+        float: right;
+    }
+    .invoice-choose{
+        margin-top: 25px;
+    }
+    .invoice-choose p{
+        padding: 0 11px;
+        height: 28px;
+        line-height: 28px;
+        border:1px solid #ccc;
+        float: left;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    .invoice-choose-title{
+        float: left;
+        width: 115px;
+        text-align: left;
+        line-height: 30px;
+        margin-left: 25px;
+    }
+    .invoice-selected{
+        color: #fff;
+    }
+    .looked-up-left{
+        float: left;
+        width: 115px;
+        text-align: left;
+        line-height: 30px;
+    }
+    .looked-up-right{
+        float: left;
+    }
+    .looked-up-left p{
+        padding: 0 11px;
+        height: 28px;
+        line-height: 28px;
+        border:1px solid #ccc;
+        float: left;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+    .invoice-choose label{
+        display: inline-block;
+        padding: 0 11px;
+        height: 28px;
+        line-height: 28px;
+        border:1px solid #ccc;
+        float: left;
+        margin-right: 10px;
+        cursor: pointer;
+        background: #fff;
+    }
+    input[type=radio]{
+        display: none;
+    }
+
+    .looked-up{
+        margin-top: 20px;
+        margin-left: 25px;
+    }
+    .li-tit{
+        line-height: 30px;
+        margin-top: 30px;
+        font-size: 14px;
+        font-weight: 600;
+        background: #eee;
+        padding-left: 25px;
+    }
+    .invoice-input{
+        width: 220px;
+        height:28px;
+        line-height: 28px;
+        padding-left: 10px;
+    }
+    .invoice-choose-content{
+        display: none;
+    }
+    .invoice-determine{
+        display: block;
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        float: left;
+        color: #fff;
+        border:1px solid;
+        border-radius: 5px;
+        margin: 0 10px 0 90px;
+    }
+    .invoice-cancel,.invoice-choose-content li .invoice-modify-close{
+        display: block;
+        width: 90px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background: #f6f6f6;
+        border:1px solid #ddd;
+        border-radius: 5px;
+        float: left;
+        margin: 0;
+    }
+    .invoice-choose-content li .invoice-prompt{
+        font-size: 12px;
+        color: #666;
+        width: 245px;
+        height:20px;
+        background:#f9f9f9;
+        line-height: 20px;
+        margin:0 0  35px 90px;
+    }
+    .clear {
+        clerar: both;
+        height: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+    .individualbusiness-content {
+        margin: 20px 0 0 0;
+        padding-left: 25px;
+    }
+    /*发票*/
+</style>
+
+<link rel="stylesheet" href="__RES__/layui/css/layui.css" />
+{/block}
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+    {include file="public/my_left" /}
+    <!--我的页面左侧公共部分结束-->
+    <!--右侧内容开始-->
+    <div class="index-right">
+        <h5 class="title">
+            订单详情
+        </h5>
+        <div class="obligation-box border-color-top">
+
+            <div class="obligation-top">
+
+                <div class="obligation">
+                    <div class="indent-number">订单号：{$result.order_attach_number}</div>
+                    <!--当前订单状态-->
+                    <p class="tit primary-color">{$result.OrderOperation.OrderStatusText}</p>
+                    <!--订单操作-->
+                    {switch name="$result.status"}
+                    {case value="0"}
+                    <!--待付款-->
+                    <p class="time" data-time="{$result.remaining_time}">
+                        <img src="__RES__/imgs/my/time.png" alt="">
+                        剩余<span id="remaining_time" data-time_str="{:date('Y-m-d H:i:s',time()+$result.remaining_time)}">00时00分00秒</span>
+                    </p>
+                    <a href="/pc2.0/order/pay_type?order_data={$result.OrderData}" class="payment-btn primary-color border-color">付款</a>
+                    <a href="javascript:order_cancel('{$result.order_attach_id}')" class="close-payment ">取消订单</a>
+                    {/case}
+                    {case value="1"}
+                    <!--买家已付款(待发货)-->
+                        <!--<a  class="close-payment">取消订单</a>-->
+                    {/case}
+                    {case value="2"}
+                    <!--配送中-->
+                        {eq name="$result.distribution_type" value="2"}
+                        <a href="javascript:confirm_collect('{$result.order_attach_id}');" class="payment-btn primary-color border-color">确认提货</a>
+                        {else/}
+                        <a href="javascript:confirm_collect('{$result.order_attach_id}');" class="payment-btn primary-color border-color">确认收货</a>
+                        {/eq}
+                    {/case}
+                    {case value="3"}
+                    <!--已完成-->
+                    <a href="javascript:evaluate('{$result.order_attach_id}');" class="payment-btn primary-color border-color">
+                        评价
+                    </a>
+                    {/case}
+                    {case value="4"}
+                    <!--已关闭-->
+                    <a href="javascript:destroy_order('{$result.order_attach_id}');" class="close-payment ">删除订单</a>
+                    {/case}
+                    {case value="6"}
+                    <a href="javascript:destroy_order('{$result.order_attach_id}');" class="close-payment ">删除订单</a>
+                    {/case}
+                    {/switch}
+                </div>
+                <div class="obligation-list">
+                    <div class="progress" style="text-align: center">
+                        <!--已取消订单-->
+                        {eq name="$result.status" value="6"}
+                            <div class="step active">
+                                <div class="progress-box">
+                                  <span class="first">
+                                      <img src="__RES__/imgs/del/indent.png" alt="">
+                                  </span>
+                                    <p class=""> 提交订单 </p>
+                                    <p class="time">{$result.create_time}</p>
+                                </div>
+                                <div class="bor">
+                                    <span  class="primary-background-color"></span>
+                                </div>
+                            </div>
+                            <div class="step finish">
+                                <div class="progress-box">
+                                  <span class="first">
+                                     <img src="__RES__/imgs/del/active-wc.png" alt="">
+                                  </span>
+                                  <p>完成</p>
+                                </div>
+                            </div>
+                        {else/}
+                            <!--第一步-->
+                        {eq name="$result.pay_type" value="1"}
+                        <!--在线支付-->
+                            {eq name="$result.status" value="0"} <div class="step half">{else/} <div class="step active"> {/eq}
+                        {else/}
+                        <!--货到付款-->
+                        {gt name="$result.status" value="1"} <div class="step active">{else}<div class="step half">{/gt}
+                        {/eq}
+                            <div class="progress-box">
+                            <span class="first">
+                            <img src="__RES__/imgs/del/indent.png" alt="">
+                            </span>
+                            <p class="">提交订单</p>
+                            <p class="time">{$result.create_time}</p>
+                            </div>
+                            <div class="bor">
+                            <span  class="primary-background-color"></span>
+                            </div>
+                            </div>
+
+                           <!--在线支付-->
+                           {eq name="$result.pay_type" value="1"}
+                            <!--第二步-->
+                            {eq name="$result.status" value="1"} <div class="step half ">{else/}{egt name="$result.status" value="1"} <div class="step active">{else}<div class="step">{/egt}{/eq}
+                            <div class="progress-box">
+                            <span class="first">
+                            {egt name="$result.status" value="1"} <img src="__RES__/imgs/del/fkcg.png" alt=""> {else/}<img src="__RES__/imgs/del/fk.png" alt="">{/egt}
+                            </span>
+                            <p>付款成功</p>
+                            <p class="time">{$result.pay_time}</p>
+                            </div>
+                            <div class="bor">
+                            <span  class="primary-background-color"></span>
+                            </div>
+                            </div>
+                           {/eq}
+                            <!--第三步-->
+                            {eq name="$result.status" value="2"}<div class="step half ">{else/}  {egt name="$result.status" value="2"}<div class="step active ">{else}<div class="step">{/egt} {/eq}
+                            <div class="progress-box">
+                            <span class="first">
+                            {egt name="$result.status" value="2"} <img src="__RES__/imgs/del/active-sh.png" alt=""> {else/} <img src="__RES__/imgs/del/sh.png" alt="">{/egt}
+                            </span>
+                            <p>{$result.OrderOperation.takeStatusText}</p>
+                            <p class="time">{$result.deal_time}</p>
+                            </div>
+                            <div class="bor">
+                            <span  class="primary-background-color"></span>
+                            </div>
+                            </div>
+                            <!--第四步-->
+                            {in name="$result.status" value="3,4"} <div class="step  finish"> {else/}<div class="step"> {/in}
+                                <div class="progress-box">
+                                  <span class="first">{in name="$result.status" value="3,4"}<img src="__RES__/imgs/del/active-wc.png" alt="">{else/}<img src="__RES__/imgs/del/wc.png" alt="">{/in}</span>
+                                    <p>完成</p>
+                                </div>
+                            </div>
+                        {/eq}
+                    </div>
+                </div>
+            </div>
+            <div class="obligation-bottom">
+                <div class="obligation-left">
+                    <div class="goods">
+                        <img onclick="jump_goods('{$result.order_goods_details.0.goods_id}')" src="{$result.order_goods_details.0.file}" alt="">
+                        <div class="state">
+                            <p>配送方式：{switch name="$result.distribution_type"}{case value="1"}同城速递{/case}{case value="2"}预约自提{/case}{case value="3"}快递邮寄{/case} {/switch}</p>
+                            <p>运费：￥{$result.subtotal_freight_price}</p>
+                            <!--<p>返积分：￥{$result.subtotal_back_integral}</p>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="obligation-right">
+                    <div class="progress">
+                        <!--待付款-->
+                        <div class="progress-box">
+                            <!--时间-->
+                            <div class="time">
+                                <p>{:date('m-d',strtotime($result.create_time))}</p>
+                                <span>{:date('H:i',strtotime($result.create_time))}</span>
+                            </div>
+                            <!--分割线-->
+                            <div class="line-box">
+                                <img src="__RES__/imgs/del/yxd.png" alt="">
+                                <div class="line">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <!--信息-->
+                            <div class="info">
+                                <p>已下单</p>
+                                <p>商家正在处理您的订单</p>
+                            </div>
+                        </div>
+                     <!--取消订单展示状态-->
+                        {eq name="$result.status" value="6"}
+                        <div class="progress-box">
+                            <!--时间-->
+                            <div class="time">
+                                <p>{:date('m-d',strtotime($result.update_time))}</p>
+                                <span>{:date('H:i',strtotime($result.update_time))}</span>
+                            </div>
+                            <!--分割线-->
+                            <div class="line-box">
+                                <img src="__RES__/imgs/del/yxd.png" alt="">
+                                <div class="line">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <!--信息-->
+                            <div class="info">
+                                <p>订单已取消</p>
+                            </div>
+                        </div>
+                        {/eq}
+                        <!--取消订单展示状态-->
+                    {notempty name="$result.deal_time"}
+                        <!--收货时间-->
+                        <div class="progress-box">
+                            <!--时间-->
+                            <div class="time">
+                                <p>{:date('m-d',strtotime($result.deal_time))}</p>
+                                <span>{:date('H:i',strtotime($result.deal_time))}</span>
+                            </div>
+                            <!--分割线-->
+                            <div class="line-box">
+                                <img src="__RES__/imgs/del/active-gx.png" alt="">
+                                <div class="line">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <!--信息-->
+                            <div class="info">
+                                <p>已收货</p>
+                            </div>
+                    </div>
+                    {/notempty}
+                    {notempty name="$express_info.data"}
+                    {volist name="$express_info.data" id="express_info_data"}
+                        <!--待付款-->
+                        <div class="progress-box">
+                            <!--时间-->
+                            <div class="time">
+                                <p>{:date('m-d',strtotime($express_info_data.time))}</p>
+                                <span>{:date('H:i',strtotime($express_info_data.time))}</span>
+                            </div>
+                            <!--分割线-->
+                            <div class="line-box">
+                                <img src="__RES__/imgs/del/active-gx.png" alt="">
+                                <div class="line">
+                                    <span></span>
+                                </div>
+                            </div>
+                            <!--信息-->
+                            <div class="info">
+                                <p>
+                                    {switch name="$express_info.state"}
+                                        {case 0}在途中{/case}
+                                        {case 1}已揽收{/case}
+                                        {case 2}疑难{/case}
+                                        {case 3}已签收{/case}
+                                        {case 4}退签{/case}
+                                        {case 5}同城派送中{/case}
+                                        {case 6}退回{/case}
+                                        {case 7}转单{/case}
+                                        {/default} 其他
+                                    {/switch}
+                                </p>
+                                <p>{$express_info_data.context}</p>
+                            </div>
+                        </div>
+                    {/volist}
+                    {/notempty}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--订单详情-->
+        <div class="indent-detail">
+            {eq name="$result.distribution_type" value="2"}
+            <!--提货人-->
+            <div class="consignee-information indent-detail-box ">
+                <div class="tit">
+                    提货人信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            提货人：
+                        </div>
+                        <div class="info-con">
+                            {$result.consignee_name}
+                        </div>
+                    </div>
+                    <div class=" info-box over-no">
+                        <div class="info-tit">
+                            提货凭证：
+                        </div>
+                        <div class="info-con">
+                           <span style="display: inline-block;width: 90px; word-wrap: break-word;word-break: normal;line-height: 16px">{$result.take_code}</span>
+                            <div class="code">
+                                <img src="__RES__/imgs/indent/ewm.png" alt="">
+                                <div class="code-con">
+                                    <div class="triangle" style="right: 83px;"></div>
+                                    <img  class="cnaidc" src="{:url('/pc2.0/order/get_barCode')}?text={$result.take_code}" alt="">
+                                    <p style="">{$result.take_code}</p>
+                                    <img class="qr-code" src="{:url('/pc2.0/order/get_qrCode')}?text={$result.take_code}" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {else/}
+            <!--收货人信息-->
+            <div class="consignee-information indent-detail-box">
+                <div class="tit">
+                    收货人信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            收货人：
+                        </div>
+                        <div class="info-con">
+                            {$result.consignee_name}
+                        </div>
+                    </div>
+
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            地址：
+                        </div>
+                        <div class="info-con">
+                            {$result.address_province}{$result.address_city}{$result.address_area}{$result.address_street}{$result.address_details}
+                        </div>
+                    </div>
+
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            手机号码：
+                        </div>
+                        <div class="info-con">
+                            {$result.consignee_phone}
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <div class="info-tit">
+                            留言：
+                        </div>
+                        <div class="info-con">
+                           {$result.message}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/eq}
+            <!--配送信息-->
+            <div class="consignee-information indent-detail-box">
+                <div class="tit">
+                    配送信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            配送方式：
+                        </div>
+                        <div class="info-con">
+                            {switch name="$result.distribution_type"}{case value="1"}同城速递{/case}{case value="2"}预约自提{/case}{case value="3"}快递邮寄{/case} {/switch}
+                        </div>
+                    </div>
+                </div>
+                {switch name='$result.distribution_type'}
+                {case 1}
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">配送人员电话：</div>
+                        <div class="info-con">{$result.distribution_tel}</div>
+                    </div>
+                </div>
+                {/case}
+                {case 2}
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">门店电话：</div>
+                        <div class="info-con">{$result.take_contacts_phone}</div>
+                    </div>
+                </div>
+                <!--<div class="info">-->
+                    <!--<div class=" info-box">-->
+                        <!--<div class="info-tit">自提时间：</div>-->
+                        <!--<div class="info-con">{$result.start_hours}-{$result.end_hours}</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">自提地址：</div>
+                        <div class="info-con">{$result.take_address}</div>
+                    </div>
+                </div>
+                {/case}
+                {case 3}
+                {if !empty($result.express_name)}
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">{$result.express_name}：</div>
+                        <div class="info-con">{$result.express_number}</div>
+                    </div>
+                </div>
+                {/if}
+                {/case}
+                {case 4}
+                {/case}
+                {/switch}
+            </div>
+            <!--付款信息-->
+            <!--<div class="consignee-information indent-detail-box">-->
+                <!--<div class="tit">-->
+                    <!--付款信息-->
+                <!--</div>-->
+                <!--<div class="info">-->
+                    <!--<div class=" info-box">-->
+                        <!--<div class="info-tit">-->
+                            <!--付款方式：-->
+                        <!--</div>-->
+                        <!--<div class="info-con">-->
+                            <!--{eq name="$result.pay_type" value="1"}在线支付{else/}货到付款{/eq}-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<div class=" info-box">-->
+                        <!--<div class="info-tit">-->
+                            <!--商品金额：-->
+                        <!--</div>-->
+                        <!--<div class="info-con">-->
+                            <!--￥{$result.subtotal_original_price|fmtPrice}-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<div class=" info-box">-->
+                        <!--<div class="info-tit">-->
+                            <!--优惠券：-->
+                        <!--</div>-->
+                        <!--<div class="info-con">-->
+                            <!--￥{:number_format($result.subtotal_coupon_price + $result.subtotal_share_platform_coupon_price,2)}-->
+                        <!--</div>-->
+                    <!--</div>-->
+
+                    <!--<div class="info-box">-->
+                        <!--<div class="info-tit">-->
+                            <!--红包：-->
+                        <!--</div>-->
+                        <!--<div class="info-con">-->
+                            <!--￥{:number_format($result.subtotal_share_platform_packet_price,2)}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div class="info-box">-->
+                        <!--<div class="info-tit">-->
+                            <!--应支付金额：-->
+                        <!--</div>-->
+                        <!--<div class="info-con">-->
+                            <!--￥{$result.subtotal_price|fmtPrice}-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--付款信息-->
+            <div class="consignee-information indent-detail-box">
+                <div class="tit">
+                    发票信息
+                </div>
+                <div class="info">
+                    <div class=" info-box">
+                        <div class="info-tit">
+                            发票类型：
+                        </div>
+                        <div class="info-con">
+                            {//billing_type=0 的时候是开票中}
+                            {eq name='$result.is_invoice' value='1'}
+                            {switch name='$result.invoice_detail.invoice_type'}
+                            {case value='0'}
+                            普通发票
+                            {/case}
+                            {case value='1'}
+                            增值税发票
+                            {/case}
+                            {/switch}
+                            {else/}
+                            沒有开票
+                            {/eq}
+                        </div>
+                    </div>
+                </div>
+                {eq name='$result.is_invoice' value='1'}
+                <div class=" info-box">
+                    <div class="info-tit">
+                        发票抬头：
+                    </div>
+                    <div class="info-con">
+                        {$result.invoice_detail.rise_name}
+                    </div>
+                </div>
+                <div class=" info-box">
+                    <div class="info-tit">
+                        发票内容：
+                    </div>
+                    <div class="info-con">
+                        商品明细
+                    </div>
+                </div>
+                <div class="info">
+                    <p>电子发票与纸质发票具有同等法律效力，
+                        可作为用户维权、保修的有效凭据
+                    </p>
+                    <div class="btn-group">
+                        <a href="javascript:;" onclick="show_invoice_info({'order_attach_id':'{$result.order_attach_id}'})">
+                            <img src="__RES__/imgs/indent/qb.png" alt="">
+                            查看发票详情
+                        </a>
+                        {//只有电子发票有下载}
+                        {if isset($result.invoice_detail.invoice_open_type) and $result.invoice_detail.invoice_open_type==0 and !empty($result.invoice_detail.download_links)}
+                        <a href="javascript:;" onclick="main.jump({'url':'{$result.invoice_detail.download_links}',is_open:true})">
+                            <img src="__RES__/imgs/indent/xz.png" alt="">
+                            点击下载发票
+                        </a>
+                        {/if}
+                    </div>
+                </div>
+                {/eq}
+            </div>
+        </div>
+        <div class="shop">
+            <p class="shop-name">
+                {$result.store_list.store_name}
+                {if INI_CONFIG['IS_CUSTOMER'] == 1}
+                    <img  onclick="jump_service({store_id:'{$result.store_id}',order_attach_id:'{$result.order_attach_id}',diversion_id:'1004'})" src="__RES__/imgs/del/info-s.png" alt="">
+                {/if}
+            </p>
+            <div class="shop-con">
+                <div class="shop-tit">
+                    <div class="goods-name">商品</div>
+                    <div class="goods-tit">商品编号</div>
+                    <div class="goods-tit">商品价格</div>
+                    <div class="goods-tit">商品数量</div>
+                    <div class="goods-tit">操作</div>
+                </div>
+                {volist name="$result.order_goods_details" id="item"}
+                <div class="shop-list">
+                    <div class="goods">
+                        <img src="{$item.file}" onclick="jump_goods('{$item.goods_id}')" alt="">
+                        <div class="goods-name">
+                            {$item.goods_name}
+                        </div>
+                    </div>
+                    <!--商品编号-->
+                    <div class="goods-list-con">
+                        {$item['goods_sn']}
+                    </div>
+                    <!--商品价格-->
+                    <div class="goods-list-con">
+                        ￥{$item.original_price}
+                    </div>
+                    <!--商品数量-->
+                    <div class="goods-list-con">
+                        {$item.quantity}
+                    </div>
+                    <div class="goods-list-con">
+                        {$item.refund_operation.operation|raw}
+                    </div>
+                </div>
+                {/volist}
+            </div>
+            <!--总计-->
+            <div class="aggregate">
+                <div class="aggregate-box">
+                    <p>
+                        <span class="aggregate-tit">商品总额</span>:
+                        <span class="aggregate-con">￥{$result.subtotal_original_price|fmtPrice}</span>
+                    </p>
+                    <p>
+                        <span class="aggregate-tit">商品优惠</span>:
+                        <span class="aggregate-con">-￥{:fmtPrice($result.subtotal_coupon_price+$result.subtotal_share_platform_packet_price+$result.diff_price)}</span>
+                    </p>
+                    <p>
+                        <span class="aggregate-tit">运费</span>:
+                        <span class="aggregate-con">+￥{$result.subtotal_freight_price|fmtPrice}</span>
+                    </p>
+                    <p>
+                        <span class="aggregate-tit">折扣价</span>:
+                        <span class="aggregate-con">-￥{$result.subtotal_discount_price|fmtPrice}</span>
+                    </p>
+                    {eq name="$result.order_type" value="3"}
+                    <p>
+                        <span class="aggregate-tit primary-color">砍价</span><span class="primary-color">:</span>
+                        <span class="aggregate-con primary-color money">-￥{$result.total_cut_amount}</span>
+                    </p>
+                    {/eq}
+                    <p>
+                        <span class="aggregate-tit primary-color">应付总额</span><span class="primary-color">:</span>
+                        <span class="aggregate-con primary-color money">￥{$result.subtotal_price|fmtPrice}</span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!--右侧内容结束-->
+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{notempty name='$result.invoice_detail'}
+<form action="/pc2.0/invoice_explain/editInvoice" id="invoice_id_info">
+    <input type="hidden" name="invoice_id" value="{$result.invoice_detail.invoice_id}">
+    <div class="invoice-modify-box">
+    <div class="invoice-modify-content" data-store_id="0">
+        <div class="invoice-modify-contenttop">
+            <span>修改发票信息</span><a href="javascript:;" class="invoice-modify-close">×</a>
+        </div>
+        <div class="invoice-choose">
+            <div class="invoice-choose-title">
+                <span class="primary-color">*</span>发票类型：
+            </div>
+            <!--发票类型 默认普通发票-->
+            <input type="hidden" id="store_set_0_invoice_set_invoice_type" name="invoice_type" value="0">
+            <div class="invoice-choose-list" id="invoice_0_invoice_type">
+                <label class="border-color primary-color">
+                    普通发票
+                </label>
+                <label class=" ">
+                    增值税专用发票
+                </label>
+                <div class="clear"></div>
+            </div>
+            <!--发票抬头 默认个人-->
+            <input type="hidden" class="border-color primary-color" id="store_set_0_invoice_set_invoice_rise" name="rise" value="1">
+            <div class="individualbusiness-content" id="invoice_0_rise">
+                <div class="looked-up-left">
+                    <span class="primary-color">*</span>发票抬头 ：
+                </div>
+                <div class="looked-up-right individualbusiness">
+                    <label class="border-color primary-color">
+                        个人或事业单位
+                    </label>
+                    <label class=" ">
+                        企业单位
+                    </label>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="clear"></div>
+
+            <!--普通个人发票-->
+            <ul class="invoice-choose-content individual-invoice" style="display: block">
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>发票抬头 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" data-name="rise_name" id="invoice_0_rise_name" placeholder="请填写发票抬头">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            </ul>
+            <!--普通公司发票-->
+            <ul class="invoice-choose-content company-invoice">
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>企业名称 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" data-name="rise_name" placeholder="请填写企业名称">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>识别号 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" data-name="taxer_number" placeholder="请填写纳税人识别号">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            </ul>
+            <!--增值税专用发票-->
+            <ul class="invoice-choose-content vat-special-invoice">
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>企业名称 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" data-name="rise_name" placeholder="请填写企业名称">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>识别号 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" data-name="taxer_number" placeholder="请填写纳税人识别号">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>注册地址 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" data-name="address" id="invoice_0_invoice_address" placeholder="请填写注册地址">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>注册电话 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" data-name="phone" id="invoice_0_invoice_phone" placeholder="请填写注册电话">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>开户行 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" id="invoice_0_bank" data-name="bank" placeholder="请填写开户行">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>银行账号 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" id="invoice_0_account" data-name="account" placeholder="请填写银行账户">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="li-tit">
+                    收货人信息
+                </li>
+
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>
+                        收货人姓名  ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" id="invoice_0_consignee_name" data-name="consignee_name" placeholder="请填写收货人姓名">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>收货人联系方式 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" id="invoice_0_consignee_phone" data-name="consignee_phone" placeholder="请填写收货人联系方式">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>所在地区 ：
+                    </div>
+                    <div class="looked-up-right">
+                        <div class="select-address1">
+                            <div class="common-address-input" style="display: none">
+                                <input type="hidden" class="invoice-input" id="invoice_0_address_province" data-name="address_province" value="黑龙江省" placeholder="请填写所在地区省">
+                                <input type="hidden" class="invoice-input" id="invoice_0_address_city" data-name="address_city" value="哈尔滨市" placeholder="请填写所在地区市">
+                                <input type="hidden" class="invoice-input" id="invoice_0_address_area" data-name="address_area" value="道外区" placeholder="请填写所在地区区">
+                                <input type="hidden" class="invoice-input" id="invoice_0_address_street" data-name="address_street" value="">
+                            </div>
+                            <div class="address-detailed-box1" style="height: 32px;width: 234px" data-top="-26">
+                                            <span>
+                                                                                                <i>黑龙江省/</i><i>哈尔滨市/</i><i>道外区/</i><i></i>
+                                                                                            </span>
+                                <img src="/template/computer/resource/imgs/my/datebottom.png" alt="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </li>
+                <li class="looked-up">
+                    <div class="looked-up-left">
+                        <span class="primary-color ">*</span>详细地址：
+                    </div>
+                    <div class="looked-up-right">
+                        <input type="text" class="invoice-input" id="invoice_0_address_details" data-name="address_details" value="和给力" placeholder="请填写详细地址">
+                    </div>
+                    <div class="clear"></div>
+                </li>
+            </ul>
+        </div>
+        <ul class="invoice-choose" style="display: block">
+            <li class="looked-up">
+                <div class="looked-up-left">
+                    <span class="primary-color "></span>发票内容 ：
+                </div>
+                <div class="looked-up-right commoditytype" id="invoice_0_detail_type">
+                    <label class="border-color primary-color">
+                        商品明细
+                        <input type="radio" name="detail_type" value="0" checked>
+                    </label>
+                    <label class="">
+                        不开发票
+                        <input type="radio" name="detail_type" value="no">
+                    </label>
+                </div>
+                <div class="clear"></div>
+            </li>
+            <li class="looked-up">
+                <div class="looked-up-left">&nbsp;</div>
+                <p class="invoice-prompt">发票内容将显示商品所属类别与价格信息</p>
+                <div class="clear"></div>
+            </li>
+            <li class="looked-up">
+                <a href="javascript:;" class="invoice-determine primary-background-color border-color invoice_submit">提交</a> <a href="javascript:;" class="invoice-cancel invoice-modify-close">取消</a>
+                <div class="clear"></div>
+            </li>
+        </ul>
+    </div>
+</div>
+</form>
+{/notempty}
+<div class="invoice-box" style="display: none">
+    <div class="invoice-tit">
+        发票详情
+    </div>
+    <div class="invoice-con">
+        <div class="invoice-group">
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票状态：
+                </div>
+                <div class="invoice-content">
+                    已开票
+                </div>
+            </div>
+        </div>
+        <div class="invoice-group">
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    订单编号：
+                </div>
+                <div class="invoice-content">
+                    561654162132132
+                </div>
+            </div>
+
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    下单时间：
+                </div>
+                <div class="invoice-content">
+                    2018-08-08 16:16:16
+                </div>
+            </div>
+        </div>
+
+        <!--纸质个人普通发票-->
+        <div class="invoice-group">
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票类型：
+                </div>
+                <div class="invoice-content">
+                    纸质普通发票
+                </div>
+            </div>
+
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票抬头：
+                </div>
+                <div class="invoice-content">
+                    个人
+                </div>
+            </div>
+
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票内容：
+                </div>
+                <div class="invoice-content">
+                    商品明细
+                </div>
+            </div>
+        </div>
+        <!--纸质普通发票结束-->
+
+        <!--电子个人普通发票-->
+        <div class="invoice-group">
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票类型：
+                </div>
+                <div class="invoice-content">
+                    电子普通发票
+
+                    <a class="invoice-btn" href="JavaScript:;">
+                        查看发票
+                    </a>
+                    <a class="invoice-btn" href="JavaScript:;">
+                        发送邮箱
+                    </a>
+                </div>
+            </div>
+
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票抬头：
+                </div>
+                <div class="invoice-content">
+                    个人
+                </div>
+            </div>
+
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票内容：
+                </div>
+                <div class="invoice-content">
+                    商品明细
+                </div>
+            </div>
+        </div>
+        <!--电子普通发票结束-->
+
+        <!--纸质企业普通发票-->
+        <div class="invoice-group">
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票类型：
+                </div>
+                <div class="invoice-content">
+                    纸质普通发票
+                </div>
+            </div>
+
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票抬头：
+                </div>
+                <div class="invoice-content">
+                    黑龙江海资科技
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    纳税人识别号：
+                </div>
+                <div class="invoice-content">
+                    123456789
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票内容：
+                </div>
+                <div class="invoice-content">
+                    商品明细
+                </div>
+            </div>
+
+            <a class="btn primary-background-color" href="JavaScript:;">
+                查看物流
+            </a>
+        </div>
+        <!--纸质企业普通发票结束-->
+
+        <!--电子企业普通发票-->
+        <div class="invoice-group">
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票类型：
+                </div>
+                <div class="invoice-content">
+                    电子普通发票
+
+                    <a class="invoice-btn" href="JavaScript:;">
+                        查看发票
+                    </a>
+                    <a class="invoice-btn" href="JavaScript:;">
+                        发送邮箱
+                    </a>
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票抬头：
+                </div>
+                <div class="invoice-content">
+                    个人
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    纳税人识别号：
+                </div>
+                <div class="invoice-content">
+                    123456789
+                </div>
+            </div>
+
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票内容：
+                </div>
+                <div class="invoice-content">
+                    商品明细
+                </div>
+            </div>
+        </div>
+        <!--电子企业普通发票结束-->
+
+
+        <!--增值税专用发票-->
+        <div class="invoice-group">
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票类型：
+                </div>
+                <div class="invoice-content">
+                    增值税专用发票
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票抬头：
+                </div>
+                <div class="invoice-content">
+                    资海网络
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    纳税人识别号：
+                </div>
+                <div class="invoice-content">
+                    123456789
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    注册地址：
+                </div>
+                <div class="invoice-content">
+                    哈尔滨市南平街72号
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    注册电话：
+                </div>
+                <div class="invoice-content">
+                    0451-549583939
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    开户行：
+                </div>
+                <div class="invoice-content">
+                    建设银行
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    开户账号：
+                </div>
+                <div class="invoice-content">
+                    62208097222222222
+                </div>
+            </div>
+            <div class="invoice-list">
+                <div class="invoice-title">
+                    发票内容：
+                </div>
+                <div class="invoice-content">
+                    商品明细
+                </div>
+            </div>
+
+            <a class="btn primary-background-color" href="JavaScript:;">
+                查看物流
+            </a>
+        </div>
+        <!--增值税专用发票结束-->
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+if($('#remaining_time').length > 0){
+    var time_str = "{:date('Y-m-d H:i:s',time()+$result.remaining_time)}";
+    remaining_time();
+}
+//{//待付款倒计时}
+function remaining_time(){
+    main.count_down({
+        'time_select':$('#remaining_time'),
+        'function_name':remaining_time,
+        'dispose_callback': function (time) {
+            return time.h + '时' + time.m + '分' + time.s + '秒';
+        },
+        'callback':function(){
+        window.location.href='/pc2.0/order/order_list';
+        }});
+}
+/******************************************************************发票处理开始****************************************************/
+//发票内容切换
+$('.commoditytype input').on('click',function(){
+    $(this).parents('label').addClass('border-color primary-color').siblings().removeClass('border-color primary-color');
+});
+//发票显示
+$('.invoice-modify').on('click', function () {
+    $(this).parents('.commodity-content').find('.invoice-modify-box').show()
+});
+//发票关闭
+$('.invoice-modify-close').on('click', function () {
+    $('.invoice-modify-box').hide();
+});
+//发票类型切换
+$('.invoice-choose-list label').on('click', function () {
+
+    $(this).addClass('border-color primary-color').siblings('label').removeClass('border-color primary-color');
+    var invoice_parent_element = $(this).closest('.invoice-modify-content');
+    //获得当前店铺id
+    var store_id=invoice_parent_element.data('store_id');
+
+    //获得当前所选发票类型  0 普通 1 个人
+    var invoice_type=$(this).index().toString();
+
+    //设置对应所选发票类型
+    $('#store_set_'+ store_id +'_invoice_set_invoice_type').val(invoice_type);
+
+    //发票类型对应发票抬头选择器
+    var invoice_rise_map={
+        '0':[0,1],
+        '1':[1],
+    };
+    //默认隐藏全部发票抬头
+    invoice_parent_element.find('.individualbusiness label').hide();
+    //切换发票抬头
+    $.each(invoice_rise_map[invoice_type],function(k,v){
+        if(k == 0){
+            invoice_parent_element.find('.individualbusiness label').eq(v).click();
+        }
+        invoice_parent_element.find('.individualbusiness label').eq(v).show();
+    });
+});
+//发票抬头切换
+$('.individualbusiness label').on('click', function () {
+    $(this).addClass('border-color primary-color').siblings('label').removeClass('border-color primary-color');
+
+    //获得当前店铺id
+    var store_id=$(this).closest('.invoice-modify-content').data('store_id');
+
+    //获得当前所选发票类型
+    var invoice_type=$('#store_set_'+ store_id +'_invoice_set_invoice_type').val().toString();
+
+    //获得当前所选发票抬头 0 个人或事业 1 企业单位
+    var rise=$(this).index().toString();//$('#invoice_'+store_id+'_rise').find('input:checked').val().toString();
+
+    //设置当前所选发票抬头
+    $('#store_set_'+ store_id +'_invoice_set_invoice_rise').val(parseInt(rise)+1);
+
+    var invaice_class_check={
+        //普通,个人
+        '00':$(this).closest('.invoice-modify-content').find('ul.individual-invoice'),
+        //普通,企业
+        '01':$(this).closest('.invoice-modify-content').find('ul.company-invoice'),
+        //增值,企业
+        '11':$(this).closest('.invoice-modify-content').find('ul.vat-special-invoice'),
+    };
+    //当前类型对应输入内容显示  其他隐藏
+    invaice_class_check[invoice_type+rise].show().siblings('.invoice-choose-content').hide();
+});
+//发票信息确认
+$('.invoice_submit').on('click', function () {
+    var store_id=$(this).closest('.invoice-modify-content').data('store_id');
+    var is_ok=true;
+    if($('#invoice_'+store_id+'_detail_type').find('input:checked').val() !== 'no'){
+        //发票类型
+        var invoice_type=$('#store_set_'+ store_id +'_invoice_set_invoice_type').val().toString();
+        //发票抬头
+        var rise=$('#store_set_'+ store_id +'_invoice_set_invoice_rise').val().toString();
+        //当前发票内容选择容器
+        var this_invoice_modify_content=$('div.invoice-modify-content[data-store_id=' + store_id + ']');
+        var checket_map={
+            //普通,个人
+            '01':this_invoice_modify_content.find('ul.individual-invoice').find('input[placeholder]'),
+            //普通,企业
+            '02':this_invoice_modify_content.find('ul.company-invoice').find('input[placeholder]'),
+            //增值,企业
+            '12':this_invoice_modify_content.find('ul.vat-special-invoice').find('input[placeholder]'),
+        };
+        //删除发票所有输入的name
+        $.each(Object.keys(checket_map),function(k,v){
+            $.each(checket_map[v],function(kk,vv){
+                var _self_this= vv.constructor === Object ? vv : $(vv);
+                //移除当前对象name属性
+                _self_this.removeAttr('name');
+            });
+        });
+        //发票填写信息验证    所有输入的发票input内容name名字放在对应标签上的data-name属性上面
+        $.each(checket_map[invoice_type+rise],function(k,v){
+            var _self_this= v.constructor === Object ? v : $(v);
+            if(_self_this.val() === ''){
+                is_ok=false;
+                _self_this.focus();
+                layer.msg(_self_this.attr('placeholder'));
+                return false;
+            }
+            //通过验证则添加name属性
+            _self_this.attr('name',_self_this.data('name'));
+        });
+        if(is_ok){
+            $('#invoice_id_info').ajaxSubmit(get_valid_options({}));
+            $('.invoice-modify-box').hide();
+        }
+    }else{
+        $('.invoice-modify-box').hide();
+    }
+});
+//省市区四级联动地址初始赋值
+common_address_select({select:'.address-detailed-box1'});
+/******************************************************************发票处理结束****************************************************/
+</script>
+{/block}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>富文本编辑器</title>
+</head>
+<link rel="stylesheet" type="text/css" href="__RES__/css/ueditor.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/ueditor.css" />
+
+<style>
+    body{margin: 0;padding: 0;}
+</style>
+<body>
+<div id="content" style="width: 99.8%;height: auto;"></div>
+</body>
+<script src="__RES__/js/jquery-1.8.2.min.js"></script>
+<!--富文本-->
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/ueditor.all.min.js"></script>
+<!--<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/ueditor.all.js"></script>-->
+<script type="text/javascript" charset="utf-8" src="__RES__/ueditor/zh-cn.js"></script>
+<script>
+    var content = $('#editorContent', parent.document);
+    var editor = UE.getEditor('content');
+    editor.addListener('ready', function() {
+//        $('#detail-table', parent.document).hide();//先显示再隐藏编辑器，兼容部分浏览在display:none时无法创建的问题
+        editor.setContent(content.val());
+    });
+    $(function(){
+        window.setInterval(function () {
+            content.val(editor.getContent());
+        },1000);
+    });
+</script>
+</html>

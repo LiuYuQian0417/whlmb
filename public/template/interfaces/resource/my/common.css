@@ -1,0 +1,409 @@
+/*清除样式*/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    /*font-family: Helvetica;*/
+    font-weight: normal;
+    vertical-align: baseline;
+    outline: none;
+    box-sizing: border-box;
+}
+
+
+img {
+    display: inline-block;
+    border: none;
+    max-width: 100%;
+    box-sizing: content-box!important;
+}
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+    outline: none;
+    border: 0;
+}
+
+a:active, a:focus {
+    outline: none;
+    star: expression(this.onFocus=this.blur());
+}
+
+a:hover, a:link, a:visited, a:active {
+    text-decoration: none;
+}
+
+input[type="button"], input[type="submit"], input[type="text"], input[type="search"], input[type="password"], input[type="tel"], input[type="reset"], input[type="number"] {
+    -webkit-appearance: none;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    border: none;
+    outline: none;
+    padding: 0;
+    border-radius: 0;
+}
+
+label {
+    font-weight: normal;
+}
+
+input {
+    outline: none !important;
+}
+
+/* 如果有输入内容IE会给输入框右边加一个大大的X */
+input::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* 去掉number输入框右边点击上下的小三角 */
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+/* 去掉search搜索框右边小叉*/
+::-webkit-search-cancel-button {
+    display: none;
+}
+
+/* IE浏览器对输入控件有自己的font-family，需要统一 */
+input,
+textarea,
+button {
+    /*font-family: inherit;*/
+}
+
+/* IOS Safari在横屏的时候会放大字体，第二个属性让滑动更流畅 */
+html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-overflow-scrolling: touch;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    max-width: 720px;
+    line-height: 1;
+    background: #fff;
+    cursor: pointer;
+}
+
+/* Chrome浏览器会在输入控制聚集的时候添加一个蓝色的outline*/
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+}
+
+/*去掉浏览器输入框黄色背景：*/
+input:-webkit-autofill {
+    -webkit-animation-name: autofill;
+    -webkit-animation-fill-mode: both;
+}
+
+@-webkit-keyframes autofill {
+    to {
+        /*color: #fff;*/
+        background: transparent;
+    }
+}
+
+select {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat scroll right center transparent;
+    padding-right: 14px;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.flex_center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pic_ratio {
+    position: relative;
+    height: 0;
+    width: 100%;
+}
+
+.pic_ratio img {
+    display: block;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+}
+
+.pic_ratio[style*="--aspect-ratio"] {
+    padding-top: calc(100% / (var(--aspect-ratio)));
+}
+
+
+.head_fix {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+    max-width: 720px;
+}
+
+header {
+    width: 100%;
+    line-height: 48px;
+    position: relative;
+    height: 33px;
+    background: #fff;
+}
+
+header .title {
+    font-size: 18px;
+    line-height: 48px;
+    color: #202224;
+    text-align: center;
+}
+
+header .back {
+    position: absolute;
+    left: 3%;
+    top: 50%;
+    margin-top: -9.5px;
+    width: 10px;
+}
+header .share{
+    position: absolute;
+    right:3%;
+    width: 28px;
+    top:50%;
+    margin-top: -14px;
+    display: none;
+}
+header .small{
+    font-size: 12px;
+    line-height: 20px;
+    color: #666;
+    position: absolute;
+    right:3%;
+    top:50%;
+    margin-top: -10px;
+}
+header.header_share{
+    z-index: 20000000;
+}
+header.header_share img{
+    display: block;
+}
+header .shop_scan{
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    right: 50px;
+    top:50%;
+    margin-top: -12px;
+}
+header .shop_search{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: 3%;
+    top:50%;
+    margin-top: -10px;
+}
+header .coupon_icon {
+    position: absolute;
+    height: 18px;
+    right: 3%;
+    top: 50%;
+    margin-top: -9px;
+}
+.vip_head{
+    background: none;
+}
+.vip_head .small{
+    color: #fff;
+}
+.vip_card{
+    width: 94%;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+    margin: 2% auto 0;
+    transition: all 0.3s ease;
+}
+.vip_card .title{
+    font-size: 16px;
+    line-height: 24px;
+    padding: 12px 5%;
+    background: #F3F3F3;
+}
+.card_con{
+    padding: 5%;
+}
+.card_con .card_info{
+    position: relative;
+}
+.card_con .card_info .info{
+    position: absolute;
+    width: 100%;
+    top:8%;
+    left:0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4%;
+    color: #fff5d8;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 20px;
+}
+.card_con .card{
+    display: block;
+    transition: all 0.3s ease;
+}
+.card_con .bar_code{
+    display: block;
+    width: 94%;
+    margin: 5% auto 0;
+    transition: all 0.3s ease;
+}
+.card_con .card_num{
+    font-size: 16px;
+    line-height: 20px;
+    margin: 15px 0;
+    text-align: center;
+    position: relative;
+}
+.card_con .card_num .first{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card_con .card_num .none{
+    display: none;
+}
+.vip_card .member_benefits{
+    display: flex;
+    padding: 12px 5%;
+    align-items: center;
+    justify-content: space-around;
+    border-top:1px solid #eee;
+}
+.vip_card .member_benefits>div{
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    line-height: 20px;
+}
+.vip_card .member_benefits>div img{
+    width: 16px;
+    display: block;
+    margin-right: 6px;
+}
+.pay_card{
+    /*margin-top: 30%;*/
+    width: 100%;
+    transition: all 0.3s ease;
+    position: absolute;
+    top:92%;
+    left: 0;
+}
+.pay_card.card_fix{
+    position: fixed;
+    top:85px;
+    left:0;
+    z-index: 5;
+    max-width: 720px;
+    transition: all 0.3s ease;
+    /*transform: translateY(-112%);*/
+    /*margin-top: 3%;*/
+}
+.member_card.card_scale{
+    transform: scaleX(0.92) scaleY(0.96);
+    transition: all 0.3s ease;
+}
+.member_card.card_scale .card{
+    transition: all 0.3s ease;
+}
+.card_board{
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,rgba(66,78,105,0.7),rgba(0,0,0,0));
+    background-size: 100% auto;
+    z-index: 3;
+    max-width: 720px;
+    display: none;
+}
+.pay_card .QR_code{
+    width: 44%;
+    margin: 0 auto;
+    display: block;
+}
+.set_pass{
+    color: #d3d9df;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+}
+.set_pass>div{
+    background: #394753;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    line-height: 30px;
+    padding: 0 15px;
+    border-radius: 20px;
+}
+.set_pass>div img{
+    width: 6px;
+    margin-left: 5px;
+}
+.pay_card .member_benefits{
+    justify-content: center;
+}
+.pay_card .member_benefits .iconPar{
+    border: 1px solid #D1D1D1;
+    border-radius: 20px;
+    margin-left: 5px;
+    width: 18px;
+    height: 18px;
+    overflow: hidden;
+}
+.pay_card .member_benefits .iconPar img{
+    width: 16px;
+    margin-right: 0;
+    position: relative;
+}
+.pay_card .member_benefits .iconPar img.iconColor{
+    border-right: 16px solid transparent;
+}

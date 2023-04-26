@@ -1,0 +1,239 @@
+.order-process{
+    width: 375px;
+    height:55px;
+    padding-top: 15px;
+    position: relative;
+}
+.order-process ul{
+    position: absolute;
+    width: 380px;
+    height:55px;
+    top: 24px;
+    left: 0;
+}
+.order-process ul li span{
+    display: block;
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    text-align: center;
+    line-height: 24px;
+    color: #fff;
+    background: #ffb401;
+    margin: 0 auto;
+}
+.order-process ul li{
+    width: 73px;
+    height: 55px;
+    float: left;
+    text-align: center;
+    color: #ffb401;
+    margin-right: 85px;
+    margin-left: -8px;
+}
+.order-process ul li p{
+    font-size: 12px;
+    line-height: 25px;
+}
+.order-process ul li:nth-child(3){
+    margin-right: 0;
+    position: relative;
+    left: 21px;
+}
+.order-process ul  .order-process-gray span{
+    background: #ccc;
+
+}
+.order-process ul  .order-process-gray p {
+    color: #ccc;
+}
+.barline{
+    width:335px;
+    background:#ccc;
+    height:5px;
+    overflow:hidden;
+    border-radius: 5px;
+    margin: 20px auto;
+}
+.charts {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 8px;
+    background: #ffb401;
+}
+.wechatpay-content{
+    width: 980px;
+    margin: 0 auto;
+    box-shadow:3px 3px 10px #757474;
+    padding:0 160px 35px 60px ;
+}
+.wechatpay-top{
+    height: 90px;
+    line-height: 90px;
+    font-size: 12px;
+    color: #333333;
+    font-size: 14px;
+    width: 1080px;
+    margin: 0 auto;
+}
+.wechatpay-top .wechatpay-top-amount{
+    float: right;
+}
+.wechatpay-top-amount span{
+    padding-left: 5px;
+}
+.wechat-pay-top{
+    font-size: 18px;
+    line-height: 58px;
+    height: 58px;
+    color: #666;
+}
+.wechat-pay-top-code-time{
+    font-size: 14px;
+    padding-left: 50px;
+
+}
+.clear{
+    clear: both;
+    overflow: hidden;
+    height: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+.wechat-pay-content{
+    margin-top: 20px;
+}
+.wechat-pay-content-code{
+    width: 300px;
+    float: left;
+    margin-left: 120px;
+}
+.wechat-pay-content-code-img{
+    border: 1px solid #ddd;
+}
+.wechat-pay-code-content{
+    height: 58px;
+    width: 300px;
+    background: #f5af90;
+    color: #fff;
+    line-height: 20px;
+    font-size: 14px;
+}
+.wechat-pay-code-content .wechat-pay-code-content-img{
+    float: left;
+    line-height: 58px;
+    padding:0 45px ;
+}
+.wechat-pay-code-content-title{
+    padding-top: 9px;
+    float: left;
+}
+.wechat-pay-content-phone{
+    width: 309px;
+    float: right;
+    margin: 0 -19px 0 0 ;
+}
+.other-way{
+    font-size: 17px;
+    color: #ffb401;
+    line-height: 45px;
+    height: 45px;
+}
+.other-way span{
+    font-size: 20px;
+    padding:0 20px 0 0 ;
+}
+.wechat-pay-bottom p{
+    text-align: center;
+    line-height: 30px;
+    height: 30px;
+    color: #666;
+    font-size: 14px;
+}
+.wechat-pay-bottom{
+    width: 1200px;
+    padding: 40px 0;
+    margin: 50px auto 0 auto;
+    border-top: 1px solid #e9e5e5;
+}
+
+.side-navigation{
+    position: fixed;
+    width: 6px;
+    height: 892px;
+    right: 0;
+    top:0;
+    background-color:#4c4c4c;
+}
+.side-navigation-view{
+    position: relative;
+}
+.shop-vip{
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    width: 95px;
+    height: 35px;
+    top:381px;
+    right:0;
+    border-radius: 3px 0 0 3px;
+    color: #fff;
+}
+.shop-vip-text{
+    margin-right: 5px;
+}
+.collect{
+    position: absolute;
+    top:417px;
+    right: 6px;
+    width: 35px;
+    height: 35px;
+    background-color:#4c4c4c;
+    border-radius: 3px 0 0 3px;
+}
+.collect img{
+    display: block;
+    margin: 10px auto 0;
+}
+.qrcode{
+    position: absolute;
+    top:785px;
+    right: 6px;
+    width: 35px;
+    height: 35px;
+    background-color:#4c4c4c;
+    border-radius: 3px 0 0 3px;
+}
+.qrcode img{
+    display: block;
+    margin: 10px auto 0;
+}
+.top{
+    position: absolute;
+    top:821px;
+    right: 6px;
+    width: 35px;
+    height: 35px;
+    background-color:#4c4c4c;
+    border-radius: 3px 0 0 3px;
+}
+.top img{
+    display: block;
+    margin: 10px auto 0;
+}
+.question{
+    position: absolute;
+    top:857px;
+    right: 6px;
+    width: 35px;
+    height: 35px;
+    background-color:#4c4c4c;
+    border-radius: 3px 0 0 3px;
+}
+.question img{
+    display: block;
+    margin: 10px auto 0;
+}

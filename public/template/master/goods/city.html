@@ -1,0 +1,124 @@
+{extend name='layout/frame' /}
+{block name='body'}
+<link href="__RES__/css/common/city.css"  rel="stylesheet" type="text/css" />
+<link href="__RES__/tree/css/bootstrapStyle/bootstrapStyle.css" rel="stylesheet" type="text/css" media="all" />
+{block name='breadcrumb'}{/block}
+<div class="city-container">
+    <form class="layui-form" action="">
+        <div class="city-list">
+            <ul class="city-ul">
+                <li>
+                    <input type="checkbox" name="" id="0" class="" lay-skin="primary" title="全选" lay-filter="0">
+                </li>
+                {foreach $city as $key => $item}
+                <li>
+                    <input type="checkbox" value="{$item['area_id']}" id="{$item['area_id']}" class="1" data-pid="0" lay-skin="primary" title="{$item['area_name']}" lay-filter="1">
+                    <em title="点击展示市" onclick="getNextCity('{$item[\'area_id\']}','{$item[\'deep\']}','.city-list');"> &gt; </em>
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+        <div class="city-list">
+            <ul class="city-ul">
+                <li class="empty">请选择省</li>
+            </ul>
+        </div>
+        <div class="city-list">
+            <ul class="city-ul">
+                <li class="empty">请选择市</li>
+            </ul>
+        </div>
+        <div class="city-list">
+            <ul class="city-ul">
+                <li class="empty">请选择区县</li>
+            </ul>
+        </div>
+        <div class="city-show">
+            <ul class="city-ul">
+                <li class="city-tip">已选省、市、区、街道</li>
+                <li><ul id="zTree" class="ztree"></ul></li>
+            </ul>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='sidebar'}{/block}
+{block name='script'}
+<script type="text/javascript" src="__RES__/tree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="__RES__/tree/js/jquery.ztree.excheck.js"></script>
+<script>
+    var obj = [];
+    for (var i=0;i<5;i++){
+        obj.push({selector:'checkbox('+ i +')',callback:function (data) {
+            relOther(data.elem);
+            this.render();
+        }});
+    }
+    main.form(obj);
+    // 获取子级城市
+    function getNextCity(cityId,deep,selector) {
+        var loadIndex = 0,
+            target = event.target,
+            checked = $(target).parent('li').children('[type="checkbox"]').prop('checked'),
+            classStr = $(target).parent('li').children('[type="checkbox"]').attr('class');
+        main.ajax({data:{cityId:cityId,deep:deep,classStr:classStr,checked:checked?'checked':''},url: '/goods/city',callback: function (res) {
+            if (res.code != 0){
+                layer.msg(res.message);
+                return false;
+            }
+            var tip1 = '<ul class="city-ul"><li class="empty">请选择市</li></ul>',
+                    tip2 = '<ul class="city-ul"><li class="empty">请选择区县</li></ul>';
+            if (deep == 1) $(selector).eq(2).html(tip1);
+            if (deep == 1 ||　deep == 2) $(selector).eq(3).html(tip2);
+            $(target).parent('li').addClass('active').siblings('li').removeClass('active');
+            $(selector).eq(deep).html(res.data);
+            main.form();
+            integration();
+        }});
+    }
+    // 关联城市状态
+    function relOther(dom) {
+        var domId = $(dom).attr('id'),
+            checked = dom.checked,
+            allChecked = $('[type="checkbox"]:not(\'#0\')').length == $('[type="checkbox"]:not(\'#0\'):checked').length;
+        if (domId === '0') {
+            // 全选
+            $('[type="checkbox"]').each(function (i, o) {
+                $(o).prop('checked', checked);
+            });
+            integration();
+            return false;
+        }
+        var classArr = $(dom).attr('class').split(' '),
+            firstFlag = classArr.shift(),
+            length = $('.'+ firstFlag +':checked').length,
+            compare = length == $('.'+ firstFlag).length,
+            value = dom.value,  //自己的id
+            next = $('.'+value),   //下级城市
+            prevId = $(dom).attr('data-pid'),   //直系上级城市ID
+            prev = $('#' + classArr.join(',#'));    //上级城市
+        if (prev.length > 0) prev.prop('checked',(prevId === '0')?compare:length);
+        if (next.length > 0) next.prop('checked',checked);
+        $('#'+'0').prop('checked',allChecked);
+        integration();
+    }
+    var _setting = {
+        data: {simpleData:{enable:true,idKey:'id',pIdKey:'pid'}},
+        view: {showIcon:false}
+    };
+    /**
+     * 收集数据渲染tree
+     */
+    function integration(){
+        var allChk = $('[type="checkbox"]:not(\'#0\'):checked'),
+            data = [];
+        if (allChk.length > 0){
+            allChk.each(function (i,o) {
+                data.push({id:$(o).val(),pid:$(o).attr('data-pid'),name:$(o).attr('title'),open:true});
+            });
+        }
+        $.fn.zTree.init($("#zTree"), _setting, data);
+    }
+</script>
+{/block}
+

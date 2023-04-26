@@ -1,0 +1,38 @@
+.advocacy{
+    background-color: #fff;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.bg-tit{
+    position: relative;
+}
+.explain{
+    position: absolute;
+    left: 86px;
+    top:-2px;
+    font-size: 28px;
+    font-weight:bold;
+}
+.bg-tit-view{
+    position: relative;
+    left: 343px;
+    top:-190px;
+}
+.tit-text{
+    position: absolute;
+    left: -330px;
+    top:97px;
+    width: 960px;
+    line-height: 30px;
+}
+.bg-tit-view2{
+    top:-56px;
+}
+.text{
+    line-height: 30px;
+}
+.text-info{
+    margin-top: 45px;
+    padding-left: 10px;
+}

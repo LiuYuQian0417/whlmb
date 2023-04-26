@@ -1,0 +1,113 @@
+.tit{
+  height: 55px;
+  background: #fff;
+  line-height: 55px;
+  font-size: 16px;
+  padding-left: 20px;
+  border-bottom: 1px solid #F0F3EF;
+  a{
+    border-bottom: 1px solid transparent;
+    padding-bottom: 5px;
+    margin-right: 50px;
+    color: #000;
+    font-size: 14px;
+  }
+
+  .tit-right{
+    float: right;
+    input{
+      outline: none;
+    }
+    .bulk-operation{
+      float: left;
+      margin-right: 8px;
+      .operation-btn{
+        width: 78px;
+        height: 26px;
+        border: 1px solid #DDDDDD;
+        background: #F4F4F4;
+        color: #333333;
+        box-sizing: border-box;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      a{
+        margin-right: 18px;
+        font-size: 12px;
+      }
+        .uncheck{
+          color: #333;
+          img{
+            display: none;
+          }
+            &:before{
+              content: '';
+              display: inline-block;
+              width: 13px;
+              height: 13px;
+              border: 1px solid #8A8A8A;
+              position: relative;
+              top: 2px;
+              margin-right: 5px;
+            }
+        }
+      .check{
+        img{
+          position: relative;
+          top: 2px;
+          margin-right: 9px;
+          width: 15px;
+          height: 15px;
+        }
+        &:before{
+          content: '';
+          display: inline-block;
+          width: 13px;
+          height: 13px;
+          border: 1px solid red;
+          position: relative;
+          top: 2px;
+          margin-right: 5px;
+          display: none;
+        }
+      }
+      .disqualification{
+        img{
+          position: relative;
+          top: 2px;
+        }
+      }
+      .success{
+        width: 58px;
+        height: 24px;
+        border: 1px solid #DDDDDD;
+        background: #F4F4F4;
+        text-align: center;
+        font-size: 12px;
+        border-radius: 3px;
+      }
+    }
+    .search-box{
+      height: 26px;
+      float: left;
+      .txt{
+        width: 148px;
+        height: 24px;
+        border: 1px solid #CCCCCC;
+        text-indent: 5px;
+        font-size: 12px;
+      }
+      .search-btn{
+        width: 58px;
+        height: 26px;
+        border: 1px solid #ddd;
+        position: relative;
+        left: -5px;
+        top: 1px;
+        color: #333333;
+        font-size: 12px;
+        cursor: pointer;
+      }
+    }
+  }
+}

@@ -1,0 +1,109 @@
+<link href="__RES__/font/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="__RES__/layui/css/layui.css" rel="stylesheet" type="text/css" media="all"/>
+<body class="childrenBody ">
+    <div class="main-content" id="mainContent">
+        <div class="tabCon">
+            <form action="" method="post" name="theForm" enctype="multipart/form-data" id="bonus_form" class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>开户行</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="limit_price" value="{$item.account_bank_name|default=''}" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>开户名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="limit_price" value="{$item.account_name|default=''}" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>开户账户</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="limit_price" value="{$item.bank_number|default=''}" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>提现金额</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="limit_price" value="{$item.price|default=''}" class="layui-input" disabled>
+                    </div>
+                </div>
+
+                <hr class="layui-bg-gray">
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>审核人账户</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="limit_price" value="{$item.nickname|default=''}" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>审核时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="limit_price" value="{$item.time|default=''}" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"><em class="require">* </em>审核结果</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="limit_price" value="失败" class="layui-input" disabled>
+                    </div>
+                </div>
+                <div class="layui-form-item" id="refuse_reason">
+                    <label class="layui-form-label"><em class="require">* </em>原因：</label>
+                    <div class="layui-input-block">
+                    <textarea placeholder="审核失败原因，不能超过100字" disabled maxlength="100" style="height: 200px;" class="layui-textarea">{$item.reason_1_5|default=''}</textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script src="__RES__/js/common/jquery-1.8.2.min.js"></script>
+<script src="__RES__/js/common/jquery.cookie.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<script src="__RES__/layui/lay/modules/layer.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/layui/lay/modules/element.js"></script>
+<script src="__RES__/js/common/main.js"></script>
+<script src="__RES__/js/common/jquery.from.js"></script>
+<script src="__RES__/js/common/Validform_v5.3.2_ncr_min.js"></script>
+<script src="__RES__/js/common/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    main.valid('.layui-form');
+    main.form('.layui-form');
+
+    function chooseIt(capital_id) {
+        var status = $('input:radio[name="status"]:checked').val();
+        var reason = $('textarea[name="reason"]').val();
+        layer.msg('确定处理审核吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({type:'post',url:'/store_capital/isChecking',data:{'capital_id': capital_id,status:status,'reason':reason},
+                    callback: function (res){
+                        if (res.code == 0){
+                            layer.msg('操作成功');
+                            layer.close(index);
+                            parent.layer.closeAll();
+                            parent.parent.location.reload();
+                        }else {
+                            layer.msg(res.message);
+                        }
+                    }});
+            }
+        });
+    }
+
+    // 切换单选
+    function showunit() {
+        var get_value = $("input[name='status']:checked").val();
+        if (get_value == 1.4) {
+            $('#refuse_reason').hide()
+        } else {
+            $('#refuse_reason').show();
+        }
+    }
+
+</script>
+
+
+

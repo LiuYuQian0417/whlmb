@@ -1,0 +1,14 @@
+[Unit]
+Description=consumer service
+After=network.target
+After=syslog.target
+[Service]
+Type=simple
+User=www
+Group=www
+LimitNOFILE=35555
+ExecStart=/www/server/php/72/bin/php 项目根目录/think 管道名
+ExecReload=/bin/kill -USR1 $MAINPID
+Restart=always
+[Install]
+WantedBy=multi-user.target graphical.target

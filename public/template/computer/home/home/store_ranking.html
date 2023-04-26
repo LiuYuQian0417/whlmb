@@ -1,0 +1,132 @@
+{extend name="public/index_header"}
+{block name="content_css"}
+<!--排行榜css-->
+<link rel="stylesheet" href="__RES__/css/RankingList/Rank.css">
+<!--iconfont-->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1111076_zk19qp75pdr.css">
+<style>
+    .goods-view-title-icon a{
+        color: #333;
+    }
+    .goods-view-title-all a{
+        color: #333;
+    }
+    .goods-view-title-all{
+        text-align: right;
+    }
+</style>
+{/block}
+{block name="content"}
+<!--商品列表-->
+<div class="goods-view">
+    <div class="goods-view2-container">
+        <!--<div class="goods-view-title" style="height: 131px;">-->
+            <!--<div class="goods-view-title-icon">-->
+                <!--<div style="padding-bottom: 80px">-->
+                    <!--<a href="{:url('/pc2.0/home/ranking')}">排行榜首页</a> > <a href="javascript:window.location.reload()">{$classify}</a>-->
+                <!--</div>-->
+                <!--&lt;!&ndash;<img src="__RES__/imgs/ranking/30.png" alt="" style="display: block;margin-left: 300px">&ndash;&gt;-->
+                <!--<div class="title-center" style="background: url('/template/computer/resource/imgs/ranking/bg-color.png') no-repeat center;height: 38px;width: 1200px;text-align: center;line-height: 38px">-->
+                    <!--<span style="font-size: 20px;color: #fff">口红</span>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="goods-view-title-all" style="padding-top: 110px">-->
+                <!--<a href="javascript:window.location.reload()">-->
+                    <!--<i class="iconfont icon-refresh"></i>-->
+                    <!--<span>刷新查看完整榜单</span>-->
+                <!--</a>-->
+            <!--</div>-->
+        <!--</div>-->
+
+        <div class="goods-view-title" style="height: 40px; line-height: 40px;">
+            <div class="goods-view-title-icon">
+                <div >
+                    <a href="{:url('/pc2.0/home/ranking')}" class="primary-color-hover">排行榜首页</a> > <a href="javascript:window.location.reload()">{$classify}</a>
+                </div>
+                <!--<img src="__RES__/imgs/ranking/29.png" alt="" style="display: block;margin-left: 300px">-->
+
+            </div>
+
+        </div>
+        <div class="title-center" style="background: url('__RES__/imgs/ranking/bg-color.png') no-repeat center;height: 38px;width: 1200px;text-align: center;line-height: 38px">
+            <span style="font-size: 20px;color: #fff">{$classify}</span>
+        </div>
+        <div class="goods-view-title-all" >
+            <a href="javascript:window.location.reload()">
+                <i class="iconfont icon-refresh"></i>
+                <span>刷新查看完整榜单</span>
+            </a>
+        </div>
+
+        <div class="goods-container">
+            <ul>
+                {volist name="$result" id="shop" key="key_shop"}
+                <li >
+                    <div class="container-top" onclick="jump_store({'store_id':'{$shop.store_id}'})">
+                        {gt name="$key_shop" value="3"}<div class="icon-num">{$key_shop}</div> {/gt}
+                        <img class="bg-pic" src="__RES__/imgs/ranking/26.png" alt="">
+                        <img class="icon-num-pic" {gt name="$key_shop" value="3"}src="__RES__/imgs/ranking/4.png" {else/} src="__RES__/imgs/ranking/{$key_shop}.png" {/gt} alt="">
+                        <div class="bg-top">
+                            <img width="100" height="33" src="{$shop.logo}" alt="">
+                            <p>
+                                <a href="javascript:;">
+                                    {$shop.store_name}
+                                    <img src="__RES__/imgs/ranking/dpgd.png" alt="">
+                                </a>
+                            </p>
+                            <div class="goods-tag">
+                                {if condition="config('user.one_more') eq 1"}
+                                {switch name="$shop.shop"}{case value="0"}<span class="border-color primary-color">自营</span>{/case}{case value="1"}<span class="border-color primary-color">个人</span>{/case}{case value="2"}<span class="border-color primary-color">公司</span>{/case}{/switch}
+                                {/if}
+                                {eq name="$shop.is_city" value="1"}<span class="border-color primary-color">同城配送</span>{/eq}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container-btm">
+                        <ul>
+                            {volist name="$shop.store_goods" id="goods_value"}
+                            <li>
+                                <a href="javascript:jump_goods('{$goods_value.goods_id}')">
+                                    <div class="li-view">
+                                        <img width="159" height="141" src="{$goods_value.file}" alt="">
+                                        <p class="goods-name">{$goods_value.goods_name}</p>
+                                        <div class="goods-content-info-btm">
+                                            <div class="show-num">
+                                                <div class="goods-price primary-color"><span>￥</span>{$goods_value.goods_price}</div>
+                                                <div class="sales-volume">销量<span class="primary-color">{$goods_value.sales_volume}</span></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            {/volist}
+                        </ul>
+                    </div>
+                </li>
+                {/volist}
+            </ul>
+        </div>
+    </div>
+</div>
+<!--商品列表结束-->
+
+<!--置顶-->
+<div class="to-top"  style="height: 77px;">
+    <div class="back-top">
+        <i class="iconfont icon-arrow_top"></i>
+        <span>返回顶部</span>
+    </div>
+</div>
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $('.ranking-category-view ul li').hover(function(){
+        $(this).addClass('primary-background-color')
+    },function () {
+        $(this).removeClass('primary-background-color')
+    })
+
+</script>
+{/block}

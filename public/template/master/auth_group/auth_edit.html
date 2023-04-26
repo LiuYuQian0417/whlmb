@@ -1,0 +1,91 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/tree/css/bootstrapStyle/bootstrapStyle.css" rel="stylesheet" type="text/css" media="all" />
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>查看或编辑用户组权限。<li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="common-head">
+    <div class="fl">
+        <a href="javascript:void(0);" class="left" onClick="saveData()">
+            <div class="fbutton">
+                <div class="add" title="保存设置"><span><i class="fa fa-floppy-o"></i> 保存设置</span></div>
+            </div>
+        </a>
+        <div class="refresh">
+            <div class="refresh_tit" title="刷新数据"  onclick="location.reload();"><i class="fa fa-refresh"></i></div>
+        </div>
+    </div>
+</div>
+<hr class="layui-bg-gray">
+<div class="contentFullShell">
+    <div id="zTree"></div>
+</div>
+{/block}
+{block name='form'}
+<script type="text/javascript" src="__RES__/layui/lay/modules/layer.js"></script>
+<script type="text/javascript" src="__RES__/tree/js/jquery.ztree.core.js"></script>
+<script type="text/javascript" src="__RES__/tree/js/jquery.ztree.excheck.js"></script>
+<script type="text/javascript">
+    main.form();
+    var setting = {
+        view: {selectedMulti: false, showIcon:false},
+        check: {enable: true,chkboxType: { "Y": "ps", "N": "s" }},
+        data: {simpleData: {enable: true,idKey: 'id',pIdKey: 'pid'}, key: {name: 'title'}},
+    },ids = [],disabledIds = '';
+    $(document).ready(function(){
+        main.ajax({data: {'group':'{:input(\'auth_group_id\')}'},url: "/auth_group/getAuthData",callback:function (data) {
+            var zNodes = data.data,_zNodes = [];
+            disabledIds = data.disabledStr;
+            if (zNodes.length > 0){
+                for (var i=0;i<=zNodes.length;i++){
+                    if ((i == zNodes.length) || (zNodes[i].id.indexOf('.') == -1 && i != 0)){
+                        if (_zNodes.length > 0){
+                            var html = '<fieldset class="layui-elem-field" style="width: 32%;margin-right: 1%;float: left;min-height: 240px">' +
+                                    '<legend>'+_zNodes[0].title+'</legend>' +
+                                    '<div class="layui-field-box">' +
+                                    '<ul id="'+i+'" class="ztree"></ul>' +
+                                    '</div></fieldset>';
+                            $('#zTree').append(html);
+                            $.fn.zTree.init($("#"+i), setting, _zNodes);
+                            ids.push(i);
+                        }
+                        _zNodes = [];
+                    }
+                    if (i != zNodes.length) _zNodes.push(zNodes[i]);
+                }
+            }else {
+                layer.msg('权限数据查询失败');
+            }
+        }});
+    });
+    function saveData() {
+        var checked = '';
+        // 有权限树
+        if (ids.length > 0){
+            for (var x=0;x<ids.length;x++){
+                var treeObj = $.fn.zTree.getZTreeObj(ids[x]),
+                    nodes=treeObj.getCheckedNodes(true);
+                for (var y=0;y<nodes.length;y++){
+                    checked += ','+nodes[y].id;
+                }
+            }
+            checked += disabledIds;
+        }
+        main.saveAuthData('/auth_group/saveAuthData',{'data':checked,'group':'{:input(\'auth_group_id\')}'});
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

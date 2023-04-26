@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="ie9 no-focus" lang="zh"><![endif]-->
+<!--[if gt IE 9]><!--><html class="no-focus" lang="zh"><!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>跳转提示</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+    <!-- Stylesheets -->
+    <!-- Bootstrap and OneUI CSS framework -->
+    <link rel="stylesheet" href="/template/master/resource/css/common/bootstrap.min.css">
+    <link rel="stylesheet" href="/template/master/resource/css/common/jump.css">
+    <!-- END Stylesheets -->
+</head>
+<body>
+<!-- Error Content -->
+<div class="content">
+    <div class="row">
+        <div class="" style="display: flex;align-items: center;">
+            <!-- Error Titles -->
+
+            <img src="/template/master/resource/image/common/success.png" alt="" class="icon" style="margin-right: 20px">
+            <div>
+                <h4 class="font-w300 {$code? 'text-success' : 'text-city'} push-10 animated flipInX" style="padding-top: 10px;"><?php echo(strip_tags($msg));?></h4>
+                <p>将在 <b id="wait" style="color: #f23030"><?php echo($wait);?></b>秒后跳转到<a id="href" href="<?php echo($url);?>"
+                                                                                              target="_top">第一个链接网址</a></p>
+            </div>
+
+
+            <!--<p class="font-w300 push-20 animated fadeInUp">-->
+                <!--页面自动 <a id="href" href="<?php echo($url);?>"-->
+                                                                   <!--target="_top">跳转</a> 等待时间： <b-->
+                    <!--id="wait"><?php echo($wait);?></b>秒</p>-->
+            <!--<div class="push-50">-->
+                <!--<a class="btn btn-minw btn-rounded btn-success" href="<?php echo($url);?>" target="_top">立即跳转</a>-->
+                <!--<button class="btn btn-minw btn-rounded btn-warning" type="button" onclick="stop()">禁止跳转</button>-->
+                <!--&lt;!&ndash;<a class="btn btn-minw btn-rounded btn-default" href="{$Request.domain}"  target="_top">返回首页</a>&ndash;&gt;-->
+            <!--</div>-->
+            <!-- END Error Titles -->
+        </div>
+    </div>
+</div>
+<!-- END Error Content -->
+
+
+<script type="text/javascript">
+    (function(){
+        var wait = document.getElementById('wait'),
+            href = document.getElementById('href').href;
+        var interval = setInterval(function(){
+            var time = --wait.innerHTML;
+            if(time <= 0) {
+               top.location.href = href;
+                clearInterval(interval);
+            }
+        }, 1000);
+        // 禁止跳转
+        window.stop = function (){
+            clearInterval(interval);
+        }
+    })();
+</script>
+</body>
+</html>

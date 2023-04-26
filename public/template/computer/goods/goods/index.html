@@ -1,0 +1,447 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<!--商品列表css-->
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<link rel="stylesheet" href="__RES__/css/classificationlist/classificationlist.css">
+
+<style>
+    .handsome li img{
+        padding: 0px 5px!important;
+    }
+    .chColor {
+        transform: rotate(180deg);
+
+    }
+    .navigation-lists  {
+        height: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-right: 50px;
+        box-sizing: border-box;
+        position: relative;
+        right: -20px;
+        width: 710px;
+        scrollbar-width: none;
+        -ms-scroll-chaining: chained;
+        -ms-overflow-style: none;
+        -ms-content-zooming: zoom;
+        -ms-scroll-rails: none;
+        -ms-content-zoom-limit-min: 100%;
+        -ms-content-zoom-limit-max: 500%;
+        -ms-scroll-snap-type: proximity;
+        -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
+        -ms-overflow-style: none;
+    }
+    .classification-nav-list{
+        scrollbar-width: none;
+        -ms-scroll-chaining: chained;
+        -ms-overflow-style: none;
+        -ms-content-zooming: zoom;
+        -ms-scroll-rails: none;
+        -ms-content-zoom-limit-min: 100%;
+        -ms-content-zoom-limit-max: 500%;
+        -ms-scroll-snap-type: proximity;
+        -ms-scroll-snap-points-x: snapList(100%, 200%, 300%, 400%, 500%);
+        -ms-overflow-style: none;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<style>
+    .public-header .header-center .img-color{
+        top: -2px;
+    }
+
+</style>
+<!--分类列表导航开始-->
+<div class="classification-nav border-color-bottom">
+    <ul class="classification-nav-list"         style="scrollbar-width: none;"
+    >
+        <li class="primary-background-color classification-nav-name" ><a href="{:url('/pc2.0/goods/index')}">全部商品分类</a>
+             <div class="classification-nav-list-nav"         style="scrollbar-width: none;"
+             >
+                 <div class="auto">
+                 {volist name="goods_classify" id="goods_classify1"}
+                 <div class="classification-nav-content">
+                     <a href="javascript:;"  class="navigation-lists-name">{$goods_classify1.title}</a>
+                     <p class="classification-nav-content-border"></p>
+                 　　<div class="classification-nav-content-list">
+                          <div class="navigation-lists">
+                              {volist name="$goods_classify1.tree_relevance" id="goods_classify2"'}
+                             <p><a href="{:url('/pc2.0/goods/index')}?goods_classify_id={$goods_classify2.goods_classify_id}" class="navigation-lists-a">{$goods_classify2.title}<span>></span></a>
+                                 {volist name="$goods_classify2.tree_relevance" id="goods_classify3"}
+                                 |<a href="{:url('/pc2.0/goods/index')}?goods_classify_id={$goods_classify3.goods_classify_id}">{$goods_classify3.title}</a>
+                                 {/volist}
+                             </p>
+                              {/volist}
+                          </div>
+                     </div>
+                 </div>
+                 {/volist}
+                 </div>
+             </div>
+        </li>
+        <!--<li><a href="{:url('/pc2.0/distribution_level/my_level')}">代言中心</a></li>-->
+        {if $function_status.one_or_more===true}<li><a href="{:url('/pc2.0/store/find_store')}">发现好店</a></li>
+        <li><a href="javascript:;" onclick="main.jump({'url':'/pc2.0/store/nearby_list?lng='+localStorage.lng+'&lat='+localStorage.lat+''})">附近商家</a></li>
+        {/if}
+    </ul>
+</div>
+<!--分类列表导航结束-->
+<!--分类列表开始-->
+<div class="classification">
+    <div class="classification-top">
+        <p>全部分类</p>
+        {notempty name=":input('goods_classify_id')"}
+        {present name="$classify_title.one_title"}<p>></p><p>{$classify_title.one_title}</p>{/present}
+        <p>></p><p>{$classify_title.two_title}</p>
+        <p>></p><p>{$classify_title.three_title}</p>
+        {/notempty}
+        <div class="clear"></div>
+    </div>
+    <div class="classification-content  goods-list">
+            <div class="handsome-list">
+                <ul class="handsome">
+                    <!--goods.create_time 综合 goods_real_price 活动价格  -->
+                    <li data_parameter="goods.create_time"  data_rank="desc" class="selected border-color-top">综合排序<img class="handsome-img" src="__RES__/imgs/classificationlist/jiang.png" width="6" height="11"> </li>
+                    <li data_parameter="sales_volume" data_rank="desc" >销量<img  class="handsome-img"  src="__RES__/imgs/classificationlist/jianghui.png" width="6" height="11"></li>
+                    <li data_parameter="goods_real_price"   data_rank="desc" >价格<img  class="handsome-img"  src="__RES__/imgs/classificationlist/jianghui.png" width="6" height="11"></li>
+                    <li class="clear"></li>
+                </ul>
+                <div class="price-range">
+                    <div class="price-range-input">
+                        <input type="text" id="minimum_price" class="price" placeholder="￥">
+                        <p>-</p>
+                        <input type="text" id="top_price" class="price" placeholder="￥">
+                    </div>
+                    <div class="price-range-div">
+                        <a href="javascript:;" class="price-range-div-cancel">取消</a><a class="price-range-div-determine">确定</a>
+                    </div>
+                </div>
+                <div class="switch-page">
+                    <a href="javascript:;" class="prev"><</a><p><i class="currentPage">1</i>/<i class="total">1</i></p><a class="next" href="javascript:;">></a>
+                </div>
+                <div class="switch-list">
+                    <img src="__RES__/imgs/classificationlist/henglie.png" class="handsome-list-row" width="12" height="12">
+                    <img src="__RES__/imgs/classificationlist/shuliehui.png" class="handsome-list-vertical"  width="12" height="12">
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="multi-select">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item" pane="">
+                        <div class="layui-input-block">
+                            <input data_type="freight_status|3" type="checkbox"  lay-skin="primary" title="同城配送" >
+                            <input data_type="shop|0" type="checkbox" lay-skin="primary" title="门店自提">
+                            <input data_type="shop|1" type="checkbox"  lay-skin="primary" title="个人店铺">
+                            <input data_type="shop|2" type="checkbox" lay-skin="primary" title="企业店铺">
+                            <input data_type="goods_number|0" type="checkbox" lay-skin="primary" title="仅看有货">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        <ul class="list-goods">
+            <!--数据-->
+        </ul>
+    </div>
+    <div class="clear"></div>
+    <!--此处加分页-->
+    <div id="page-container" class="pageContainer"><ul class="pagination"></ul></div>
+</div>
+
+<!--分类列表结束-->
+{/block}
+
+{block name="js"}
+{__block__}
+<script type="text/javascript">
+
+
+    var pageInited = false; //分页
+    var data = {
+        'goods_classify_id': '{:input("goods_classify_id")}',
+        'keyword': '{:input("keyword")}',
+    };
+    $(function () {
+        nearby_list();
+    })
+
+    //排序切换列表样式
+    $(".handsome li").click(function() {
+        var rank = $(this).attr('data_rank');
+        $(this).find('img').attr('src','__RES__/imgs/classificationlist/jiang.png');
+        if ($(this).hasClass('selected') && rank == 'desc') {
+            $(this).find('img').addClass('chColor');
+            $(this).attr('data_rank','asc')
+        }
+        if($(this).hasClass('selected') && rank == 'asc'){
+            $(this).find('img').removeClass('chColor');
+            $(this).attr('data_rank','desc')
+        }
+        $(this).siblings('li').find('img').attr("src","__RES__/imgs/classificationlist/jianghui.png");
+        $(this).addClass("selected border-color-top").siblings('li').removeClass("selected border-color-top");
+
+        condition();
+        nearby_list();
+    });
+
+    //价格 确定
+    $('.price-range-div-determine').click(function () {
+        condition();
+        nearby_list();
+    })
+
+    //价格 取消
+    $('.price-range-div-cancel').click(function () {
+
+        $('#minimum_price').val('');
+        $('#top_price').val('');
+
+        condition();
+        nearby_list();
+
+    })
+
+    //筛选
+    $('.layui-input-block').on('click','.layui-form-checkbox',function () {
+        condition();
+        nearby_list();
+    })
+
+    //跳页
+    $('.prev').click(function () {
+        var local_page = $('.currentPage').text();
+        var page = 0;
+
+        if (local_page == 1){
+            layer.msg('当前是第一页',{time:500});
+        }else{
+            $('.currentPage').text(parseInt($('.currentPage').text()) - 1);
+            condition();
+            nearby_list(data.page);
+        }
+    })
+
+    //下一页
+    $('.next').click(function () {
+        console.log('下一页');
+        var total = $('.total').text();
+        var local_page = $('.currentPage').text();
+        var page = 0;
+        if(local_page == total){
+            layer.msg('当前是最后一页',{time:500});
+        }else{
+            $('.currentPage').text(parseInt($('.currentPage').text()) +1);
+            condition();
+            nearby_list(data.page);
+        }
+    })
+
+    //获取条件
+    function condition(){
+        var parameter = $('.handsome .selected').attr('data_parameter');
+
+        var rank = $('.handsome .selected').attr('data_rank');
+
+        var minimum_price = $('#minimum_price').val();
+        var top_price = $('#top_price').val();
+
+        var shop = '';
+        var freight_status = '';
+        var goods_number = '';
+        $('.layui-input-block input').each(function () {
+            if($(this).next('.layui-form-checkbox').hasClass('layui-form-checked')){
+                var arr = $(this).attr('data_type').split('|');
+                if(arr[0] == 'shop'){
+                    if(shop == ''){
+                        shop += arr[1]
+                    }else{
+                        shop += ','+arr[1];
+                    }
+
+                }
+                if(arr[0] == 'freight_status') freight_status += arr[1]+',';
+                if(arr[0] == 'goods_number') goods_number = arr[1];
+            }
+        })
+
+        var page = $('.currentPage').text();
+
+        data ={
+            'goods_classify_id':data.goods_classify_id,
+            'keyword':data.keyword,
+            'parameter':parameter,
+            'rank':rank,
+            'minimum_price':minimum_price,
+            'top_price':top_price,
+            'shop':shop,
+            'freight_status':freight_status,
+            'goods_number':goods_number,
+            'page':page,
+        };
+        pageInited = false
+    }
+
+    //分页类
+    function init_pages(currentPage,lastPage) {
+        // 初始化分页
+        $('#page-container').find('ul.pagination').pagination({
+            currentPage: currentPage,
+            prevText: '«',
+            nextText: '»',
+            pages: lastPage, //总页数
+            edges: 2,
+            cssStyle: 'pagination-sm', //按纽大小pagination-lg或写入自定义css
+            displayedPages: 9, //显示几个
+            onPageClick: function(pageNumber, event) {
+                nearby_list(pageNumber)
+            }
+        });
+    }
+
+    //ajax
+    function nearby_list(pages){
+        data.page  = pages === undefined ? 1 : pages
+        main.ajax({
+            'url':'{:url(\'pc2.0/goods/index\')}',
+            'data':data,
+            callback:function (res) {
+                console.log(res);
+                if(res.code==0){
+                    $('.currentPage').text(res.result.current_page);
+                    $('.total').text(res.result.last_page == 0 ? 1 :res.result.last_page);
+                    if (!pageInited){
+                        if(parseInt(res.result.last_page) >1){
+                            init_pages(parseInt(res.result.current_page),parseInt(res.result.last_page))
+                            pageInited = true
+                        }
+                        else{
+                            $('#page-container').find('ul.pagination').html('')
+                        }
+                    }
+                    var str = '';
+                    $.each(res.result.data, function (k, v) {
+                        var text = '';
+                        if(v.is_group == 1 ){
+                            text ='<a href="javsscript:;" class="group-price primary-color">￥'+v.group_price+'<span class="group primary-background-color">'+v.group_num+'人拼团</span></a>';
+                        }
+                        if(v.is_bargain == 1 ){
+                            text ='<a href="javsscript:;" class="group-price primary-color">￥'+v.cut_price+'<span class="group primary-background-color">砍价</span></a>';
+                        }
+                        if(v.is_limit == 1 ){
+                            text ='<a href="javsscript:;" class="group-price primary-color">￥'+v.time_limit_price+'<span class="group primary-background-color">限时抢购</span></a>';
+                        }
+                        if(v.is_limit == 0 && v.is_bargain == 0 && v.is_group == 0){
+                            // text = ' <a href="javsscript:;" class="group-price floor-price">底价￥'+v.market_price+'</a>';
+                            text = '';
+                        }
+                        var sign = '';
+                        switch(v.shop){
+                            case 0: sign='自营'; break;
+                            case 1: sign='个人'; break;
+                            case 2: sign='公司'; break;
+                        }
+                        var city = '';
+                        if(v.is_city == 1){
+                            city = '<span class="primary-color border-color">同城配送</span>';
+                        }
+
+                        str += '<li>\n' +
+                            '                <a href="/pc2.0/goods/view?goods_id='+v.goods_id+'" class="vertical-goods-right-img">\n' +
+                            '                  <img src="'+v.file+'" width="220" height="220">\n' +
+                            '                <p class="list-goods-price">\n' +
+                            '                    <a href="javascript:;"" class="price-goods-list primary-color">￥'+v.goods_price+'</a>\n' + text+
+                            '                </p>\n' +
+                            '                <p class="goods-name">\n' +
+                            '                    <a href="javascript:;"" >'+v.goods_name+'</a>\n' +
+                            '                </p>\n' +
+                            '                <P class="goods-sales">\n' +
+                            '                    销量<span class="primary-color">'+v.sales_volume+'</span>\n' +
+                            '                </P>\n' +
+                            '                <p class="merchants">\n' +
+                            '                    '+v.store_name+'<img src="__RES__/imgs/classificationlist/shangjia.png" width="14" height="14">\n' +
+                            '                </p>\n' +
+                            '                <p class="merchants-label">\n' +
+                            '                    <span class="primary-color border-color">'+sign+'</span>\n' + city+
+                            '                </p>\n' +
+                            '               </a>\n' +
+                            '            </li>';
+                    });
+                    $('.list-goods').html(str);
+                }
+            }})
+    }
+
+
+    /*样式************/
+    //网格 列表切换
+    $(".handsome-list-row").click(function(){
+        $(".classification-content").addClass("goods-list").removeClass("vertical-goods");
+        $(this).attr("src","__RES__/imgs/classificationlist/henglie.png");
+        $(".handsome-list-vertical").attr("src","__RES__/imgs/classificationlist/shuliehui.png")
+        $('.vertical-goods-left').css("display","none")
+    });
+    $(".handsome-list-vertical").click(function(){
+        $(".classification-content").addClass("vertical-goods").removeClass("goods-list");
+        $(".handsome-list-row").attr("src","__RES__/imgs/classificationlist/hengliehui.png");
+        $(this).attr("src","__RES__/imgs/classificationlist/shulie.png")
+        $('.vertical-goods-left').css("display","block")
+    });
+
+    //导航分类
+    $(".classification-nav-content").hover(function(){
+        $(this).find(".classification-nav-content-list").css("display","block");
+    },function(){
+        $(this).find(".classification-nav-content-list").css("display","none");
+    });
+    //全部分类
+    $(".classification-nav-name").hover(function(){
+        $(this).find(".classification-nav-list-nav").css("display","block");
+    },function(){
+        $(this).find(".classification-nav-list-nav").css("display","none");
+    })
+    //切换选中样式
+    $(".choose").hover(function() {
+        $(this).find(".choose-list").css("display", "block");
+        $(this).addClass("border-bottom");
+    },function(){
+        $(this).find(".choose-list").css("display", "none");
+        $(this).removeClass("border-bottom");
+
+    })
+
+    //复选框样式
+    layui.use(['form', 'layedit', 'laydate'], function(){
+        var form = layui.form
+            ,layer = layui.layer
+            ,layedit = layui.layedit
+            ,laydate = layui.laydate;
+
+        //日期
+        //表单初始赋值
+        form.val('example', {
+            "username": "贤心" // "name": "value"
+            ,"password": "123456"
+            ,"interest": 1
+            ,"like[write]": true //复选框选中状态
+            ,"close": true //开关状态
+            ,"sex": "女"
+            ,"desc": "我爱 layui"
+        })
+    });
+    //价格
+    $(".price-range").hover(function(){
+          $(".price-range-div").css("display","block");
+    },function () {
+        $(".price-range-div").css("display","none");
+    });
+
+    //取消价格
+    $('.price-range-div-cancel').click(function () {
+     $('#minimum_price').val('');
+     $('#top_price').val('');
+    })
+</script>
+{/block}

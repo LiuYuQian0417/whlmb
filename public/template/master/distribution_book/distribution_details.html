@@ -1,0 +1,271 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+<style>
+    .calculate span {
+        margin-right: 20px;
+    }
+    .sel {
+        background-color: rgba(102, 204, 153, 1);
+    }
+</style>
+{__block__}
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <div class="goods-list" style="width: 100%">
+        <table class="ecsc-default-table ecsc-table-seller mt20" style="width: 100%;color: #333;margin: 10px 0;">
+            <tbody>
+            <tr>
+                <td class="{:input('get.type','') == 1 ? 'sel' : 'nav'}" onclick="reloadSelf({type:1})" style="cursor: pointer;border:1px solid #e6e6e6;padding: 9px 15px;">
+                    <p style="line-height: 30px">已结算</p>
+                    <p>&yen;<span class="font-style">{$count.close_pro?:0.00}</span></p>
+                </td>
+                <td class="{:input('get.type','') == 2 ? 'sel' : 'nav'}" onclick="reloadSelf({type:2})" style="cursor: pointer;border:1px solid #e6e6e6;padding: 9px 15px;">
+                    <p style="line-height: 30px">待结算</p>
+                    <p>&yen;<span class="font-style">{$count.wait_pro?:0.00}</span></p>
+                </td>
+                <td class="{:input('get.type','') == 3 ? 'sel' : 'nav'}" onclick="reloadSelf({type:3})" style="cursor: pointer;border:1px solid #e6e6e6;padding: 9px 15px;">
+                    <p style="line-height: 30px">直属粉丝</p>
+                    <p><span class="font-style">{$distribution_hierarchy > 1 ? ($count.referrer_num?:0) : 0}</span></p>
+                </td>
+                <td class="{:input('get.type','') == 4 ? 'sel' : 'nav'}" onclick="reloadSelf({type:4})" style="cursor: pointer;border:1px solid #e6e6e6;padding: 9px 15px;">
+                    <p style="line-height: 30px">推荐粉丝</p>
+                    <p><span class="font-style">{$distribution_hierarchy == 3 ? ($count.relation_num?:0) : 0}</span></p>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--关键词结束-->
+    {if condition="!is_array($order)"}
+    <div class="order">
+        <div class="common-head">
+            <div class="fl">
+                <div class="refresh">
+                    <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                    <div class="refresh_span">目前共有 {:$order->total()} 条记录&nbsp;&nbsp;每页<font> {:$order->listRows()} </font>条</div>
+                </div>
+                <div class="inquire_search" >
+                    <div class="imitate_select" style="width: 180px;">
+                        <input title="下单日期" name="date" type="text" class="layui-input"
+                               value="{:input('get.date','')}"
+                               id="date" readonly placeholder="按下单日期范围查询">
+                    </div>
+                    <div class="inquire">
+                        <input type="text" name="keyword" class="inquire_text nofocus"
+                               placeholder="请输入订单编号" value="{:input('get.keyword','')}" autocomplete="off">
+                    </div>
+                    <input type="hidden" name="distribution_id" value="{:input('get.distribution_id','')}" />
+                    <input type="hidden" name="type" value="{:input('get.type','')}" />
+                    <input type="submit" class="btn search_btn" value="查询">
+                </div>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <!--列表-->
+        <div class="layui-form">
+            <table class="layui-table goods-list">
+                <thead>
+                <tr>
+                    <th>订单</th>
+                    <th>买家信息</th>
+                    <th>佣金规则</th>
+                    <th>佣金分配</th>
+                    <th>佣金金额</th>
+                    <th>状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='order'}
+                <tr class='emptyTable'>
+                    <td colspan="100" style="font-size: 25px;">暂无数据</td>
+                </tr>
+                {/empty}
+                {foreach $order as $_order}
+                <tr>
+                    <td style="width: 400px;">
+                        <div style="display: flex;align-items: center;justify-content: flex-start">
+                            <div class="img-div">
+                                <img src="{$_order.file}" alt="{$_order.goods_name}" title="{$_order.goods_name}" class="thumb-img"
+                                     onerror="this.src='/template/master/resource/image/common/imageError.png'"/>
+                            </div>
+                            <div class="describe" style="flex: 1">
+                                <div class="name-div" title="{$_order.goods_name}">订单编号：{$_order.order_number}</div>
+                                <div class="brand-div">下单时间：<font>{$_order.create_time}</font></div>
+                                <div class="brand-div">商品价格：<span>{$_order.single_price}</span></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <img src="{$_order.avatar}" class="avatar" alt="买家图片" onerror="this.src='__RES__/image/common/imageError.png'" />
+                        {$_order.nickname}
+                    </td>
+                    <td>
+                        <!--<div style="display: flex;align-items: center;justify-content: flex-start">-->
+                        {switch name=":input('get.distribution_id')"}
+                        {case value="$_order.distributor_a"}
+                        <p><font style="color: green;">{$_order.rule_type_a_alias}</font></p>
+                        <p>{$_order.rule_snapshot_content_a}</p>
+                        {/case}
+                        {case value="$_order.distributor_b"}
+                        <p><font style="color: green;">{$_order.rule_type_b_alias}</font></p>
+                        <p>{$_order.rule_snapshot_content_b}</p>
+                        {/case}
+                        {case value="$_order.distributor_c"}
+                        <p><font style="color: green;">{$_order.rule_type_c_alias}</font></p>
+                        <p>{$_order.rule_snapshot_content_c}</p>
+                        {/case}
+                        {/switch}
+                        <!--</div>-->
+                    </td>
+                    <td>
+                        {switch name=":input('get.distribution_id')"}
+                        {case value="$_order.distributor_a"}
+                            <p><font>一级分佣</font></p>
+                            <p><font>{$_order.level_a_snapshot}</font></p>
+                            <p><font>&yen;{$_order.distributor_a_brokerage}</font></p>
+                        {/case}
+                        {case value="$_order.distributor_b"}
+                            <p><font>二级分佣</font></p>
+                            <p><font>{$_order.level_b_snapshot}</font></p>
+                            <p><font>&yen;{$_order.distributor_b_brokerage}</font></p>
+                        {/case}
+                        {case value="$_order.distributor_c"}
+                            <p><font>三级分佣</font></p>
+                            <p><font>{$_order.level_c_snapshot}</font></p>
+                            <p><font>&yen;{$_order.distributor_c_brokerage}</font></p>
+                        {/case}
+                        {/switch}
+                    </td>
+                    <td>
+                        {switch name=":input('get.distribution_id')"}
+                        {case value="$_order.distributor_a"}
+                        <p><font>{$_order.distributor_a_brokerage}</font></p>
+                        {/case}
+                        {case value="$_order.distributor_b"}
+                        <p><font>{$_order.distributor_b_brokerage}</font></p>
+                        {/case}
+                        {case value="$_order.distributor_c"}
+                        <p><font>{$_order.distributor_c_brokerage}</font></p>
+                        {/case}
+                        {/switch}
+                    </td>
+                    <td>
+                        {if condition="$_order.status eq 1"}
+                        <font>已结算</font>
+                        {elseif condition="$_order.status eq 0"}
+                        <font style="color: red;">待结算</font>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+                {if condition="$order->lastPage() > 1"}
+                <tfoot>
+                <tr>
+                    <td colspan="100">
+                        <span style="float:right;">{:$order->render()}</span>
+                    </td>
+                </tr>
+                </tfoot>
+                {/if}
+            </table>
+        </div>
+    </div>
+    {/if}
+    {if condition="!is_array($fans)"}
+    <div class="fans">
+        <div class="common-head">
+            <div class="fl">
+                <div class="refresh">
+                    <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                    <div class="refresh_span">目前共有 {:$fans->total()} 条记录&nbsp;&nbsp;每页<font> {:$fans->listRows()} </font>条</div>
+                </div>
+                <div class="inquire_search" >
+                    <div class="inquire">
+                        <input type="text" name="keyword" class="inquire_text nofocus"
+                               placeholder="请输入昵称" value="{:input('get.keyword','')}" autocomplete="off">
+                    </div>
+                    <input type="hidden" name="distribution_id" value="{:input('get.distribution_id','')}" />
+                    <input type="hidden" name="type" value="{:input('get.type','')}" />
+                    <input type="submit" class="btn search_btn" value="查询">
+                </div>
+            </div>
+        </div>
+        <hr class="layui-bg-gray">
+        <!--列表-->
+        <div class="layui-form">
+            <table class="layui-table goods-list">
+                <thead>
+                <tr>
+                    <th>粉丝信息</th>
+                    <th>推荐日期</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='fans'}
+                <tr class='emptyTable'>
+                    <td colspan="100" style="font-size: 25px;">暂无数据</td>
+                </tr>
+                {/empty}
+                {foreach $fans as $_fans}
+                <tr>
+                    <td>
+                        <a rel="{$_fans.avatar}" class="preview">
+                            <img src="{$_fans.avatar}" class="avatar" alt="头像" onerror="this.src='__RES__/image/common/imageError.png'" />
+                        </a>
+                        {$_fans.nickname}
+                    </td>
+                    <td>
+                        {$_fans.create_time}
+                    </td>
+                </tr>
+                {/foreach}
+                </tbody>
+                {if condition="$fans->lastPage() > 1"}
+                <tfoot>
+                <tr>
+                    <td colspan="100">
+                        <span style="float:right;">{:$fans->render()}</span>
+                    </td>
+                </tr>
+                </tfoot>
+                {/if}
+            </table>
+        </div>
+    </div>
+    {/if}
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    $('.nav').on('mousemove',function () {
+        $(this).addClass('sel');
+    }).on('mouseleave',function () {
+        $(this).removeClass('sel');
+    });
+    main.form('.layui-form');
+    main.laydate([{
+        elem: '#date',
+        type: 'date',
+        range: true,
+        max:0
+    }]);
+    //重定向本身
+    function reloadSelf(args) {
+        var param = 'distribution_id=' + $('[name="distribution_id"]').val(),key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+        }
+        location.href='?' + param;
+    }
+</script>
+{/block}

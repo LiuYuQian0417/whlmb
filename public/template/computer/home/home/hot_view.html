@@ -1,0 +1,96 @@
+{extend name='public/common'/}
+
+{block name="content_css"}
+<!--热点详情css-->
+<link rel="stylesheet" href="__RES__/css/hot/hotDetail.css">
+<link rel="stylesheet" href="__RES__/css/my/my.css" />
+<!--iconfont-->
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1111076_0ls8xzat8vc.css">
+<style>
+    .fav img{
+        margin-right: 5px;
+    }
+</style>
+<script src="__RES__/js/public/jquery.min.js"></script>
+{/block}
+
+
+
+{block name="content"}
+<!--我的页面头部-->
+<div class="my-box">
+    <div class="my primary-background-color">
+        <div class="my-center">
+            <!-- logo -->
+            <a class="logo left" href="javascript:;">
+                <img src="__RES__/imgs/logo.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            </a>
+            <div class="my-top-menu left">
+                <span style="color:#fff;">热点</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!--我的页面头部结束-->
+<div class="hot-detail-content">
+    <div class="catepos">
+        <a href="{:url('pc2.0/home/hot_list')}">热点</a> > <a >正文</a>
+    </div>
+    <div class="hot-detail-list">
+        <p>{$item.title}</p>
+        <div class="time">
+            <div class="hits">
+                <span class="date">{$item.create_time}</span>
+                <i class="iconfont icon-liulan"></i>
+                <span>{$item.hits}人浏览</span>
+            </div>
+            {empty name="$item.attention_state"}
+            <div class="fav primary-color border-color sc_coupon" data_article_id="{$item.article_id}">
+                <!--<i class="iconfont icon-shoucang"></i>-->
+                <img src="__RES__/imgs/sc.png" alt="">
+                <span >收藏</span>
+            </div>
+            {else/}
+            <div class="fav primary-color border-color ysc_coupon" data_article_id="{$item.article_id}">
+                <!--<i class="iconfont icon-shoucang"></i>-->
+                <img src="__RES__/imgs/ysc.png" alt="">
+                <span >已收藏</span>
+            </div>
+            {/empty}
+
+        </div>
+        <div class="desc">
+            {$item.content|raw}
+        </div>
+        {volist name="$item.goods" id="val"}
+        <div class="hot-goods" onclick="jump_goods('{$val.goods_id}')">
+            <img src="{$val.file}" width="200" height="200" alt="">
+            <div class="hot-content">
+                <p>{$val.goods_name}</p>
+                <div class="hot-price primary-color">
+                    <span>￥</span>{$val.shop_price}
+                </div>
+                <div class="buy primary-background-color">立即购买</div>
+            </div>
+        </div>
+        {/volist}
+    </div>
+</div>
+{/block}
+
+{block name="js"}
+
+<script>
+    $('.hot-detail-list .sc_coupon').click(function () {
+        sessionStorage.return_url = ObjectOrJson({'use_url':'home/hot_view','return_url':window.location.href});
+        var article_id = $(this).attr('data_article_id');
+        main.ajax({'url':'/v2.0/home/collect_article',data:{'article_id':article_id}});
+    })
+    $('.hot-detail-list .ysc_coupon').click(function () {
+        sessionStorage.return_url = ObjectOrJson({'use_url':'home/hot_view','return_url':window.location.href});
+        var article_id = $(this).attr('data_article_id');
+        main.ajax({'url':'/v2.0/home/view_collect_article_delete',data:{'article_id':article_id}});
+    })
+
+</script>
+{/block}

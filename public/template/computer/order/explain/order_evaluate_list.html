@@ -1,0 +1,42 @@
+{extend name='public/my_header'/}
+{block name="content_css"}
+<!--我的左侧css-->
+<link rel="stylesheet" href="__RES__/css/my/MyHomePage.css"/>
+<link rel="stylesheet" href="__RES__/css/evaluate/evaluateSuccess.css">
+<link rel="stylesheet" href="__RES__/css/swiper.min.css"/>
+{/block}
+{block name="content"}
+<div class="index-box">
+    <div class="title">
+        <img src="__RES__/imgs/pjcg.png" alt="">
+        <div class="tit-con">
+            <p>据说坚持写评价，成长值涨的快哦，加油！ </p>
+            <a href="javascript:main.jump({'url':'/pc2.0/evaluate/myevaluatelist'})" class="primary-color"> 查看我的评价＞ </a>
+        </div>
+    </div>
+
+    <div class="evaluate-con">
+
+        <div class="list-con">
+            {volist name='result' id='data'}
+            <div class="list">
+                <div class="list-left">
+                    <img src="{$data.order_goods_evaluate.0.file}" alt="">
+                    <div class="goods">
+                        <p class="goods-name">{$data.order_goods_evaluate.0.goods_name}</p>
+                        <p class="goods-type">{$data.order_goods_evaluate.0.attr}</p>
+                    </div>
+                </div>
+                <a class="go primary-color border-color" href="javascript:main.jump({'url':'/pc2.0/evaluate/report?order_attach_id={$data.order_goods_evaluate.0.order_attach_id}'});">
+                    去评价
+                </a>
+            </div>
+            {/volist}
+        </div>
+    </div>
+</div>
+{/block}
+{block name="js"}
+<script type="text/javascript">
+</script>
+{/block}

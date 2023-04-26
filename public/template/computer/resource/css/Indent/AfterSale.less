@@ -1,0 +1,228 @@
+*{
+  margin: 0px;
+  padding: 0px;
+}
+li{
+  list-style: none;
+}
+a{
+  text-decoration: none;
+}
+.index-box{
+  .index-right{
+    .aftr-sale-box{
+      background: #fff;
+      padding: 10px 25px 20px;
+      height: 827px;
+      box-sizing: border-box;
+      .title{
+        line-height: 36px;
+        font-size: 14px;
+        font-weight: bolder;
+        background: #fff;
+        margin-bottom: 20px;
+      }
+      .goods{
+        border: 1px solid #E5E5E5;
+        border-bottom: none;
+        .goods-tit{
+          height: 32px;
+          line-height: 32px;
+          background: #F9F9F9;
+          border-bottom: 1px solid #E5E5E5;
+          display: flex;
+          font-size: 12px;
+          .tit-con{
+            flex: 1;
+            text-align: center;
+          }
+          .goods-name-tit{
+            flex: 2;
+            text-indent: 110px;
+            text-align: left;
+          }
+        }
+        .goods-list{
+          display: flex;
+          padding-top: 15px;
+          padding-left: 10px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid #E5E5E5;
+          .goods-con{
+            flex: 2;
+            img{
+              width: 62px;
+              height: 62px;
+              float: left;
+            }
+            p{
+              line-height: 64px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              font-size: 12px;
+              margin-left: 18px;
+              float: left;
+              width: 80%;
+            }
+          }
+          .goods-pub{
+            flex: 1;
+            line-height: 64px;
+            text-align: center;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .after-box{
+        font-size: 12px;
+        margin-top: 55px;
+        .mark{
+          .mark-tit{
+            color: #EA5413;
+            margin-right: 0px;
+          }
+          span{
+            margin-right: 10px;
+          }
+        }
+        .after-con{
+          padding-top: 30px;
+          padding-left: 50px;
+          padding-bottom: 75px;
+          border: 1px solid #999999;
+          margin-top: 10px;
+          .btn{
+            display: inline-block;
+            cursor: pointer;
+            width: 80px;
+            height: 30px;
+            border: 1px solid #CCCCCC;
+            margin-right: 5px;
+            text-align: center;
+            line-height: 30px;
+
+          }
+        }
+        .table-tit{
+          float: left;
+          line-height: 30px;
+          width: 70px;
+          span{
+            color: #EA5413;
+          }
+        }
+        .table{
+          overflow: hidden;
+        }
+        .table-box{
+          .table-list{
+            margin-top: 20px;
+            line-height: 30px;
+            min-height: 30px;
+            display: flex;
+            label{
+              margin-left: 10px;
+              input{
+                position: relative;
+                top: 2px;
+                margin-right: 3px;
+              }
+            }
+            .sex-active .mxz{
+              display: none;
+            }
+            label{
+              cursor: pointer;
+            }
+            label .xz{
+              display: none;
+            }
+            .sex-active .xz{
+              display: inline-block !important;
+            }
+
+
+            .inp{
+              width: 228px;
+              height: 28px;
+              border: 1px solid #CCCCCC;
+              text-indent: 10px;
+              &::-webkit-input-placeholder{
+                font-size: 12px;
+              }    /* 使用webkit内核的浏览器 */
+              &:-moz-placeholder{
+                font-size: 12px;
+              }                  /* Firefox版本4-18 */
+              &::-moz-placeholder{
+                font-size: 12px;
+              }                  /* Firefox版本19+ */
+              &:-ms-input-placeholder{
+                font-size: 12px;
+              }
+            }
+
+            .table-con{
+              float: left;
+              .ts{
+                color: #999999;
+                line-height: 24px;
+              }
+
+              .img-box{
+                float: left;
+                width: 85px;
+                height: 85px;
+                position: relative;
+                background: #eee;
+                margin-right: 10px;
+                .del{
+                  position: absolute;
+                  top: -8px;
+                  right: -8px;
+                  cursor: pointer;
+                  width: 20px;
+                  height: 20px;
+                }
+                img{
+                  width: 100%;
+                  height: 100%;
+                }
+              }
+              .label{
+                display: block;
+                width: 85px;
+                height: 85px;
+                border:1px #E3E3E3 dashed ;
+                padding-top: 12px;
+                box-sizing: border-box;
+                text-align: center;
+                line-height: 19px;
+                color: #A2A2A2;
+                float: left;
+              }
+            }
+          }
+
+          .submit{
+              width: 150px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 5px;
+            border: none;
+            color: #fff;
+            margin-left: 70px;
+            margin-top: 60px;
+          }
+        }
+
+
+      }
+    }
+
+
+
+  }
+}

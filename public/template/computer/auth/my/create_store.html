@@ -1,0 +1,377 @@
+{extend name='public/common' /}
+{block name='content_css'}
+<!--公共头部css-->
+<link rel="stylesheet" href="__RES__/css/public/PublicHeader.css">
+<link rel="stylesheet" href="__RES__/css/public/GuessLike.css">
+<!--公共搜索css-->
+<link rel="stylesheet" href="__RES__/css/public/indexHeader.css">
+<!--地域选择样式-->
+<link rel="stylesheet" href="__RES__/css/tenants/MyAddress.css">
+<!--代言人等级升降css-->
+<link rel="stylesheet" href="__RES__/css/tenants/applicationshop.css">
+<!--公共JQ库-->
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/layui/layui.js"></script>
+<link rel="stylesheet" href="__RES__/layui/css/layui.css">
+<style>
+
+    input::-webkit-input-placeholder {
+        color: #c1c1c1;
+    }
+
+    input::-moz-placeholder {
+        /* Mozilla Firefox 19+ */
+        color: #c1c1c1;
+    }
+    .list .select-address .address-detailed-box{
+        color: #c1c1c1;
+    }
+    input:-moz-placeholder {
+        /* Mozilla Firefox 4 to 18 */
+        color: #c1c1c1;
+    }
+
+    input:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
+        color: #c1c1c1;
+    }
+    .head-container{
+        height: 100px;
+        line-height: 100px;
+        padding-bottom: 0px;
+    }
+    .head-container .logo img{
+        position: relative;
+        top: 4px;
+        margin-right: 10px;
+    }
+    .head-container .logo span{
+        font-size: 14px;
+        position: relative;
+        top: 8px;
+        color: #c1c1c1;
+    }
+    .public-header .header-center .img-color{
+        top: -2px;
+    }
+    .service{
+        height:50px;
+        margin:40px 0 0 30px;
+        width: 355px;
+        line-height: 50px;
+        align-items: center;
+        display: flex;
+        align-content: center;
+        justify-content: space-between;
+        background: #fff;
+        box-shadow: 1px 1px 10px rgba(225,225,225,.5);
+    }
+    .service span{
+        color: #f3312f;
+    }
+    .service-img{
+        margin-right: -2px;
+    }
+    .application-shop-popup-content{
+        padding-bottom: 20px;
+    }
+</style>
+{/block}
+{block name="content"}
+<!--头部样式-->
+<div class="head-container">
+    <div class="head-container-center">
+        <div class="logo" >
+            <img src="__RES__/imgs/logo-color.png" onclick="main.jump({'url':'/pc2.0/index/index'})">
+            <span  >商家入驻</span>
+        </div>
+    </div>
+</div>
+<!--商家入驻开始-->
+<div class="applicationshop">
+    <div class="applicationshop-conent">
+        <h3>商家入驻 轻松赚钱</h3>
+        <p class="applicationshop-name">店铺 火爆招商中</p>
+        <button class="application-shop application-shop-color">立即申请</button>
+        <div class="application-shop-process">
+            <img src="__RES__/imgs/tenants/ruzhuliucheng.jpg" width="900" height="280">
+        </div>
+        <div class="application-shop-popup">
+            <div class="application-shop-popup-content">
+                <div class="application-shop-popup-establish">创建店铺<span class="application-shop-popup-hidden">×</span>
+                </div>
+                <form id="form" action="/v2.0/my/create_store">
+                    <input type="hidden" name="shop" value="1">
+                    <ul class="application-shop-popup-form">
+
+                        <li><span class="primary-color">*</span>店铺名称</li>
+                        <li><input type="text" maxlength="60" placeholder="请输入店铺名称" datatype="*" nullmsg="请输入店铺名称" name="store_name">
+                        </li>
+                        <li><span class="primary-color">*</span>主营项目</li>
+                        <li>
+                            <div class="application-shop-popup-form-select">
+                                <cite>请选择特主营项目</cite>
+                                <ul>
+                                    {volist name='data.store_classify' id='store_classify'}
+                                    <li {eq name='$key' value='0'}class="primary-background-color"{/eq}><a
+                                            href="javascript:;" data-id="{$store_classify.store_classify_id}">{$store_classify.title}</a></li>
+                                    {/volist}
+                                </ul>
+                            </div>
+                            <input type="hidden" name="category" datatype="*" id="category" nullmsg="主营类目不能为空">
+                        </li>
+                        <li><p class="application-shop-popup-tips">主营类目及类目细项<!--<a href="">查看详情</a>--></p></li>
+                        <li>
+                            <div class="list">
+                                <p class="list-tit">
+                                    <input type="hidden" name="province" datatype="*" id="address_province" nullmsg="省份不能为空">
+                                    <input type="hidden" name="city" datatype="*" id="address_city" nullmsg="市不能为空">
+                                    <input type="hidden" name="area" datatype="*" id="address_area" nullmsg="地址区不能为空">
+                                    <span class="primary-color">*</span>所在地区：
+                                </p>
+                                <div class="select-address">
+                                    <div class="address-detailed-box  ">
+                                        <span>--请选择--</span>
+                                        <img src="__RES__/imgs/tenants/datebottom.png" alt="">
+                                    </div>
+                                    <div class="detailed-box" style="display: none;">
+                                        <div class="detailed-box-top">
+                                            <!--省-->
+                                            <div class="address-text active">
+                                                <a href="javascript:;">--请选择--</a>
+                                                <img src="__RES__/imgs/tenants/datebottom.png" alt="">
+                                            </div>
+                                            <!--市-->
+                                            <div class="address-text " style="display: none;">
+                                                <a href="javascript:;">--请选择--</a>
+                                                <img src="__RES__/imgs/tenants/datebottom.png" alt="">
+                                            </div>
+                                            <!--区-->
+                                            <div class="address-text" style="display: none;">
+                                                <a href="javascript:;">--请选择--</a>
+                                                <img src="__RES__/imgs/tenants/datebottom.png" alt="">
+                                            </div>
+
+                                            <img class="close" src="__RES__/imgs/tenants/address-close.png"
+                                                 style="cursor: pointer;" alt="">
+                                        </div>
+                                        <div class="address-detailed" id="province">
+                                            <!--省份列表-->
+                                            {volist name="$data.province" id="province"}
+                                            <a href="javascript:;" data_id="{$province.area_id}"
+                                               class="{eq name='$key' value='0'}primary-background-color checked{else/}provincial{/eq}">{$province.area_name}</a>
+                                            {/volist}
+                                        </div>
+                                        <div class="address-detailed" style="display: none;" id="city">
+                                        </div>
+                                        <div class="address-detailed" style="display: none;" id="area">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+
+
+
+                        <li><span class="primary-color">*</span>详细地址</li>
+                        <li><input type="text" maxlength="200" placeholder="请输入详细地址" datatype="*" nullmsg="请输入详细地址" name="address"></li>
+                        <li><p class="application-shop-popup-tips">创建店铺代表您同意<a href="javascript:agreement(34,'店铺入驻协议')" class="primary-color">《店铺服务协议》</a>
+                        </p></li>
+                        <li><span class="primary-color">*</span>联系电话</li>
+                        <li><input type="number"  maxlength="11" placeholder="请输入详细地址" value="{$tel}"  readonly ="readonly" datatype="*" nullmsg="请输入详细地址" name="address"></li>
+                        {empty name='is_password'}
+                         <li><span class="primary-color">*</span>店铺密码</li>
+
+                        <li><input type="text" maxlength="60" placeholder="请输入登录密码" datatype="/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,18}$/" nullmsg="请输入登录密码" name="password">
+                        </li>
+                        <li><p class="application-shop-popup-tips"> 数字 字母组合6~18位</p></li>
+                        {/empty}
+
+                        <li>
+                            <button class="primary-background-color">创建店铺</button>
+                        </li>
+                    </ul>
+                </form>
+                <div class="service">
+                    <div>客服电话:<span>400-000-0000</span></div>
+<!--                    <div class="service-img"><img src="__RES__/imgs/kf.png" width="92" height="30"></div>-->
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--商家入驻结束-->
+{/block}
+{block name="js"}
+<script type="text/javascript">
+    main.valid({'select':'#form'});
+    $('.detailed-box-top .address-text').click(function () {
+        var num = $(this).index();
+        $('.address-detailed').eq(num).show().siblings('.address-detailed').hide()
+        if ($(this).index() == 0 || $(this).prev().hasClass('finish')) {
+            $(this).addClass('active').siblings('.address-text').removeClass('active')
+        } else {
+
+        }
+    });
+    $('.address-con .tit .right img').click(function () {
+        $('.mask').hide()
+    });
+    $('.add-address').click(function () {
+        $('.mask').show()
+    });
+    $('.detailed-box .close').click(function () {
+        $('.detailed-box').hide();
+        $('.address-detailed-box').removeClass('border-bottom')
+    })
+    $('.address-detailed-box').click(function () {
+        $('.detailed-box').show()
+        $(this).addClass('border-bottom')
+    });
+    /**
+     * 详细地址选择
+     */
+    $('.address-detailed').on('click', 'a', function () {
+        var clear_site = ['province', 'city', 'area'];
+        $(this).addClass('primary-background-color checked').siblings('a').removeClass('primary-background-color checked');
+        var txt = $(this).text();
+        $('.address-detailed-box span').append();
+        if ($('.address-detailed-box span').html() == '--请选择--') {
+            $('.address-detailed-box span').html('');
+        }
+        var parent_id = $(this).attr('data_id');
+        //设置当前选择省市区数据
+        $('#address_' + $(this).parent('div').attr('id')).val($(this).text());
+        var index, district;
+        //判断是点击省市区不同操作
+        switch ($(this).parent('div').attr('id')) {
+            case 'province':
+                $('#province').val(parent_id);
+                index = 0;
+                district = 'city';
+                $('.address-detailed').eq(1).show().siblings('.address-detailed').hide();
+                break;
+            case 'city':
+                $('#city').val(parent_id);
+                index = 1;
+                district = 'area';
+                $('.address-detailed').eq(2).show().siblings('.address-detailed').hide();
+                break;
+            case 'area':
+                $('#area').val(parent_id);
+                index = 2;
+                district = undefined;
+                break;
+            default :
+                return;
+        }
+        $.each(clear_site, function (k, v) {
+            if (k > index) {
+                $('#address_' + v).val('');
+            }
+        });
+        $('.detailed-box-top .address-text').eq(index).find('a').html(txt);
+        $('.detailed-box-top .address-text').eq(index).addClass('finish');
+        $('.detailed-box-top .address-text').eq(index).next('div').show().addClass('active').siblings().removeClass('active');
+        $('.detailed-box-top .address-text').eq(index).next('div').html('<a href="javascript:;">--请选择--</a><img src="__RES__/imgs/my/datebottom.png" alt="">').nextAll('.address-text').hide();
+        if ($('.address-detailed-box span i').eq(index).length != 0) {
+            $('.address-detailed-box span i').eq(index).html(txt).nextAll().remove();
+        } else {
+            if($('.address-detailed-box span').html()==''){
+                $('.address-detailed-box span').append("<i>" + txt + "</i>")
+            }else{
+                $('.address-detailed-box span').append("<i>/" + txt + "</i>")
+            }
+
+        }
+        //城市联动
+        if (district) {
+            main.ajax({
+                'url': '/pc2.0/address/linkage', data: {'parent_id': parent_id}, callback: function (t) {
+                    if (t.code !== 0) {
+                        layer.msg(t.message);
+                    } else {
+                        var str = '';
+                        for (var i = 0; i < t.result.length; i++) {
+                            str += '<a class="' + district + '" data_id="' + t.result[i]['area_id'] + '">' + t.result[i]['area_name'] + '</a>';
+                        }
+                        $('#' + district).html(str);
+                    }
+                }
+            })
+        } else {
+            $('.detailed-box').hide();
+            $('.address-detailed-box').removeClass('border-bottom')
+        }
+    });
+    //创建店铺弹出
+    $(".application-shop").click(function () {
+        if('{$store_info.delete_time|default="NULL"}' != 'NULL'){
+            layer.msg('您的店铺已注销，如想重新开启，请联系客服：{$phone}');
+        }else{
+            switch ('{$store_info.status|default=-1}'.toString()) {
+                case '-1':
+                    $(".application-shop-popup").show(1000);
+                    break;
+                case '0':
+                    layer.msg('平台正在审核您的入驻申请,请注意查收审核结果的通知短信');
+                    break;
+                case '1':
+                    layer.msg('入驻申请通过,请登录后台填写认证信息', function () {
+                        main.jump({'url': '/client/login/index','is_open':true});
+                    });
+                    break;
+                case '2':
+                    layer.msg('入驻申请未通过,请重新申请', {time:1000}, function () {
+                        $(".application-shop-popup").show(1000);
+                    });
+                    break;
+                case '3':
+                    layer.msg('入驻认证正在审核中', function () {
+                        main.jump({'url': '/client/login/index','is_open':true});
+                    });
+                    break;
+                case '4':
+                    main.jump({'url': '/client/login/index','is_open':true});
+                    break;
+                case '5':
+                    layer.msg('入驻认证未通过,请重新填写认真信息', function () {
+                        main.jump({'url': '/client/login/index','is_open':true});
+                    });
+                    break;
+            }
+        }
+
+
+
+
+    });
+    //创建店铺关闭
+    $(".application-shop-popup-hidden").click(function () {
+        $(".application-shop-popup").hide(1000);
+    });
+    //模拟下拉菜单
+    var inputselect = $(".application-shop-popup-form-inputselect");
+    $(".application-shop-popup-form-select" + " cite").click(function () {
+        var ul = $(".application-shop-popup-form-select" + " ul");
+        if (ul.css("display") == "none") {
+            ul.slideDown("fast");
+            $(".application-shop-popup-form-select").removeClass("bottom").addClass('border-bottom')
+        } else {
+            ul.slideUp("fast");
+            $(".application-shop-popup-form-select").removeClass("border-bottom").addClass('bottom')
+        }
+    });
+    $(".application-shop-popup-form-select" + " ul li a").click(function () {
+        var txt = $(this).text();
+        $(".application-shop-popup-form-select" + " cite").addClass('color-font')
+        $(".application-shop-popup-form-select" + " cite").html(txt);
+        inputselect.val(txt);
+        $(".application-shop-popup-form-select" + " ul").hide();
+        $(".application-shop-popup-form-select").removeClass("border-bottom").addClass("bottom");
+        $(this).parent().addClass("primary-background-color").siblings().removeClass("primary-background-color");
+        $('#category').val(($(this).data('id')));
+    });
+</script>
+{/block}

@@ -1,0 +1,121 @@
+{extend name="public/index_header"}
+
+{block name="content_css"}
+<!--积分 css-->
+<link rel="stylesheet" href="__RES__/css/score/score.css">
+<link rel="stylesheet" href="__RES__/css/index/indexHeader.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css" />
+<script src="__RES__/js/public/jquery.min.js"></script>
+<script src="__RES__/js/swiper.min.js"></script>
+<link rel="stylesheet" href="__RES__/css/swiper.min.css">
+{/block}
+
+{block name="content"}
+<!--导航-->
+<div class="nav border-color-bottom">
+    <ul class="nav-view">
+        <li class="primary-background-color" style="color: #fff">首页</li>
+        <li><a href="javascript:main.jump({'url':'/pc2.0/lottery_activity/activity_goods_list'})">玩游戏</a></li>
+        <li><a href="javascript:main.jump({'url':'/pc2.0/integral/my'})">赚积分</a></li>
+    </ul>
+</div>
+<!--我的积分-->
+<div class="score-view">
+    <div class="score-container">
+        <div class="my-score">
+            <div class="my-score-view">
+                <div class="my-score-text">我的积分</div>
+                <img class="score-img" src="__RES__/imgs/score/1.png" alt="">
+                <div onclick="main.jump({'url':'/pc2.0/integral/detail'})" class="score-detail">积分明细</div>
+            </div>
+            <div class="vip">
+                <div class="avatar"><img width="62" height="62" src="{$member_info.avatar}" alt=""></div>
+                <div class="vip-info">
+                    <p>{$member_info.nickname}</p>
+                    <p>我的积分：<span class="primary-color" style="font-weight: bold;">{$member_info.pay_points}</span></p>
+                </div>
+            </div>
+        </div>
+        {if condition="!is_null($adv)"}
+        <a href="javascript:main.adv_jump('{$adv.type}','{$adv.content}');" >
+            <img class="bg" src="{$adv.file?:'__RES__/imgs/score/bg.png'}" alt="">
+        </a>
+        {else/}
+        <img class="bg" src="__RES__/imgs/score/bg.png" alt="">
+        {/if}
+    </div>
+</div>
+
+<!--积分兑换 -->
+<div class="score-conversion">
+    <ul class="score-conversion-item item1">
+        <li {empty name=":input('type')"} class="actives primary-background-color" {/empty}><a href="javascript:main.jump({'url':'/pc2.0/integral/index'})">积分兑换</a></li>
+        <li {eq name=":input('type')" value="1"} class="actives primary-background-color" {/eq}><a href="javascript:main.jump({'url':'/pc2.0/integral/index?type=1'})">积分换购</a></li>
+    </ul>
+    <ul class="score-conversion-item item2">
+        <li><a {empty name=":input('integral_classify_id')"} class="primary-color" {/empty} href="javascript:main.jump({'url':'/pc2.0/integral/index?type={:input('type')}'})">全部商品</a></li>
+        {volist name="$classify" id="class"}
+        <li><a  {eq name=":input('integral_classify_id')" value="$class.integral_classify_id"} class="primary-color"  {/eq}  href="javascript:main.jump({'url':'/pc2.0/integral/index?integral_classify_id={$class.integral_classify_id}&type={:input('type')}'})">{$class.title}</a></li>
+        {/volist}
+    </ul>
+</div>
+
+<!--商品列表-->
+<div class="goods-list">
+    {empty name="$data"}
+    <p style="text-align: center;padding-top: 5px;color: #8C8C8C;">暂无记录</p>
+    {/empty}
+    <ul>
+        {volist name="$data" id="item"}
+        <li>
+            <a href="javascript:main.jump({'url':'/pc2.0/integral/view?integral_id={$item.integral_id}'})">
+                <img class="score-goods" src="{$item.file}" alt="">
+                <div class="buy">立即兑换</div>
+                <div class="score-info">
+                    <p class="info-txt">{$item.integral_name}</p>
+                    <p class="info-score">
+                        {eq name=":input('type')" value="1"}
+                        <span class="price primary-color">￥{$item.price} + </span>
+                        {/eq}
+                        <span class="add-score">{$item.integral}积分</span>
+                        {eq name=":input('type')" value="1"}
+                        <span style="float: right;padding: 1px 2px;border: 1px solid #EA5413;border-radius: 5px;color: #EA5413;">省{$item.integral*$integral_ratio}元</span>
+                        {/eq}
+                    </p>
+                </div>
+            </a>
+        </li>
+        {/volist}
+    </ul>
+</div>
+
+<!--分页-->
+<div class="pageContainer">{$data|raw}</div>
+
+<!--置顶-->
+<div class="back-top">
+    <img src="__RES__/imgs/findshop/top.png" alt="">
+    <span>返回顶部</span>
+</div>
+
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    /*置顶*/
+    $('.back-top').click(function () {
+        $("html,body").animate({scrollTop: 0}, 300);
+    })
+    $('.to-top').click(function () {
+        $("html,body").animate({scrollTop: 0}, 300);
+    })
+    // $('.item1 li').click(function (e) {
+    //     e.preventDefault()
+    //     $(this).addClass('actives primary-background-color').siblings().removeClass('actives primary-background-color')
+    // })
+    // $('.item2 li a').click(function (e) {
+    //     e.preventDefault()
+    //     $(this).addClass('primary-color').parent().siblings().find('a').removeClass('primary-color')
+    // })
+</script>
+{/block}

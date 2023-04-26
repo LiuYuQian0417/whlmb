@@ -1,0 +1,196 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/map.css" rel="stylesheet" type="text/css"/>
+<link href="__RES__/css/common/step.css" rel="stylesheet" type="text/css"/>
+<style>
+    .picShow>.pic{display: none;width: 150px}
+    .picShow>.pic:first-child{display: block}
+    .picShow>.pic a{position: relative;width: 150px;}
+    .picShow>.pic img{width: 150px;display: block;}
+    #tooltip{position:absolute;width:300px;border:1px solid #f4f4f4;background:#fff;color:#fff;display: none ;
+        z-index: 9999999;}
+    #tooltip img{width: 100%}
+    .step > li:not(.active) > .stepLabel:hover:before{
+        background: #fff;
+        color: rgb(51, 51, 51);
+    }
+    .step > li:not(.active) > .stepLabel:hover:after{
+        background: rgb(235, 235, 235);
+        color: rgb(51, 51, 51);
+    }
+</style>
+{/block}
+{block name='body'}
+{__block__}
+<!--表单-->
+
+<form class="layui-form" action="" method="post">
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>请先选择商城已注册会员进行添加店铺操作。</span></li>
+                <li><span>请根据提示信息准确无误填写店铺信息。</span></li>
+                <li><span>标识“<font color="red">*</font>”的选项为必填项，其余为选填项。</span></li>
+                <li><span>入驻店铺需认证，自营无需认证。</span></li>
+            </ul>
+        </div>
+    </div>
+    <br>
+
+    <!--店铺装修-->
+    <div class="contentShell contentShell_1">
+        <!--店铺模式切换-->
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 店铺背景图<br>[720*235]</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$item.back_image|default=''}"
+                        width="720"
+                        height="235"
+                        file-mime="image/gif,image/jpeg,image/png"
+                        name="back_image"
+                        dir="store_image_back_image"
+                        value="{$item.back_image_data|default=''}"
+                        {eq name="Request.get.audit|default=0" value="1"}disabled="disabled"{/eq}
+                >
+                </div>
+            </div>
+            <label class="layui-form-label"><font color="red">*</font> 店铺模式切换</label>
+            <div class="layui-input-block goods_style">
+                <input type="radio" name="goods_style" id="0" value="0" title="正常样式" lay-filter="goods_style"
+                       {eq name="item.goods_style|default='0'" value="0" }checked{/eq}
+                >
+                <input type="radio" name="goods_style" id="1" value="1" title="新零售样式" lay-filter="goods_style"
+                       {eq name="item.goods_style|default=''" value="1"}checked{/eq}
+                >
+            </div>
+            <div class="layui-input-block picShow">
+                <div class="pic pic1">
+                    <a href="__RES__/image/common/shop2.png" class="tooltip">
+                        <img src="__RES__/image/common/shop2.png" alt="Picture 1" />
+                    </a>
+                    <!--<img src="__RES__/image/common/shop2.png" alt="">-->
+                </div>
+                <div class="pic pic2">
+                    <a href="__RES__/image/common/shop1.png" class="tooltip">
+                        <img src="__RES__/image/common/shop1.png" alt="Picture 1" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="contentShellBtn">
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {notempty name="Request.get.member_id|default=''"}
+                    <button type="button" class="layui-btn layui-btn-primary" onclick="main.jumpFour('store/setting?member_id={$Request.get.member_id}')">返回上一步</button>
+                    <button class="layui-btn" type="submit" id="submit">保存</button>
+                {/notempty}
+                {notempty name="Request.get.store_id|default=''"}
+<!--                    <button type="button" class="layui-btn layui-btn-primary" onclick="main.jumpFour('store/setting?store_id={$store_id}')">返回上一步</button>-->
+                        <button class="layui-btn" type="submit" id="submit">保存</button>
+                {/notempty}
+            </div>
+        </div>
+    </div>
+    <!--操作提示end-->
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/uploadPreview.js"></script>
+<script type="text/javascript"
+        src='//webapi.amap.com/maps?v=1.4.5&key={:config("user.")["common"]["gao_de"]["jsapi_key"]}&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('element');
+    main.valid('.layui-form');
+    main.laydate([{
+        elem: '#time'
+    }]);
+    layui.use(['form'], function () {
+        var $ = layui.jquery,
+            form = layui.form;
+        form.on('radio(goods_style)', function (data) {
+            if (data.value == 0) {
+                $('.pic1').show();
+                $('.pic2').hide();
+            }
+            if (data.value == 1) {
+                $('.pic1').hide()
+                $('.pic2').show()
+            }
+
+        });
+    });
+
+    <!--店铺logo-->
+
+
+    //内容页切换
+    $('#tabs1 li').click(function () {
+        var index = $(this).index();
+        $(this).addClass("curr").siblings().removeClass("curr");
+        $(".contentShell").eq(index).show().siblings(".contentShell").hide();
+    })
+
+
+
+    // 选择
+    function elect(url, title) {
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: 0.8,
+            area: ['800px', '600px'],
+            content: [url, 'yes']
+        });
+    }
+
+
+    // 模式选择
+    $(function () {
+
+        var showId = $(".goods_style").find("input:checked").val();
+        $('.picShow .pic').eq(showId).show().siblings().hide();
+
+        var x = 20;
+        var y = -300;
+        $("a.tooltip").mouseover(function (e) {
+            var tooltip = "<div id='tooltip'><img src='" + this.href + "' alt='预览图'/><\/div>"; //创建 div 元素
+            $("body").append(tooltip);	//把它追加到文档中
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                }).show("fast");	  //设置x坐标和y坐标，并且显示
+        }).mouseout(function () {
+
+            $("#tooltip").remove();	 //移除
+        }).mousemove(function (e) {
+            $("#tooltip")
+                .css({
+                    "top": (e.pageY + y) + "px",
+                    "left": (e.pageX + x) + "px"
+                });
+        });
+
+
+    })
+</script>
+{/block}
+{block name='highSearch'}{/block}

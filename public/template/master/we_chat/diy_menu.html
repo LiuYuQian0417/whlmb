@@ -1,0 +1,818 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<style>
+    .layui-row {
+        margin-top: 30px;
+    }
+
+    .we-ui {
+        width: 350px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .we-ui > .header {
+        width: 100%;
+        height: 40px;
+        background-color: rgb(45, 45, 45);
+    }
+
+    .we-ui > .header > p {
+        width: 100%;
+        line-height: 40px;
+        text-align: center;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .we-ui > .body {
+        width: 100%;
+        height: 485px;
+        background: rgb(235, 235, 235);
+    }
+
+    .we-ui > .footer {
+        width: calc(100% - 2px);
+        height: 35px;
+        border: 1px solid rgb(220, 220, 220);
+        background-color: rgb(245, 245, 245);
+    }
+
+    .we-ui > .footer > .keyboard {
+        width: 40px;
+        height: 100%;
+        border-right: 1px solid rgb(220, 220, 220);
+        float: left;
+    }
+
+    .we-ui > .footer > .keyboard > img {
+        width: 26px;
+        margin: 5px 7px;
+    }
+
+    .we-ui > .footer > .menu-list {
+        float: left;
+        width: calc(100% - 41px);
+        height: 100%;
+        line-height: 37px;
+        display: flex;
+    }
+
+    .we-ui > .footer > .menu-list > li {
+        flex: 1;
+        height: 100%;
+        color: rgb(46, 46, 46);
+        border-right: 1px solid rgb(220, 220, 220);
+        position: relative;
+        cursor: pointer;
+    }
+
+    .we-ui > .footer > .menu-list > li:last-child {
+        border-right: none;
+    }
+
+    .we-ui > .footer > .menu-list > li > p {
+        text-align: center;
+    }
+
+    .we-ui > .footer > .menu-list > li > ul {
+        display: none;
+        position: absolute;
+        text-align: center;
+        border: 1px solid rgb(220, 220, 220);
+        background-color: rgb(250, 250, 250);
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+        bottom: 49px;
+        padding: 0 10px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .we-ui > .footer > .menu-list > li > ul:before {
+        position: absolute;
+        content: ' ';
+        display: block;
+        width: 10px;
+        height: 10px;
+        left: 50%;
+        bottom: -10px;
+        transform: translateX(-50%);
+        background-image: url(/template/master/resource/image/common/wechat_triangle.png);
+        -webkit-background-size: 20px;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+    }
+
+    .we-ui > .footer > .menu-list > li > ul > li {
+        border-bottom: 1px solid rgb(220, 220, 220);
+    }
+
+    .we-ui > .footer > .menu-list > li > ul > li:last-child {
+        border-bottom: none;
+    }
+
+    .we-ui > .footer > .menu-list > li > ul > li > p {
+        white-space: nowrap;
+    }
+
+    .control-panel {
+        padding: 25px;
+        height: 562px;
+        background-color: rgb(244, 245, 249);
+    }
+
+    .control-panel > .header {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+        overflow: hidden;
+    }
+
+    .control-panel > .header > span {
+        line-height: 20px;
+        float: left;
+    }
+
+    .control-panel > .header > a {
+        line-height: 20px;
+        float: right;
+        color: #428bca !important;
+        cursor: pointer;
+    }
+
+    .control-panel > .header > .title-control {
+
+    }
+
+    .control-panel > .title-control > div {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .control-panel > .title-control > div > .name {
+        display: inline-block;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+
+    .control-panel > .title-control > div > .value {
+    }
+
+    .control-panel > .content-control {
+        width: 100%;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .control-panel > .content-control .tip {
+        color: #98999a;
+    }
+
+    .control-panel > .content-control > .title {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 20px;
+        background-color: rgb(244, 245, 249);
+    }
+
+    .control-panel > .content-control > .current-content {
+        width: calc(100% - 40px);
+        padding: 10px 0;
+        border-bottom: 1px solid #ccc;
+        margin: 0 20px;
+    }
+
+    .control-panel > .content-control > .current-content > .current-content-image {
+        height: 50px;
+        overflow: hidden;
+    }
+
+    .control-panel > .content-control > .current-content > .current-content-image > img {
+        float: left;
+        height: 100%;
+    }
+
+    .control-panel > .content-control > .current-content > .current-content-image > p {
+        float: left;
+        line-height: 50px;
+        margin-left: 10px;
+        font-size: 14px;
+    }
+
+    .control-panel > .content-control > .current-content > .current-content-text {
+        height: 25px;
+        line-height: 25px;
+        font-size: 14px;
+    }
+
+    .control-panel > .content-control > .current-content > .current-content-text > p {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .control-panel > .content-control > .module {
+        padding: 13px;
+    }
+
+    .control-panel > .content-control > .module > div {
+        display: inline-block;
+        width: 100px;
+        padding: 10px 0;
+        text-align: center;
+        border: 1px solid #ccc;
+        margin: 6px;
+        cursor: pointer;
+    }
+
+    .control-panel > .content-control > .module > div > i {
+        font-size: 40px;
+        margin-bottom: 3px;
+    }
+
+    .control-panel > .content-control > .module > div > p {
+        font-size: 12px;
+    }
+
+    .control-panel > .content-control > .module-input {
+        padding: 20px;
+    }
+
+    .control-panel > .content-control > .module-input > label {
+        display: inline-block;
+        width: 65px;
+    }
+
+    .control-panel > .content-control > .module-input > input {
+        display: inline-block;
+        width: calc(100% - 70px);
+    }
+
+    .control-panel > .content-control > .module-input > .tip {
+        padding-left: 68px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
+
+    .footer-submit {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    #sub {
+        float: right;
+    }
+
+</style>
+<div class="layui-form" action="" method="post">
+    <!--操作提示begin-->
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><span>微信自定义菜单最多可添加3个一级菜单、5个二级菜单。</span></li>
+                <li><span>微信自定义菜单分为关键词click，网址view两种类型。click是响应关键词指令，view则是直接跳转URL地址（填写绝对路径）。</span></li>
+                <li><span>每次修改自定义菜单后，由于微信客户端缓存，需要24小时左右微信客户端才会显示生效。测试时可以尝试重新关注微信公众号，或者清除微信缓存。</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <input id="data" type="hidden" value="{$data}">
+
+    <!--操作提示end-->
+
+    <div class="layui-row">
+        <div class="layui-col-xs5">
+            <div class="we-ui">
+                <!-- 头部 -->
+                <div class="header">
+                    <p>默认菜单</p>
+                </div>
+                <!-- 内容 -->
+                <div class="body"></div>
+                <!-- 底部菜单 -->
+                <div class="footer">
+                    <div class="keyboard">
+                        <img src="__RES__/image/common/wechat_keyboard.png">
+                    </div>
+                    <ul class="menu-list" id="menu-list">
+                        <li class="add-first">
+                            <p>
+                                <i class="layui-icon layui-icon-add-1"></i>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs7 control-panel" id="control-panel">
+            <div class="header">
+                <span>
+                    当前菜单
+                </span>
+                <a href="javascript:;" id="deleteMenu">删除菜单</a>
+            </div>
+            <div class="title-control">
+                <div id="menu-name">
+                    <label class="name">菜单名称:</label>
+                    <div class="value">
+                        <input type="text" name="title" autocomplete="off" class="layui-input" id="menu-name-input">
+                    </div>
+                </div>
+                <div id="menu-content" class="hide">
+                    <label class="name">菜单内容:</label>
+                    <div class="value">
+                        <div class="radio">
+                            <input type="radio" name="radio" lay-filter="radio-module" data-type="module-message"
+                                   value="click" title="发送消息" checked>
+                            <input type="radio" name="radio" lay-filter="radio-module" data-type="module-link"
+                                   value="view" title="跳转网页">
+                            <input type="radio" name="radio" lay-filter="radio-module" data-type="module-message"
+                                   value="location_select" title="地理位置">
+                            <input type="radio" name="radio" lay-filter="radio-module" data-type="module-message"
+                                   value="pic_sysphoto" title="拍照发图">
+                            <input type="radio" name="radio" lay-filter="radio-module" data-type="module-message"
+                                   value="pic_photo_or_album" title="拍照相册">
+                            <input type="radio" name="radio" lay-filter="radio-module" data-type="module-message"
+                                   value="pic_weixin" title="相册发图">
+                            <input type="radio" name="radio" lay-filter="radio-module" data-type="module-micro-app"
+                                   value="miniprogram" title="关联小程序">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="content-control" class="content-control hide">
+                <p class="title">回复内容</p>
+                <div id="current-content" class="current-content hide">
+                    <div class="current-content-image hide" id="current-content-image">
+                        <img src="">
+                        <p></p>
+                    </div>
+                    <div class="current-content-text hide" id="current-content-text">
+                        <p></p>
+                    </div>
+                </div>
+                <div class="module module-message">
+                    <div id="module-message-image">
+                        <i class="fa fa-image"></i>
+                        <p>图片</p>
+                    </div>
+                    <div id="module-message-text">
+                        <i class="fa fa-align-left"></i>
+                        <p>文本</p>
+                    </div>
+                </div>
+                <div class="module-input module-link hide">
+                    <label>
+                        页面地址
+                    </label>
+                    <input type="text" autocomplete="off" class="layui-input" name="link-page">
+                    <p class="tip">指定点击此菜单时要跳转的链接（注：链接需加http://）</p>
+                </div>
+                <div class="module-input module-micro-app hide">
+                    <label>
+                        APPID
+                    </label>
+                    <input name="micro-app-id" type="text" autocomplete="off" class="layui-input"
+                           placeholder="填写小程序APPID">
+                    <p class="tip">请确保小程序与公众号已关联</p>
+                    <label>
+                        页面
+                    </label>
+                    <input name="micro-app-page" type="text" autocomplete="off" class="layui-input"
+                           placeholder="请填写跳转页面的小程序访问路径">
+                    <p class="tip">请填写跳转页面的小程序访问路径</p>
+                    <label>
+                        备用网页
+                    </label>
+                    <input name="micro-app-spare-page" type="text" autocomplete="off" class="layui-input"
+                           placeholder="旧版微信客户端不支持小程序，用户点击菜单时会打开该网页">
+                    <p class="tip">旧版微信客户端不支持小程序，用户点击菜单时会打开该网页</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer-submit">
+        <button class="layui-btn layui-btn-normal" id="sub">保存</button>
+    </div>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+{/block}
+{block name='script'}
+<script src="__RES__/layui/layui.all.js"></script>
+<script>
+    // 当前点击的菜单
+    var currentMenu = null
+    // 当前菜单的类型
+    var menuType = null
+    // layuiForm实例
+    var form = layui.form
+    // layer open 的 实例
+    var openObj
+
+    $(function () {
+
+        (function () {
+            var menuList = $('#menu-list')
+            var data = $('#data').val()
+
+            // 是否有保存数据
+            if (data.length <= 0) {
+                return;
+            }
+            // 有保存数据解析数据
+            else {
+                data = JSON.parse(data)
+            }
+
+            // 菜单元素的结果
+            var menuResult = $('<ul></ul>')
+            var menuDom = $('#menu-list')
+            // 添加一级菜单的按钮
+            var firstAddButton = '<li class="add-first"><p><i class="layui-icon layui-icon-add-1"></i></p></li>'
+            // 添加二级菜单的按钮
+            var secondAddButton = '<li class="add-second"><p><i class="layui-icon layui-icon-add-1"></i></p></li>'
+            // 清空菜单元素中的子元素
+            menuDom.children().remove()
+
+            // 遍历保存的元素
+            for (var item of data) {
+                // 一级菜单
+                var firstMenu = $('<li><p>' + item.name + '</p><ul></ul></li>')
+
+                firstMenu.children('p').html(item.name)
+                firstMenu.data('name', item.name)
+
+                console.log(item)
+
+                // 包含子元素
+                if (
+                    item.children !== undefined &&
+                    item.children.length > 0
+                ) {
+                    var childParentDom = firstMenu.children('ul')
+                    for (var child of item.children) {
+                        var childDom = $('<li><p>' + child.name + '</p></li>')
+                        childDom.data('name',child.name)
+                        childDom.data('type',child.type)
+                        childDom.data('data',child.data)
+                        childParentDom.append(childDom)
+                    }
+                    if (childParentDom.children('li').length < 5){
+                        childParentDom.append($(secondAddButton))
+                    }
+                }
+                // 不包含子元素
+                else {
+
+                    firstMenu.children('ul').append($(secondAddButton))
+                    firstMenu.data('type', item.type)
+                    firstMenu.data('data', item.data)
+                }
+                menuResult.append(firstMenu)
+            }
+
+            // 一级菜单个数小于三个的时候为其添加<添加按钮>
+            if (menuResult.children().length < 3){
+                menuResult.append($(firstAddButton))
+            }
+
+            menuDom.append(menuResult.children())
+
+        })()
+
+        form.on('radio(radio-module)', function (data) {
+            var type = $(data.elem).data('type'); //得到radio原始DOM对象
+            var dom = $('#content-control').find('.' + type)
+            dom.show().siblings('div').hide()
+            currentMenu.data('type', data.value)
+            currentMenu.data('data', {})
+            $('#current-content').hide()
+            $('#current-content-image').hide()
+            $('#current-content-text').hide()
+            $('.module-input').find('input').val('')
+        });
+
+        // 点击子菜单
+        $('.we-ui > .footer > .menu-list').on('click', '> li > ul > li:not(.add-second)', function (e) {
+            e.stopPropagation()
+            currentMenu = $(this)
+            menuType = 'second'
+            // 赋值当前元素的名字
+            $('#menu-name-input').val(currentMenu.children('p').text())
+            changeMenuSelected()
+        }).on('click', '>li:not(.add-first)', function (e) {
+            // 点击一级菜单
+            currentMenu = $(this)
+            menuType = 'first'
+            // 显示隐藏二级菜单
+            e.stopPropagation()
+            // 如果子菜单当前是隐藏的
+            if ($(this).children('ul').is(":hidden")) {
+                // 隐藏所有子菜单
+                $('.we-ui > .footer > .menu-list > li > ul').hide()
+                // 显示当前子菜单
+                $(this).children('ul').show()
+            }
+
+            // 赋值当前元素的名字
+            $('#menu-name-input').val(currentMenu.children('p').text())
+            // 改变右侧界面所显示的参数 
+            var existChildMenu = $(this).find('> ul > li:not(\'.add-second\')').length > 0
+
+            // 如果存在子菜单的话
+            if (existChildMenu) {
+                $('#menu-content').hide()
+                $('#content-control').hide()
+            } else {
+                // 子菜单不存在
+                $('#menu-content').show()
+                $('#content-control').show()
+
+                changeMenuSelected()
+            }
+        }).on('click', '> li > ul > li.add-second', function (e) {
+            // 添加子菜单
+            e.stopPropagation()
+            var second_menu_list_length = $(this).parent().children('li').length
+            var ele = $('<li><p>子菜单名称</p></li>')
+
+            ele.data('type', 'click')
+            ele.data('data', {})
+            ele.data('name', '子菜单名称')
+
+            $(this).before(ele)
+            if (second_menu_list_length >= 5) {
+                $(this).remove();
+            }
+            if (menuType === 'first') {
+                $('#menu-content').hide()
+                $('#content-control').hide()
+            }
+        }).on('click', '>li.add-first', function (e) {
+            // 添加一级菜单
+            e.stopPropagation()
+            var first_ment_list_length = $(this).parent().children('li').length
+
+            var ele = $('<li><p>菜单名称</p><ul><li class="add-second"><p><i class="layui-icon layui-icon-add-1"></i></p></li></ul></li>')
+
+            ele.data('type', 'click')
+            ele.data('data', {})
+            ele.data('name', '菜单名称')
+
+            $(this).before(ele)
+
+            if (first_ment_list_length >= 3) {
+                $(this).remove()
+            }
+        }).on('click', '> li > ul', function (e) {
+            // 去除误操作
+            e.stopPropagation();
+        })
+
+        // 改变菜单名作时候,修改当前选中元素的名字
+        $('#menu-name-input').on('change', function () {
+            var name = $(this).val().trim()
+            currentMenu.data('name', name)
+            currentMenu.children('p').text(name)
+        })
+
+        // 其他的输入框值变化的时候,保存到data中
+        $('.module-input').find('input').on('change', function () {
+            var th = $(this)
+            var name = th.attr('name')
+
+            var data = currentMenu.data('data')
+
+            data = data === undefined ? {} : data
+            console.log(data)
+            data[name] = th.val()
+
+            currentMenu.data('data', data)
+        })
+
+        $('#module-message-image').on('click', function () {
+            showMaterialList()
+        })
+
+        $('#module-message-text').on('click', function () {
+            layer.prompt({title: '输入回复文本', formType: 2}, function (text, index) {
+                layer.close(index);
+                var data = {
+                    data_type: 'text',
+                    text: text
+                }
+                currentMenu.data('data', data)
+
+                $('#current-content').show()
+                $('#current-content-text').show().children('p').html(text)
+                $('#current-content-image').hide()
+            });
+        })
+
+
+        function changeMenuSelected() {
+            // 当前选中的类型
+            var type = currentMenu.data('type')
+            // 当前选中的身上挂着的类型
+            var data = currentMenu.data('data')
+            // radio元素
+            var radioEle = $('#menu-content').find('input[value=' + type + ']')
+            // radio的值
+            var radioDataType = radioEle.data('type')
+            // 输入文本的元素
+            var inputEle = $('#content-control>.' + radioDataType)
+            // 选中应该选中的radio
+            radioEle.attr('checked', true)
+            // 重新渲染radio
+            form.render('radio')
+            // 显示这两个元素
+            $('#menu-content').show()
+            $('#content-control').show()
+            // 显示输入的地方,其他的隐藏
+            inputEle.show().siblings('div:not(\'.current-content\')').hide()
+
+            switch (type) {
+                case 'click':
+                case 'location_select':
+                case 'pic_sysphoto':
+                case 'pic_photo_or_album':
+                case 'pic_weixin':
+                    switch (data.data_type) {
+                        case 'image':
+                            if (data.url !== undefined && data.media_id !== undefined) {
+                                $('#current-content').show()
+                                $('#current-content-image').show().children('img').attr('src', data.url).next('p').html(data.media_id)
+                                $('#current-content-text').hide()
+                            }
+                            break;
+                        case 'text':
+                            if (data.text !== undefined) {
+                                $('#current-content').show()
+                                $('#current-content-text').show().children('p').html(data.text)
+                                $('#current-content-image').hide()
+                            }
+                            break;
+                        default:
+                            $('#current-content').hide()
+                            $('#current-content-image').hide()
+                            $('#current-content-text').hide()
+                            break;
+                    }
+                    break;
+                case 'view':
+                case 'miniprogram':
+                    $('#current-content').hide()
+                    $('#current-content-image').hide()
+                    $('#current-content-text').hide()
+                    $('.module-input').find('input').val('')
+                    // 循环赋值
+                    var dataKeys = Object.keys(data)
+
+                    if (dataKeys.length >= 1) {
+                        for (var item of dataKeys) {
+                            $('.module-input').find('input[name=' + item + ']').val(data[item])
+                        }
+                    }
+                    break;
+            }
+        }
+
+        $('#deleteMenu').on('click', function () {
+            // 姐妹元素是否存在一级菜单添加元素
+            var siblingsAddFirstExist = currentMenu.siblings('.add-first').length === 1
+            // 姐妹元素是否存在二级菜单添加元素
+            var siblingsAddSecondExist = currentMenu.siblings('.add-second').length === 1
+
+            if (!siblingsAddFirstExist && !siblingsAddSecondExist) {
+                // 把加号放回去
+                currentMenu.parent().append('<li class="add-' + menuType + '"><p><i class="layui-icon layui-icon-add-1"></i></p></li>')
+            }
+
+            currentMenu.remove()
+            currentMenu = null
+            $('#menu-name-input').val('')
+            $('#menu-content').hide()
+            $('#content-control').hide()
+            $('#current-content').hide()
+            $('#current-content-image').hide()
+            $('#current-content-text').hide()
+        })
+
+        $('#sub').on('click', function () {
+            var result = []
+
+            if ($('#menu-list > li:not(.add-first)').length <= 0) {
+                layer.msg('没有设置任何菜单')
+                return false
+            }
+            var buildResult = true
+            // 遍历所有的菜单
+            $('#menu-list > li:not(.add-first)').each(function (i, ele) {
+                var data = $(ele).data();
+                var childrenMenuList = $(this).children('ul').children('li:not(.add-second)')
+
+                // 判断data是否是空,同时是否含有子元素
+                if (JSON.stringify(data.data) === '{}' && childrenMenuList.length <= 0) {
+                    layer.msg('第 ' + (i + 1) + ' 个一级菜单没有设置内容')
+                    buildResult = false
+                    return false;
+                }
+
+                var saveData = {
+                    name: data.name,
+                    children: []
+                }
+
+                // 如果元素含有子元素的话,元素是没有参数的
+                if (childrenMenuList.length > 0) {
+                    childrenMenuList.each(function (ii, elee) {
+                        var childData = $(elee).data()
+                        if (JSON.stringify(childData.data) === '{}') {
+                            layer.msg('第 ' + (i + 1) + ' 个一级菜单下的第 ' + (ii + 1) + ' 没有设置内容')
+                            buildResult = false
+                            return false;
+                        }
+                        saveData.children.push({
+                            name: childData.name,
+                            type: childData.type,
+                            data: childData.data
+                        })
+                    })
+
+                    if (!buildResult){
+                        buildResult = false
+                        return false
+                    }
+                } else {
+                    saveData.type = data.type
+                    saveData.data = data.data
+                }
+                result.push(saveData)
+            })
+
+            if (!buildResult){
+                return false
+            }
+
+            $.post('/we_chat/update_diy_menu', {
+                content: result
+            }, function (data) {
+                if (data.code === 0){
+                    layer.msg('保存成功')
+                }else{
+                    layer.msg(data.message)
+                }
+            })
+            console.log(result)
+        })
+    })
+
+    /**
+     * 显示 永久素材列表
+     */
+    function showMaterialList() {
+        openObj = layer.open({
+            type: 2,
+            title: '选择回复素材',
+            area: ['900px', '600px'],
+            content: '/we_chat/material_list'
+        });
+    }
+
+    /**
+     * 隐藏 永久素材列表 同时 赋值给当前的元素
+     * @param media
+     */
+    function hideMaterialList(media) {
+        if (media !== undefined) {
+            // // 获取当前元素的data 值
+            // var data = currentMenu.data('data')
+            // // 赋值media_id 给 data
+            // delete data['text']
+            var data = {
+                // 元素ID
+                media_id: media.media_id,
+                // 元素链接地址
+                url: media.url,
+                // 元素类型
+                data_type: 'image',
+            }
+            // 赋值data 给 当前元素
+            currentMenu.data('data', data)
+            $('#current-content').show()
+            $('#current-content-image').show().children('img').attr('src', media.url).next('p').html(media.media_id)
+            $('#current-content-text').hide()
+        }
+        layer.close(openObj)
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

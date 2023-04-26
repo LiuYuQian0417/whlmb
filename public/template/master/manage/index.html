@@ -1,0 +1,106 @@
+{extend name='layout/frame' /}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li>该页面展示了所有入驻平台的管理员列表。<li>
+            <li>可手动添加管理员并分配权限等操作。<li>
+        </ul>
+    </div>
+</div>
+<div class="layui-form" >
+    <!--操作提示end-->
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onClick="main.jumpFour('manage/create')">
+                <div class="fbutton">
+                    <div class="add" title="添加管理员"><span><i class="fa fa-plus"></i>添加管理员</span></div>
+                </div>
+            </a>
+            <div class="refresh" onclick="location.reload();">
+                <div class="refresh_tit" title="刷新数据" onclick="location.reload();"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+    <!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>ID</th>
+            <th>头像</th>
+            <th>昵称</th>
+            <th>手机号</th>
+            <th>所属权限组</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+            {empty name='data'}
+                <tr  class='emptyTable'><td colspan="100" style="font-size: 25px;">暂无数据</td></tr>
+            {/empty}
+            {foreach name='data' item='v'}
+                <tr>
+                    <td><input type="checkbox" value="{$v.manage_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+                    <td>{$v.manage_id}</td>
+                    <td>
+                        <a rel="{$v.avatar}" class="preview">
+                            <img src="{$v.avatar?:'?'}" class="avatar" alt="管理员头像" onerror="this.src='__RES__/image/common/imageError.png'" />
+                        </a>
+                    </td>
+                    <td>{$v.nickname}</td>
+                    <td>{$v.phone}</td>
+                    <td>{$v.title}</td>
+                    <td><input type="checkbox" lay-filter="status" lay-skin="switch" title="管理员状态" value="{$v.manage_id}" {$v.status?'checked':''} lay-text="启用|禁用"></td>
+                    <td>
+                        <a class="btn_edit" onclick="main.jumpFour('manage/edit?id={$v.manage_id}')"><i class="fa fa-edit"></i>编辑</a>
+                        <a class="btn_trash" onclick="main.destroy('/manage/destroy','{$v.manage_id}')"><i class="fa fa-trash-o"></i>删除</a>
+                    </td>
+                </tr>
+            {/foreach}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <!--<span>-->
+                    <!--<a class="btn_trash" onclick="main.destroy('/manage/destroy')"><i class="fa fa-trash-o"></i>多选删除</a>-->
+                <!--</span>-->
+                <!--<span style="float:right;">{:$data->render()}</span>-->
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/manage/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/preview.js"></script>
+<script>
+    main.form([{selector:'switch(status)',callback:function (data) {
+        main.ajax({type:'post',url:'/manage/changeStatus',data:{'id': data.value}})
+    }}]);
+    if ($('a.preview').length) {
+        var img = preloadIm();
+        imagePreview(img);
+    }
+</script>
+{/block}
+{block name='form'}{/block}
+{block name='highSearch'}{/block}

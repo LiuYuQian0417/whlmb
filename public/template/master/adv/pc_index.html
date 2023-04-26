@@ -1,0 +1,145 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .previewShowWindow > img{
+        width: 500px;
+    }
+</style>
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li>该页面展示所有分类下的电脑端广告</li>
+                <li>可通过搜索广告标题和广告分类进行搜索。</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+
+<!--导航-->
+<form class="layui-form" action="">
+    <div class="common-head">
+        <div class="fl">
+            <a href="javascript:void(0);" class="left" onclick="main.jumpFour('adv/pc_create')">
+                <div class="fbutton">
+                    <div class="add" title="添加电脑端广告"><span><i class="fa fa-plus"></i>添加电脑端广告</span></div>
+                </div>
+            </a>
+            <div class="refresh" onclick="location.reload();">
+                <div class="refresh_tit" title="刷新数据"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div>
+                <div class="refresh_span">共{$data->total()}条记录&nbsp;&nbsp;每页<font> {$data->listRows()} </font>条</div>
+            </div>
+            <div class="inquire_search" >
+                <div class="imitate_select">
+                    <select name="classify_id" class="cite ps-container">
+                    <option value="">全部广告分类</option>
+                        {volist name='classify_list' id='classify_list'}
+                        <option
+                                {eq name=":input('get.classify_id')" value="$classify_list.adv_position_id" }selected{/eq}
+                        {eq name="item.parent_id|default=''" value="$classify_list.adv_position_id" }selected{/eq}
+                        value="{$classify_list.adv_position_id}"
+                        >{$classify_list.title}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="inquire">
+                    <input type="text" name="keyword" class="inquire_text nofocus" placeholder="广告名称"
+                           value="{:input('get.keyword')}"
+                           autocomplete="off">
+                    <input type="submit" class="btn" name="secrch_btn" value="">
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="layui-bg-gray">
+<!--列表-->
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" /></th>
+            <th>广告图片</th>
+            <th>广告标题</th>
+            <th>广告位置</th>
+            <th width="60">显示状态</th>
+            <th>开始日期</th>
+            <th>结束日期</th>
+            <th>点击次数</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {empty name='data'}
+        <tr class='emptyTable'>
+            <td colspan="100" style="font-size: 25px;">暂无数据</td>
+        </tr>
+        {/empty}
+        {volist name='data' id='item'}
+        <tr>
+            <td><input type="checkbox" value="{$item.adv_id}" class="chk" lay-filter="chk" title="" lay-skin="primary" /></td>
+            <td>
+                <a rel="{$item.file}" class="preview">
+                    <img src="{$item.file?:'?'}" class="" alt="" onerror="this.src='__RES__/image/common/imageError.png'" />
+                    <!--<div class="fa fa-picture-o"> </div>-->
+                </a>
+            </td>
+            <td id="title{$item.adv_id}"><span class="onpress" onclick="main.viewText('{$item.adv_id}','title','/adv/text_update')">{$item.title}</span></td>
+            <td>{$item.classify_name}</td>
+            <td>
+                <input type="checkbox" name="status" lay-skin="switch"
+                       lay-filter="status"
+                       lay-text="开|关"
+                       value="{$item.adv_id}"
+                       {eq name="item.status" value="1" }checked{/eq}
+                >
+            </td>
+            <td>{$item.start_time|default="无限制"}</td>
+            <td>{$item.end_time|default="无限制"}</td>
+            <td>{$item.hits}</td>
+            <td>
+                <a class="btn_edit" href="javascript:void(0);" onclick="main.jumpFour('adv/pc_edit?adv_id={$item.adv_id}')"><i
+                        class="fa fa-edit"></i>编辑</a>
+                <a class="btn_trash" href="javascript:void(0);" onclick="main.destroy('/adv/destroy','{$item.adv_id}')"><i
+                        class="fa fa-trash-o"></i>删除</a>
+            </td>
+        </tr>
+        {/volist}
+        </tbody>
+        <tfoot>
+        {notempty name='data'}
+        <tr>
+            <td colspan="100">
+                <div class="left left_all">
+                    <div class="allCheck">
+                        <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                    </div>
+                    <a class="btn_trash" onclick="main.destroy('/adv/destroy')"><i class="fa fa-trash-o"></i>批量删除</a>
+                </div>
+                <span style="float:right;">{:$data->render()}</span>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+</form>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/preview.js"></script>
+<script>
+    main.form([{selector:'switch(status)',callback:function (data) {
+        main.ajax({type:'post',url:'/adv/auditing',data:{'id': data.value}});
+    }}]);
+    if ($('a.preview').length) {
+        var img = preloadIm();
+        imagePreview(img);
+    }
+</script>
+{/block}
+{block name='highSearch'}{/block}

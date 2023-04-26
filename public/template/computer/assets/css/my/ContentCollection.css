@@ -1,0 +1,112 @@
+.content-collection {
+  background: #fff;
+  padding-bottom: 20px;
+  margin-top: 20px;
+}
+.content-collection .goods-emtry {
+  text-align: center;
+  color: #9EA3A9;
+  font-size: 14px;
+  height: 500px;
+  box-sizing: border-box;
+  padding-top: 150px;
+}
+.content-collection .goods-emtry p {
+  margin-top: 5px;
+}
+.content-collection .content-box {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+.content-collection .content-box .content-list {
+  width: 475px;
+  height: 180px;
+  box-sizing: border-box;
+  border: 1px solid #EEEEEE;
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.content-collection .content-box .content-list .cancel-collection {
+  width: 65px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.3);
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  line-height: 24px;
+  cursor: pointer;
+  display: none;
+}
+.content-collection .content-box .content-list .cover {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  box-sizing: border-box;
+  border: 1px solid #666666;
+  z-index: 9;
+}
+.content-collection .content-box .content-list .cover a {
+  width: 41px;
+  height: 41px;
+  display: block;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  background: #666666;
+  text-align: center;
+  line-height: 41px;
+}
+.content-collection .content-box .content-list a {
+  display: block;
+  overflow: hidden;
+  position: relative;
+}
+.content-collection .content-box .content-list a .con-img {
+  width: 140px;
+  height: 140px;
+  float: left;
+}
+.content-collection .content-box .content-list a .list-right {
+  float: left;
+  margin-left: 18px;
+  width: 275px;
+  color: #202224;
+}
+.content-collection .content-box .content-list a .list-right h5 {
+  font-size: 16px;
+  font-weight: 600;
+}
+.content-collection .content-box .content-list a .list-right .list-bottom {
+  overflow: hidden;
+  position: absolute;
+  bottom: 0px ;
+  width: 275px;
+  font-size: 12px;
+  color: #9EA3A9;
+}
+.content-collection .content-box .content-list a .list-right .browsing {
+  float: left;
+}
+.content-collection .content-box .content-list a .list-right .time {
+  float: right;
+}
+.content-collection .content-box .active .cover {
+  border: 1px solid #EA5413;
+}
+.content-collection .content-box .active .cover a {
+  background: #EA5413;
+}
+.content-collection .content-box .content-list-hover:hover .cancel-collection {
+  display: block;
+}

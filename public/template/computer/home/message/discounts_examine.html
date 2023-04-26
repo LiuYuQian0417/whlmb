@@ -1,0 +1,94 @@
+{extend name='public/my_header' /}
+{block name='content_css'}
+<!--分页css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/pageContainer.css"/>
+
+<link rel="stylesheet" href="__RES__/css/my/InfoNotification.css"/>
+<!--消息css-->
+<link rel="stylesheet" href="__RES__/css/my/MyInfo.css"/>
+<!--优惠详情-->
+<link rel="stylesheet" href="__RES__/css/my/InfoCouponDetails.css"/>
+{/block}
+{block name="content"}
+<!--我的消息主体-->
+<div class="my-info">
+    <div class="index-box">{include file="public/my_left" /}
+        <!-- 我的右侧 -->
+        <div class="index-right">
+            <div class="info-center">
+
+                <div class="info-coupon-details">
+                    <h5 class="title">
+                        优惠详情
+                    </h5>
+                    <div>
+                        <div class="details">
+                            <div class="tit-box">
+                                <h5 class="tit">{$data.title}</h5>
+                                <p class="time">{$data.create_time}</p>
+                            </div>
+                            <div class="con">
+                                {$data.content|raw}
+
+                            </div>
+                        </div>
+
+                        <div class="goods-list">
+                            {volist name="$data.goods" id="item"}
+                            <div class="goods" >
+                                <img src="{$item.file}">
+                                <div class="goods-right">
+                                    <p class="name">
+                                        {$item.goods_name}
+                                    </p>
+                                    <p class="money primary-color">
+                                        ¥  {$item.shop_price}
+                                    </p>
+                                    <span onclick="jump_goods('{$item.goods_id}')" class="btn primary-background-color">
+                                        去购买
+                                    </span>
+                                </div>
+                            </div>
+                            {/volist}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-right-list">
+                <!--active 选中-->
+                <a class="list " href="{:url('/pc2.0/message/index')}?type=1">
+                    <img class="default" src="__RES__/imgs/my/logistics.png" alt="">
+                    <img class="chosen" src="__RES__/imgs/my/active-logistics.png" alt="">
+                    <div class="list-right">
+                        <p class="tit">交易物流</p>
+                        <p class="info">{$statistics.express|default=0}条未读</p>
+                    </div>
+                </a>
+                <a class="list" href="{:url('/pc2.0/message/index')}?type=0">
+                    <img class="default" src="__RES__/imgs/my/notification.png" alt="">
+                    <img class="chosen" src="__RES__/imgs/my/active-notification.png" alt="">
+                    <div class="list-right">
+                        <p class="tit">通知</p>
+                        <p class="info">{$statistics.common|default=0}条未读</p>
+                    </div>
+                </a>
+                <a class="list" href="{:url('/pc2.0/message/index')}?type=2">
+                    <img class="default" src="__RES__/imgs/my/discounts.png" alt="">
+                    <img class="chosen" src="__RES__/imgs/my/active-discounts.png" alt="">
+                    <div class="list-right">
+                        <p class="tit">优惠</p>
+                        <p class="info">{$statistics.activity|default=0}条未读</p>
+                    </div>
+                </a>
+            </div>
+
+
+        </div>
+
+    </div>
+</div>
+<!--我的消息主体结束-->
+{/block}

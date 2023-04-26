@@ -1,0 +1,295 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+{/block}
+{block name='body'}
+<style>
+    .calculate span {
+        margin-right: 20px;
+    }
+    .layui-laydate{
+        margin-top: 35px;
+    }
+</style>
+{__block__}
+<div class="tabs_info" id="tabs" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_switch/index')">功能设置</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_rule/index')">分销规则</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_level/level_list')">分销商等级</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_manage/manage_list')">分销商</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现</a></li>
+        <li><a href="javascript:void(0);" {eq name="single_store" value="0"} onclick="main.jumpFour('distribution_book/distribution')" {else/}onclick="main.jumpFour('distribution_book/store')" {/eq}>结算</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_card/index')">推广</a></li>
+    </ul>
+</div>
+<!--操作提示begin-->
+<div class="content">
+    <div class="explanation" id="explanation">
+        <div class="ex_tit">
+            <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+        </div>
+        <ul>
+            <li><span>1、默认展示最近48小时的提现申请，如果48小时内没有手动通过审核，超过48小时候系统将默认通过审核，进行转账；</span></li>
+        </ul>
+    </div>
+</div>
+<!--操作提示end-->
+<div class="tabs_info" id="tab" style="margin-top: 15px;">
+    <ul>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/rule')">提现规则</a></li>
+        <li class="curr"><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/index')">提现审核</a></li>
+        <li><a href="javascript:void(0);" onclick="main.jumpFour('distribution_withdraw/getList')">提现管理</a></li>
+    </ul>
+</div>
+<form action="" name="searchForm" id="searchForm" class="layui-form" method="get">
+    <link href="__RES__/css/common/main.css" rel="stylesheet" type="text/css"/>
+
+    <!--店铺类型-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">提现方式：</label>
+        <div class="layui-input-block">
+            <select name="distribution_type" lay-filter="time">
+                <option value="-1" {eq name=":input('distribution_type','-1')" value='-1' } selected {/eq}>全部</option>
+                <option value="1" {eq name=":input('distribution_type','-1')" value='1' } selected {/eq}>余额</option>
+                <option value="2" {eq name=":input('distribution_type','-1')" value='2' } selected {/eq}>微信</option>
+                <option value="3" {eq name=":input('distribution_type','-1')" value='3' } selected {/eq}>银行卡</option>
+            </select>
+        </div>
+    </div>
+
+
+    <!--起止时间开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">成为分销商日期：</label>
+        <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <input type="text" name="start_date" id="start_date" lay-verify="datetime" placeholder="不限" value="{:input('start_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="end_date" id="end_date" lay-verify="datetime" placeholder="至今" value="{:input('end_date','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--起止时间结束-->
+
+    <!--申请时间开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">申请时间：</label>
+        <div class="layui-input-block">
+            <div class="layui-input-inline">
+                <input type="text" name="start_date1" id="start_date1" lay-verify="datetime" placeholder="不限" value="{:input('start_date1','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="text" name="end_date1" id="end_date1" lay-verify="datetime" placeholder="至今" value="{:input('end_date1','')}" readonly autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+    <!--申请时间结束-->
+
+    <!--关键词开始-->
+    <div class="layui-form-item order_item">
+        <label class="layui-form-label">关键词：</label>
+        <div class="layui-input-block">
+            <input type="text" name="keywords" value="{:input('keywords','','htmlspecialchars')}" autocomplete="off" placeholder="分销商昵称/手机号/订单号" class="layui-input">
+            <button class="layui-btn" lay-submit="">搜索</button>
+        </div>
+    </div>
+    <!--关键词结束-->
+
+    <div class="calculate">
+        <span>申请提现数量：{$count|default=0}</span>
+        <span>提现总金额：{$total|default=0}</span>
+        <span>手续费用：{$service_charge|default=0}</span>
+    </div>
+    <!--列表-->
+    <div class="layui-form">
+        <table class="layui-table goods-list">
+            <thead>
+            <tr>
+                <th class="table_num"><input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary"/></th>
+                <th>分销商</th>
+                <th>电话</th>
+                <th>订单编号</th>
+                <th>分销商等级</th>
+                <th>申请提现金额</th>
+                <th>手续费用</th>
+                <th>提现方式</th>
+                <th>申请时间</th>
+                <th>状态</th>
+            </tr>
+            </thead>
+            <tbody>
+            {empty name='data'}
+            <tr class='emptyTable'>
+                <td colspan="100" style="font-size: 25px;">暂无数据</td>
+            </tr>
+            {/empty}
+            {volist name="data" id="item"}
+            <tr>
+                <td>
+                    <input type="checkbox" value="{$item.distribution_withdraw_id}" class="chk" lay-filter="chk" title="" lay-skin="primary"
+                        {eq name="$item.status" value="1"} disabled {/eq}
+                    />
+                </td>
+                <td>
+                    <a rel="{$item.avatar}" class="preview">
+                    <img src="{$item.avatar?:'?'}" class="avatar" alt="头像" onerror="this.src='__RES__/image/common/imageError.png'" />
+                    </a>{$item.nickname|default=''}
+                </td>
+                <td>{$item.phone|default=''}</td>
+                <td>{$item.withdraw_number|default=''}</td>
+                <td>{$item.level_title|default=''}</td>
+                <td>{$item.price|default=''}</td>
+                <td>{$item.service_charge|default=''}</td>
+                <td>
+                    {switch name="item.distribution_type"}
+                    {case value="1"}余额{/case}
+                    {case value="2"}微信{/case}
+                    {case value="3"}
+                    银行卡
+                    <hr>
+                    {$item.card_bank_name|default=''} -
+                    {$item.card_bank_owner|default=''} -
+                    {$item.card_number|default=''}
+                    
+                    {/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+                <td>{$item.create_time|default=''}</td>
+                <td>
+                    {switch name="item.status"}
+                    {case value="0"}待确认{/case}
+                    {case value="1"}已确认转账{/case}
+                    {case value="2"}<font color="red">暂停转账</font>{/case}
+                    {default /}出错啦
+                    {/switch}
+                </td>
+            </tr>
+            {/volist}
+            </tbody>
+            <tfoot>
+            {notempty name='data'}
+            <tr>
+                <td colspan="100">
+                    <div class="left left_all">
+                        <div class="allCheck">
+                            <input type="checkbox" title="" class="chkAll" lay-filter="chkAll" lay-skin="primary" id="all"/><label for="all">当页全选</label>
+                        </div>
+                        <a class="btn_trash" onclick="checkTransfer()"><i class="fa fa-check-circle-o"></i>确认转账</a>
+                        <a class="btn_trash" onclick="stopTransfer()"><i class="fa fa-exclamation-triangle"></i>暂停转账</a>
+                    </div>
+                    <span style="float:right;">{:$data->render()}</span>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+    </div>
+</form>
+
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/DataTables-1.10.15/media/js/jquery.dataTables.min.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form('.layui-form');
+    function checkTransfer() {
+
+        var checked = $('tbody .chk:checked');
+        if (checked.length === 0) {
+            layer.msg('请选择操作数据', {offset: '400px', time: 2000});
+            return false;
+        }
+        var distribution_withdraw_id = [];
+        checked.each(function (i, o) {
+            distribution_withdraw_id.push($(o).val());
+        });
+        if (distribution_withdraw_id.length > 0) distribution_withdraw_id = distribution_withdraw_id.join(',');
+
+        layer.msg('确定转账吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {distribution_withdraw_id:distribution_withdraw_id}, url: '/distribution_withdraw/checkTransfer', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function stopTransfer() {
+
+        var checked = $('tbody .chk:checked');
+        if (checked.length === 0) {
+            layer.msg('请选择操作数据', {offset: '400px', time: 2000});
+            return false;
+        }
+        var distribution_withdraw_id = [];
+        checked.each(function (i, o) {
+            distribution_withdraw_id.push($(o).val());
+        });
+        if (distribution_withdraw_id.length > 0) distribution_withdraw_id = distribution_withdraw_id.join(',');
+
+        layer.msg('确定暂停转账吗？', {
+            btn: ['确定', '再看看'], yes: function (index) {
+                main.ajax({
+                    data: {distribution_withdraw_id:distribution_withdraw_id}, url: '/distribution_withdraw/stopTransfer', callback: function (res) {
+                        if (res.code != 0) {
+                            layer.msg(res.message);
+                            return false;
+                        } else {
+                            layer.msg(res.message);
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    function exportList() {
+        $("#searchForm").append("<input type='text' name='dc' id='dc' value='dc'>");
+        $("#searchForm").submit();
+        $("#dc").remove();
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '',key = Object.keys(args);
+        if (key.length > 0){
+            $.each(args,function (i,o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        console.log(param);
+        location.href='?' + param;
+    }
+
+    main.laydate([{
+        elem: '#start_date',
+        type: 'datetime'
+    },{
+        elem: '#end_date',
+        type: 'datetime'
+    },{
+        elem: '#start_date1',
+        type: 'datetime'
+    },{
+        elem: '#end_date1',
+        type: 'datetime'
+    }]);
+</script>
+{/block}

@@ -1,0 +1,70 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link rel="stylesheet" type="text/css" href="__RES__/css/purebox.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/perfect-scrollbar.min.css">
+<link rel="stylesheet" type="text/css" href="__RES__/css/calendar.min.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/css/spectrum.css" />
+<link rel="stylesheet" type="text/css" href="__RES__/layui/css/layui.css" />
+{/block}
+{block name='title'}{__block__}{/block}
+{block name='body'}
+{__block__}
+
+<div class="main-content" id="mainContent">
+    <form method="post" class="layui-form" action="">
+        <!--操作提示begin-->
+        <div class="content">
+            <div class="explanation" id="explanation">
+                <div class="ex_tit">
+                    <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+                </div>
+                <ul>
+                    <li><span>展示所有标签类型。</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="search-info">
+            <div class="search-form">
+                <div class="search-key">
+                    <input type="text" name="keyword" size="30" class="text text_2" placeholder="标签分类名称"/>
+                    <!--<input type="submit" value=" 搜索 " class="submit"/>-->
+                </div>
+                <input type="submit" class="btn search_btn" name="secrch_btn" value="查询">
+            </div>
+        </div>
+
+        <div class="list-div" id="listDiv">
+            <table class="ecsc-default-table">
+                <thead>
+                <tr>
+                    <th >编号</th>
+                    <th >标签分类名称</th>
+                </tr>
+                </thead>
+                <tbody>
+                {empty name='data'}
+                <tr><td class="no-records" colspan="2">没有找到任何记录</td></tr>
+                {/empty}
+                {volist name='data' id='item'}
+                <tr>
+                    <td>{$item.tag_classify_id}</td>
+                    <td >{$item.name}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+{/block}
+{block name='js'}
+{__block__}
+<script type="text/javascript" src="__RES__/js/seller.js"></script>
+<script type="text/javascript">
+    main.form();
+</script>
+{/block}
+

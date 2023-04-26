@@ -1,0 +1,325 @@
+.coupon {
+  .title {
+    height: 55px;
+    background: #fff;
+    line-height: 55px;
+    font-size: 14px;
+    padding-left: 20px;
+    border-bottom: 1px solid #F0F3EF;
+  }
+
+  .coupon-con {
+    .tit {
+      height: 55px;
+      background: #fff;
+      line-height: 55px;
+      font-size: 16px;
+      padding-left: 20px;
+      border-bottom: 1px solid #F0F3EF;
+
+      a {
+        border-bottom: 1px solid transparent;
+        padding-bottom: 5px;
+        margin-right: 50px;
+        color: #000;
+      }
+    }
+
+    .coupon-box {
+      background: #fff;
+      padding-bottom: 28px;
+      overflow: hidden;
+
+      .page {
+        float: right;
+        margin-right: 17px;
+        margin-top: 15px;
+
+        li:first-child {
+          width: 79px;
+        }
+
+        li:last-child {
+          width: 79px;
+        }
+
+        li {
+          width: 36px;
+          height: 26px;
+          border: 1px solid #DDDDDD;
+          background: #F6F5F5;
+          text-align: center;
+          line-height: 26px;
+          color: #333333;
+          border-radius: 3px;
+          font-size: 12px;
+          float: left;
+          margin-left: 3px;
+          cursor: pointer;
+        }
+
+        .active {
+          border: none;
+          background: none;
+        }
+      }
+    }
+
+    .coupon-list {
+      padding-left: 20px;
+      overflow: hidden;
+      margin-top: 20px;
+      height: 945px;
+
+      .list {
+        &::before {
+          content: '';
+          display: block;
+          width: 45px;
+          height: 22.5px;
+          border-radius: 0px 0px 22.5px 22.5px;
+          background: #fff;
+          position: absolute;
+          top: 0px;
+          left: 50%;
+          margin-left: -22.5px;
+        }
+
+        position: relative;
+        float: left;
+        width: 234px;
+        height: 300px;
+        position: relative;
+        background: #FDBEA3;
+        margin-bottom: 15px;
+        margin-right: 11px;
+        .list-top {
+          padding-bottom: 15px;
+          margin-top: 35px;
+          text-align: center;
+
+          .face-value {
+            color: #fff;
+
+            margin-bottom: 15px;
+
+            .symbol {
+              font-size: 20px;
+              position: relative;
+              top: -12px;
+            }
+
+            .money {
+              font-size: 34px;
+            }
+
+            .character {
+              font-size: 12px;
+              color: #F38F64;
+            }
+          }
+
+          .condition {
+            font-size: 12px;
+            color: #fff;
+          }
+
+          .time {
+            color: #F38F64;
+            font-size: 12px;
+            margin-top: 40px;
+          }
+        }
+
+        .list-bottom {
+          &::before {
+            content: '';
+            display: block;
+            width: 100%;
+            border-top: 3px dashed #F9F9F9;
+            position: absolute;
+            top: -3px;
+            left: 0px;
+          }
+
+          height: 118px;
+          background: #F9F9F9;
+          position: relative;
+          z-index: 2;
+          box-sizing: border-box;
+          padding-top: 15px;
+
+          .limit {
+            font-size: 12px;
+            color: #969696;
+            overflow: hidden;
+            width: 205px;
+            margin: 0px auto;
+
+            span {
+              float: left;
+              color: #666666;
+            }
+
+            p {
+              width: 155px;
+              float: left;
+              text-overflow: -o-ellipsis-lastline;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              display: -webkit-box;
+              -webkit-line-clamp: 2;
+              line-clamp: 2;
+              -webkit-box-orient: vertical;
+            }
+          }
+
+          .now {
+            display: block;
+            box-sizing: border-box;
+            width: 115px;
+            height: 30px;
+            border: 1px solid #FDC2A9;
+            color: #FDC2A9;
+            text-align: center;
+            line-height: 30px;
+            margin: 0px auto;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-top: 20px;
+          }
+        }
+
+        .coupon-overdue-img, .coupon-used-img {
+          display: none;
+        }
+      }
+    }
+        
+    .coupon-unused .now {
+      display: block !important;
+    }
+
+
+    .coupon-list {
+        display: none;
+      .coupon-enty {
+        width: 305px;
+        height: 90px;
+        padding-left: 90px;
+        font-size: 14px;
+        margin: 155px auto 0px;
+        background: url("../../imgs/my/couponenty.png") no-repeat;
+        padding-top: 25px;
+
+        p {
+          color: #000;
+        }
+
+        a {
+          display: block;
+          width: 58px;
+          height: 26px;
+          color: #fff;
+          text-align: center;
+          line-height: 26px;
+          border-radius: 5px;
+          margin-top: 8px;
+        }
+      }
+    }
+    .coupon-unused{
+       display: block;
+    }
+    .coupon-used {
+        
+      .list {
+        background: #C3C3C3;
+
+        .list-top .face-value .character {
+          color: #9C9C9C;
+        }
+
+        .list-top .time {
+          color: #9C9C9C;
+        }
+
+        img{
+          width: 64px;
+          height: 64px;
+          float: right;
+          margin-top: 6px;
+          margin-right: 10px;
+        }
+
+        .coupon-used-img {
+          display: block!important;
+        }
+      }
+
+    }
+
+    .coupon-overdue {
+      .coupon-used;
+      .list{
+        .coupon-overdue-img {
+          display: block!important;
+        }
+        .coupon-used-img{
+          display: none!important;
+        }
+      }
+
+
+    }
+  }
+
+  .gain-coupon {
+    padding: 20px 17px;
+    margin-top: 10px;
+    background: #fff;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    div {
+      width: 480px;
+      height: 150px;
+      float: left;
+      padding-left: 64px;
+      box-sizing: border-box;
+      padding-top: 30px;
+
+      p {
+        color: #333333;
+        font-size: 14px;
+        margin-bottom: 15px;
+      }
+
+      .tit {
+        font-size: 20px;
+
+      }
+
+      a {
+        font-size: 12px;
+        display: block;
+        width: 90px;
+        height: 30px;
+        border: 1px solid #0F0F0F;
+        text-align: center;
+        line-height: 30px;
+        color: #333333;
+
+      }
+    }
+
+    .get-coupon {
+      background: url("../../imgs/my/lqzx.png") no-repeat;
+    }
+
+    .getinreturn {
+      float: right;
+      background: url("../../imgs/my/hqzx.png") no-repeat;
+    }
+  }
+}

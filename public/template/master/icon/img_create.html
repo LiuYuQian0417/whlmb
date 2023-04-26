@@ -1,0 +1,114 @@
+{extend name='layout/frame' /}
+{block name='mainCss'}
+{__block__}
+<link href="__RES__/css/common/step.css"  rel="stylesheet" type="text/css" />
+<link href="__RES__/css/common/uploads.css" rel="stylesheet" type="text/css"/>
+{/block}
+{block name='body'}
+{__block__}
+<!--操作提示begin-->
+<div class="content">
+    <div class="content">
+        <div class="explanation" id="explanation">
+            <div class="ex_tit">
+                <i class="sc_icon"></i><h4>操作提示</h4><span id="explanationZoom" title="收起提示"></span>
+            </div>
+            <ul>
+                <li><font color="red">*</font><span>请注意图标选择圆形上传。</span></li>
+                <li><font color="red">*</font><span>图标尺寸85*85。</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!--操作提示end-->
+<!--表单-->
+<div class="contentShell">
+    <form class="layui-form" action="" method="post">
+        {if !isset($data.type) or ((isset($data.type) and $data.type==2))}
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">商品分类</label>
+                <div class="layui-input-block">
+                    <select name="parent_id" lay-search="">
+                        <option value="0" {eq name="item.parent_id|default=''" value="0" }selected{/eq}>顶级分类</option>
+                        {volist name='classify_list' id='classify_list'}
+                        <option
+                                {eq name=":input('get.classify_id')" value="$classify_list.goods_classify_id" }selected{/eq}
+                        {eq name="classify_list.goods_classify_id|default=''" value="$data.name|default='a'" }selected{/eq}
+                        value="{$classify_list.goods_classify_id}"
+                        >{$classify_list.title}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+        {/if}
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 图标名字</label>
+            <div class="layui-input-inline">
+                <input type="text" name="title" value="{$data.title|default=''}" maxlength="5" autocomplete="off" placeholder="请输入图标名字"
+                       class="layui-input">
+            </div>
+        </div>
+        {notempty name='$data'}
+        <input type="hidden" name="index_icon_id" value="{$data.index_icon_id}">
+        <input type="hidden" name="name" value="{$data.name}">
+        {/notempty}
+        <div class="layui-form-item">
+            <label class="layui-form-label"><font color="red">*</font> 图标</label>
+            <div class="layui-input-block">
+                <div
+                        class="imageUpload"
+                        default="{$data.img|default=''}"
+                        width="85"
+                        height="85"
+                        file-mime="image/gif,image/jpeg,image/png" 文件类型
+                        name="img"
+                        dir="icon"
+                        value="{$data.img_data|default=''}"
+
+                ></div>
+                <!--<div>-->
+                    <!--<div class="uploader white left">-->
+                        <!--<input type="text" class="filename" id="localPath" value="{$data.img|default=''}" readonly/>-->
+                        <!--<input type="button" class="button" value="上传..."/>-->
+                        <!--<input type="file" id="up_img" name="image" datatype="*" nullmsg="请上传图标"/>-->
+                    <!--</div>-->
+                    <!--<div id="imgPrev" style="float: left;margin: 10px 0 0 10px;">-->
+                        <!--<img id="imgShow" src="/{$data.img|default=''}?{:rand()}" height="30" onerror="this.src='__RES__/image/common/imageError.png'"  alt="图标"/>-->
+                    <!--</div>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-inline">
+                <input type="text" name="sort" value="{$data.sort|default='0'}" maxlength="5" autocomplete="off" placeholder="请输入分类名称"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                {present name="$item.goods_classify_id"}
+                <input type="hidden" name="goods_classify_id" value="{$item.goods_classify_id}">
+                {/present}
+                <a type="reset" class="layui-btn layui-btn-primary"  href="/icon/index_img">返回</a>
+                <button class="layui-btn" type="submit" id="submit">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+{/block}
+{block name='js'}
+{__block__}
+<script src="__RES__/js/common/step.js" type="application/javascript"></script>
+<script src="__RES__/js/common/uploadPreview.js"></script>
+{/block}
+{block name='script'}
+{__block__}
+<script>
+    main.form();
+    main.valid('.layui-form');
+</script>
+{/block}
+{block name='highSearch'}{/block}

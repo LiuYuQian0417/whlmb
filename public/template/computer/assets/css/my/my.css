@@ -1,0 +1,151 @@
+body {
+  background: #F0F3EF ;
+}
+.my {
+  height: 80px;
+  padding-top: 8px;
+  box-sizing: border-box;
+}
+.my .left {
+  float: left;
+}
+.my .my-center {
+  width: 1200px;
+  margin: 0px auto;
+  line-height: 72px;
+  height: 72px;
+}
+.my .my-center .logo {
+  line-height: 0px;
+}
+.my .my-center .logo img {
+  width: 112px;
+  height: 44px;
+  position: relative;
+  top: 5px;
+}
+.my .my-center .my-top-menu {
+  margin-left: 55px;
+  height: 72px;
+}
+.my .my-center .my-top-menu a {
+  color: #fff;
+}
+.my .my-center .my-top-menu .mar {
+  margin-right: 45px;
+}
+.my .my-center .my-top-menu .my-top-menu-left .pub {
+  position: relative;
+}
+.my .my-center .my-top-menu .my-top-menu-left .trilateral::before {
+  content: '';
+  display: block;
+  width: 0px;
+  height: 0px;
+  border: 9px solid transparent;
+  border-bottom: 9px solid #F0F3EF;
+  position: absolute;
+  left: 50%;
+  bottom: 0px;
+  transform: translateX(-50%);
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box {
+  position: relative;
+  line-height: 35px;
+  top: 18px;
+  z-index: 99;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box::before {
+  bottom: -19px;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box:hover {
+  box-shadow: #CBCECA 0px 0px 5px;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box:hover .a-box {
+  color: #333 !important;
+  background: #fff url("../../imgs/my/hoverzhbottom.png") no-repeat 82px center;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box:hover .secondary-menu {
+  display: block;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box .a-box {
+  display: block;
+  width: 105px;
+  height: 35px;
+  background: url("../../imgs/my/zhbottom.png") no-repeat 82px center;
+  padding-left: 10px;
+  position: relative;
+  z-index: 7;
+  color: #fff;
+  box-sizing: border-box;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box .secondary-menu {
+  display: none;
+  position: absolute;
+  top: 35px;
+  left: 0px;
+  background: #fff;
+  width: 100%;
+  line-height: 35px;
+  box-sizing: border-box;
+  box-shadow: #CBCECA 0px 0px 5px;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box .secondary-menu a {
+  display: block;
+  color: #333333;
+  height: 35px;
+  padding-left: 10px;
+  font-size: 14px;
+}
+.my .my-center .my-top-menu .my-top-menu-left .account-box .secondary-menu a:hover {
+  background: #F5F5F5;
+}
+.my .my-center .my-top-menu-right {
+  float: right;
+  margin-top: 20px;
+}
+.my .my-center .my-top-menu-right .search-box {
+  float: left;
+}
+.my .my-center .my-top-menu-right .search-box .txt {
+  width: 200px;
+  height: 30px;
+  background: #fff;
+  outline: none;
+  border: none;
+  text-indent: 12px;
+  float: left;
+}
+.my .my-center .my-top-menu-right .search-box .btn {
+  width: 66px;
+  height: 30px;
+  background: #EAEAEA;
+  color: #333;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  float: left;
+}
+.my .my-center .my-top-menu-right .car-box {
+  width: 132px;
+  height: 30px;
+  background: #fff;
+  float: left;
+  margin-left: 6px;
+  line-height: 30px;
+  font-size: 12px;
+  text-align: center;
+}
+.my .my-center .my-top-menu-right .car-box a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: #333;
+}
+.my .my-center .my-top-menu-right .car-box a .car {
+  position: relative;
+  top: 3px;
+}
+.my .my-center .my-top-menu-right .car-box a span {
+  margin: 0px 7px;
+}

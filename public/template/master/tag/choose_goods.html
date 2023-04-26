@@ -1,0 +1,240 @@
+{extend name='layout/frame' /}
+{block name='title'}{__block__}{/block}
+{block name='breadcrumb'}{/block}
+{block name='imgUpload'}{/block}
+{block name='multiImgUpload'}{/block}
+{block name='body'}
+{__block__}
+<style>
+    .childrenBody {
+        padding-top: 15px !important;
+    }
+
+    .layui-table {
+        margin-bottom: 35px;
+    }
+
+    th > input, td > input {
+        display: block;
+    }
+
+    td > img {
+        width: 30px;
+        height: 30px;
+        float: left;
+    }
+
+    td > span {
+        float: left;
+        display: inline-block;
+        width: calc(100% - 40px);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 30px;
+        padding: 0 5px;
+    }
+
+    .footer {
+        width: calc(100% - 30px);
+        height: 40px;
+        background: #FFFFFF;
+        position: fixed;
+        bottom: 0;
+    }
+
+    .footer > button {
+        float: right;
+        margin: 5px 0;
+    }
+    #done{
+        margin-left: 10px;
+    }
+</style>
+<div class="layui-tab layui-tab-brief">
+    <div class="tabs_info" id="tabs" style="margin-top: 15px;">
+        <ul>
+            <li class="{eq name=":input('choose_type','1')" value='1'}curr{/eq}"><a href="javascript:void(0);"
+                                                        onclick="tabReload(1)">选择商品</a>
+            </li>
+            <li class="{eq name=":input('choose_type','1')" value='2'}curr{/eq}"><a href="javascript:void(0);"
+                                                        onclick="tabReload(2)">已选商品</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<form class="layui-form" action="" method="get" style="width: 100%;margin-top: 5px">
+    <div class="layui-form-item" style="float: left; width: 100%;margin-bottom: 0">
+        <div class="layui-inline" style="float: right; margin: 0;">
+            <div class="layui-input-inline" style="width: 52px; margin-right: 0;">
+                <input type="hidden" name="choose_type" value="{:input('choose_type','')}">
+                <input type="hidden" name="choose_goods_id" value="{:input('choose_goods_id','')}">
+                <button class="layui-btn" id="sumit" lay-submit>搜索</button>
+            </div>
+        </div>
+        <div class="layui-inline" style="float: right;">
+            <div class="layui-input-inline" style=" width: 200px;">
+                <input type="text" name="goods_name" autocomplete="off" value="{:input('goods_name','')}"
+                       class="layui-input" placeholder="商品名称">
+            </div>
+        </div>
+        <div class="layui-inline" style="float: right;">
+            <div class="layui-input-inline" style=" width: 200px;">
+                <select name="goods_classify_id">
+                    <option value="">商品分类</option>
+                    {volist name="goodsClassifyList|default=[]" id="goods_classify"}
+                    <option
+                            value="{$goods_classify.goods_classify_id}"
+                            {eq name=":input('goods_classify_id','')" value="$goods_classify.goods_classify_id" }selected="selected" {/eq}
+                    >{for start="1" end="$goods_classify.level" }└ {/for}{$goods_classify.title}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+<table class="layui-table">
+    <colgroup>
+        <col width="20">
+        <col width="300">
+        <col>
+        <col width="200">
+    </colgroup>
+    <thead>
+    <tr>
+        <th><input type="checkbox" id="chooseAll"></th>
+        <th>商品</th>
+        <th>分类</th>
+    </tr>
+    </thead>
+    {notempty name="goodsList"}
+    <tbody>
+    {volist name="goodsList" id="vo"}
+    <tr>
+        <td><input type="checkbox" data-id="{$vo.goods_id}"></td>
+        <td>
+            <img src="{$vo.file}">
+            <span>{$vo.goods_name}</span>
+        </td>
+        <td>{$vo.classify_name}</td>
+    </tr>
+    {/volist}
+    {else/}
+    <tr>
+        <td colspan="3">暂无符合条件的商品</td>
+    </tr>
+    </tbody>
+    {/notempty}
+</table>
+<div class="footer">
+    <button class="layui-btn" id="done">完成</button>
+    {if input('choose_type',1) == 1}
+    <button class="layui-btn" id="choose">选择</button>
+    {else/}
+    <button class="layui-btn layui-btn-danger" id="remove">移除</button>
+    {/if}
+</div>
+{/block}
+
+{block name='js'}
+{__block__}
+
+<script>
+    $(function () {
+        main.form()
+        $('#chooseAll').on('change', function () {
+            $('td>input[type=checkbox]').prop('checked', $(this).prop('checked'))
+        })
+        $('#choose').on('click', function () {
+            var checkedGoodsIdArr = [];
+            $('td>input[type=checkbox]:checked').each(function () {
+                checkedGoodsIdArr.push($(this).data('id'))
+            })
+
+            var checkedGoodsId = checkedGoodsIdArr.join(',')
+
+            var wasCheckedGoodsId = '{:input("choose_goods_id","")}'
+
+            var finalCheckedGoodsId = ''
+
+            if (checkedGoodsId.length > 0 && wasCheckedGoodsId.length > 0) {
+                finalCheckedGoodsId = checkedGoodsId + ',' + wasCheckedGoodsId
+            } else if (checkedGoodsId.length > 0) {
+                finalCheckedGoodsId = checkedGoodsId
+            } else {
+                finalCheckedGoodsId = wasCheckedGoodsId
+            }
+
+            parent.set_choose_goods(finalCheckedGoodsId)
+
+            reloadSelf({
+                choose_type: '{:input("choose_type", "1")}',
+                choose_goods_id: finalCheckedGoodsId,
+            })
+        })
+
+        $('td > input[type=checkbox]').on('change', function () {
+            if (!$(this).prop('checked')) {
+                $('#chooseAll').prop('checked', false)
+            } else if ($('td > input[type=checkbox]:checked').length == $('td > input[type=checkbox]').length) {
+                $('#chooseAll').prop('checked', true)
+            }
+        })
+
+        $('#remove').on('click', function () {
+            var choose_goods_id = parent.get_choose_goods()
+            var choose_goods_id_arr = choose_goods_id.split(',')
+
+            console.log(choose_goods_id_arr)
+            $('td > input[type=checkbox]:checked').each(function () {
+                var goods_id = $(this).data('id')
+                var index = choose_goods_id_arr.findIndex(function (v) {
+                    console.table({
+                        v: v,
+                        goods_id: goods_id
+                    })
+                    return v == goods_id
+                })
+
+                if (index !== -1) {
+                    choose_goods_id_arr.splice(index, 1)
+                }
+            })
+
+            var finalChooseGoodsId = choose_goods_id_arr.join(',')
+
+            parent.set_choose_goods(finalChooseGoodsId)
+
+            reloadSelf({
+                choose_type: '{:input("choose_type","1")}',
+                choose_goods_id: finalChooseGoodsId,
+            })
+        })
+
+        $('#done').on('click', function () {
+            parent.layer.closeAll()
+        })
+
+    })
+
+    function tabReload(choose_type) {
+        reloadSelf({
+            choose_type: choose_type,
+            choose_goods_id: parent.get_choose_goods()
+        })
+    }
+
+    //重定向本身
+    function reloadSelf(args) {
+        var param = '', key = Object.keys(args);
+
+        if (key.length > 0) {
+            $.each(args, function (i, o) {
+                param += '&' + i + '=' + o;
+            });
+            param = param.substr(1);
+        }
+        location.href = '?' + param;
+    }
+</script>
+{/block}

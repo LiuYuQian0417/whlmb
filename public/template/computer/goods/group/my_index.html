@@ -1,0 +1,357 @@
+{extend name="public/my_header"}
+{block name="content_css"}
+<!--		猜你喜欢css-->
+<link rel="stylesheet" type="text/css" href="__RES__/css/my/GuessLike.css" />
+<link rel="stylesheet" href="__RES__/css/my/MySpellGroup.css">
+<style>
+    .pl .code {
+        display: none;
+        width: 174px;
+        height: 180px;
+        background: url("__RES__/imgs/my/qp.png") no-repeat;
+        position: absolute;
+        top: 45px;
+        left: -55px;
+        box-sizing: border-box;
+        z-index: 98;
+
+    }
+    .code img {
+        width: 138px;
+        height: 138px;
+        position: absolute;
+        top: 23px;
+        left: 17px;
+    }
+    .pl:hover .code{
+        display: block;
+    }
+    .index-box .index-right .indent-box .indent-list .goods-box .money-box{
+        height: 95px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    .index-box .index-right .indent-box .indent-list .goods-box .indent-state{
+        height: 95px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    .index-box .index-right .indent-box .indent-list .goods-box .indent-operation{
+        height: 95px;
+        margin-bottom: 0px;
+        padding-bottom: 0px;
+    }
+    .index-box .index-right .indent-box .indent-list{
+        overflow: initial;
+    }
+    .index-box .index-right .indent-box .indent-list .goods-box{
+        float: none;
+        display: flex;
+    }
+</style>
+{/block}
+
+{block name="content"}
+<div class="index-box">
+    <!--我的页面左侧公共部分开始-->
+ {include file="public/my_left"}
+    <!--我的页面左侧公共部分结束-->
+
+    <div class="index-right">
+        <!--右侧内容开始-->
+        <div class="title">
+            我的拼团
+        </div>
+        <div class="table-list">
+            <div class="tit">
+                <a {eq name=":input('status')" value="" }  class='primary-color border-color' {/eq}   href="{:url('/pc2.0/group/my_index')}" >全部订单</a>
+                <a {eq name=":input('status')" value="1" } class='primary-color border-color' {/eq}  href="{:url('/pc2.0/group/my_index')}?status=1">进行中</a>
+                <a {eq name=":input('status')" value="2" } class='primary-color border-color' {/eq}  href="{:url('/pc2.0/group/my_index')}?status=2">成功</a>
+                <a {eq name=":input('status')" value="3" } class='primary-color border-color' {/eq}  href="{:url('/pc2.0/group/my_index')}?status=3">失败 </a>
+
+                <div class="tit-right">
+                    <div class="search-box" >
+                        <input class="txt" type="text" name="keyword"  value="{:input('keyword','')}" placeholder="商品名称/订单号">
+                        <input class="search-btn" type="button" value="" onclick="search()">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="indent-content">
+            <!--title开始-->
+            <div class="indent-tit">
+                <!--时间选择-->
+                <div class="time-filtrate ">
+                    <a class="now-time" href="{:url('pc2.0/group/my_index')}?share_time={:input('share_time')}">
+                            <span>{switch name=":input('share_time')"}
+                            {case 1}近三个月拼团{/case}
+                            {case 2}今年内拼团{/case}
+                            {case 3}{:date('Y',strtotime('-1 year'))}年拼团{/case}
+                            {case 4}{:date('Y',strtotime('-2 year'))}年拼团{/case}
+                            {case 5}{:date('Y',strtotime('-3 year'))}年拼团{/case}
+                            {default /}全部时间
+                            {/switch}</span>
+                        <img src="__RES__/imgs/xs.png" alt="">
+                    </a>
+                    <div class="time-list">
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/group/my_index')}?share_time=0">
+                            全部时间
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/group/my_index')}?share_time=1">
+                            近三个月拼团
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/group/my_index')}?share_time=2">
+                            今年内拼团
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/group/my_index')}?share_time=3">
+                            {:date('Y',strtotime('-1 year'))}年拼团
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/group/my_index')}?share_time=4">
+                            {:date('Y',strtotime('-2 year'))}年拼团
+                        </a>
+                        <a class="now-time primary-color-hover" href="{:url('pc2.0/group/my_index')}?share_time=5">
+                            {:date('Y',strtotime('-3 year'))}年拼团
+                        </a>
+                    </div>
+                </div>
+
+                <div class="indent">
+                    订单详情
+                </div>
+                <div class="figure-title">
+                    金额
+                </div>
+                <div class="state">
+                    <a class="now-state" href="javascript:;">
+                        <span>
+                            {switch name=":input('status')"}
+                            {case value="1"}进行中{/case}
+                            {case value="2"}成功{/case}
+                            {case value="3"}失败{/case}
+                            {default/}全部状态
+                            {/switch}
+
+                        </span>
+                        <img src="__RES__/imgs/xs.png" alt="">
+                    </a>
+
+                    <div class="state-list">
+                        <a class=" primary-color-hover" href="{:url('/pc2.0/group/my_index')}?status=1">进行中</a>
+                        <a class=" primary-color-hover" href="{:url('/pc2.0/group/my_index')}?status=2">成功</a>
+                        <a class=" primary-color-hover" href="{:url('/pc2.0/group/my_index')}?status=3">失败</a>
+                    </div>
+                </div>
+
+                <div class="operation-title">
+                    操作
+                </div>
+            </div>
+            {empty name="$result"}
+            <!--订单为空-->
+            <div class="indent-box indent-box-emty">
+                <img src="__RES__/imgs/orderemty.png" alt="">
+                <p>暂无数据</p>
+                <!--<span>“暂无订单，忙里偷闲下一单吧”</span>-->
+            </div>
+            {/empty}
+            <!--订单内容开始-->
+
+            <div class="indent-box">
+                <!--砍价成功-->
+                {volist name="$result" id="item"}
+                <!--每个订单-->
+                <div class="indent-list">
+
+                    <!--成功图标-->
+                    {switch name="$item.status"}
+                    {case value="2"}
+                    <img class="mark" src="__RES__/imgs/my/kjsuccess.png" alt="">
+                    {/case}
+                    {case value="3"}
+                    <img class="mark" src="__RES__/imgs/my/kjerror.png" alt="">
+                    {/case}
+                    {/switch}
+                    <!--头部信息-->
+                    <div class="list-title">
+                        <span>
+                            订单号：{empty name="$item.order_number"} -{else/} {$item.order_number} {/empty}
+                        </span>
+                        <span class="shop-name">
+                            {$item.store_name}
+                            <!--<a href="javascript:;">-->
+                                <!--<img src="__RES__/imgs/my/info.png" alt="">-->
+                            <!--</a>-->
+                        </span>
+                    </div>
+                    <!--头部信息结束-->
+                    <!--商品开始-->
+                    <div class="goods-box">
+                        <div class="goods-left">
+                            <div class="goods-list">
+                                <a href="javascript:jump_goods('{$item.goods_id}')">
+                                    <img src="{$item.file}" alt="">
+                                    <div class="goods-details">
+                                        <p class="goods-name">
+                                            {$item.goods_name}
+                                        </p>
+                                        <p class="specifications">
+                                            {$item.attr}
+                                        </p>
+                                        <span class="pt-nmu border-color primary-color">
+                                            {$item.group_num}人拼
+                                        </span>
+                                    </div>
+
+                                    <div class="number">x1</div>
+                                    <!--<div class="state">-->
+                                        <!--申请售后-->
+                                    <!--</div>-->
+                                </a>
+                            </div>
+                        </div>
+
+
+
+                        <div class="money-box">
+                            <span >￥{$item.single_price}</span>
+                        </div>
+
+                        <div class="indent-state">
+                            <span class="state primary-color">
+                                {switch name="$item.status"}
+                                {case value="1"} 进行中{/case}
+                                {case value="2"} 拼团成功{/case}
+                                {case value="3"} 拼团失败{/case}
+                                {/switch}</span>
+                            {eq name="$item.status" value="2"}<a href="javascript:main.jump({'url':'/pc2.0/order/order_details.html?order_attach_id={$item.order_attach_id}'})">订单详情</a> {/eq}
+                            <a href="javascript:main.jump({'url':'/pc2.0/group/view?group_activity_attach_id={$item.group_activity_attach_id}'})">拼团详情</a>
+                        </div>
+
+
+                       {switch name="$item.status"}
+                        {case value="1"}
+                        <div class="indent-operation">
+
+                            <a href="" class="pl border-color primary-color">
+                                邀请好友
+                                <div class="code">
+                                    <img src="{$item.qr_code.domain}{$item.qr_code.qr_code}" alt="">
+                                </div>
+                            </a>
+                            <!--<a href=""> 继续砍价</a>-->
+                        </div>
+                        {/case}
+                        {case value="2"}
+
+                        <div class="indent-operation">
+                            <a class="pl border-color primary-color" href="javascript:main.jump({'url':'/pc2.0/group/index'})">其他拼团</a>
+                        </div>
+                        {/case}
+                        {case value="3"}
+                        <div class="indent-operation">
+                            <a href="javascript:jump_goods('{$item.goods_id}')" class="look ">
+                                再开一团
+                            </a>
+                            <!--<a href="javascript:;">交易成功</a>-->
+                            <!--<a href="" class="btn primary-background-color">确认收货</a>-->
+                            <!--<a href=""> 查看物流</a>-->
+                            <!--<a href="javascript:;">取消订单</a>-->
+                        </div>
+                        {/case}
+                        {/switch}
+
+                    </div>
+                </div>
+                <!--每个订单结束-->
+                {/volist}
+            </div>
+
+            <!--分页-->
+            <div class="pageContainer" style="width: auto">{$result|raw}</div>
+        </div>
+        <!--订单内容结束-->
+
+
+        <!--猜你喜欢-->
+        <div class="guess">
+            <!-- 猜你喜欢 -->
+            <div class="guess-like">
+                <div class="title">
+                    <span>猜你喜欢</span>
+                    <div onclick="main.new_like({'select':'.guess-like-list'});">换一换 <img src="__RES__/imgs/hyh.png" alt=""></div>
+                </div>
+
+                <div class="guess-like-list">
+                    {volist name='recommend_list' id='recommend_list_data'}
+                    <div class="list" style="width: 25%">
+                        <a href="javascript:jump_goods('{$recommend_list_data.goods_id}')">
+                            <img src="{$recommend_list_data.file}" alt="">
+                            <p class="name">{$recommend_list_data.goods_name}</p>
+                            <div class="money">
+                                <div class="pic primary-color">
+                                    ￥
+                                    {switch $recommend_list_data.is_group.$recommend_list_data.is_bargain.$recommend_list_data.is_limit}
+                                    {case 100}
+                                    {$recommend_list_data.group_price}
+                                    {/case}
+                                    {case 010}
+                                    {$recommend_list_data.cut_price}
+                                    {/case}
+                                    {case 001}
+                                    {$recommend_list_data.time_limit_price}
+                                    {/case}
+                                    {default /}
+                                    {$recommend_list_data.shop_price}
+                                    {/switch}
+                                </div>
+                                <div class="volume">
+                                    销量 <span class="primary-color">{$recommend_list_data.sales_volume}</span>
+                                </div>
+                            </div>
+                            <div class="discounts">
+                                {if condition="config('user.one_more') eq 1"}
+                                <span style="margin-right: 2px;" class="mark primary-color border-color">
+                                    {switch $recommend_list_data.shop}
+                                    {case 0}自营{/case}
+                                    {case 1}个人{/case}
+                                    {case 2}公司{/case}
+                                    {/switch}
+                                  </span>
+                                {/if}
+                                {eq name="$recommend_list_data.is_group" value='1'}
+                                {$recommend_list_data.group_price}
+                                <span class="group-buying primary-background-color">{$recommend_list_data.group_num}人拼</span>
+                                {/eq}
+                                {eq name="$recommend_list_data.is_bargain" value='1'}
+                                <span class="group-buying primary-background-color">砍价</span>
+                                {/eq}
+                            </div>
+                        </a>
+                    </div>
+                    {/volist}
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+
+</div>
+{/block}
+
+{block name="js"}
+<script type="text/javascript">
+    function search() {
+        var keyword = $('input[name="keyword"]').val();
+        if (keyword == ''){
+            layer.msg('请填写商品名称',{time:500});
+        }else{
+            main.jump({'url': '/pc2.0/group/my_index?keyword=' + keyword})
+        }
+    }
+
+</script>
+{/block}
